@@ -1,0 +1,349 @@
+@if(application.isBankFee === "Y"){
+<accordion-item [isOpen]="false">
+  <accordion-header>
+    <div class="accordion-header-content">
+      <div class="accordion-title">
+        <ion-icon src="assets/icons/accordian/initial-doc.svg"></ion-icon>
+        <div class="accordion-title-content">
+          <div>Auto Posting</div>
+        </div>
+      </div>
+    </div>
+  </accordion-header>
+  <accordion-body>
+    <div class="d-flex end align-items-center pb15">
+      <app-icon-button
+        name="save"
+        toolTip="Save"
+        (click)="onSave()"
+      ></app-icon-button>
+    </div>
+    <div class="bg-white-padd">
+      <app-tab-sub-group (tabChange)="onChange($event)">
+        <app-sub-tab tabTitle="Trust and Estate">
+          <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+              <form #e="ngForm" (submit)="trustAndEstateGlIsValid()">
+                <app-table
+                  [columns]="trustColumn"
+                  class="cus-table"
+                  [columnsName]="trustColumnName"
+                  [hideSelectAll]="true"
+                  [pagination]="pagination"
+                  [hasPagination]="true"
+                  [dataSource]="tableLinkedData"
+                >
+                  <ng-template cellHeaderDef="groupName" let-element>
+                    Group Name
+                  </ng-template>
+                  <ng-template cellDef="groupName" let-element>
+                    <app-search-group
+                      [(ngModel)]="group.id"
+                      [groupItems]="grouplist"
+                      name="groupId"
+                      [displayText]="group.name"
+                      (getGroupId)="getLedgerBasedOnGroupId($event)"
+                      (onSelect)="getLedgerBasedOnGroupId($event)"
+                      (onClear)="(group); ledgers = []; ledger.description = ''"
+                      [required]="true"
+                      [errorTrue]="errorTrue"
+                      [btnClicked]="legderDisabled"
+                    ></app-search-group>
+                  </ng-template>
+                  <ng-template cellHeaderDef="ledgerName" let-element>
+                    ledger Name
+                  </ng-template>
+                  <ng-template cellDef="ledgerName" let-element>
+                    <app-search-debit
+                      [(ngModel)]="element.ledgerAccountId"
+                      name="ledgerAccountId{{ element }}"
+                      [displayText]="element.ientLedger.codeName"
+                      (onSelect)="onLedgerSelect($event, element)"
+                      [noCashorBankValue]="journalVoucher.isIncludeBankLedger"
+                      valueType="int"
+                      [regionValue]="
+                        !!regionValue ? regionValue : journalVoucher.regionValue
+                      "
+                      [isNoCashorBank]="
+                        journalVoucher.isIncludeBankLedger === 'Y'
+                          ? false
+                          : true
+                      "
+                      [required]="true"
+                      [errorTrue]="errorTrue"
+                      [noCashorBank]="journalVoucher.isIncludeBankLedger"
+                    >
+                    </app-search-debit>
+                    <!-- <app-leadger-auto-search
+                      [ledgerItems]="ledgers"
+                      [(ngModel)]="ledger.id"
+                      name="ledgerId"
+                      (onSelect)="getLedgerData($event)"
+                      (onClear)="clearLedger()"
+                      [displayText]="ledger.description"
+                      [btnClicked]="legderDisabled"
+                      [required]="true"
+                      [errorTrue]="errorTrue"
+                    ></app-leadger-auto-search> -->
+                  </ng-template>
+                  <ng-template cellHeaderDef="postingNature" let-element>
+                    Posting Nature
+                  </ng-template>
+                  <ng-template cellDef="postingNature" let-element>
+                    <app-input-control type="text"></app-input-control>
+                  </ng-template>
+                  <ng-template cellHeaderDef="curlGL" let-element>
+                    <div class="d-flex justify-content-center">Customer GL</div>
+                  </ng-template>
+                  <ng-template cellDef="curlGL" let-element>
+                    <div class="checkbox d-flex justify-content-center">
+                      <mat-checkbox
+                        color="primary"
+                        (change)="isCheckedLedger($event, element)"
+                      ></mat-checkbox>
+                    </div>
+                  </ng-template>
+                  <!-- <ng-template cellHeaderDef="action" let-element>
+                                            Action
+                                        </ng-template>
+                                        <ng-template cellDef="action" let-element>
+
+                                            <app-icon-button name="edit" toolTip="Edit"
+                                                (click)="trustAndEstateGlIsValid()"></app-icon-button>
+
+                                        </ng-template> -->
+
+                  <!-- <ng-template #slotRight>
+                    <div class="d-flex gap-10">
+                      <app-icon-button
+                        name="save"
+                        toolTip="Save"
+                      ></app-icon-button>
+                    </div>
+                  </ng-template> -->
+                </app-table>
+              </form>
+            </div>
+          </div>
+        </app-sub-tab>
+
+        <app-sub-tab tabTitle="Bank">
+          <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+              <app-table
+                [columns]="bankColumns"
+                [columnsName]="bankColumnsName"
+                [hideSelectAll]="true"
+                [pagination]="pagination"
+                [hasPagination]="true"
+                [dataSource]="trustData"
+              >
+                <ng-template cellDef="isCustomerGl" let-element>
+                  @if(element.isCustomerGl === 'N'){
+                  <div>No</div>
+                  }@else if(element.isCustomerGl === 'Y'){
+                  <div>Yes</div>
+                  }
+                </ng-template>
+                <ng-template cellDef="action" let-element>
+                  <app-icon-button name="doc-download-button"></app-icon-button>
+                </ng-template>
+                <ng-template #slotRight>
+                  <div class="d-flex gap-10">
+                    <!-- <app-icon-button name="edit" toolTip="Edit"></app-icon-button>
+                                        <app-icon-button name="save" toolTip="Save"></app-icon-button> -->
+                  </div>
+                </ng-template>
+              </app-table>
+            </div>
+          </div>
+        </app-sub-tab>
+      </app-tab-sub-group>
+      <app-tab-sub-group (tabChange)="onChange($event)">
+        <app-sub-tab tabTitle="Corporate">
+          <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+              <app-table
+                [columns]="cusColumn"
+                class="mh200"
+                [columnsName]="cusColumnName"
+                [hideSelectAll]="true"
+                [hasPagination]="false"
+                [dataSource]="tableLinkedData"
+              >
+                <ng-template cellHeaderDef="groupName" let-element>
+                  Group Name
+                </ng-template>
+                <ng-template cellDef="groupName" let-element>
+                  <app-search-group
+                    [(ngModel)]="group.id"
+                    [groupItems]="grouplist"
+                    name="id"
+                    [displayText]="group.name"
+                    (getGroupId)="getLedgerBasedOnGroupId($event)"
+                    (onSelect)="getLedgerBasedOnGroupId($event)"
+                    (onClear)="(group); ledgers = []; ledger.description = ''"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                    [btnClicked]="legderDisabled"
+                  ></app-search-group>
+                </ng-template>
+                <ng-template cellHeaderDef="ledgerName" let-element>
+                  ledger Name
+                </ng-template>
+                <ng-template cellDef="ledgerName" let-element>
+                  <app-leadger-auto-search
+                    [ledgerItems]="ledgers"
+                    [(ngModel)]="ledger.id"
+                    name="id"
+                    (onSelect)="getLedgerData($event)"
+                    (onClear)="clearLedger()"
+                    [displayText]="ledger.description"
+                    [btnClicked]="legderDisabled"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                  ></app-leadger-auto-search>
+                </ng-template>
+
+                <ng-template cellHeaderDef="postingNature" let-element>
+                  Posting Nature
+                </ng-template>
+                <ng-template cellDef="postingNature" let-element>
+                  <app-input-control type="text"></app-input-control>
+                </ng-template>
+                <!-- <ng-template cellHeaderDef="curlGL" let-element>
+                  <div class="d-flex justify-content-center">Customer GL</div>
+                </ng-template>
+                <ng-template cellDef="curlGL" let-element>
+                  <div class="checkbox d-flex justify-content-center">
+                    <mat-checkbox
+                      color="primary"
+                      (change)="isCheckedLedger($event, element)"
+                    ></mat-checkbox>
+                  </div>
+                </ng-template> -->
+
+                <!-- <ng-template cellHeaderDef="action" let-element>
+                                        Action
+                                    </ng-template>
+                                    <ng-template cellDef="action" let-element>
+
+                                        <app-icon-button name="edit" toolTip="Edit"></app-icon-button>
+
+                                    </ng-template> -->
+                <!-- <ng-template #slotRight>
+                  <div class="d-flex gap-10">
+
+                    <app-icon-button
+                      name="save"
+                      toolTip="Save"
+                    ></app-icon-button>
+                  </div>
+                </ng-template> -->
+              </app-table>
+            </div>
+          </div>
+        </app-sub-tab>
+
+        <app-sub-tab tabTitle="Bank">
+          <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+              <app-table
+                [columns]="bankColumns"
+                [columnsName]="bankColumnsName"
+                [hideSelectAll]="true"
+                [pagination]="pagination"
+                [hasPagination]="true"
+                [dataSource]="corporateData"
+              >
+                <ng-template cellDef="isCustomerGl" let-element>
+                  @if(element.isCustomerGl === 'N'){
+                  <div>No</div>
+                  }@else if(element.isCustomerGl === 'Y'){
+                  <div>Yes</div>
+                  }
+                </ng-template>
+                <ng-template cellDef="action" let-element>
+                  <app-icon-button name="doc-download-button"></app-icon-button>
+                </ng-template>
+                <ng-template #slotRight>
+                  <div class="d-flex gap-10">
+                    <!-- <app-icon-button name="edit" toolTip="Edit"></app-icon-button> -->
+                    <!-- <app-icon-button name="save" toolTip="Save"></app-icon-button> -->
+                  </div>
+                </ng-template>
+              </app-table>
+            </div>
+          </div>
+        </app-sub-tab>
+      </app-tab-sub-group>
+    </div>
+
+    <div class="col-md-12 end gap-10">
+      <!-- <button type="submit" class="approve-btn">Document Obtained</button>
+                <button type="submit" class="complete-btn"> Cancel</button> -->
+    </div>
+  </accordion-body>
+</accordion-item>
+}
+
+<accordion-item [isOpen]="false">
+  <accordion-header>
+    <div class="accordion-header-content">
+      <div class="accordion-title">
+        <ion-icon src="assets/icons/accordian/initial-doc.svg"></ion-icon>
+        <div class="accordion-title-content">
+          <div>Primary Posting</div>
+        </div>
+      </div>
+    </div>
+  </accordion-header>
+  <accordion-body>
+    <div class="bg-white-padd">
+      <app-tab-sub-group (tabChange)="onChange($event)">
+        <app-sub-tab tabTitle="Trust and Estate ">
+          <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+              <app-table
+                [columns]="bankColumns"
+                [columnsName]="bankColumnsName"
+                [hideSelectAll]="true"
+                [pagination]="pagination"
+                [hasPagination]="true"
+                [dataSource]="primaryData"
+              >
+                <ng-template cellDef="isCustomerGl" let-element>
+                  @if(element.isCustomerGl === 'N'){
+                  <div>No</div>
+                  }@else if(element.isCustomerGl === 'Y'){
+                  <div>Yes</div>
+                  }
+                </ng-template>
+                <ng-template cellDef="action" let-element>
+                  <app-icon-button name="doc-download-button"></app-icon-button>
+                </ng-template>
+                <ng-template #slotRight>
+                  <div class="d-flex gap-10">
+                    <!-- <app-icon-button name="edit" toolTip="Edit"></app-icon-button> -->
+                    <!-- <app-icon-button name="save" toolTip="Save"></app-icon-button> -->
+                  </div>
+                </ng-template>
+              </app-table>
+            </div>
+          </div>
+        </app-sub-tab>
+      </app-tab-sub-group>
+    </div>
+  </accordion-body>
+</accordion-item>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text">Event Mapping On Vouchers</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

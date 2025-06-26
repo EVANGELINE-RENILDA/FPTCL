@@ -1,0 +1,90 @@
+<div class="content-wrapper">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+       [sortColumnsName]="sortColumns" (pageChanged)="pageChanged($event)" columnID="willApplicationId" (onSelect)="onSelect($event)">
+        <ng-template cellDef="createdDate" let-ele>
+            {{ele.createdDate | appDate}}
+        </ng-template>
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.willId)"></app-icon-button>
+        </ng-template>
+        
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"  maxHeight="350px"></app-search>
+        </ng-template>
+        
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Will Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="createWillSearch('clear')"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-3"><app-input-control label="Will Application Ref No"
+                                [(ngModel)]="searchParams.willApplRefNo" name="willApplRefNo"></app-input-control>
+                        </div>
+                      <div class="col-md-3">
+                        <app-input-control label="Applicant"
+                        [(ngModel)]="searchParams.applicantId" name="applicantId" defaultOption="All"
+                        [items]="initialData.DDLValues.DDLCustomer" key="id" type="select" keyName="fullName"
+                        valueType="int"
+                       ></app-input-control>
+                      </div>
+                      <div class="col-md-3">
+                        <app-input-control label="Beneficiary"
+                        [(ngModel)]="searchParams.beneficaryId" name="beneficaryId" defaultOption="All"
+                        [items]="initialData.DDLValues.DDLCustomer" key="id" type="select" keyName="fullName"
+                        valueType="int"
+                       ></app-input-control>
+                      </div>
+                      <div class="col-md-3">
+                        <app-input-control label="Testator" defaultOption="All"
+                        [(ngModel)]="searchParams.testatorId" name="testatorId"
+                        [items]="initialData.DDLValues.DDLCustomer" key="id" type="select" keyName="fullName"
+                        valueType="int"
+                       ></app-input-control>
+                      </div>
+                      <div class="col-md-3">
+                        <app-input-control label="Created Date (From)" type="date" [(ngModel)]="searchParams.createdDateFrom" [maxDate]="searchParams.createdDateTo"
+                            name="createdDateFrom"></app-input-control>
+                    </div>
+                    <div class="col-md-3">
+                        <app-input-control label="Created Date (To)" type="date" [(ngModel)]="searchParams.createdDateTo" [minDate]="searchParams.createdDateFrom"
+                            name="createdDateTo"></app-input-control>
+                    </div>
+                        <div class="col-md-3"><app-input-control label="File No" [(ngModel)]="searchParams.fileNo"
+                                type="special" name="fileNo"> </app-input-control></div>
+                    </row>
+                </div>
+            </scroll>
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name" >
+                <ion-icon src="assets/icons/will.svg"></ion-icon>
+                <div class="screen-text">Will</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+

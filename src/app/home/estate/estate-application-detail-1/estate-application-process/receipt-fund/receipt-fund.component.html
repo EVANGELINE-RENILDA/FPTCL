@@ -1,0 +1,83 @@
+<!-- Receipt Fund -->
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/receipt-fund.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Receipt Fund</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <row>
+            <div class="col-md-9">
+                <row>
+                    <div class="col-md-4"> <view-label label="Assigned Officer" value="Trust Officer"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="Assigned Date" value="24 May 2024"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="TAT" value=" 5 Days"></view-label>
+                    </div>
+                </row>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex">
+                    <!-- @if(this.trustApplication.assignedOfficerFlag === 'True'){
+                    @if(this.trustApplication.reAssignFlag === 'True'){
+                    <form #p="ngForm" class="col-md-10 w250">
+                        <app-input-control type="select" key="constant" keyName="description"
+                            placeholder="Officer" [items]="assignedOfficerDDL" defaultOption="--Select--"
+                            [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                            name="assignedTo"></app-input-control>
+                    </form>
+                    <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                            toolTip="Reassign"></app-icon-button></div>
+                    }
+                    @if(this.trustApplication.selfAssignFlag ===' True'){
+                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                            toolTip="Self Assign"></app-icon-button></div>
+                    }
+                    } -->
+                </div>
+            </div>
+        </row>
+        <row>
+            <div class="col-md-9 border-right">
+                <div class="outer-content-wrapper">
+
+                    <div class="content-wrapper">
+                        <app-table [columns]="receiptFundColumns" [columnsName]="receiptFundColumnsName"
+                            [dataSource]="receiptFundTableData" [hasPagination]="true" [hideSelectAll]="true"
+                            columnID="trustApplicationId"></app-table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="view-label-container-title mb26">Add New</div>
+                <app-input-control label="Organization Name" type="text" class="mb20"></app-input-control>
+                <div class="d-flex gap-10 mb20">
+                    <div class="d-flex gap-5">
+                        <app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>Cheque
+                    </div>
+                    <div class="d-flex gap-5">
+                        <app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>DD
+                    </div>
+                </div>
+                <app-input-control label="Cheque / Trans No" type="text" class="mb20"></app-input-control>
+                <app-input-control label="Date" type="date" class="mb20"></app-input-control>
+                <app-input-control label="Amount" type="number" class="mb20"></app-input-control>
+                <app-input-control label="Receipt No" type="number" class="mb20"></app-input-control>
+                <div class="mb20"></div>
+                <div class="end mb26">
+                    <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                </div>
+                <div class="col-md-12 end">
+                    <button class="approve-btn">Receipt Collected</button>
+                </div>
+            </div>
+        </row>
+
+    </accordion-body>
+</accordion-item>

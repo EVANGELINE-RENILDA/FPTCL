@@ -1,0 +1,246 @@
+@if(type!=='bank' && type!=='employer' && type!=='settlement'){
+<row>
+        <div class="col-md-12">
+                <app-input-control type="special" label="Line 1" [(ngModel)]="__ientAddress.line1" [maxLength]="250"
+                        name="{{type}}line1" [errorTrue]="this.__ientAddress.provinceId!==0 && __errorTrue"
+                        [required]="this.__ientAddress.provinceId!==0" [btnClicked]="__btnClicked"
+                        [oldValue]="__oldValue?.Line1" (onChange)="updateAddress()"></app-input-control>
+        </div>
+        <div class="col-md-12">
+                <app-input-control type="special" label="Line 2" [(ngModel)]="__ientAddress.line2" [maxLength]="250"
+                        name="{{type}}line2" [btnClicked]="__btnClicked" [oldValue]="__oldValue?.Line2"
+                        (onChange)="updateAddress()"></app-input-control>
+        </div>
+        <div class="col-md-12">
+                <app-input-control type="special" label="Line 3" [(ngModel)]="__ientAddress.line3" [maxLength]="250"
+                        name="{{type}}line3" [btnClicked]="__btnClicked" [oldValue]="__oldValue?.Line3"
+                        (onChange)="updateAddress()"></app-input-control>
+        </div>
+        @if(!view){
+        <div class="col-md-12">
+                <app-input-control type="select" label="Province" [maxLength]="250"
+                        [(ngModel)]="__ientAddress.provinceId" defaultOption="--Select--"
+                        [oldValueDescription]="__oldValueDesription?.ProvinceDescription"
+                        [oldValue]="__oldValue?.ProvinceId" defaultOption="--Select--"
+                        [items]="initialData.DDLValues.DDLProvince" key="id" keyName="description"
+                        (onChange)="getIslandFromProvince(__ientAddress.provinceId); updateAddress()"
+                        [required]="__ientAddress.line1 !== ''" [errorTrue]="__ientAddress.line1 !== '' && __errorTrue"
+                        name="{{type}}provinceId" [btnClicked]="__btnClicked"></app-input-control>
+        </div>
+        <div class="col-md-12">
+                <app-input-control type="select" label="Island" defaultOption="--Select--" [items]="islandDDL"
+                        key="islandId" keyName="islandName" valueType="int"
+                        (onChange)="getTikinaDDL(__ientAddress.provinceId,__ientAddress.islandId); updateAddress()"
+                        [(ngModel)]="__ientAddress.islandId" name="{{type}}islandId"
+                        [oldValue]="__oldValue?.IslandId"
+                        [oldValueDescription]="__oldValueDesription?.IslandDescription"
+                        [required]="__ientAddress.line1 !== '' || this.__ientAddress.provinceId!==0"
+                        [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+                        [btnClicked]="__btnClicked"></app-input-control>
+        </div>
+        <div class="col-md-12">
+          <app-input-control type="select" label="Tikina" defaultOption="--Select--" [items]="villageDDL"
+          key="tikinaId"  keyName="tikinaName"
+                  (onChange)="updateAddress()"  valueType="int"
+                  [(ngModel)]="__ientAddress.tikinaId" name="{{type}}tikinaId"
+                  [oldValue]="__oldValue?.TikinaId"
+                  [oldValueDescription]="__oldValueDesription?.TikinaDescription"
+                  [required]="__ientAddress.line1 !== '' || this.__ientAddress.provinceId!==0"
+                  [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+                  [btnClicked]="__btnClicked"></app-input-control>
+         </div>
+        <div class="col-md-12">
+                <app-input-control type="text" label="Village" defaultOption="--Select--" [items]="villageDDL"
+                        key="constant" keyName="description" [(ngModel)]="__ientAddress.village"
+                        name="{{type}}village"
+                        [required]="__ientAddress.line1 !== ''|| this.__ientAddress.provinceId!==0"
+                        (onChange)="onVillageChange(); updateAddress()" [oldValue]="__oldValue?.Village"
+                        [oldValueDescription]="__oldValueDesription?.village"
+                        [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+                        [btnClicked]="__btnClicked || __ientAddress.islandId===0"></app-input-control>
+        </div>
+        }@else {
+                <div class="col-md-12">
+                        <app-input-control type="select" label="Province" [maxLength]="250"
+                                [(ngModel)]="__ientAddress.provinceId" defaultOption="--Select--"
+                                [oldValueDescription]="__oldValueDesription?.ProvinceDescription"
+                                [oldValue]="__oldValue?.ProvinceId" defaultOption="--Select--"
+                                [items]="initialData.DDLValues.DDLProvince" key="id" keyName="description"
+                                (onChange)="getIslandFromProvince(__ientAddress.provinceId); updateAddress()"
+                                [required]="__ientAddress.line1 !== ''" [errorTrue]="__ientAddress.line1 !== '' && __errorTrue"
+                                name="permanentprovinceId" [btnClicked]="true"></app-input-control>
+                </div>
+                <div class="col-md-12">
+                        <app-input-control type="select" label="Island" defaultOption="--Select--" [items]="islandDDL"
+                                key="islandId" keyName="islandName" valueType="int"
+                                (onChange)="getTikinaDDL(__ientAddress.provinceId,__ientAddress.islandId); updateAddress()"
+                                [(ngModel)]="__ientAddress.islandId" name="permanentislandId"
+                                [oldValue]="__oldValue?.IslandId"
+                                [oldValueDescription]="__oldValueDesription?.IslandDescription"
+                                [required]="__ientAddress.line1 !== '' || this.__ientAddress.provinceId!==0"
+                                [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+                                [btnClicked]="true"></app-input-control>
+                </div>
+                <div class="col-md-12">
+                  <app-input-control type="select" label="Tikina" defaultOption="--Select--" [items]="villageDDL"
+                  key="tikinaId"  keyName="tikinaName"
+                          (onChange)="updateAddress()"  valueType="int"
+                          [(ngModel)]="__ientAddress.tikinaId" name="permanenttikinaId"
+                          [oldValue]="__oldValue?.TikinaId"
+                          [oldValueDescription]="__oldValueDesription?.TikinaDescription"
+                          [required]="__ientAddress.line1 !== '' || this.__ientAddress.provinceId!==0"
+                          [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+                          [btnClicked]="true"></app-input-control>
+                 </div>
+                <div class="col-md-12">
+                        <app-input-control type="text" label="Village" defaultOption="--Select--" [items]="villageDDL"
+                                key="constant" keyName="description" [(ngModel)]="__ientAddress.village"
+                                name="permanentvillage"
+                                [required]="__ientAddress.line1 !== ''|| this.__ientAddress.provinceId!==0"
+                                (onChange)="onVillageChange(); updateAddress()" [oldValue]="__oldValue?.Village"
+                                [oldValueDescription]="__oldValueDesription?.village"
+                                [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+                                [btnClicked]="true"></app-input-control>
+                </div>
+        }
+        <div class="col-md-12">
+                <app-input-control type="number" label="PO Box No" [(ngModel)]="__ientAddress.poBoxNo"
+                        [oldValue]="__oldValue?.PoBoxNo" (onChange)="updateAddress()"
+                        name="{{type}}poBoxNo" [maxLength]="10" [btnClicked]="__btnClicked"></app-input-control>
+        </div>
+</row>
+}
+@if(type==='bank'){
+<row>
+        <div class="col-md-12">
+                <app-input-control type="text" label="Line 1" [(ngModel)]="__ientAddress.line1" [maxLength]="250"
+                        [oldValue]="__oldValue?.Line1" name="{{type}}line1" [errorTrue]="__errorTrue" [required]="true"
+                        [btnClicked]="__btnClicked" (onChange)="updateAddress()"></app-input-control>
+        </div>
+        <div class="col-md-12">
+                <app-input-control type="text" label="Line 2" [(ngModel)]="__ientAddress.line2" [maxLength]="250"
+                        [oldValue]="__oldValue?.Line2" name="{{type}}line2" [btnClicked]="__btnClicked"
+                        (onChange)="updateAddress()"></app-input-control>
+        </div>
+        <div class="col-md-12">
+                <app-input-control type="text" label="Line 3" [(ngModel)]="__ientAddress.line3" [maxLength]="250"
+                        [oldValue]="__oldValue?.Line3" name="{{type}}line3" [btnClicked]="__btnClicked"
+                        (onChange)="updateAddress()"></app-input-control>
+        </div>
+        <div class="col-md-12">
+          <app-input-control type="select" label="Province" [maxLength]="250"
+          [(ngModel)]="__ientAddress.provinceId" defaultOption="--Select--"
+          [oldValueDescription]="__oldValueDesription?.ProvinceDescription"
+          [oldValue]="__oldValue?.ProvinceId" defaultOption="--Select--"
+          [items]="initialData.DDLValues.DDLProvince" key="id" keyName="description"
+          (onChange)="getIslandFromProvince(__ientAddress.provinceId); updateAddress()"
+          [required]="__ientAddress.line1 !== ''" [errorTrue]="__ientAddress.line1 !== '' && __errorTrue"
+          name="{{type}}provinceId" [btnClicked]="__btnClicked"></app-input-control>
+        </div>
+        <div class="col-md-12">
+          <app-input-control type="select" label="Island" defaultOption="--Select--" [items]="islandDDL"
+          key="islandId" keyName="islandName" valueType="int"
+          (onChange)="getTikinaDDL(__ientAddress.provinceId,__ientAddress.islandId); updateAddress()"
+          [(ngModel)]="__ientAddress.islandId" name="{{type}}islandId"
+          [oldValue]="__oldValue?.IslandId"
+          [oldValueDescription]="__oldValueDesription?.IslandDescription"
+          [required]="__ientAddress.line1 !== '' || this.__ientAddress.provinceId!==0"
+          [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+          [btnClicked]="__btnClicked"></app-input-control>
+        </div>
+        <div class="col-md-12">
+          <app-input-control type="select" label="Tikina" defaultOption="--Select--" [items]="villageDDL"
+          key="tikinaId"  keyName="tikinaName"
+                  (onChange)="updateAddress()"  valueType="int"
+                  [(ngModel)]="__ientAddress.tikinaId" name="{{type}}tikinaId"
+                  [oldValue]="__oldValue?.TikinaId"
+                  [oldValueDescription]="__oldValueDesription?.TikinaDescription"
+                  [required]="__ientAddress.line1 !== '' || this.__ientAddress.provinceId!==0"
+                  [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+                  [btnClicked]="__btnClicked"></app-input-control>
+         </div>
+        <div class="col-md-12">
+                <app-input-control type="text" label="Village" defaultOption="--Select--" [items]="villageDDL"
+                        key="constant" [oldValue]="__oldValue?.Village"
+                        [oldValueDescription]="__oldValueDesription?.village" keyName="description"
+                        [(ngModel)]="__ientAddress.village" name="{{type}}village" [required]="true"
+                        [errorTrue]="__errorTrue" (onChange)="onVillageChange(); updateAddress()"
+                        [btnClicked]="__btnClicked || __ientAddress.islandId===0"></app-input-control>
+        </div>
+        <div class="col-md-12">
+                <app-input-control type="number" label="PO Box No" [(ngModel)]="__ientAddress.poBoxNo"
+                        [oldValue]="__oldValue?.PoBoxNo" (onChange)="updateAddress()" [maxLength]="10"
+                        name="{{type}}poBoxNo" [btnClicked]="__btnClicked"></app-input-control>
+        </div>
+</row>
+}
+
+@if(type === 'employer'){
+<row>
+        <div class="col-md-6">
+                <app-input-control type="text" label="Line 1" [(ngModel)]="__ientAddress.line1" [maxLength]="250"
+                        [oldValue]="__oldValue?.Line1" name="{{type}}line1"
+                        [errorTrue]="this.__ientAddress.provinceId!==0 && __errorTrue"
+                        [required]="this.__ientAddress.provinceId!==0" [btnClicked]="__btnClicked"
+                        (onChange)="updateAddress()"></app-input-control>
+        </div>
+        <div class="col-md-6">
+          <app-input-control type="select" label="Island" defaultOption="--Select--" [items]="islandDDL"
+          key="islandId" keyName="islandName" valueType="int"
+          (onChange)="getTikinaDDL(__ientAddress.provinceId,__ientAddress.islandId); updateAddress()"
+          [(ngModel)]="__ientAddress.islandId" name="{{type}}islandId"
+          [oldValue]="__oldValue?.IslandId"
+          [oldValueDescription]="__oldValueDesription?.IslandDescription"
+          [required]="__ientAddress.line1 !== '' || this.__ientAddress.provinceId!==0"
+          [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+          [btnClicked]="__btnClicked"></app-input-control>
+  </div>
+        <div class="col-md-6">
+                <app-input-control type="text" label="Line 2" [(ngModel)]="__ientAddress.line2" [maxLength]="250"
+                        [oldValue]="__oldValue?.Line2" name="{{type}}line2" [btnClicked]="__btnClicked"
+                        (onChange)="updateAddress()"></app-input-control>
+        </div>
+        <div class="col-md-12">
+          <app-input-control type="select" label="Tikina" defaultOption="--Select--" [items]="villageDDL"
+          key="tikinaId"  keyName="tikinaName"
+                  (onChange)="updateAddress()"  valueType="int"
+                  [(ngModel)]="__ientAddress.tikinaId" name="{{type}}tikinaId"
+                  [oldValue]="__oldValue?.TikinaId"
+                  [oldValueDescription]="__oldValueDesription?.TikinaDescription"
+                  [required]="__ientAddress.line1 !== '' || this.__ientAddress.provinceId!==0"
+                  [errorTrue]="__ientAddress.line1 !== '' && __errorTrue || this.__ientAddress.provinceId!==0 && __errorTrue"
+                  [btnClicked]="__btnClicked"></app-input-control>
+  </div>
+        <div class="col-md-6">
+                <app-input-control type="text" label="Line 3" [(ngModel)]="__ientAddress.line3" [maxLength]="250"
+                        [oldValue]="__oldValue?.Line3" name="{{type}}line3" [btnClicked]="__btnClicked"
+                        (onChange)="updateAddress()"></app-input-control>
+        </div>
+
+
+        <div class="col-md-6">
+                <app-input-control type="text" label="Village" defaultOption="--Select--" [items]="villageDDL"
+                        key="constant" [oldValue]="__oldValue?.Village"
+                        [oldValueDescription]="__oldValueDesription?.village" keyName="description"
+                        [(ngModel)]="__ientAddress.village" name="{{type}}village"
+                        [errorTrue]="__ientAddress.provinceId!==0 && __errorTrue"
+                        [required]="__ientAddress.provinceId!==0" (onChange)="onVillageChange(); updateAddress()"
+                        [btnClicked]="__btnClicked || __ientAddress.islandId===0"></app-input-control>
+        </div>
+        <div class="col-md-6">
+          <app-input-control type="select" label="Province" [maxLength]="250"
+                        [(ngModel)]="__ientAddress.provinceId" defaultOption="--Select--"
+                        [oldValueDescription]="__oldValueDesription?.ProvinceDescription"
+                        [oldValue]="__oldValue?.ProvinceId" defaultOption="--Select--"
+                        [items]="initialData.DDLValues.DDLProvince" key="id" keyName="description"
+                        (onChange)="getIslandFromProvince(__ientAddress.provinceId); updateAddress()"
+                        [required]="__ientAddress.line1 !== ''" [errorTrue]="__ientAddress.line1 !== '' && __errorTrue"
+                        name="{{type}}provinceId" [btnClicked]="__btnClicked"></app-input-control>
+  </div>
+        <div class="col-md-6">
+                <app-input-control type="number" label="" [(ngModel)]="__ientAddress.poBoxNo"
+                        [oldValue]="__oldValue?.PoBoxNo" (onChange)="updateAddress()" [maxLength]="20"
+                        name="{{type}}poBoxNo" [maxLength]="20" [btnClicked]="__btnClicked"></app-input-control>
+        </div>
+</row>
+}

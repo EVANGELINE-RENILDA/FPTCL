@@ -1,0 +1,164 @@
+<div class="text-icon d-flex" (click)="createBankDetail()">
+    <ion-icon name="add-outline"></ion-icon>
+    <div>Add Bank</div>
+</div>
+<ng-template #bankDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="dialog-header-icon" src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer
+                <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon class="arrow-icon"
+                    src="assets/icons/arrow.svg"></ion-icon>
+                Create Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveBankDetails()"
+                        appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearBankDetails()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="doClose()"
+                        appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="p10">
+                        <div class="view-label-container-title mb26">
+                            Enter Bank Code and to continue
+                        </div>
+                        <form #q="ngForm">
+                            <row>
+                                <div class="col-md-8">
+                                    <form #x="ngForm" class="d-flex align-items-center"
+                                        (ngSubmit)="viewBankDetailsBasedOnBankCode(x)">
+                                        <div class="col-md-6">
+                                            <app-input-control label="Bank Code" [errorTrue]="errorTrue"
+                                                [required]="true" [(ngModel)]="bankCodeValue" [maxLength]="20"
+                                                name="bankCodeValue"></app-input-control>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="submit" class="info-btn">
+                                                Get Info<ion-icon class="pl10px" name="information-outline"></ion-icon>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </row>
+                            @if(createNewBankInfoValues){
+
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header">Bank Information</div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26">
+                                                    <app-input-control type="text" label="Bank Name"
+                                                        [(ngModel)]="customerBank.ientBank.bankName"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="50"
+                                                        [btnClicked]="
+                              this.customerBank.editableFlag === 'N'
+                            " name="bankName"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12 mb26">
+                                                    <app-input-control type="text" [errorTrue]="errorTrue"
+                                                        [required]="true" label="Bank Code"
+                                                        [(ngModel)]="customerBank.ientBank.bankCode" [btnClicked]="true"
+                                                        [maxLength]="20" name="bankCode"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12 mb26">
+                                                    <view-label label="Branch" value="{{ branchName }}"></view-label>
+                                                </div>
+
+                                                <!-- <div class="col-md-12 mb26">
+                          <app-input-control
+                            type="text"
+                            label="IFSC Code"
+                            [(ngModel)]="customerBank.ientBank.ifscCode"
+                            [maxLength]="20"
+                            [errorTrue]="errorTrue"
+                            [required]="true"
+                            [btnClicked]="
+                              this.customerBank.editableFlag === 'N'
+                            "
+                            name="ifscCode"
+                          ></app-input-control>
+                        </div> -->
+                                                <div class="col-md-12 mb26">
+                                                    <app-input-control type="text" label="Swift Code"
+                                                        [(ngModel)]="customerBank.ientBank.swiftCode"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="20"
+                                                        [btnClicked]="
+                              this.customerBank.editableFlag === 'N'
+                            " name="swiftCode"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12 mb26">
+                                                    @if(this.customerBank.ientBank.branchTypeValue ===
+                                                    'BRNOF'){
+                                                    <app-input-control type="select" label="Head Office Bank"
+                                                        [items]="initialData.getHeadOfficeBankDDL.DDLBank" key="id"
+                                                        keyName="code" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="
+                              this.customerBank.editableFlag === 'N'
+                            " [(ngModel)]="customerBank.ientBank.headOfficeBankId"
+                                                        name="headOfficeBankId"></app-input-control>
+                                                    }
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header">Additional Information</div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26">
+                                                    <app-input-control type="number" label="Account No"
+                                                        [(ngModel)]="customerBank.accountNo" name="accountNo"
+                                                        [errorTrue]="errorTrue" [required]="true"
+                                                        [maxLength]="20"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12 mb26">
+                                                    <app-input-control type="date" label="Effective Date"
+                                                        [(ngModel)]="customerBank.effectiveDate"
+                                                        name="effectiveDate"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12 mb26">
+                                                    <app-input-control type="select" label="Account Status"
+                                                        [(ngModel)]="customerBank.statusValue" name="statusValue"
+                                                        [errorTrue]="errorTrue" [required]="true" [btnClicked]="true"
+                                                        [items]="initialData.DDLValues.DDLActiveAndInActive"
+                                                        key="constant" keyName="description"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header">Bank Address</div>
+                                        <div class="box-pad">
+                                            <app-address-edit [ientAddress]="customerBank.ientBank.ientAddress"
+                                                [btnClicked]="this.customerBank.editableFlag === 'N'"
+                                                [errorTrue]="errorTrue" type="bank"></app-address-edit>
+                                        </div>
+                                    </div>
+                                </div>
+                            </row>
+                            }
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+    </div>
+</ng-template>

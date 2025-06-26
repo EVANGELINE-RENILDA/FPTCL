@@ -1,0 +1,1382 @@
+<div class="content-wrapper">
+    <div class="card">
+        <div class="mb15"></div>
+        <row>
+
+            <div class="col-md-6 border-right">
+                <div class="view-label-container-title mb26">
+                    <div class="view-label-container-title ">
+                        <ion-icon src="assets/icons/accordian/application.svg" class="pr5"></ion-icon>Application
+                        Information
+                    </div>
+                </div>
+                <row>
+                    <div class="col-md-6 mb15">
+                        <view-label label="Ref No" value="4561203"></view-label>
+                    </div>
+                    <div class="col-md-6 mb15">
+                        <view-label label="Type" value="New"></view-label>
+                    </div>
+                    <div class="col-md-6 mb15">
+                        <view-label label="Stage" value="Stage1"></view-label>
+                    </div>
+                    <div class="col-md-6 mb15">
+                        <view-label label="Application Status" value="Obtaining Document From Client"></view-label>
+                    </div>
+                    <div class="col-md-6 mb15">
+                        <view-label label="Action Status" status="PEVRI"
+                            statusValue="Pending Verification"></view-label>
+                    </div>
+                    <div class="col-md-6 mb15">
+                        <view-label label="Applied Date" value="12/12/2020"></view-label>
+                    </div>
+                    <div class="col-md-6 mb15">
+                        <view-label label="Lead Ref No" value="dss"></view-label>
+                    </div>
+
+                </row>
+            </div>
+            <div class="col-md-3 border-right">
+                <div class="view-label-container-title mb26">
+                    <div class="view-label-container-title ">
+                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                        Client Information
+                    </div>
+                </div>
+                <row>
+                    <div class="col-md-12 mb15">
+                        <view-label label="Name" value="Shaji"></view-label>
+                    </div>
+                    <div class="col-md-12 mb15">
+                        <view-label label="DOB" value="12/05/2023"></view-label>
+                    </div>
+                    <div class="col-md-12 mb15">
+                        <view-label label="DOD(Age)" value="15/05/2024"></view-label>
+                    </div>
+                    <div class="col-md-12 mb15">
+                        <view-label label="BRN" value="BRN45623018"></view-label>
+                    </div>
+                </row>
+            </div>
+            <div class="col-md-3">
+                <div class="view-label-container-title mb26">
+
+                    <ion-icon src="assets/icons/estate.svg" class="pr5"></ion-icon>
+                    Estate Information
+
+                </div>
+                <row>
+                    <div class="col-md-12 mb15">
+                        <view-label label="Estate No" value="EST04561203"></view-label>
+                    </div>
+                    <div class="col-md-12 mb15">
+                        <view-label label="File Number" value="FIL45680234"></view-label>
+                    </div>
+                    <div class="col-md-12 mb15">
+                        <view-label label="Cash Amount" value="472.02"></view-label>
+                    </div>
+                    <div class="col-md-12 mb15">
+                        <view-label label=" Non Cash Amount" value="321.06"></view-label>
+                    </div>
+                    <div class="col-md-12 mb15">
+                        <view-label label="Total Benificiary" value="970.24"></view-label>
+                    </div>
+                </row>
+            </div>
+
+        </row>
+    </div>
+    <div class="d-flex bottom-border">
+        <div (click)="selectedTabChange(1)" [ngClass]="{'hori-active': activeValue1 === true}" class="horizontal-tab">
+            Application</div>
+        <div (click)="selectedTabChange(2)" [ngClass]="{'hori-active': activeValue2 === true}" class="horizontal-tab">
+            Process
+        </div>
+    </div>
+    @if(selectedTabValue === '1'){
+    <accordion>
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/trust.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Estate Application</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                        <row>
+                            <div class="col-md-6 ">
+                                <div class="view-label-container-title mb26">
+
+                                    <ion-icon src="assets/icons/estate.svg" class="pr5"></ion-icon>
+                                    Estate Information
+
+                                </div>
+                                <div class="border-right">
+                                    @if(estateInfoEdit === false){
+
+                                    <row>
+                                        <div class="col-md-6 mb15"><view-label label="Application Date"
+                                                value="25/08/2023"></view-label></div>
+                                        <div class="col-md-6 mb15"><view-label label="Entered By"
+                                                value="Estate Officer"></view-label>
+                                        </div>
+                                        <div class="col-md-6 mb15"><view-label label="Applied By"
+                                                value="Trust Officer"></view-label>
+                                        </div>
+                                        <div class="col-md-6 mb15"><view-label label="Entered Date"
+                                                value="26/08/2024"></view-label>
+                                        </div>
+                                        <div class="col-md-6 mb15"><view-label label="Applied Date"
+                                                value="28/04/2024"></view-label>
+                                        </div>
+                                        <div class="col-md-6 mb15"><view-label label="Branch"
+                                                value="Port Suva"></view-label>
+                                        </div>
+                                        <div class="col-md-12 end">
+                                            <app-icon-button name="edit" (click)="editEstateDetils()"
+                                                toolTip="Edit"></app-icon-button>
+                                        </div>
+                                    </row>
+                                    }
+                                    @else {
+                                    <row>
+                                        <div class="col-md-6 "><app-input-control label="Application Date"
+                                                value=""></app-input-control></div>
+                                        <div class="col-md-6 "><app-input-control label="Entered By"
+                                                value=""></app-input-control>
+                                        </div>
+                                        <div class="col-md-6 "><app-input-control label="Applied By"
+                                                value=""></app-input-control>
+                                        </div>
+                                        <div class="col-md-6 "><app-input-control label="Entered Date"
+                                                value=""></app-input-control>
+                                        </div>
+                                        <div class="col-md-6 "><app-input-control label="Applied Date"
+                                                value=""></app-input-control>
+                                        </div>
+                                        <div class="col-md-6 "><app-input-control label="Branch"
+                                                value=""></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 end d-flex gap-10">
+                                            <app-icon-button name="save" toolTip="Save"
+                                                (click)="saveEstateDetils()"></app-icon-button>
+                                            <app-icon-button name="clear" toolTip="Clear"
+                                                (click)="saveEstateDetils()"></app-icon-button>
+                                        </div>
+                                    </row>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-6 ">
+                                <div class="view-label-container-title mb26">
+                                    <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                    Death Notice
+                                </div>
+                                <row>
+                                    <div class="col-md-6 mb15">
+                                        <app-input-control label="Death Notice Ref No" type="text"
+                                            [search]="true"></app-input-control>
+                                    </div>
+                                    <div class="col-md-6 mb15"></div>
+                                    <div class="col-md-6 mb15"><view-label label="Person Name"
+                                            value="Seth Rollins"></view-label>
+                                    </div>
+                                    <div class="col-md-6 mb15"><view-label label="Notice Date"
+                                            value="23/02/2020"></view-label>
+                                    </div>
+                                    <div class="col-md-6 mb15"><view-label label="Date Of Death"
+                                            value="02/05/2023"></view-label>
+                                    </div> 
+                                    <div class="col-md-6"><view-label label="Entered Date"
+                                            value="12/03/2024"></view-label></div>
+                                    <div class="col-md-6"><view-label label="Entered By"
+                                            value="Estate Officer"></view-label></div>
+                                    <div class="col-md-6"><view-label label="Branch" value="Port Villa"></view-label>
+                                    </div>
+
+                                </row>
+                            </div>
+                        </row>
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon name="notifications-outline"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div> Deceased Person Details</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                        @if(editDecesedEstate === false){
+                        <row>
+                            <div class="col-md-3 border-right">
+                                <view-label label="First Name" class="mb15" value="Mahendra"></view-label>
+                                <view-label label="Middle Name" class="mb15" value="Singh"></view-label>
+                                <view-label label="Last Name" class="mb15" value="Dhoni"></view-label>
+                                <view-label label="Date Of Birth" class="mb15" value="15/05/1980"></view-label>
+                                <view-label label="Gender" class="mb15" value="Male"></view-label>
+                                <view-label label="Maritial Status" class="mb15" value="Married"></view-label>
+                            </div>
+                            <div class="col-md-3 border-right pl15">
+                                <view-label label="Father Name" class="mb15" value="Siddhu Singh"></view-label>
+                                <view-label label="Mother Name" class="mb15" value="Devaki Devi"></view-label>
+                                <view-label label="Notified Date" class="mb15" value="14/02/2019"></view-label>
+                                <view-label label="Client BRN" class="mb15" value="BRN4562031"></view-label>
+                                <view-label label="Date Of Death" class="mb15" value="15/05/2024"></view-label>
+                                <view-label label="Death Certificate Ref No" class="mb15"
+                                    value="DST45620842"></view-label>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="document-pad">
+                                    <div class="doc-header">
+                                        <row class="row-w100">
+
+                                            <row class="row-w100">
+                                                <div class="col-md-4">Document Name</div>
+                                                <div class="col-md-3">File Name</div>
+                                                <div class="col-md-3">File Type</div>
+                                                <div class="col-md-2">Size</div>
+
+                                            </row>
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 end">
+                                <app-icon-button name="edit" (click)="editDecesedEstateDetils()"
+                                    toolTip="Edit"></app-icon-button>
+                            </div>
+                        </row>
+                        }
+                        @else{
+                        <row>
+                            <div class="col-md-4 border-right">
+                                <app-input-control type="" label="First Name"></app-input-control>
+                                <app-input-control type="" label="Middle Name"></app-input-control>
+                                <app-input-control type="" label="Last Name"></app-input-control>
+                                <app-input-control type="date" label="Date Of Birth"></app-input-control>
+                                <app-input-control type="select" label="Gender"></app-input-control>
+                                <app-input-control type="select" label="Maritial Status"></app-input-control>
+                            </div>
+                            <div class="col-md-4 pl15 border-right">
+                                <app-input-control type="" label="Father Name" class="mb15"
+                                    value=""></app-input-control>
+                                <app-input-control type="" label="Mother Name" class="mb15"
+                                    value=""></app-input-control>
+                                <app-input-control type="date" label="Notified Date" class="mb15"
+                                    value=""></app-input-control>
+                                <app-input-control type="" label="Client BRN" class="mb15" value=""></app-input-control>
+                                <app-input-control type="date" label="Date Of Death" class="mb15"
+                                    value=""></app-input-control>
+                                <app-input-control type="" label="Death Certificate Ref No" class="mb15"
+                                    value=""></app-input-control>
+                            </div>
+                            <div class="col-md-4 ">
+                                <div class="view-label-container-title mb26">
+                                    <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                    Death Certificate
+                                </div>
+                                <app-drop-zone type="1" fileType="pdf" [accept]="accept"></app-drop-zone>
+                            </div>
+                            <div class="col-md-12 end d-flex gap-10">
+                                <app-icon-button name="save" toolTip="Save"
+                                    (click)="saveDecesedEstateDetils()"></app-icon-button>
+                                <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                            </div>
+                        </row>
+                        }
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon name="notifications-outline"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Conduct Initial Interview</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="content-wrapper">
+                    <row>
+                        <div class="col-md-4"> <view-label label="Estate Officer Name"
+                                value="Trust Officer"></view-label>
+                        </div>
+                        <div class="col-md-4"> <view-label label="Application Status" value="24 May 2024"></view-label>
+                        </div>
+                        <div class="col-md-4"> <view-label label="Application Stage" value=" 5 Days"></view-label>
+                        </div>
+                    </row>
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+                            <app-table [columns]="conductInitialColumns" [columnsName]="conductInitialColumnsName"
+                                [hasPagination]="true" [dataSource]="conductInitialTableData" [hideSelectAll]="true">
+                                <ng-template cellDef="action" let-element>
+                                    <div class="d-flex gap-5">
+                                        <app-icon-button name="doc-view" toolTip="View"></app-icon-button>
+                                        <app-icon-button name="doc-download" toolTip="Download"></app-icon-button>
+                                        <app-icon-button name="doc-delete" toolTip="Delete"></app-icon-button>
+                                    </div>
+
+                                </ng-template>
+                                <ng-template cellDef="docName" let-element>
+
+                                    <div class="w400">{{element.docName}}</div>
+                                </ng-template>
+                            </app-table>
+                        </div>
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <div class="card-accordian w100">
+            <div>
+                <row className=" card-header">
+                    <div class="col-md-7 pl8px">
+                        <div class="d-flex">
+                            <div class="accordion-title-card pr10 flex-none border-right pointer"
+                                (click)="openStatusValue(1)" [ngClass]="{'active-tab': selectedTab === 1}">
+                                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Deceased Info</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card px10 pointer flex-none border-right pointer"
+                                (click)="openStatusValue(2)" [ngClass]="{'active-tab': selectedTab === 2}">
+                                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Marriage Info</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card px10 pointer flex-none border-right"
+                                (click)="openStatusValue(3)" [ngClass]="{'active-tab': selectedTab === 3}">
+                                <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Will Info</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card px10 pointer flex-none" (click)="openStatusValue(4)"
+                                [ngClass]="{'active-tab': selectedTab === 4}">
+                                <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Beneficiary Info</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card px10 pointer flex-none" (click)="openStatusValue(5)"
+                                [ngClass]="{'active-tab': selectedTab === 5}">
+                                <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Executor Info</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5" (click)="openAccordian(this.accordianOpen)">
+
+                        <div class="end btn-accordian">
+                            @if(this.accordianOpen === true){
+
+                            <div class="rotate">
+                                <ion-icon src="assets/icons/down.svg"></ion-icon>
+                            </div>
+                            }
+                            @else{
+                            <ion-icon src="assets/icons/down.svg"></ion-icon>
+                            }
+                        </div>
+
+
+                    </div>
+                </row>
+            </div>
+            @if(this.accordianOpen === true){
+            @if(this.selectedTab === 1){
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper p16">
+
+                    <row>
+                        <div class="col-md-6 border-right p20">
+                            <div class="d-flex align-items-center address-header mb26">
+                                <ion-icon src="assets/icons/customer_info.svg"></ion-icon>
+                                <view-label value="Deceased Person Information" class="pl10"></view-label>
+                            </div>
+                            <row>
+                                <div class="col-md-6">
+                                    <div class="mb20">
+                                        <view-label label="Deceased Person Full Name"
+                                            value="Mr.John Ambrose"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Father Name" value="Mosese"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Mother Name" value="Josefa"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Occupation" value="Agriculture"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Employee Name" value="Pedro"></view-label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div class="mb20">
+                                        <view-label label="Date of Death" value="08 May 1970"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Place of Death" value="08 May 2020"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Nationality" value="Fijian"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Place of Demicile" value="Nevala"></view-label>
+                                    </div>
+                                </div>
+                            </row>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="v-flex h100 justify-content-between">
+                                <div class=" ">
+                                    <div class="d-flex align-items-center address-header mb26">
+                                        <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                        <view-label value="Address" class="pl10"></view-label>
+                                    </div>
+                                    <div class="pl10">
+                                        <view-label label="Address" value=" 3 James Madhavan St,"></view-label>
+                                    </div>
+                                    <div class="pl10">
+                                        <view-label value="Garden City,"></view-label>
+                                    </div>
+                                    <div class="mb20 pl10">
+                                        <view-label value="Vatuwaqa - 9980-999"></view-label>
+                                    </div>
+                                </div>
+                                <div class="end">
+                                    <app-icon-button name="edit" toolTip="Edit"
+                                        (click)="editInfo('deceased')"></app-icon-button>
+                                </div>
+                            </div>
+                        </div>
+                    </row>
+                </div>
+            </div>
+            }
+            @if(this.selectedTab === 2){
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper p16">
+
+                    <row>
+                        <div class="col-md-12">
+                            <div class="d-flex align-items-center address-header mb26">
+                                <ion-icon src="assets/icons/customer_info.svg"></ion-icon>
+                                <view-label value="Marriage Information" class="pl10"></view-label>
+                            </div>
+                            <row>
+                                <div class="mb20 col-md-4">
+                                    <view-label label="Place of Marriage" value="Navala"></view-label>
+                                </div>
+                                <div class="mb20 col-md-4">
+                                    <view-label label="Father Name" value="William"></view-label>
+                                </div>
+                                <div class="mb20 col-md-4">
+                                    <view-label label="Married To" value="Ana"></view-label>
+                                </div>
+                                <div class="mb20 col-md-4">
+                                    <view-label label="Maiden Name of deceased if any" value="Joe"></view-label>
+                                </div>
+                                <div class="mb20 col-md-4">
+                                    <view-label label="Is spouse still leaving?" value="No"></view-label>
+                                </div>
+                                <div class="mb20 col-md-4">
+                                    <view-label label="Place of Death" value="20 Jan 1955"></view-label>
+                                </div>
+                                <div class="mb20 col-md-4">
+                                    <view-label label="Date of Death" value="25 Mar 2010"></view-label>
+                                </div>
+                            </row>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="end">
+                                <app-icon-button name="edit" toolTip="Edit"
+                                    (click)="editInfo('marriage')"></app-icon-button>
+                            </div>
+                        </div>
+
+                    </row>
+                </div>
+            </div>
+            }
+            @if(this.selectedTab === 3){
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper">
+
+                    <app-table [columns]="willColumns" [columnsName]="willColumnsName" [hasPagination]="true"
+                        [hideSelectAll]="true">
+
+
+                        <ng-template cellDef="action" let-element>
+                            <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                        </ng-template>
+                        <ng-template #slotRight>
+                            <app-icon-button name="add" toolTip="Add New"
+                                (click)="editInfo('willInfo')"></app-icon-button>
+                        </ng-template>
+                    </app-table>
+                </div>
+            </div>
+            }
+            @if(this.selectedTab === 4){
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper">
+
+                    <app-table [columns]="binificiaryColumns" [columnsName]="binificiaryColumnsName"
+                        [hasPagination]="true" [hideSelectAll]="true">
+
+
+                        <ng-template cellDef="action" let-element>
+                            <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                        </ng-template>
+                        <ng-template #slotRight>
+                            <app-icon-button name="add" toolTip="Add New"
+                                (click)="editInfo('benificiary')"></app-icon-button>
+                        </ng-template>
+                    </app-table>
+                </div>
+            </div>
+            }
+            @if(this.selectedTab === 5){
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper p16">
+
+                    <row>
+                        <div class="col-md-6 border-right p20">
+                            <div class="d-flex align-items-center address-header mb26">
+                                <ion-icon src="assets/icons/customer_info.svg"></ion-icon>
+                                <view-label value="Executor Information" class="pl10"></view-label>
+                            </div>
+                            <row>
+                                <div class="col-md-6">
+
+                                    <div class="mb20">
+                                        <view-label label="First Name" value="Mahendra"></view-label>
+
+
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Middle Name" value="Singh"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Last Name" value="Dhoni"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Is Deceased" value="Y"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Date Of Death" value="12/12/2024"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Place Of Death" value="Suva"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Occupation" value="Suva"></view-label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div class="mb20">
+                                        <view-label label="Relationship to Deceased" value="08 May 1970"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Date Of Birth" value="08 May 2020"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Is Female" value="N"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Marital Status" value="Single"></view-label>
+                                    </div>
+                                    <div class="mb20">
+                                        <view-label label="Is The Executor Benificiary or Spouse Of Benificary"
+                                            value="Y"></view-label>
+                                    </div>
+                                </div>
+                            </row>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="v-flex h100 justify-content-between">
+                                <div class=" ">
+                                    <div class="d-flex align-items-center address-header mb26">
+                                        <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                        <view-label value="Address" class="pl10"></view-label>
+                                    </div>
+                                    <div class="pl10">
+                                        <view-label label="Address" value=" 3 James Madhavan St,"></view-label>
+                                    </div>
+                                    <div class="pl10">
+                                        <view-label value="Garden City,"></view-label>
+                                    </div>
+                                    <div class="mb20 pl10">
+                                        <view-label value="Vatuwaqa - 9980-999"></view-label>
+                                    </div>
+                                </div>
+                                <div class="end">
+                                    <app-icon-button name="edit" toolTip="Edit"
+                                        (click)="editInfo('executor')"></app-icon-button>
+                                </div>
+                            </div>
+                        </div>
+                    </row>
+                </div>
+            </div>
+            }
+            }
+
+        </div>
+        <div class="p5px"></div>
+
+        <div class="card-accordian w100">
+            <div class="card-header">
+                <row>
+                    <div class="col-md-7 pl8px">
+                        <div class="d-flex">
+                            <div class="accordion-title-card pr10 flex-none border-right pointer"
+                                (click)="openStatusValue1(1)" [ngClass]="{'active-tab': selectedTab1 === 1}">
+                                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Assets</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card px10 pointer flex-none border-right pointer"
+                                (click)="openStatusValue1(2)" [ngClass]="{'active-tab': selectedTab1 === 2}">
+                                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Liablity Info</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card px10 pointer flex-none border-right"
+                                (click)="openStatusValue1(3)" [ngClass]="{'active-tab': selectedTab1 === 3}">
+                                <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Funeral Info</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card px10 pointer flex-none" (click)="openStatusValue1(4)"
+                                [ngClass]="{'active-tab': selectedTab1 === 4}">
+                                <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Declaration</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5" (click)="openAccordian1(this.accordianOpen1)">
+
+                        <div class="end btn-accordian">
+                            @if(this.accordianOpen === true){
+
+                            <div class="rotate">
+                                <ion-icon src="assets/icons/down.svg"></ion-icon>
+                            </div>
+                            }
+                            @else{
+                            <ion-icon src="assets/icons/down.svg"></ion-icon>
+                            }
+                        </div>
+
+
+                    </div>
+                </row>
+            </div>
+            @if(this.accordianOpen1 === true){
+            @if(this.selectedTab1 === 1){
+            <div class="mb20"></div>
+            <row>
+                <div class="col-md-3">
+                    <view-label label="Care Taker Name" value="John"></view-label>
+                </div>
+                <div class="col-md-3">
+                    <view-label label="Renumeration" value="7892"></view-label>
+                </div>
+                <div class="col-md-3">
+                    <view-label label="Is Employed Elsewhere" value="N"> </view-label>
+                </div>
+                <div class="col-md-3">
+                    <view-label label="Employer Detail" value="-"></view-label>
+                </div>
+            </row>
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper">
+                    <app-table [columns]="conductInitialColumns" [columnsName]="conductInitialColumnsName"
+                        [hasPagination]="true" [dataSource]="assetsTableData" [hideSelectAll]="true">
+                        <ng-template cellDef="action" let-element>
+                            <div class="d-flex gap-5">
+                                <app-icon-button name="doc-view" toolTip="View"></app-icon-button>
+                                <app-icon-button name="doc-download" toolTip="Download"></app-icon-button>
+                                <app-icon-button name="doc-delete" toolTip="Delete"></app-icon-button>
+                            </div>
+
+                        </ng-template>
+                        <!-- <ng-template cellDef="docName" let-element>
+
+                            <div class="w400">{{element.docName}}</div>
+                        </ng-template> -->
+                    </app-table>
+                </div>
+            </div>
+            }
+            @if(this.selectedTab1 === 2){
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper">
+                    <div class=" px16">Give particulars of deceased's labilities (other than funerali. Nil. All
+                        accounts should be
+                        certified as correct for payment for otherwise and forwarded to the Public Trustee. If paid
+                        since death, receipts should be submitted for noting</div>
+                    <app-table [columns]="liablityColumns" [columnsName]="liablityColumnsName" [hasPagination]="true"
+                        [hideSelectAll]="true">
+                        <ng-template #slotRight> <app-icon-button name="add" (click)="editInfo('liablity')"
+                                toolTip="Create"></app-icon-button></ng-template>
+                    </app-table>
+                    <div class="mb26"></div>
+                    <div class="col-md-12">
+                        <div class="sub-box">Who Can Best Certify to Correctness or Otherwise of Claims?</div>
+                        <app-input-control label="" [maxLength]="250" type="textarea"
+                            className="notes"></app-input-control>
+                    </div>
+                    <div class="mb20"></div>
+                    <div class=" px16">Is there any existing fire for other) insurance cover in respect of
+                        reality,
+                        famiture, piano, refrigerator, wireless, motor car etc or worker's compensation? If so, give
+                        details of a company, amount premium, expiry date, whereabouts of policy.</div>
+                    <app-table [columns]="liablityColumns1" [columnsName]="liablityColumnsName1" [hasPagination]="true"
+                        [hideSelectAll]="true">
+                    </app-table>
+                    <div class="broder-bottom"></div>
+                    <div class="mb20"></div>
+                    <div class="px16">
+                        <div>Was deceased aperson or agent in any capacity?, If so give paticulars</div>
+                        <app-input-control label="" [maxLength]="250" type="textarea"
+                            className="notes"></app-input-control>
+                    </div>
+                    <div class="px16">
+                        <div>
+                            Did deceased at the time of death hold any property joined any other person? If so give
+                            paticulars of property and joint owner.
+                            Also
+                        </div>
+                        <app-input-control label="" [maxLength]="250" type="textarea"
+                            className="notes"></app-input-control>
+                    </div>
+
+                </div>
+            </div>
+            }
+            @if(this.selectedTab1 === 3){
+            ghjghjh
+            }
+            @if(this.selectedTab1 === 4){
+            ghjghjhjgh1
+            }
+            }
+        </div>
+        <div class="p5px"></div>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Contact Initial InterView</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Obtain Detail Instruction</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Identify and Validate Debt</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Conform Asset</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Assessment of Valuation Summary</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Obtain Grant Of Probate or Letter Of Administration</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Obtain Tin for The Estate</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Collect Estate</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Assessment of Valuation Report Summary</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon name="receipt-outline"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Receipt Asset</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Generate SOA</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Identify,Validate and Pay Family Provision Claims</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Vetting Of Document Checklist</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Arrange For Payment</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Make Payments</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Distribute Assets</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Distribute Residue</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Prepare Estate Closure Memo</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon name="document-outline"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Close Estate File</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+    </accordion>
+    }
+    @if(selectedTabValue === '2'){
+    <accordion>
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon name="notifications-outline"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Notes</div>
+                            <div class="accordian-title-count">3</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                        <div class="p16px pb26 wrap-content">
+                            <div class="justify-content-end d-flex">
+                                <app-icon-button name="add" toolTip="Create" (click)="createNotes()"
+                                    appButtonAccess="CrmCustAppAddNoteBtn"></app-icon-button>
+                            </div>
+                            <div class="border-bottom  notes-list">
+                                <div class="mx10">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Delectus
+                                    amet ducimus sint deserunt similique, exercitationem quas voluptatem labore
+                                    praesentium, vel debitis. Iure nulla animi suscipit.</div>
+                                <div class="d-flex justify-content-end notes-context">
+                                    <div style="padding-right:5px ;">
+                                        Raj</div>
+                                    <div class=" notes-border-left">
+                                        18/09/2000
+                                    </div>
+                                    <div style="padding-right:5px ;"></div>
+                                    <div class=" notes-border-left status-PNDSU">
+                                        Pending Submission
+                                    </div>
+                                    <div class="card-1-header-label px-2 ">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Assigned Officer</div>
+                            <div class="accordian-title-count">0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                        <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName">
+                            <ng-template cellDef="statusDescription" let-element>
+                                <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+                            </ng-template>
+                            <ng-template cellDef="assignedDate" let-element>
+                                {{element.assignedDate}}
+                            </ng-template>
+                            <!-- @if(customerUpdate.assignedOfficerFlag === 'True'){ -->
+                            <ng-template #slotRight>
+                                <div class="d-flex align-items-center">
+
+                                    <form #p="ngForm" class="col-md-10 w250"><app-input-control
+                                            type="select"></app-input-control></form>
+                                    <div class="col-md-2">
+                                        <div class="col-md-2"><app-icon-button name="reassign"
+                                                toolTip="Reassign"></app-icon-button></div>
+                                    </div>
+
+                                </div>
+                            </ng-template>
+                            <!-- } -->
+                        </app-table>
+                    </div>
+                </div>
+
+            </accordion-body>
+        </accordion-item>
+    </accordion>
+    <div class="card-accordian w100">
+        <div class="card-header">
+            <row className=" card-header">
+                <div class="col-md-5 pl8px">
+
+                    <div class="d-flex">
+                        <div class="accordion-title-card pr10 flex-none border-right pointer"
+                            [ngClass]="{'active-tab': showStatusHistory === true}" (click)="openStatusValueProcess(1)">
+                            <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                            <div class="accordion-title-content">
+                                <div>Status History</div>
+                                <div class="accordian-title-count">2</div>
+                            </div>
+                        </div>
+                        <div class="accordion-title-card pl10 pointer" (click)="openStatusValueProcess(2)"
+                            [ngClass]="{'active-tab': showEmailHistory === true}">
+                            <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                            <div class="accordion-title-content">
+                                <div>Communication History</div>
+                                <div class="accordian-title-count">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7" (click)="openAccordianProcess(this.accordianOpen)">
+
+                    <div class="end btn-accordian">
+                        @if(this.accordianOpen === true){
+
+                        <div class="rotate">
+                            <ion-icon src="assets/icons/down.svg"></ion-icon>
+                        </div>
+                        }
+                        @else{
+                        <!-- <div class="rotate-180"> -->
+                        <ion-icon src="assets/icons/down.svg"></ion-icon>
+                        <!-- </div> -->
+                        }
+                    </div>
+
+
+                </div>
+            </row>
+        </div>
+        @if(this.accordianOpen === true){
+        @if(this.showStatusHistory === true){
+        <!-- <div class="acc-card-content"> -->
+        <div class="status-padding">
+            <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+        </div>
+        <!-- </div> -->
+        }
+        @else if(this.showEmailHistory === true){
+        <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+
+                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName" [hasPagination]="true"
+                    [dataSource]="emailHistoryTableData" [hideSelectAll]="true">
+                    <ng-template cellDef="toEmailId" let-element>
+                        {{element.ientCommunicationTracking.toEmailId}}
+                    </ng-template>
+                    <ng-template cellDef="sentDate" let-element>
+                        {{element.ientCommunicationTracking.sentDate |
+                        appDate
+                        }} |
+                        {{element.ientCommunicationTracking.sentDate
+                        | appDate: 'hh:mm a'}}
+                    </ng-template>
+                    <ng-template cellDef="sentStatusDescription" let-element>
+                        <div class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                            {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+                    </ng-template>
+
+                    <ng-template cellDef="action" let-element>
+                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                    </ng-template>
+                </app-table>
+            </div>
+        </div>
+        }
+        }
+
+    </div>
+    <div class="p5px"></div>
+    }
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon src="assets/icons/estate.svg"></ion-icon>
+                <div class="screen-text">Estate Application</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

@@ -1,0 +1,80 @@
+.bgff {
+  background: #fff;
+}
+.fin-header {
+  font-size: 14px;
+  font-weight: 500;
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.pr20 {
+  padding-right: 20px;
+}
+
+.w200 {
+  width: 200px;
+}
+
+.box-pad-1 {
+  padding: 8px;
+}
+.finance-header {
+  gap: 15px;
+  height: 54px;
+  align-items: center;
+  display: flex;
+  font-size: 20px;
+  background: #f2f2f2;
+  padding: 10px;
+  font-weight: 600;
+  color: #0079c4;
+  ion-icon {
+    font-size: 24px;
+  }
+}
+.finance-sub-menus {
+  padding-left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 10px;
+  font-size: 14px;
+}
+.pointer-1 {
+  &:hover {
+    color: #0079c4;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+.sub-box {
+  height: 100%;
+  background: #f2f2f2;
+  padding: 12px;
+  .header {
+    height: 33px;
+    align-items: center;
+    padding-top: 4px;
+    border-bottom: 1px solid #dbe0e1;
+    padding-bottom: 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0079c4;
+    margin-bottom: 10px;
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+}
+.pb16 {
+  padding-bottom: 16px;
+}
+.mb200 {
+  margin-bottom: 220px;
+}

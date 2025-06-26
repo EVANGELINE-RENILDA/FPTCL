@@ -1,0 +1,639 @@
+<div class="content-wrapper" appAccess="CULED" [parentId]="pageId">
+  <app-multi-page-url [id]="id" url="/home/crm/lead/detail"></app-multi-page-url>
+
+  <accordion>
+    <accordion-item [isOpen]="true">
+      <accordion-header>
+        <div class="accordion-header-content">
+          <div class="accordion-title open-visible">
+            <ion-icon src="assets/icons/accordian/lead.svg"></ion-icon>
+            <div class="">Lead Information</div>
+          </div>
+          <div class="accordion-title open-hide">
+            <row class="row-w100">
+              <div class="col-md-2"> <view-label label="Lead No" value="{{leadDetails.leadRefNo}}"></view-label>
+              </div>
+              <div class="col-md-2"> <view-label label="Lead Type"
+                  value="{{leadDetails.leadTypeDescription}}"></view-label>
+              </div>
+              <div class="col-md-3"> <view-label label="Product Type"
+                  value="{{leadDetails.productTypeDescription}}"></view-label>
+              </div>
+
+              <div class="col-md-3"> <view-label label="Lead Data | Time"
+                  value="{{leadDetails.leadDatetime}}"></view-label></div>
+              <div class="col-md-2"> <view-label label="Status" class="status-{{leadDetails.statusValue}}"
+                  value="{{leadDetails.statusDescription}}"></view-label></div>
+            </row>
+          </div>
+        </div>
+      </accordion-header>
+      <accordion-body>
+        <div class="accordian-content">
+          <row>
+            <div class="col-md-5 border-right v-flex justify-content-between">
+              <row>
+                <div class="col-md-6"><view-label class="mb26" label="Lead No"
+                    value="{{leadDetails.leadRefNo}}"></view-label>
+                </div>
+                @if(leadEdit === false){
+
+                <div class="col-md-6"><view-label class="mb26" label="Lead Type"
+                    value="{{leadDetails.leadTypeDescription}}"></view-label>
+                </div>
+                }
+                @if(leadEdit === true){
+ 
+                <div class="col-md-6"><app-input-control label="Lead Type" type="select" [sort]="false"
+                    [(ngModel)]="leadDetails.leadTypeValue" name="leadTypeValue" [errorTrue]="errorTrue"
+                    [required]="true" [items]="initialData.DDLValues.DDLLeadType" key="constant"
+                    keyName="description"></app-input-control></div>
+                }
+                <div class="col-md-6"><view-label class="mb26" label="Product Type"
+                    value="{{leadDetails.productTypeDescription}}"></view-label></div>
+                <!-- <div class="col-md-12"><view-label class="mb26" label="Product Sub Type"
+                                        value="{{leadDetails.productSubTypeDescription}}"></view-label></div> -->
+                <div class="col-md-6"><view-label class="mb26" label="Lead Date | Time"
+                    value="{{leadDetails.leadDatetime}}"></view-label></div>
+                <div class="col-md-6"><view-label class="mb26" label="Assigned Department"
+                    value="{{leadDetails.assignedDepartmentDescription}}"></view-label></div>
+                <div class="col-md-6">
+                  <div class="between">
+                    <view-label class="mb26" label="Status" status="{{leadDetails.statusValue}}"
+                      statusValue="{{leadDetails.statusDescription}}">
+                    </view-label>
+
+                  </div>
+
+
+                </div>
+                .
+
+              </row>
+              @if(leadEditBtn === true){
+              @if(this.leadDetails.assignedOfficerFlag ==="True" &&
+              this.leadDetails.statusValue!=="CANCD"&&
+              this.leadDetails.statusValue !=='CLDWN'){
+              <app-icon-button name="edit" class="end p10" toolTip="Edit" appButtonAccess="CrmCustLeadAppEditBtn"
+                (click)="editLead()"></app-icon-button>
+              }
+              }
+              @if(leadEditBtn === false){
+              <div class="end gap-10">
+                @if(this.leadDetails.assignedOfficerFlag ==="True" &&
+                this.leadDetails.statusValue!=="CANCD"
+                &&
+                this.leadDetails.statusValue !=='CLDWN'){
+                <app-icon-button name="save" toolTip="Update" (click)="saveLead()"
+                  appButtonAccess="CrmCustLeadAppSaveBtn"></app-icon-button>
+                <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshLead()"
+                  appButtonAccess="CrmCustLeadAppRefreshBtn"></app-icon-button>
+                }
+              </div>
+
+              }
+            </div>
+            <div class="col-md-4 border-right">
+              <div class="">
+                <div class=" ">
+                  <div class="view-label-container-title mb26">
+                    Customer Service Information</div>
+
+
+                </div>
+                <row>
+                  <div class="col-md-12">
+                    <div class="view-type mb26">
+                      <div class="label">
+                        Service No
+                      </div>
+                      <div class="value" (click)="navigateToServiceDetail()">
+                        {{leadDetails.serviceNo}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12"> <view-label class="mb26" label="Service Type"
+                      value="{{leadDetails.serviceTypeDescription}}"></view-label>
+                  </div>
+                  <!-- <div class="col-md-12"> <view-label class="mb26" label="Branch"
+                                            value="{{leadDetails.serviceBranchDescription}}"></view-label></div> -->
+                  <div class="col-md-12"> <view-label class="mb26" label="Service Data | Time"
+                      value="{{leadDetails.servicedDateTime}}"></view-label></div>
+                  <!-- <div class="col-md-12"><view-label class="mb26" label="Service By"
+                                            value="{{leadDetails.servicedByFullName}}"></view-label></div>
+                                    <div class="col-md-12"><view-label class="mb26" label="Contact Mode"
+                                            value="{{leadDetails.serviceContactModeDescription}}"></view-label>
+                                    </div> -->
+                  <div class="col-md-12"><view-label class="mb26" label="Service Status"
+                      status="{{leadDetails.serviceStatusValue}}"
+                      statusValue="{{leadDetails.serviceStatusDescription}}"></view-label>
+                  </div>
+                </row>
+              </div>
+            </div>
+            <div class="col-md-3 ">
+              <div class="">
+                <div class=" align-items-center mb26">
+                  <div class="view-label-container-title">
+                    Customer Information</div>
+
+                </div>
+                <row>
+                  <div class="col-md-12">
+                    <div class="view-type mb26">
+                      <div class="label">Customer No</div>
+                      <div class="value" (click)="navigateToCustomerList()">
+                        {{leadDetails.customerRefNo}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12"><view-label class="mb26" label="Customer Name"
+                      value="{{leadDetails.customerName}}"></view-label></div>
+
+                  <!-- <div class="col-md-6"><view-label class="mb26" label="Date of Birth"
+                                            value="{{leadDetails.customerDateOfBirth | appDate}}"></view-label></div> -->
+                  <div class="col-md-12"><view-label class="mb26" label="Email ID"
+                      value="{{leadDetails.customerEmailId}}"></view-label></div>
+                  <!-- <div class="col-md-6"><view-label class="mb26" label="Gender"
+                                            value="{{leadDetails.customerGenderDescription}}"></view-label></div>
+                                    <div class="col-md-6"><view-label class="mb26" label="Father Name"
+                                            value="{{leadDetails.customerFatherName}}"></view-label></div>
+                                    <div class="col-md-6"><view-label class="mb26" label="Nationality"
+                                            value="{{leadDetails.customerNationality}}"></view-label></div>
+                                    <div class="col-md-6"><view-label class="mb26" label="Mother Name"
+                                            value="{{leadDetails.customerMotherName}}"></view-label></div> -->
+                  <div class="col-md-12"><view-label class="mb26" label="Contact No"
+                      value="{{leadDetails.customerContactNo}}"></view-label></div>
+                  <!-- <div class="col-md-6"><view-label class="mb26" label="Guardian Name"
+                                            value="{{leadDetails.customerGuardianName}}"></view-label></div>
+
+                                    <div class="col-md-6"><view-label class="mb26" label="Alternate Contact No"
+                                            value="{{leadDetails.customerAlternateContactNo}}"></view-label></div> -->
+                  <div class="col-md-12"><view-label class="mb26" label="Customer Status"
+                      status="{{leadDetails.customerStatusValue}}"
+                      statusValue="{{leadDetails.customerStatus}}"></view-label></div>
+
+
+
+                </row>
+
+              </div>
+            </div>
+          </row>
+
+
+
+
+        </div>
+      </accordion-body>
+    </accordion-item>
+
+    <div class="card">
+      @if(descriptionEdit === false){
+      <div class="card-header between align-items-center">
+        <div>Description</div>
+        @if(this.leadDetails.assignedOfficerFlag ==="True" && this.leadDetails.statusValue!=="CANCD" &&
+        this.leadDetails.statusValue !=='CLDWN'){
+
+        <div><app-icon-button name="edit" toolTip="Edit" appButtonAccess="CrmCustLeadAppEditBtn"
+            (click)="editDescription()"></app-icon-button></div>
+        }
+      </div>
+      <div class="card-content">
+        {{leadDetails.description ?leadDetails.description:'-'}}
+      </div>
+      }
+      @if(descriptionEdit === true){
+      <div class="between">
+        <div class="card-header">Description</div>
+        <div class="card-header end gap-10 align-items-center">
+          @if(this.leadDetails.assignedOfficerFlag ==="True" && this.leadDetails.statusValue!=="CANCD" &&
+          this.leadDetails.statusValue !=='CLDWN'){
+
+          @if(this.leadDetails.descriptionFlag === ''){
+          <app-icon-button name="save" toolTip="Save" appButtonAccess="CrmCustLeadAppSaveBtn"
+            (click)="saveLeadDescription()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearLeadDescription()"
+            appButtonAccess="CrmCustLeadAppClearBtn"></app-icon-button>
+          }
+          @else{
+          <app-icon-button name="save" toolTip="Update" (click)="saveLeadDescription()"
+            appButtonAccess="CrmCustLeadAppSaveBtn"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="openLeadDetails()"
+            appButtonAccess="CrmCustLeadAppRefreshBtn"></app-icon-button>
+          }
+          }
+        </div>
+      </div>
+      <form #x="ngForm">
+        <div class="col-md-12">
+          <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [required]="true" label=""
+            placeholder="Enter Lead Description" [(ngModel)]="leadDetails.description" [maxLength]="250"
+            name="description"></app-input-control>
+        </div>
+      </form>
+      }
+    </div>
+    <div style="padding: 10px;"></div>
+
+    <accordion-item>
+      <accordion-header>
+        <div class="accordion-header-content">
+          <div class="accordion-title">
+            <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+            <div class="accordion-title-content">
+              <div>Notes</div>
+              <div class="accordian-title-count">{{notesList.entLeadNotesList.length}}</div>
+            </div>
+          </div>
+        </div>
+      </accordion-header>
+      <accordion-body>
+        <div class="content-wrapper pb26">
+          <div class="justify-content-end d-flex">
+            @if(this.leadDetails.assignedOfficerFlag ==="True" ){
+            <!-- && this.leadDetails.statusValue!=="CANCD" &&
+                        this.leadDetails.statusValue !=='CLDWN'&&
+                        this.leadDetails.statusValue !=='CLOST' &&
+                        this.leadDetails.statusValue !=='DISED' -->
+            <app-icon-button name="add" toolTip="Create" (click)="createNotes()"
+              appButtonAccess="CrmCustLeadAppCreateBtn"></app-icon-button>
+            }
+          </div>
+          @for (item of notesList.entLeadNotesList; track $index) {
+          <div class="border-bottom  notes-list">
+            <div class="mx10">{{item.notes}}</div>
+            <div class="d-flex justify-content-end notes-context">
+              <div style="padding-right:5px ;">
+                {{item.enteredByFullname}}</div>
+              <div class=" notes-border-left">
+                {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm a'}}
+              </div>
+              <div style="padding-right:5px ;"></div>
+              <div class=" notes-border-left status-{{item.statusValue}}">
+                {{item.statusDescription}}
+              </div>
+              <div class="card-1-header-label px-2 ">
+
+              </div>
+              <!-- <div class="card-1-header-label px-2 ">Email </div> -->
+            </div>
+          </div>
+          }
+        </div>
+      </accordion-body>
+    </accordion-item>
+
+    <accordion-item>
+      <accordion-header>
+        <div class="accordion-header-content">
+          <div class="accordion-title">
+            <ion-icon src="assets/icons/accordian/document.svg"></ion-icon>
+            <div class="accordion-title-content">
+              <div>Document</div>
+              <div class="accordian-title-count">{{customerLeadDocumentList.length}}</div>
+            </div>
+          </div>
+        </div>
+      </accordion-header>
+      <accordion-body>
+        <div class="document-pad">
+          <div class="doc-header">
+            <row class="row-w100">
+              <!-- <div class="col-md-2">Doc Ref No</div> -->
+              <div class="col-md-3">Document Name</div>
+              <div class="col-md-2">File Name</div>
+              <div class="col-md-2">File Type</div>
+              <div class="col-md-2">Uploaded Date</div>
+              <div class="col-md-2"></div>
+            </row>
+          </div>
+
+
+          <div style="padding: 10px 20px;">
+            @for (document of customerLeadDocumentList; track $index) {
+
+            <app-documents [document]="document" (onUpload)="onUpload($event, document)"
+              [docViewAccess]="'CustUpAppViewDocBtn'" [docDeleteAccess]="'CrmCustAppCleaDocBtn'"
+              [docDownloadAccess]="'CustUpAppDownDocBtn'" [docUploadAccess]="'CrmCustAppUpldDocBtn'"
+              [pageAccess]="'CULED'" [btnCondition]="btnConditions"
+              (onDelete)="checkDocumentDelete(document)"></app-documents>
+
+            }
+          </div>
+        </div>
+      </accordion-body>
+    </accordion-item>
+
+    <div class="card-accordian w100">
+      <div class="card-header">
+        <div class="w100 card-header">
+          <div class="col-md-9 pl8px">
+
+            <div class="d-flex">
+              <div class="accordion-title-card pr10 flex-none border-right pointer"
+                [ngClass]="{'active-tab': showNotesDatas === true}" (click)="openStatusValue(1)">
+                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Assigned Officer</div>
+                  <div class="accordian-title-count">{{assignOfficerTableData.length}}</div>
+                </div>
+              </div>
+              <div class="accordion-title-card pl10 pr10 flex-none border-right pointer"
+                [ngClass]="{'active-tab': showAppAssigned === true}" (click)="openStatusValue(4)">
+                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Application Assigned Officer</div>
+                  <div class="accordian-title-count">{{appAssDataSource.length}}</div>
+                </div>
+              </div>
+              <div class="accordion-title-card pl10 pr10 pointer flex-none border-right pointer"
+                (click)="openStatusValue(2)" [ngClass]="{'active-tab': showStatusHistory === true}">
+                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Status History</div>
+                  <div class="accordian-title-count">{{statusHistoryDataSource.length}}</div>
+                </div>
+              </div>
+              <div class="accordion-title-card pl10 pointer flex-none" (click)="openStatusValue(3)"
+                [ngClass]="{'active-tab': showCommunicationHistory === true}">
+                <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Communication History</div>
+                  <div class="accordian-title-count">{{emailHistoryTableData.length}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3" (click)="openAccordian(this.accordianOpen)">
+
+            <div class="end btn-accordian">
+              @if(this.accordianOpen === true){
+
+              <div class="rotate">
+                <ion-icon src="assets/icons/down.svg"></ion-icon>
+              </div>
+              }
+              @else{
+              <!-- <div class="rotate-180"> -->
+              <ion-icon src="assets/icons/down.svg"></ion-icon>
+              <!-- </div> -->
+              }
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      @if(this.accordianOpen === true){
+      @if(this.showNotesDatas === true){
+      <div class="outer-content-wrapper">
+        <div class="content-wrapper">
+
+          <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName" [hasPagination]="true"
+            [dataSource]="assignOfficerTableData" [pagination]="pagination" [hideSelectAll]="true"
+            (pageChanged)="servicePageChanged($event)">
+
+            <ng-template cellDef="assignedDate" let-element>
+              {{element.assignedDate | appDate}}
+            </ng-template>
+            <ng-template cellDef="statusDescription" let-element>
+              <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+            </ng-template>
+            <ng-template #slotRight>
+              <div class="d-flex align-items-center">
+                @if(this.leadDetails.assignedOfficerFlag ==="True" &&
+                this.leadDetails.statusValue!=="CANCD" &&
+                this.leadDetails.statusValue !=='CLDWN'&&
+                this.leadDetails.statusValue !=='CLOST' &&
+                this.leadDetails.statusValue !=='DISED' &&
+                this.leadDetails.statusValue !=='NEGOM'){
+                <form #p="ngForm" class="col-md-10 w250">
+                  <app-input-control type="select" [(ngModel)]="leadAssignOfficer.assignedTo" name="assignedTo"
+                    [items]="assignedOfficerDDL" key="constant" [required]="true" [errorTrue]="errorTrue"
+                    keyName="description"></app-input-control>
+                </form>
+                @if(this.leadDetails.assignedOfficerFlag ==="True" && this.leadDetails.statusValue
+                !=='CLDWN' &&this.leadDetails.statusValue !=='CANCD'){
+
+
+                <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssigned()"
+                    toolTip="Reassign"></app-icon-button></div>
+
+                }
+                }
+                @if(this.leadDetails.selfAssignFlag === 'True'){
+                <div class="col-md-2"><app-icon-button name="add" (click)="selfAssigned()"
+                    toolTip="Self Assign"></app-icon-button></div>
+                }
+
+              </div>
+            </ng-template>
+
+          </app-table>
+        </div>
+      </div>
+      }
+      @if(this.showAppAssigned === true){
+      <div class="outer-content-wrapper">
+        <div class="content-wrapper">
+
+          <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName" [hasPagination]="true"
+            [dataSource]="appAssDataSource" [pagination]="pagination" [hideSelectAll]="true"
+            (pageChanged)="servicePageChanged($event)">
+
+            <ng-template cellDef="assignedDate" let-element>
+              {{element.assignedDate | appDate}}
+            </ng-template>
+            <ng-template cellDef="statusDescription" let-element>
+              <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+            </ng-template>
+            <!-- <ng-template #slotRight>
+              <div class="d-flex align-items-center">
+                @if(this.leadDetails.assignedOfficerFlag ==="True" &&
+                this.leadDetails.statusValue!=="CANCD" &&
+                this.leadDetails.statusValue !=='CLDWN'&&
+                this.leadDetails.statusValue !=='CLOST' &&
+                this.leadDetails.statusValue !=='DISED' &&
+                this.leadDetails.statusValue !=='NEGOM'){
+                <form #p="ngForm" class="col-md-10 w250">
+                  <app-input-control type="select" [(ngModel)]="leadAssignOfficer.assignedTo" name="assignedTo"
+                    [items]="assignedOfficerDDL" key="constant" [required]="true" [errorTrue]="errorTrue"
+                    keyName="description"></app-input-control>
+                </form>
+                @if(this.leadDetails.assignedOfficerFlag ==="True" && this.leadDetails.statusValue
+                !=='CLDWN' &&this.leadDetails.statusValue !=='CANCD'){
+
+
+                <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssigned()"
+                    toolTip="Reassign"></app-icon-button></div>
+
+                }
+                }
+                @if(this.leadDetails.selfAssignFlag === 'True'){
+                <div class="col-md-2"><app-icon-button name="add" (click)="selfAssigned()"
+                    toolTip="Self Assign"></app-icon-button></div>
+                }
+
+              </div>
+            </ng-template> -->
+
+          </app-table>
+        </div>
+      </div>
+      }
+      @if(this.showStatusHistory === true){
+      <div class="status-padding">
+        <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+
+      </div>
+      }
+      @else if(this.showCommunicationHistory === true){
+      <div class="outer-content-wrapper">
+        <div class="content-wrapper">
+
+          <app-table [columns]="emailColumns" [columnsName]="emailColumnsName" [hasPagination]="true"
+            [dataSource]="emailHistoryTableData" [pagination]="pagination" [hideSelectAll]="true"
+            (pageChanged)="servicePageChanged($event)">
+            <ng-template cellDef="toEmailId" let-element>
+              {{element.ientCommunicationTracking.toEmailId}}
+            </ng-template>
+            <ng-template cellDef="sentDate" let-element>
+              {{element.ientCommunicationTracking.sentDate |
+              appDate
+              }} |
+              {{element.ientCommunicationTracking.sentDate
+              | appDate: 'hh:mm a'}}
+            </ng-template>
+            <ng-template cellDef="sentStatusDescription" let-element>
+              <div class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+            </ng-template>
+
+            <ng-template cellDef="action" let-element>
+              <app-icon-button name="open" toolTip="Open" (click)="viewEmailDetail(element)"></app-icon-button>
+            </ng-template>
+          </app-table>
+        </div>
+      </div>
+      }
+
+      }
+
+    </div>
+    <div class="p5px"></div>
+
+    <accordion-item>
+      <accordion-header>
+        <div class="accordion-header-content">
+          <div class="accordion-title">
+            <ion-icon src="assets/icons/accordian/lead.svg"></ion-icon>
+            <div class="accordion-title-content">
+              <div>Lead History</div>
+              <div class="accordian-title-count">{{leadHistoryTableData.length}}</div>
+            </div>
+          </div>
+        </div>
+      </accordion-header>
+      <accordion-body>
+
+        <div class="outer-content-wrapper">
+          <div class="content-wrapper">
+            <app-table [columns]="serviceHistoryColumns" [columnsName]="serviceHistoryColumnsName"
+              columnID="customerBankId" (onSelect)="onSelect($event)" [dataSource]="leadHistoryTableData"
+              [pagination]="pagination" [hasPagination]="true" [hideSelectAll]="true"
+              (pageChanged)="bankPageChanged($event)">
+
+              <ng-template cellDef="action" let-element>
+                <app-icon-button name="open" toolTip="Open"
+                  (click)="getChildLeadHistory(element.customerServiceId)"></app-icon-button>
+              </ng-template>
+              <ng-template cellDef="statusDescription" let-element>
+                <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+              </ng-template>
+            </app-table>
+
+          </div>
+        </div>
+      </accordion-body>
+    </accordion-item>
+  </accordion>
+
+</div>
+
+
+<!-- <ng-template #descriptionDialog>
+
+    <div class="dialog-container">
+
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon src="assets/icons/human-icon.svg"></ion-icon>
+                @if(this.leadDetails.assignedOfficerFlag === ''){
+                Add Description
+                }
+                @else{ Edit Description}
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(this.leadDetails.assignedOfficerFlag ==="True" && this.leadDetails.statusValue!=="CANCD" &&
+                    this.leadDetails.statusValue !=='CLDWN'){
+
+                    @if(this.leadDetails.descriptionFlag === ''){
+                    <app-icon-button name="save" toolTip="Save" appButtonAccess="CrmCustLeadAppSaveBtn"
+                        (click)="saveLeadDescription()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearLeadDescription()"
+                        appButtonAccess="CrmCustLeadAppClearBtn"></app-icon-button>
+                    }
+                    @else{
+                    <app-icon-button name="save" toolTip="Update" (click)="saveLeadDescription()"
+                        appButtonAccess="CrmCustLeadAppSaveBtn"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh" (click)="openLeadDetails()"
+                        appButtonAccess="CrmCustLeadAppRefreshBtn"></app-icon-button>
+                    }
+                    }
+
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <div>
+                    <div class="box box-pad">
+                        <form #x="ngForm">
+                            <row>
+                                <div class="col-md-12">
+                                    <app-input-control type="input" label="Description" [errorTrue]="errorTrue"
+                                        [required]="true" placeholder="Enter Lead Description"
+                                        [(ngModel)]="leadDetails.description" [maxLength]="250"
+                                        name="description"></app-input-control>
+                                </div>
+                            </row>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template> -->
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+        <ion-icon src="assets/icons/accordian/lead.svg"></ion-icon>
+        <div class="screen-text">Lead</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

@@ -1,0 +1,7 @@
+<svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="17" cy="17" r="16.75" transform="matrix(1 0 0 -1 0 34)" stroke="currentColor" stroke-width="0.5"/>
+<path d="M24.2857 24.286H9.85718V9.85742H22L24.2857 12.5717V24.286Z" stroke="currentColor" stroke-width="0.7" stroke-miterlimit="10"/>
+<path d="M18.4285 14.286H15.7142C14.5714 14.286 13.7142 13.4289 13.7142 12.286V9.85742H20.4285V12.286C20.4285 13.4289 19.5714 14.286 18.4285 14.286Z" stroke="currentColor" stroke-width="0.7" stroke-miterlimit="10"/>
+<path d="M18.4285 18.5713H15.7142C14.5714 18.5713 13.7142 19.4284 13.7142 20.5713V24.1427H20.4285V20.5713C20.4285 19.4284 19.5714 18.5713 18.4285 18.5713Z" stroke="currentColor" stroke-width="0.7" stroke-miterlimit="10"/>
+<path d="M18.4286 11.2861V13.0004" stroke="currentColor" stroke-width="0.7" stroke-miterlimit="10"/>
+</svg>

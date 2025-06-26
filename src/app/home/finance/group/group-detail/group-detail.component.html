@@ -1,0 +1,250 @@
+<div class="v-flex h100" appAccess="AGRPS" [parentId]="pageId">
+  <form #l="ngForm" class="content-header">
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="text" label="Group Name" [(ngModel)]="group.groupName" name="groupName"
+          [required]="true" [errorTrue]="errorTrue" [maxLength]="100"></app-input-control>
+      </div>
+      <div class="card-content pt14">
+        <app-input-control label="Nature of Group" [(ngModel)]="group.groupNatureDescription"
+          name="groupNatureDescription" [required]="true" [errorTrue]="errorTrue"
+          [btnClicked]="true"></app-input-control>
+      </div>
+      <!-- <div class="card-content pt14">
+        <view-label label="Region" value="{{ group.regionDescription }}"></view-label>
+      </div> -->
+    </div>
+    <div class="card-box-1 border-right">
+      <div class="card-content">
+        <app-input-control type="date" label="Created Date" [(ngModel)]="group.effectiveDate" name="effectiveDate"
+          [btnClicked]="true"></app-input-control>
+      </div>
+      @if(!showSubLedger){
+      <div class="card-content ">
+        <view-label label="Debit Amount ({{currencyValue}})"
+          value="{{ group.groupDebitValue |  number : '1.2-2' }}"></view-label>
+      </div>
+      }@else if(showSubLedger){
+      <div class="card-content ">
+        <view-label label="Debit Amount ({{currencyValue}})"
+          value="{{ group.ledgerDebitValue | number : '1.2-2' }}"></view-label>
+      </div>
+      }
+    </div>
+    <div class="card-box-1 border-right">
+      <div class="card-content">
+        <view-label label="Parent Group Name"
+          value="{{ group.parentGroupName ? group.parentGroupName : '-' }}"></view-label>
+      </div>
+      <div class="card-content pt14">
+        @if(!showSubLedger){
+        <view-label label="Credit Amount ({{currencyValue}})"
+          value="{{ group.groupCreditValue | number : '1.2-2' }}"></view-label>
+        }@else{
+        <view-label label="Credit Amount ({{currencyValue}})"
+          value="{{ group.ledgerCreditValue  | number : '1.2-2'}}"></view-label>
+        }
+      </div>
+    </div>
+    <div class="card-box-1 border-right">
+      <div class="card-content">
+        <app-input-control type="text" label="Group Code" [(ngModel)]="group.codeName" name="groupCode"
+          [required]="true" [errorTrue]="errorTrue" [maxLength]="50"></app-input-control>
+      </div>
+      <div class="card-content ">
+        @if(!showSubLedger){
+        @if( group.ledgerClosingBalance === '0.00Dr'){
+        <view-label label="Closing Balance ({{currencyValue}})" value="{{
+            group.groupClosingBalance ? '0.00' : '-'
+          }}"></view-label>}
+        @else { <view-label label="Closing Balance ({{currencyValue}})" value="{{
+            group.groupClosingBalance ? group.groupClosingBalance : '-'
+          }}"></view-label>}
+        }@else{
+        @if( group.ledgerClosingBalance === '0.00Dr'){
+        <view-label label="Closing Balance ({{currencyValue}})" value="{{
+            group.ledgerClosingBalance ? '0.00' : '-'
+          }}"></view-label>}
+        @else {
+        <view-label label="Closing Balance ({{currencyValue}})" value="{{
+              group.ledgerClosingBalance ? group.ledgerClosingBalance : '-'
+            }}"></view-label>
+        }
+        }
+      </div>
+    </div>
+    @if(group.groupNatureValue === 'INCME'
+    || group.groupNatureValue === 'EXPNS'){
+    <div class="card-box border-right">
+      <div class="card-content align-center ">
+        <app-checkbox (change)="profitChange($event)" [checked]="group.impactProfitLoss === 'Y'"
+          [disabled]="group.parentGroupId !== 0">
+        </app-checkbox>
+        <label class="pl12">Impact Gross Profit</label>
+      </div>
+    </div>
+    }
+    @if(group.isDefaultGroup !== 'Y'){
+    <div class="status-header-box flex-none">
+      <div class="card-content btn-group">
+        @if(group.actGroupId === 0){
+        <app-icon-button name="save" toolTip="Save" (click)="saveAccountsGroup(l,'save')"
+          appButtonAccess="GroupSaveBtn"></app-icon-button>
+        <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"
+          appButtonAccess="GroupClearBtn"></app-icon-button>
+        }@else{
+        <app-icon-button name="save" toolTip="Update" (click)="saveAccountsGroup(l)"
+          appButtonAccess="GroupUpdtBtn"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh" (click)="openAccountsGroup(group.actGroupId)"
+          appButtonAccess="GroupRefrBtn"></app-icon-button>
+        }
+      </div>
+    </div>
+    }
+  </form>
+  @if(group.actGroupId > 0){
+  <div class="content-body ptb14 flex-1">
+    @if(selectedTab === 0 ){
+    <app-table [columns]="subGroup" [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false" [hasIndex]="true"
+      [columnsName]="subGroupName" [dataSource]="subGroupTableData" class="h100">
+
+      <ng-template cellHeaderDef="subGroup">
+        <div class="header-cell-title">Sub Group Name</div>
+      </ng-template>
+      <ng-template cellDef="subGroup" let-element>
+        <div class="hl-open pointer text-blue" (click)="openAccountsGroup(element.actGroupId)">
+          {{ element.groupName }}
+        </div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="debitAmt">
+        <div class="header-cell-title text-end">Debit Amount ({{currencyValue}})</div>
+      </ng-template>
+      <ng-template cellDef="debitAmt" let-element>
+        <div class="text-end">{{ element.groupDebitValue | appCurrency }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="creditAmt">
+        <div class="header-cell-title text-end">Credit Amount ({{currencyValue}})</div>
+      </ng-template>
+      <ng-template cellDef="creditAmt" let-element>
+        <div class="text-end">{{ element.groupCreditValue | appCurrency }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="createdDate">
+        <div class="header-cell-title pl32">Created Date</div>
+      </ng-template>
+      <ng-template cellDef="createdDate" let-element>
+        <div class="pl32">{{ element.effectiveDate | appDate }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="add">
+        <div class="flex-center" (click)="createNewSubgroup()" appButtonAccess="SubGroupNewBtn">
+          <app-icon-button name="add" toolTip="Add New"></app-icon-button>
+        </div>
+      </ng-template>
+      <ng-template cellDef="add" let-element>
+        <div class="flex-center" (click)="subGroupDelete(element)" appButtonAccess="SubGroupDelBtn">
+          <app-icon-button name="doc-delete" toolTip="Delete"></app-icon-button>
+        </div>
+      </ng-template>
+    </app-table>
+    } @else if(selectedTab === 1){
+    <app-table [columns]="ledger" [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false" [hasIndex]="true"
+      [columnsName]="ledgerName" [dataSource]="ledgerTableData" class="h100">
+      <ng-template cellHeaderDef="ledgerName">
+        <div class="header-cell-title">Ledger Name</div>
+      </ng-template>
+      <ng-template cellDef="ledgerName" let-element>
+        <div class="header-cell-title pointer text-blue" (click)="navigateLedger(element)">{{element.ledgerName}}</div>
+      </ng-template>
+      <ng-template cellDef="subGroup" let-element>
+        <div class="hl-open">
+          {{ element.groupName }}
+        </div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="debitAmt">
+        <div class="header-cell-title text-end">Debit Amount ({{currencyValue}})</div>
+      </ng-template>
+      <ng-template cellDef="debitAmt" let-element>
+        <div class="text-end">{{ element.debitValue | appCurrency }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="creditAmt">
+        <div class="header-cell-title text-end">Credit Amount ({{currencyValue}})</div>
+      </ng-template>
+      <ng-template cellDef="creditAmt" let-element>
+        <div class="text-end">{{ element.creditValue | appCurrency }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="createdDate">
+        <div class="header-cell-title pl32">Created Date</div>
+      </ng-template>
+      <ng-template cellDef="createdDate" let-element>
+        <div class="pl32">{{ element.effectiveDate | appDate }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="add">
+        <div class="flex-center" (click)="createNewLedger()" appButtonAccess="GroupLedgerNewBtn">
+          <app-icon-button name="add" toolTip="Add New"></app-icon-button>
+        </div>
+      </ng-template>
+      <ng-template cellDef="add" let-element>
+        <div class="flex-center" (click)="ledgerDelete(element)" appButtonAccess="GroupLedgerDelBtn">
+          <app-icon-button name="doc-delete" toolTip="Delete"></app-icon-button>
+        </div>
+      </ng-template>
+    </app-table>
+    }
+  </div>
+  <div class="card-footer">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon name="people-outline"></ion-icon>
+          <div>Subgroups</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon name="receipt-outline"></ion-icon>
+          <div>Ledgers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+
+    <ul>
+      @if(breadCrumbTrust === 'REGIO'){
+      <li class="screen-name link">
+        <div class="back-btn" (click)="navBack()">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navBack()">Group</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+      }
+
+      @else {
+      <li class="screen-name link" (click)="navBack()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navBack()">Group</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+      }
+
+    </ul>
+  </div>
+</ng-template>

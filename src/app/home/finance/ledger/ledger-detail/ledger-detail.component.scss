@@ -1,0 +1,22 @@
+.jus-none {
+	justify-content: flex-start !important;
+}
+
+.class-click {
+	text-decoration: underline;
+	color: #2867B2;
+}
+
+.card-box{
+	// justify-content: initial;
+	gap: 0;
+}
+.card-box-1 {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  flex: 1;
+  padding: 8px;
+  gap: 10px;
+}
+

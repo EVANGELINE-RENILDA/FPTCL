@@ -1,0 +1,112 @@
+<div class="content-wrapper" appAccess="TAPSR" [parentId]="pageId">
+    <div class="v-flex h100">
+        <app-table class="h100" [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"
+            [dataSource]="tableData" (pageChanged)="pageChanged($event)" columnID="trustApplicationId"
+            (onSelect)="onSelect($event)" [sortColumnsName]="sortColumns">
+            <ng-template cellDef="action" let-element>
+                <app-icon-button name="open" toolTip="Open"
+                    (click)="navigateToDetail(element.trustId)"></app-icon-button>
+            </ng-template>
+
+            <ng-template cellHeaderDef="trustApplRefNo">
+                <div class="header-cell-title">Trust Name</div>
+                <div class="header-cell-subtitle">Trust App Ref No</div>
+            </ng-template>
+            <ng-template cellDef="trustApplRefNo" let-element>
+                <div>{{element.trustName}}</div>
+                <div class="table-cell-subtitle">{{element.trustApplRefNo}}</div>
+            </ng-template>
+            <ng-template cellHeaderDef="applicant">
+                <div class="header-cell-title">Applicant Name</div>
+                <div class="header-cell-subtitle">Beneficiary Name</div>
+            </ng-template>
+            <ng-template cellDef="applicant" let-element>
+                <div>{{element.applicant}}</div>
+                <div class="table-cell-subtitle">{{element.beneficiary}}</div>
+            </ng-template>
+            <ng-template cellDef="startDate" let-element>{{element.startDate | appDate}}</ng-template>
+            <ng-template cellDef="status" let-element>
+                <accouts-status-table [statusDescription]="element.statusDescription"></accouts-status-table>
+            </ng-template>
+            <ng-template #slotLeft>
+                <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+            </ng-template>
+
+        </app-table>
+
+    </div>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Trust Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createTrustApplicationSearch('clear')"></app-icon-button>
+                    <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (ngSubmit)="searchTrustApplication()">
+                        <row className="row-h100">
+                            <div class="col-md-3">
+                                <app-input-control label="Trust App Ref No" type="text"
+                                    [(ngModel)]="searchParams.trustApplRefNo" name="trustApplRefNo"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control label="Trust Name" type="text" [(ngModel)]="searchParams.trustName"
+                                    name="trustApplRefNo"></app-input-control>
+                            </div>
+
+                            <div class="col-md-3">
+                                <app-input-control label="Trust Account No" type="text"
+                                    [(ngModel)]="searchParams.trustAccountNo" name="trustAccountNo"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control label="File No" type="text" [(ngModel)]="searchParams.fileNo"
+                                    name="fileNo"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                              <app-input-control type="select" label="Trust Applicant" defaultOption="All" [(ngModel)]="searchParams.applicantId" name="applicantId" [items]="initialData.DDLValues.DDLCustomer" key="id" keyName="fullName"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                              <app-input-control type="select" label="Trust Beneficiary" defaultOption="All" [(ngModel)]="searchParams.beneficaryId" name="beneficaryId" [items]="initialData.DDLValues.DDLCustomer" key="id" keyName="fullName"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control label="Start Date (From)" type="date" [(ngModel)]="searchParams.startDateFrom" [maxDate]="searchParams.startDateTo"
+                                    name="startDateFrom"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control label="Start Date (To)" type="date" [(ngModel)]="searchParams.startDateTo" [minDate]="searchParams.startDateFrom"
+                                    name="startDateTo"></app-input-control>
+                            </div>
+                            <!-- <div class="col-md-3">
+                                <app-input-control label="Status" type="select" defaultOption="All"
+                                    [(ngModel)]="searchParams.statusValue" name="statusValue"
+                                    [items]="initialData.DDLValues.DDLStatus" key="constant"
+                                    keyName="description"></app-input-control>
+                            </div> -->
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/trust.svg"></ion-icon>
+                <div class="screen-text">Trust</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

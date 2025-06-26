@@ -1,0 +1,126 @@
+<div class="content-wrapper" appAccess="RJVUH" [parentId]="pageId">
+    <div class="v-flex h100">
+        <div class="pb10 h100">
+            <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"
+                [dataSource]="tableData" [hideSelectAll]="true" [showPaginator]="true" [hasHeader]="true"
+                (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)">
+
+                <ng-template cellDef="slNo">
+                    <div class="header-cell-title h100">Sl.No</div>
+                </ng-template>
+                <ng-template cellDef="status" let-element>
+                    <div>{{element.status}}</div>
+                </ng-template>
+                <ng-template cellDef="ledgerName">
+                    <div class="header-cell-title h100">Ledger Name</div>
+                </ng-template>
+                <ng-template cellDef="status" let-element>
+                    <div>{{element.status}}</div>
+                </ng-template>
+                <ng-template cellDef="status">
+                    <div class="header-cell-title h100">Status</div>
+                </ng-template>
+                <ng-template cellDef="status" let-element>
+                    <div>{{element.status}}</div>
+                </ng-template>
+
+                <ng-template cellDef="action" let-element>
+                    <app-icon-button name="open" toolTip="Open" (click)="navigateToDetail(element)"></app-icon-button>
+                </ng-template>
+
+                <ng-template #slotLeft>
+                    <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+                </ng-template>
+
+                <ng-template #slotMiddle>
+                    <div class="d-flex">
+                        <div (click)="statusSortSearch('ACTIV')"><table-status-sort type="activeCount"
+                                [activeCount1]="totalActiveCount"></table-status-sort>
+                        </div>
+                        <div (click)="statusSortSearch('INACT')">
+                            <table-status-sort type="inactiveCount"
+                                [inActiveCount1]="totalInActiveCount"></table-status-sort>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #slotRight>
+                    <div>
+                        <app-icon-button name="add" toolTip="Add New" (click)="createNewTax(0)"
+                            appButtonAccess="TaxNewBtn"></app-icon-button>
+                    </div>
+                </ng-template>
+            </app-table>
+        </div>
+
+    </div>
+
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Cost Centre Allocation Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (submit)="onSearch()">
+                        <row>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Fiscal Year"
+                                            [(ngModel)]="searchParams.istrEnterBy" name="istrEnterBy"
+                                            [items]="initialData.DDLValues.DDLUser" key="code" keyName="name"
+                                            defaultOption="--Select--"></app-input-control>
+                                    </div>
+
+                                </row>
+                            </div>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Ledger"
+                                            [(ngModel)]="searchParams.istrEnterBy" name="istrEnterBy"
+                                            [items]="initialData.DDLValues.DDLUser" key="code" keyName="name"
+                                            defaultOption="--Select--"></app-input-control>
+                                    </div>
+
+                                </row>
+                            </div>
+                            <div class="col-md-4">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Status"
+                                            [(ngModel)]="searchParams.istrEnterBy" name="istrEnterBy"
+                                            [items]="initialData.DDLValues.DDLUser" key="code" keyName="name"
+                                            defaultOption="--Select--"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon name="person-outline"></ion-icon>
+                <div class="screen-text">Cost Centre Allocation</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

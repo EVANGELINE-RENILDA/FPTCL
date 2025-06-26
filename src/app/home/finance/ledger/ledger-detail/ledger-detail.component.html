@@ -1,0 +1,706 @@
+<div class="v-flex h100" appAccess="ALGSC" [parentId]="pageId">
+  @if(ledger.actLedgerId > 0){
+  <div class="flex-end pt8 pr20 header-bg">
+    <div class="col-md-3">
+      <app-input-control type="select" label="Fiscal Year" [(ngModel)]="ledger.companyFiscalyearId"
+        name="companyFiscalyearId" [items]="initialData.DDLValues.ConfigFiscalyearlist" key="id" keyName="description"
+        (onSelect)="changeFiscalYear(ledger.companyFiscalyearId)">
+      </app-input-control>
+    </div>
+    <div class="submit-btn bor-rad" (click)="openLedgerForExportExcel()" appButtonAccess="LedgerExportExelBtn">
+      <ion-icon name="arrow-up-outline"></ion-icon>
+      Export To Excel
+    </div>
+  </div>
+  }
+  <form #l="ngForm" class="content-header">
+    <div class="card-box-1 border-right">
+      <div class="card-content ">
+        <app-input-control type="text" label="Ledger Name" [(ngModel)]="ledger.ledgerName" name="ledgerName"
+          [required]="true" [errorTrue]="errorTrue" [maxLength]="100"></app-input-control>
+      </div>
+      @if(ledger.ledgerTypeValue !=='P&L'){
+      <div class="card-content">
+        <app-input-control type="select" label="Nature of Group" [(ngModel)]="ledger.natureOfGroup" name="natureOfGroup"
+          [items]="initialData.DDLValues.configLedgerGroupNatureValue" defaultOption="--Select--" key="constant"
+          keyName="description" [required]="true" [errorTrue]="errorTrue" [btnClicked]="true"
+          (onSelect)="getLedgerTypeBasedOnNtureofGroup()"></app-input-control>
+      </div>
+      }
+      <div class="card-content pt14">
+        <view-label label="Debit Amount ({{currencyValue}})"
+          value="{{ ledger.debitValue | number : '1.2-2' }}"></view-label>
+      </div>
+    </div>
+    <div class="card-box-1 border-right">
+      @if(ledger.ledgerTypeValue !=='P&L'){
+      <div class="card-content ">
+        <app-input-control type="select" label="Parent Group Name" [(ngModel)]="ledger.groupId" name="groupId"
+          defaultOption="--Select--" [items]="DDLParentGroupName" key="id" keyName="name" [required]="true"
+          [errorTrue]="errorTrue" valueType="int" [btnClicked]="this.groupData.actGroupId !==0"></app-input-control>
+      </div>
+      }
+      <div class="card-content">
+        <app-input-control type="input" label="Alias Name" [(ngModel)]="ledger.aliasName" name="aliasName"
+          [required]="true" [errorTrue]="errorTrue" [maxLength]="100"></app-input-control>
+      </div>
+      <div class="card-content pt14">
+        <view-label label="Credit Amount ({{currencyValue}})"
+          value="{{ ledger.creditValue| number : '1.2-2' }}"></view-label>
+      </div>
+    </div>
+
+
+    <div class="card-box-1 border-right">
+      <div class="card-content ">
+        <app-input-control type="text" label="Ledger Code" [(ngModel)]="ledger.codeName" name="codeName"
+          [required]="true" [errorTrue]="errorTrue" [maxLength]="50"></app-input-control>
+      </div>
+      @if(ledger.ledgerTypeValue !=='P&L'){
+      <div class="card-content">
+        <app-input-control type="select" label="Ledger Type" [(ngModel)]="ledger.ledgerTypeValue" name="ledgerTypeValue"
+          [items]="ledgerddl" key="constant" keyName="description" defaultOption="--Select--" [required]="true"
+          [errorTrue]="errorTrue" (change)="changeFiscalYear(ledger.ledgerTypeValue)"></app-input-control>
+      </div>
+      }
+
+      @if(indexHideShow === 0 && type==='edit'){
+      <div class="card-content ">
+        <app-input-control label="Opening Balance ({{currencyValue}})" [(ngModel)]=" ledger.openingBalance"
+          name="openingBalance" type="number" (onChange)="searchLedgerEntry(ledger.openingBalance)"></app-input-control>
+      </div>
+      }
+
+      @if (indexHideShow !== 0) {
+      <div class="card-content pt14">
+        <view-label label="Opening Balance ({{currencyValue}})"
+          value="{{ ledger.openingBalance | number : '1.2-2'}}"></view-label>
+      </div>
+      }
+    </div>
+
+
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="date" label="Created Date" [(ngModel)]="ledger.effectiveDate"
+          name="effectiveDate"></app-input-control>
+      </div>
+      @if(ledger.ledgerTypeValue !=='P&L'){
+      <div class="card-content pt14">
+        <view-label label="Created By" [value]="ledger.enteredBy"></view-label>
+      </div>
+      }
+
+      <div class="card-content ">
+        <view-label label="Closing Balance ({{currencyValue}})"
+          value="{{ ledger.closingBalance | number : '1.2-2' }}"></view-label>
+      </div>
+
+    </div>
+    <div class="card-box">
+      @if(ledger.ledgerTypeValue ==='TAX'){
+      <div class="card-content pb14">
+        <div class="label-text">Is Include Vat</div>
+        <div class="radio-value">
+          <mat-radio-group [(ngModel)]="ledger.isIncludeVatReport" name="isIncludeVatReport"
+            (change)="isIncludeVatReport($event)">
+            <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+            <mat-radio-button value="N" color="primary">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      } @if(ledger.ledgerTypeValue === 'TAX' && ledger.isIncludeVatReport ===
+      'Y'){
+      <app-input-control type="select" label="Report Type" [(ngModel)]="ledger.reportTypeValue" name="reportTypeValue"
+        [items]="initialData.DDLValues.DDLReportType" key="constant" keyName="description" [required]="true"
+        [errorTrue]="errorTrue">
+      </app-input-control>
+      }
+      <!-- <div class="card-content">
+        <view-label label="Region" value="{{ ledger.regionDescription }}"></view-label>
+      </div> -->
+
+      <div class="card-content ">
+        <view-label label="Current Fiscal Year Running Balance ({{currencyValue}})"
+          value="{{ ledger.runningBalance | number : '1.2-2' }}"></view-label>
+      </div>
+      @if(ledger.actLedgerId === 0){
+      <div class="card-content btn-group">
+        <app-icon-button name="save" toolTip="Save" (click)="saveAccountsGroup(l,'save')"
+          appButtonAccess="LedgerSaveBtn"></app-icon-button>
+        <app-icon-button name="clear" toolTip="Clear" (click)="createNewLedger(ledgerData.regionValue)"
+          appButtonAccess="LedgerClearBtn"></app-icon-button>
+      </div>
+      } @else{
+      <div class="card-content btn-group">
+        <app-icon-button name="save" toolTip="Update" (click)="saveAccountsGroup(l)"
+          appButtonAccess="LedgerUpdtBtn"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh" (click)="openLedger(ledgerData.actLedgerId)"
+          appButtonAccess="LedgerRefrBtn"></app-icon-button>
+      </div>
+      }
+    </div>
+  </form>
+  @if(ledger.actLedgerId > 0){
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <app-table [columns]="entries" [hideSelectAll]="true" [showPaginator]="true" [hasHeader]="true"
+      [columnsName]="entriesName" [dataSource]="entriesTableData" [pagination]="pagination" class="h100">
+      <ng-template cellHeaderDef="docNo">
+        <div class="header-cell-title">Document Number</div>
+      </ng-template>
+      <ng-template cellDef="docNo" let-element>
+        <div class="hl-open" (click)="navigateLedgerDetail(element)">
+          {{ element.documentNumber }}
+        </div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="docDate">
+        <div class="header-cell-title">Effective Date</div>
+      </ng-template>
+      <ng-template cellDef="docDate" let-element>
+        <div class="">{{ element.effectiveDate | appDate }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="postedDate">
+        <div class="header-cell-title">Posted Date</div>
+      </ng-template>
+      <ng-template cellDef="postedDate" let-element>
+        <div class="">{{ element.postedDate | appDate }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="debitAmt">
+        <div class="header-cell-title">Debit Amount ({{currencyValue}})</div>
+      </ng-template>
+      <ng-template cellDef="debitAmt" let-element>
+        <div class="">{{ element.debitAmount }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="creditAmt">
+        <div class="header-cell-title">Credit Amount ({{currencyValue}})</div>
+      </ng-template>
+      <ng-template cellDef="creditAmt" let-element>
+        <div class="">{{ element.creditAmount }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="runningBal">
+        <div class="header-cell-title">Running Balance ({{currencyValue}})</div>
+      </ng-template>
+      <ng-template cellDef="runningBal" let-element>
+        <div class="">{{ element.runningBalance }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="narration">
+        <div class="header-cell-title">Narration</div>
+      </ng-template>
+      <ng-template cellDef="narration" let-element>
+        <div class="">{{ element.narration }}</div>
+      </ng-template>
+    </app-table>
+    }
+    @if(selectedTab === 1){
+    <div class="v-flex h100">
+      
+      <button class="view-btn" (click)="viewBranchAccessStatus(branchAccessId)"
+        [matMenuTriggerFor]="branchAccessTrigger">
+        <ion-icon name="eye-outline"></ion-icon>
+        View Status History
+      </button>
+      <app-table [columns]="branch" [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false"
+        [columnsName]="branchName" [dataSource]="branchTableData" class="h100" [hasIndex]="true"
+        (onActive)="getBranchSelected($event)">
+        <ng-template cellHeaderDef="branchName">
+          <div class="header-cell-title">Branch Name</div>
+        </ng-template>
+        <ng-template cellDef="branchName" let-element>
+          <div class="hl-open  class-click pointer" (click)="openDialogBranch(element.actLedgerBranchAccessId)">
+            {{ element.ientCompanyBranch.branchName }}
+          </div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="effDate">
+          <div class="header-cell-title">Effective Date</div>
+        </ng-template>
+        <ng-template cellDef="effDate" let-element>
+          <div class="">{{ element.effectiveDate | appDate }}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="createdDate">
+          <div class="header-cell-title">Created Date</div>
+          <div class="header-cell-subtitle">Created By</div>
+        </ng-template>
+        <ng-template cellDef="createdDate" let-element>
+          <div class="">
+            {{ element.createdDate | appDate }}
+          </div>
+          <div class="">{{ element.istrAddedByUserName }}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="apprvDate">
+          <div class="header-cell-title">Approved Date</div>
+          <div class="header-cell-subtitle">Approved By</div>
+        </ng-template>
+        <ng-template cellDef="apprvDate" let-element>
+          <div class="">{{ element.modifiedDate | appDate }}</div>
+          <div class="">
+            {{
+            element.istrApprovedByUserName
+            ? element.istrApprovedByUserName
+            : "-"
+            }}
+          </div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="action">
+          <div class="flex-center">
+            <app-icon-button name="add" toolTip="Add New" (click)="openDialogBranch(0)"
+              appButtonAccess="LedgerBrchAcsNewBtn"></app-icon-button>
+          </div>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+          <div class="flex-center">
+            @if(element.statusValue !=='APROV'){
+            <app-icon-button (click)="branchAccessDelete(element)" name="doc-delete" toolTip="Delete"
+              appButtonAccess="LedgerBrchAcsNewBtn"></app-icon-button>
+            }
+          </div>
+        </ng-template>
+      </app-table>
+    </div>
+    }
+    @else if(selectedTab === 2){
+    <div class="v-flex h100">
+      <button class="view-btn" [matMenuTriggerFor]="ledgerLockTrigger" (click)="viewLedgerLockStatus(ledgerLockId)">
+        <ion-icon name="eye-outline"></ion-icon>
+        View Status History
+      </button>
+      <app-table [columns]="ledgerheader" [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false"
+        [columnsName]="ledgerName" [dataSource]="ledgerTableData" class="h100" [hasIndex]="true"
+        (onActive)="getLedgerLockSelected($event)">
+        <ng-template cellHeaderDef="lockTypeValue">
+          <div class="header-cell-title">Lock Type</div>
+        </ng-template>
+        <ng-template cellDef="lockTypeValue" let-element>
+          <div class="hl-open  class-click" (click)="openDialogLedger(element.actLedgerLockHistoryId)">
+            {{ element.lockTypeValue }}
+          </div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="effDate">
+          <div class="header-cell-title">Effective Date</div>
+        </ng-template>
+        <ng-template cellDef="effDate" let-element>
+          <div>{{ element.effectiveDate | appDate }}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="endDate">
+          <div class="header-cell-title">End Date</div>
+        </ng-template>
+        <ng-template cellDef="endDate" let-element>
+          <div>{{ element.endDate | appDate }}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="reqBy">
+          <div class="header-cell-title">Requested By</div>
+          <div class="header-cell-subtitle">Approved By</div>
+        </ng-template>
+
+        <ng-template cellDef="reqBy" let-element>
+          <div>
+            {{
+            element.istrRequestedByUserName
+            ? element.istrRequestedByUserName
+            : "-"
+            }}
+          </div>
+          <div class="header-cell-subtitle">
+            {{
+            element.istrApprovedByUserName
+            ? element.istrApprovedByUserName
+            : "-"
+            }}
+          </div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="action">
+          <div class="flex-center">
+            <app-icon-button name="add" toolTip="Add New" (click)="openDialogLedger(0)"
+              appButtonAccess="LedgerLockNewBtn"></app-icon-button>
+          </div>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+          <div class="flex-center">
+            @if(element.statusValue !=='APROV'){
+            <app-icon-button (click)="deleteLedgerLock(element)" name="doc-delete" toolTip="Add New"
+              appButtonAccess="LedgerLockNewBtn"></app-icon-button>
+            }
+          </div>
+        </ng-template>
+      </app-table>
+    </div>
+    } @else if(selectedTab === 3 && ledger.ledgerTypeValue === 'BANK'){
+    <div class="col-md-12 pxy">
+      <label class="label-bold">Company Bank Branch Detail</label>
+    </div>
+    <row className="pxy">
+      <div class="col-md-3">
+        <app-input-control type="text" label="Bank Name" [(ngModel)]="ledger.lentActCompanyBranchBankDetail.bankName"
+          name="bankName" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="text" label="Bank Account No"
+          [(ngModel)]="ledger.lentActCompanyBranchBankDetail.bankAccountNo" name="bankAccountNo" [required]="true"
+          [errorTrue]="errorTrue"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="date" label="Begin Date" [(ngModel)]="ledger.lentActCompanyBranchBankDetail.beginDate"
+          name="beginDate" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="date" label="End Date" [(ngModel)]="ledger.lentActCompanyBranchBankDetail.endDate"
+          name="endDate"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="text" label="Swift Code" [(ngModel)]="ledger.lentActCompanyBranchBankDetail.swiftCode"
+          name="swiftCode" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="text" label="Bank Code" [(ngModel)]="ledger.lentActCompanyBranchBankDetail.bankCode"
+          name="bankCode" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="select" label="Status" [(ngModel)]="ledger.lentActCompanyBranchBankDetail.statusValue"
+          name="statusValue" [items]="initialData.DDLValues.DDLActive" key="constant" keyName="description"
+          [required]="true" [errorTrue]="errorTrue"></app-input-control>
+      </div>
+    </row>
+    <div class="col-md-12 pxy">
+      <label class="label-bold">Address</label>
+    </div>
+    <row className="pxy">
+      <div class="col-md-3">
+        <app-input-control type="text" label="Line 1" type="special" [(ngModel)]="
+            ledger.lentActCompanyBranchBankDetail.iAddress.addressLine1
+          " name="addressLine1" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="text" label="Line 2" type="special" [(ngModel)]="
+            ledger.lentActCompanyBranchBankDetail.iAddress.addressLine2
+          " name="addressLine2"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="text" label="Line 3" type="special" [(ngModel)]="
+            ledger.lentActCompanyBranchBankDetail.iAddress.addressLine3
+          " name="addressLine3"></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="select" label="Country" [(ngModel)]="
+            ledger.lentActCompanyBranchBankDetail.iAddress.countryValue
+          " name="countryValue" [items]="initialData.DDLValues.ddlCBBCountry" key="constant" keyName="description"
+          [required]="true" [errorTrue]="errorTrue" defaultOption="--Select--" (onSelect)="
+            countryBasedOnProvince(
+              ledger.lentActCompanyBranchBankDetail.iAddress.countryValue
+            )
+          "></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="select" label="State/Provinces" [(ngModel)]="
+            ledger.lentActCompanyBranchBankDetail.iAddress.stateValue
+          " name="stateValue" [items]="initialData.DDLValues.ddlCBBState" key="constant" keyName="description"
+          [required]="true" [errorTrue]="errorTrue" defaultOption="--Select--" [btnClicked]="
+            ledger.lentActCompanyBranchBankDetail.iAddress.countryValue === ''
+          "></app-input-control>
+      </div>
+      <div class="col-md-3">
+        <app-input-control type="text" label="City" [(ngModel)]="ledger.lentActCompanyBranchBankDetail.iAddress.city"
+          name="city" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+      </div>
+    </row>
+    }
+  </div>
+  <div class="card-footer">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon name="reader-outline"></ion-icon>
+          <div>Ledger Entries</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon name="key-outline"></ion-icon>
+          <div>Branch Access</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          <div>Ledger Lock</div>
+        </div>
+        @if(ledger.ledgerTypeValue === 'BANK'){
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon name="business-outline"></ion-icon>
+          <div>Company Branch Bank</div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+
+    <ul>
+      @if(breadCrumbTrust === 'REGIO'){
+      <li class="screen-name link">
+        <div class="back-btn" (click)="navBack()">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navBack()">Ledger</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+      }
+
+      @else {
+      <li class="screen-name link" (click)="navBack()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navBack()">Ledger</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+      }
+
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #branchDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        @if(ledgerBranchAccess.actLedgerBranchAccessId === 0){ Ledger > Detail >
+        Add Branch Access } @else{ Ledger > Detail > Edit Branch Access }
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(ledgerBranchAccess.actLedgerBranchAccessId === 0){
+          <app-icon-button name="save" toolTip="Save" (click)="saveLedgerBranchAccess(x)"
+            appButtonAccess="LedgerBrchAcsSaveBtn"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearBranch()"
+            appButtonAccess="LedgerBrchAcsClearBtn"></app-icon-button>
+          } @else{
+          <app-icon-button name="save" toolTip="Update" (click)="saveLedgerBranchAccess(x)"
+            appButtonAccess="LedgerBrchAcsUpdtBtn"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="
+              openLedgerBranchAccess(ledgerBranchAccess.actLedgerBranchAccessId)
+            " appButtonAccess="LedgerBrchAcsRefrBtn"></app-icon-button>
+          }
+
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #x="ngForm" (ngSubmit)="saveLedgerBranchAccess(x)">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Branch" [(ngModel)]="ledgerBranchAccess.actCompanyBranchId"
+                name="actCompanyBranchId" [items]="initialData.DDLValues.configLdgrBranchName" key="id" keyName="code"
+                valueType="int" [errorTrue]="errorTrue" [required]="true" defaultOption="--Select--" [btnClicked]="
+                  ledgerBranchAccess.statusValue !== 'INPRO' &&
+                  ledgerBranchAccess.statusValue !== 'PENSB'
+                "></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="select" [(ngModel)]="ledgerBranchAccess.statusValue" name="statusValue"
+                [items]="initialData.DDLValues.DDLBranchStatus" key="constant" keyName="description"
+                [errorTrue]="errorTrue" [required]="true" defaultOption="--Select--" label="Status"
+                [btnClicked]="hideBranchBtn"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="date" label="Effective Date" [(ngModel)]="ledgerBranchAccess.effectiveDate"
+                name="effectiveDate" [btnClicked]="
+                  ledgerBranchAccess.statusValue !== 'INPRO' &&
+                  ledgerBranchAccess.statusValue !== 'PENSB'
+                "></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="date" label="End Date" [(ngModel)]="ledgerBranchAccess.endDate" name="endDate"
+                [btnClicked]="
+                  ledgerBranchAccess.statusValue !== 'INPRO' &&
+                  ledgerBranchAccess.statusValue !== 'PENSB'
+                " [minDate]="ledgerBranchAccess.effectiveDate"></app-input-control>
+            </div>
+            <div class="col-md-6 check-align">
+              <mat-checkbox color="primary" [checked]="ledgerBranchAccess.isAllowed === 'Y'" name="isAllowed"
+                (change)="isAllowed($event)" [disabled]="
+                  ledgerBranchAccess.isRestricted === 'Y' ||
+                  (ledgerBranchAccess.statusValue !== 'INPRO' &&
+                    ledgerBranchAccess.statusValue !== 'PENSB')
+                ">Access Allowed</mat-checkbox>
+            </div>
+            <div class="col-md-6 check-align">
+              <mat-checkbox color="primary" [checked]="ledgerBranchAccess.isRestricted === 'Y'" name="isRestricted"
+                (change)="isRestricted($event)" [disabled]="
+                  ledgerBranchAccess.isAllowed === 'Y' ||
+                  (ledgerBranchAccess.statusValue !== 'INPRO' &&
+                    ledgerBranchAccess.statusValue !== 'PENSB')
+                ">Access Restricted</mat-checkbox>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="text" label="Added By" [(ngModel)]="ledgerBranchAccess.istrAddedByUserName"
+                name="istrAddedByUserName" placeholder="Enter Added By" [btnClicked]="true"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="text" label="Approved By" placeholder="Enter Approved By"
+                [(ngModel)]="ledgerBranchAccess.istrApprovedByUserName" name="istrApprovedByUserName"
+                [btnClicked]="true"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #ledgerDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        @if(lockLedger.actLedgerLockHistoryId === 0){ Ledger > Detail > Add Lock
+        Detail } @else{ Ledger > Detail > Edit Lock Detail }
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(lockLedger.actLedgerLockHistoryId === 0){
+          <app-icon-button name="save" toolTip="Save" (click)="saveLedgerLock(x)"
+            appButtonAccess="LedgerLockSaveBtn"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearLedger()"
+            appButtonAccess="LedgerLockClearBtn"></app-icon-button>
+          } @else{
+
+          <app-icon-button name="save" toolTip="Update" (click)="saveLedgerLock(x)"
+            appButtonAccess="LedgerLockUpdtBtn"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="openLockLedger(lockLedger.actLedgerLockHistoryId)"
+            appButtonAccess="LedgerLockRefrBtn"></app-icon-button>
+          }
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner">
+        <form #x="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Lock Type" [(ngModel)]="lockLedger.lockTypeValue"
+                name="lockTypeValue" [items]="initialData.DDLValues.configLedgerGrpLockType" key="constant"
+                keyName="description" [required]="true" [errorTrue]="errorTrue" [btnClicked]="
+                  lockLedger.statusValue !== 'INPRO' &&
+                  lockLedger.statusValue !== 'PENSB'
+                " defaultOption="--Select--"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="select" [(ngModel)]="lockLedger.statusValue" name="statusValue"
+                [items]="initialData.DDLValues.DDLBranchLockStatus" key="constant" keyName="description"
+                [required]="true" [errorTrue]="errorTrue" [btnClicked]="hideBranchBtn" defaultOption="--Select--"
+                label="Status"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="date" label="Effective Date" [(ngModel)]="lockLedger.effectiveDate"
+                name="effectiveDate" [required]="true" [errorTrue]="errorTrue" [btnClicked]="
+                  lockLedger.statusValue !== 'INPRO' &&
+                  lockLedger.statusValue !== 'PENSB'
+                " placeholder="Select Date"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="date" label="End Date" [(ngModel)]="lockLedger.endDate" name="endDate"
+                [btnClicked]="
+                  lockLedger.statusValue !== 'INPRO' &&
+                  lockLedger.statusValue !== 'PENSB'
+                " [minDate]="lockLedger.effectiveDate"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="text" label="Added By" [(ngModel)]="lockLedger.istrRequestedByUserName"
+                name="istrRequestedByUserName" [btnClicked]="true"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="text" label="Approved By" [(ngModel)]="lockLedger.istrApprovedByUserName"
+                name="istrApprovedByUserName" [btnClicked]="true"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #branchAccessTrigger="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of branchAccessStatus; track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByUserName ? status.changedByUserName : "-" }}
+          </div>
+          <div class="sub-status_by">{{ status.effectiveDate | appDate }}</div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #ledgerLockTrigger="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of ledgerLockStatus; track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByUserName ? status.changedByUserName : "-" }}
+          </div>
+          <div class="sub-status_by">{{ status.effectiveDate | appDate }}</div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>

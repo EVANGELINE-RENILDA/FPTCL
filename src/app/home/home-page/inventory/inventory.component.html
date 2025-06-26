@@ -1,0 +1,34 @@
+<div class="padd-menus" [parentId]="pageId" appAccess="PRTDV">
+    <div class="submenu-container col-md-10">
+        <div class="d-flex">
+            <div class="col-md-3">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_config.svg"></ion-icon> Configuration
+                </div>
+
+                <a class="submenu-item" cdkMenuItem routerLink="/home/inventory/configuration/category/search"
+                    [appAccess]="'IMCAT' | menuAccess:appService.userData">Item
+                    category</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/inventory/configuration/items/item-type-sub-type"
+                    [appAccess]="'IMTPE' | menuAccess:appService.userData">Item Type and Sub Type</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/inventory/configuration/item/search"
+                    [appAccess]="'ITEMS' | menuAccess:appService.userData">Item</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/inventory.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToCorporate()">Corporate</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Inventory</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

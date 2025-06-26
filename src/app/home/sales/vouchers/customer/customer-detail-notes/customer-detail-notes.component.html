@@ -1,0 +1,55 @@
+<app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+[dataSource]="tableNoteData" [hasIndex]="true">
+<ng-template cellHeaderDef="add">
+    <app-icon-button name="add" toolTip="Add New" (click)="createNewNotes(0)"></app-icon-button>
+</ng-template>
+<ng-template cellHeaderDef="notes" let-element>
+    <div class="header-cell-title"> Notes</div>
+    <div class="header-cell-subtitle">Created By | Date | Time</div>
+</ng-template>
+<ng-template cellDef="notes" let-element>
+    <div class="header-cell-title"> {{element.notesDetail}}</div>
+    <div class="header-cell-subtitle">
+        {{ element.createdBy }} | {{ element.createdDate | appDate }}
+    </div>
+</ng-template>
+
+</app-table>
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase
+                Vendor > Detail >
+                Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveSalesCustomerNotes()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearSalesCustomerNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #n="ngForm">
+                    <row>
+
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue"
+                                [maxLength]="250" [required]="true" label="Notes" [(ngModel)]="customerNotes.notesDetail"
+                                name="statusvalue"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</ng-template>

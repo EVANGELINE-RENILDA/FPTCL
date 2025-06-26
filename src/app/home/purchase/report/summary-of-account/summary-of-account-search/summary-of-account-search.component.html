@@ -1,0 +1,110 @@
+<div class="content-wrapper" appAccess="CUSTR">
+
+  <div class="between">
+    <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+    <div class="flex-end align-items-center p-2">
+      Report Date & Time : {{ currentDate | appDate }}
+    </div>
+  </div>
+  <div class="sub-table">
+    <table class="w100">
+      <thead class="h40 thead-th">
+        <tr>
+          <th>#</th>
+          <th>Vendor Code</th>
+          <th>Vendor Name</th>
+          <th class="text-right">Total Balance Due</th>
+          <th class="text-right">0 - 30 Days Due</th>
+          <th class="text-right">31 - 60 Days Due</th>
+          <th class="text-right">61 - 90 Days Due</th>
+          <th class="text-right">90 Days Due</th>
+          <th>Open</th>
+          <th>SOA</th>
+        </tr>
+      </thead>
+      @if(reportResult.Table?.length > 0){
+        <tbody>
+          @for (element of reportResult.Table; track $index) {
+            <tr>
+              <td>{{$index+1}}</td>
+              <td>{{element.VENDOR_CODE}}</td>
+              <td>{{element.VENDOR_NAME}}</td>
+              <td class="text-right">{{element.Total_Bal_Amt | appCurrency}}</td>
+              <td class="text-right">{{element.DaysDue0to30 | appCurrency}}</td>
+              <td class="text-right">{{element.DaysDue31to60 | appCurrency}}</td>
+              <td class="text-right">{{element.DaysDue61to90 | appCurrency}}</td>
+              <td class="text-right">{{element.DaysDue90 | appCurrency}}</td>
+              <td class="text-center" (click)="soaVendorDetail(element)">
+                <app-icon-button
+                name="open"
+                toolTip="Open"
+              ></app-icon-button>
+              </td>
+              <td class="text-center" (click)="soaDetail(element)">
+                <app-icon-button
+                name="open"
+                toolTip="Open"
+              ></app-icon-button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      }
+    </table>
+  </div>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Statement Of Account Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="generateCreditorsSummaryReportWithForm()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearFilters()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                  <form #l="ngForm" autocomplete="off">
+                    <row>
+                                <div class="col-md-3 ">
+                                    <app-input-control label="Statement Date" type="date" [(ngModel)]="purchaseReport.toDate"
+                                    name="toDate"></app-input-control>
+                                </div>
+
+                                <div class="col-md-3 ">
+                                    <app-input-control type="select" label="Currency Value"key="constant"
+                                    keyName="description" [items]="initialData.DDLValues.iddlcurrency"
+                                    [(ngModel)]="purchaseReport.currencyValue" name="currencyValue"></app-input-control>
+                                </div>
+                                <div class="col-md-3">
+                                  <app-input-control label="Region"  [(ngModel)]="purchaseReport.regionValue"
+                                  name="regionValue" [items]="initialData.DDLValues.DDLRegion" key="constant"
+                                  keyName="description" [errorTrue]="errorTrue" [required]="true" type="select"></app-input-control>
+                                </div>
+                    </row>
+                    </form>
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+      <ul>
+          <li class="screen-name link">
+              <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+              <div class="screen-text" (click)="navigateToPurchase()">Purchase</div>
+          </li>
+          <li class="screen-name">
+              <div class="screen-text">Summary of Statement Account - Vendor</div>
+          </li>
+      </ul>
+  </div>
+</ng-template>

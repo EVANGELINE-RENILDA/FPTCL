@@ -1,0 +1,124 @@
+<div class="content-wrapper">
+    <div class="sticky-card p15">
+        <row>
+            <div class="col-md-21">
+                <view-label label="Trust Application Count" value="{{dashboardDatas?.trustApplicationCount}}"></view-label>
+            </div>
+            <div class="col-md-21">
+                <view-label label="Trust Accounts" value="{{dashboardDatas?.trustAccounts}}"></view-label>
+            </div>
+            <div class="col-md-21">
+                <view-label label="Trust Count" value="{{dashboardDatas?.trustCount}}"></view-label>
+            </div>
+            <div class="col-md-21">
+                <view-label label="Trust Withdrawal Count" value="{{dashboardDatas?.trustWithdrawalApplicationCount}}"></view-label>
+            </div>
+            <div class="col-md-21">
+                <view-label label="Trust Count" value="{{dashboardDatas?.trustSettlementApplicationCount}}"></view-label>
+            </div>
+        </row>
+    </div>
+    <div class="d-flex gap-10 h80">
+      
+        <div class="col-md-12 box ">
+                    
+                        <div class="d-flex space-between align-items-center pt8">
+                          <div class="col-md-6">
+                            <row>
+                                <div class="col-md-4 border-right pointer" (click)="changeTrust('app')" [ngClass]="{'active' : activeNew === 'app'}">Trust Application</div>
+                                <div class="col-md-4 border-right pointer" (click)="changeTrust('with')" [ngClass]="{'active' : activeNew === 'with'}">Trust Withdrawal</div>
+                                <div class="col-md-4 pointer" (click)="changeTrust('sett')" [ngClass]="{'active' : activeNew === 'sett'}">Trust Settlement</div>
+                            </row>
+                          </div>
+                            <div class="col-md-4">
+                                <app-input-control label="" type="select" [(ngModel)]="yearData" name="yearData" [items]="initialData.DDLValues.DDLYEAR" key="id" keyName="description" (onSelect)="yearChanged($event)"></app-input-control>
+                            </div>
+                        </div>
+                        <div class="mb26"></div>
+                        <div class="flex-1 relative h80">
+                            <scroll>
+                                @if(showApp === true){
+                                    <div class="chart-size pl32">
+                                        @if(showChart){
+                                           
+                                                <div>
+                                                     <div class="dash-header pb16">
+                                                Trust Stage {{yearData}}
+                                            </div>
+                                            <app-line-chart [dataset]="this.dataSet1"></app-line-chart>
+                                                </div>
+                                                <div class="pb16"></div>
+                                                <div>
+                                                    <div class="dash-header pb16 ">
+                                                Trust Type {{yearData}}
+                                            </div>
+                                            <app-line-chart2 [dataset]="this.dataSet2"></app-line-chart2>  
+                                                </div>
+                                            
+                                           
+                                            
+                                      }
+                                        
+                                    </div>
+                                }
+                                @if(showWith === true){
+                                    <div class="chart-size pl32">
+                                        @if(showChart){
+                                           
+                                                <div>
+                                                     <div class="dash-header pb16">
+                                                Trust Withdrawal Type {{yearData}}
+                                            </div>
+                                            <app-line-chart3 [dataset]="this.dataSet3"></app-line-chart3>
+                                                </div>
+                                                <div class="pb16"></div>
+                                                <div>
+                                                    <div class="dash-header pb16 ">
+                                                        Trust Withdrawal Stage {{yearData}}
+                                            </div>
+                                            <app-line-chart4 [dataset]="this.dataSet4"></app-line-chart4>  
+                                                </div>
+                                            
+                                           
+                                            
+                                      }
+                                        
+                                    </div>
+                                }
+                                @if(showSett === true){
+                                    <div class="chart-size pl32">
+                                        @if(showChart){
+                                           
+                                                
+                                                <div>
+                                                    <div class="dash-header pb16 ">
+                                                        Trust Settlement Stage {{yearData}}
+                                            </div>
+                                            <app-line-chart5 [dataset]="this.dataSet5"></app-line-chart5>  
+                                                </div>
+                                            
+                                           
+                                            
+                                      }
+                                        
+                                    </div>
+                                }
+
+                            </scroll>
+                        </div>
+              
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/line-chart.svg"></ion-icon>
+                <div class="screen-text">Trust Dashboard</div>
+            </li>
+
+        </ul>
+    </div>
+</ng-template>

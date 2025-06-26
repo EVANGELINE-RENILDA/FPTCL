@@ -1,0 +1,51 @@
+<div class="content-wrapper">
+    <div class=" gap-10 h100">
+        <div class="sticky-card p15">
+            <row>
+                <div class="col-md-4">
+                    <view-label label="Customer Count" value="{{dashboardDatas.customerCount}}"></view-label>
+                </div>
+                <div class="col-md-4">
+                    <view-label label="Customer Service Count" value="{{dashboardDatas.serviceCount}}"></view-label>
+                </div>
+                <div class="col-md-4">
+                    <view-label label="Lead Count" value="{{dashboardDatas.leadCount}}"></view-label>
+                </div>
+            </row>
+        </div>
+       
+        <div class="h80">
+            <div class="box h100">
+                <div class="box-pad">
+                    <div class="d-flex space-between align-items-center">
+                        <div class="dash-header">
+                            Customer Status
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="" type="year" [items]="initialData.DDLValues.DDLYEAR" key="id" keyName="description" (onSelect)="getDataBasedOnYear($event)" [(ngModel)]="year" name="year" type="select"></app-input-control>
+                        </div>
+                    </div>
+                    
+                    
+<div class="chart-size">
+    @if(showChart){
+        <app-bar-chart  [xaisLabel]="xAxisData" [yaxisValue]="yAxisData"></app-bar-chart>
+    }
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/line-chart.svg"></ion-icon>
+                <div class="screen-text">Customer Dashboard</div>
+            </li>
+
+        </ul>
+    </div>
+</ng-template>

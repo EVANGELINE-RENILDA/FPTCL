@@ -1,0 +1,12 @@
+.mat-datepicker-content {
+    .mat-calendar {
+        &.itg-calendar {
+            height: 330px;
+
+            .mat-calendar-controls {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+        }
+    }
+}

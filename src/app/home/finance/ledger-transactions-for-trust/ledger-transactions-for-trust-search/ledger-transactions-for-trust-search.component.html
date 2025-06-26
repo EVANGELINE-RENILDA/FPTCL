@@ -1,0 +1,139 @@
+<div class="content-wrapper" appAccess="LDTRS" [parentId]="pageId">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        [hideSelectAll]="true" (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)"
+        [sortColumnsName]="sortColumnsName">
+        <ng-template cellDef="action" let-element>
+        </ng-template>
+
+        <ng-template cellDef="documentNumber" let-element>
+            <div class="pointer hover-underline"
+                (click)="navigateToDetail(element.voucherTypeValue,element.referenceId)">
+                {{element.documentNumber}}</div>
+        </ng-template>
+
+        <ng-template cellDef="effectiveDate" let-element>
+            <div class="w85">
+                {{element.effectiveDate | appDate}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="postedDate" let-element>
+            <div class="w85">
+                {{element.postedDate | appDate}}
+            </div>
+        </ng-template>
+        <ng-template cellHeaderDef="debitAmount" let-element>
+            <div class="table-content-end">
+                Debit ({{currencyValue}})</div>
+        </ng-template>
+        <ng-template cellDef="debitAmount" let-element>
+            <div class="table-content-end">
+                {{element.debitAmount}}
+            </div>
+        </ng-template>
+        <ng-template cellHeaderDef="creditAmount" let-element>
+            <div class="table-content-end">
+                Credit ({{currencyValue}})
+            </div>
+        </ng-template>
+        <ng-template cellDef="creditAmount" let-element>
+            <div class="table-content-end">
+                {{element.creditAmount}}
+            </div>
+        </ng-template>
+
+        <ng-template cellDef="statusdescription" let-element>
+            <accouts-status-table [statusDescription]="element.statusdescription"></accouts-status-table>
+        </ng-template>
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate" maxHeight="250px"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+            <div class="d-flex align-items-center w100">
+                <div class="col-md-1">
+                </div>
+            </div>
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Ledger Transaction Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <form #l=ngForm class="dialog-content-inner" (ngSubmit)="onSearch()">
+                    <row>
+                        <div class="col-md-4 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-search-debit [search]="true" [(ngModel)]="searchParams.ledgerName"
+                                        name="ledgerName" label="Ledger Name" [displayText]="
+                                        searchParams.ledgerName
+                                      " (onSelect)="onLedgerSelect($event)"></app-search-debit>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Transaction Date From"
+                                        [(ngModel)]="searchParams.dtmTransactionDateFrom"
+                                        [maxDate]="searchParams.dtmTransactionDateTo"
+                                        name="dtmTransactionDateFrom"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-4 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Document Name" [search]="true"
+                                        [(ngModel)]="searchParams.lngactVoucherConfigId" name="lngactVoucherConfigId"
+                                        [items]="initialData.DDLValues.VoucherName" key="id" keyName="description"
+                                        valueType="int" defaultOption="All"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Transaction Date To
+                                    " [(ngModel)]="searchParams.dtmTransactionDateTo" name="dtmTransactionDateTo"
+                                        [minDate]="searchParams.dtmTransactionDateFrom"></app-input-control>
+                                </div>
+
+                            </row>
+                        </div>
+                        <div class="col-md-4">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Transaction Status"
+                                        [(ngModel)]="searchParams.istrTransactionStatus" name="istrTransactionStatus"
+                                        [items]="initialData.DDLValues.configLdgrTransactionStatus" key="constant"
+                                        keyName="description" defaultOption="All"></app-input-control>
+                                </div>
+
+                            </row>
+                        </div>
+
+                    </row>
+
+                </form>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon name="person-outline"></ion-icon>
+                <div class="screen-text" (click)="navigateToAccount()">Trust</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Ledger Transaction</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

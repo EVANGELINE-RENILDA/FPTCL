@@ -1,0 +1,62 @@
+// .toggle-children-wrapper-expanded .toggle-children {
+// 	background-image: url('../assets/chevron-forward-outline.svg') !important;
+//   }
+  
+//   .toggle-children-wrapper-collapsed .toggle-children {
+// 	background-image: url('../assets/chevron-forward-outline.svg') !important;
+//   }
+  
+  .toggle-children {
+	width: 20px !important;
+	height: 15px !important;
+	position: relative;
+	top: 0.598rem !important;
+  }
+  
+  .finance-header-card {
+	display: flex;
+	align-items: center;
+	padding: 14px 16px !important;
+  
+	.finance-header-title {
+	  font-size: 14px;
+	  color: #fff;
+	  font-weight: 500;
+	}
+
+     ion-icon{
+		color: #fff;
+		opacity: 1;
+		font-size: 14px;
+		cursor: pointer;
+	 }
+  
+	&.assets {
+	  background: var(--assets-header);
+	}
+	&.liability {
+	  background: var(--liablity-header);
+	}
+	&.income {
+	  background: var(--income-header);
+	}
+	&.expense {
+	  background: var(--expense-header);
+	}
+  
+  }
+  
+  .tree-body {
+  
+	ul {
+	  margin-bottom: 0rem !important;
+	  padding-left: 0 !important;
+	  padding: 0.5rem 1rem !important;
+	}
+  }
+  
+  .node-content-wrapper {
+	padding: 0 !important;
+	width: 100%;
+  }
+  

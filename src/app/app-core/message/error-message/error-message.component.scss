@@ -1,0 +1,121 @@
+.error-message-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 16px;
+
+    .error-message-header {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        height: 40px;
+        min-height: 40px;
+        background-color: #FFD2DC;
+        color: #BE1622;
+        font-weight: 600;
+
+        .error-message-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-message-right-panel {
+            // margin-left: auto;
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 2px;
+
+                li {
+                    height: 40px;
+                    padding: 0 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    font-weight: 500;
+                    gap: 4px;
+                    font-weight: 500;
+
+                    &.active {
+                        background-color: #FFE7EC;
+
+                        .error-number {
+                            background-color: var(--app-danger);
+                            color: white;
+                        }
+                    }
+
+                    &.warning {
+                        color: var(--app-warning);
+
+                        .error-number {
+                            border-color: var(--app-warning);
+                            color: var(--app-warning);
+                        }
+
+                        &.active {
+                            .error-number {
+                                background-color: var(--app-warning);
+                                color: white;
+                            }
+                        }
+                    }
+
+                    &.info {
+                        color: var(--app-info);
+
+                        .error-number {
+                            border-color: var(--app-info);
+                            color: var(--app-info);
+                        }
+
+                        &.active {
+                            .error-number {
+                                background-color: var(--app-info);
+                                color: white;
+                            }
+                        }
+                    }
+
+                    .error-number {
+                        height: 18px;
+                        padding: 5px;
+                        border: 1px solid var(--app-danger);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--app-danger);
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+    }
+
+    .error-message-body {
+        background-color: #FFE7EC;
+        padding: 8px;
+
+        .error-message {
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+
+                li {
+                    color: #393939;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    padding-bottom: 4px;
+                }
+            }
+        }
+    }
+}

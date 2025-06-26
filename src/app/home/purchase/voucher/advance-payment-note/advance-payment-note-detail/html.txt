@@ -1,0 +1,87 @@
+        <div class="col-md-8 pad-0 d-flex">
+          <div class="d-flex w100 p8">
+            <div class="d-flex justify-content-between w100">
+              <!-- <div> -->
+                <view-label
+                label="Document Currency"
+                value="FJD"
+                class="mb20"
+              ></view-label>
+              <table class="app-table account-table">
+                @for(currency of advancePaymentNote.ilstbusActCurrencyExchangeRate; track $index){
+
+                  <tr class="app-table-row">
+                    <td class="app-table-cell">
+                      {{currency.description}}
+                    </td>
+                    <td class="app-table-cell">
+                      <total-value
+                      toTotal="advancePayment"
+                      currentRateElement="ibusPurPurchaseOrder"
+                      totalAfterDiscount="totalAfterDiscount"
+                      [updateSequence]="internalUpdateSequence"
+                      [items]="advancePaymentNote.ilistbusPurAdvancePaymentNoteDetail"
+                      [currencyRate]="advancePaymentNote.currencyRate"
+                      [(exchangeRateArray)]="advancePaymentNote.ilstbusActCurrencyExchangeRate"
+                    ></total-value>
+                    </td>
+                  </tr>
+                }
+            </table>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="col-md-2">
+          <div class="justify-end">
+            <div class="f-content-txt">
+              <!-- <div>Total After Discount</div>
+                            <div>Tax</div> -->
+              <div>Net Amount</div>
+            </div>
+            <div class="text-end">
+              <!-- <div>1,000.00</div>
+                            <div>1,000.00</div> -->
+              <div>19.00</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-sub-box">
+          <div class="d-flex justify-content-between">
+            <div>
+              <view-label
+                label="Reporting Currency"
+                value="INR"
+                class="mb20"
+              ></view-label>
+              <form #c="ngForm" (ngSubmit)="saveAdvancePaymentNotes()">
+                <app-input-control
+                  label="Conversion Rate"
+                  [(ngModel)]="advancePaymentNote.currencyRate"
+                  name="currencyRate"
+                  [btnClicked]="
+                    advancePaymentNote.currencyValue ===
+                    advancePaymentNote.pentActVendor.currencyValue
+                  "
+                  [decimal]="8"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                ></app-input-control>
+              </form>
+            </div>
+            <div class="justify-end">
+              <div class="f-content-txt">
+                <!-- <div>Total After Discount</div>
+                                <div>Tax</div> -->
+                <div>Net Amount</div>
+              </div>
+              <div class="text-end">
+                <!-- <div>1,000.00</div>
+                                <div>1,000.00</div> -->
+                <div>17.00</div>
+              </div>
+            </div>
+          </div>
+        </div>

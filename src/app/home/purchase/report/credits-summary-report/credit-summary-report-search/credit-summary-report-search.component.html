@@ -1,0 +1,97 @@
+<!-- <div class="content-wrapper" appAccess="CUSTR">
+  <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+  <div class="outer-content-wrapper">
+    <div class="content-wrapper acc-back">
+      <div class="sub-table">
+        <thead class="h40 thead-th">
+          <tr>
+            <th>#</th>
+            <th>Doc No</th>
+            <th>Doc Date</th>
+            <th>Voucher Name</th>
+            <th>Vendor Name</th>
+            <th class="text-right">Invoice Value</th>
+            <th class="text-right">Balance Due</th>
+            <th class="text-right">0 - 30 Days Due</th>
+            <th class="text-right">31 - 60 Days Due</th>
+            <th class="text-right">61 - 90 Days Due</th>
+            <th class="text-right">90 Days Due</th>
+          </tr>
+        </thead>
+        @if(reportResult.length !==0){
+          @for (element of reportResult; track $index) {
+            <tr>
+              <td>{{$index + 1}}</td>
+              <td>{{element.VENDOR_CODE}}</td>
+              <td>{{element.VENDOR_NAME}}</td>
+              <td class="text-right">{{element.Total_Bal_Amt | appCurrency}}</td>
+              <td class="text-right">{{element.DaysDue0to30 | appCurrency}}</td>
+              <td class="text-right">{{element.DaysDue31to60 | appCurrency}}</td>
+              <td class="text-right">{{element.DaysDue61to90 | appCurrency}}</td>
+              <td class="text-right">{{element.DaysDue90 | appCurrency}}</td>
+              <td class="text-center" (click)="creditorDetail(element.ACT_VENDOR_ID)">
+                <ion-icon name="folder-outline" color="primary"></ion-icon>
+              </td>
+            </tr>
+          }
+        }
+      </div>
+    </div>
+  </div>
+
+
+</div>
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Creditors Summary Report</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <row>
+            <div class="col-md-6 border-right">
+              <row>
+                <div class="col-md-12 ">
+                  <app-input-control label="Statement Date" type="date"></app-input-control>
+                </div>
+              </row>
+            </div>
+            <div class="col-md-6 border-right">
+              <row>
+                <div class="col-md-12 ">
+                  <app-input-control type="select" label="Currency Value"></app-input-control>
+                </div>
+              </row>
+            </div>
+
+
+          </row>
+
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text">Purchase</div>
+
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Creditors Summary Report</div>
+      </li>
+    </ul>
+  </div>
+</ng-template> -->

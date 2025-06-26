@@ -1,0 +1,344 @@
+<div class="v-flex content-wrapper">
+  <div class="d-flex space1">
+    <div>
+      <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+    </div>
+    <div class="ml-auto d-flex align-items-center mr-3">
+      <div class="mr-3 d-flex">
+        <app-checkbox
+          color="primary"
+          [checked]="balanceSheetMonthlyReport.isExcludeZero === 'Y'"
+          (change)="excludeZero($event)"
+          class="mr-3"
+        ></app-checkbox>
+        Exclude Zero
+        <div class="mr-3">
+          @if(isToggle){
+          <app-icon-button
+            name="expand"
+            toolTip="Expand All"
+            (click)="toggleExpand()"
+          ></app-icon-button>
+
+          } @if(!isToggle){
+
+          <app-icon-button
+            name="collapse"
+            toolTip="Collapse All"
+            (click)="toggleExpand()"
+          ></app-icon-button>
+          }
+        </div>
+              <div>
+          <app-icon-button
+            name="download"
+            toolTip="Export To Excel"
+            (click)="generateBalanceSheetMonthlyReportExcel()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="v-flex">
+    <div class="align-items-center v-flex">
+      <div class="pt-2">
+        <span>
+          <b>{{ appService.companyName }}</b>
+        </span>
+      </div>
+      <div class="pt-2">
+        <span
+          >Balance Sheet Statement Monthly Report for the Fiscal Period- ({{
+            balanceSheetMonthlyReport.fiscalYear
+          }})</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="ml-auto d-flex p-2">
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center">
+        <ion-icon name="square" class="parant-color"></ion-icon>
+      </div>
+      <div>Parent Group</div>
+    </div>
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center">
+        <ion-icon name="square" class="child-color"></ion-icon>
+      </div>
+      <div>Child Group</div>
+    </div>
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center">
+        <ion-icon name="square" class="text-dark"></ion-icon>
+      </div>
+      <div>Ledger</div>
+    </div>
+  </div>
+
+
+  @if(balanceSheetMonthlyReport.plstentBalanceSheetMonthlyReport.length !== 0){
+    <div class="relative h100">
+      <div class="ab">
+        <div class="rel">
+          <table class="table w100 sub-table-1">
+            <thead class="thead-th">
+              <tr>
+                <th>Period Ending</th>
+                @for(xmonts of balanceSheetMonthlyReport.plstentBalanceSheetMonthlyReport ; track $index){
+                  <th colspan="2" class="text-right">
+                    {{xmonts.monthName}}
+                    @if(xmonts.year !==0){
+                      <span > {{xmonts.year}}</span>
+                    }
+                  </th>
+                }
+              </tr>
+            </thead>
+
+            @for (xm of  balanceSheetMonthlyReport.plstentBalanceSheetMonthlyReport[0].plstLiabilityentActGroup; track $index) {
+              <ng-container [ngTemplateOutlet]="primarygroup"
+              [ngTemplateOutletContext]="{data: balanceSheetMonthlyReport.plstentBalanceSheetMonthlyReport, xm: xm, type: 'plstLiabilityentActGroup', index: $index + 100}">
+            </ng-container>
+            }
+
+          @for (ym of balanceSheetMonthlyReport.plstentBalanceSheetMonthlyReport[0].plstAssetentActGroup; track $index) {
+            <ng-container [ngTemplateOutlet]="primarygroup"
+            [ngTemplateOutletContext]="{data: balanceSheetMonthlyReport.plstentBalanceSheetMonthlyReport, xm: ym, type: 'plstAssetentActGroup', index: $index + 1000}">
+          </ng-container>
+          }
+
+          <ng-container [ngTemplateOutlet]="totaldata"
+          [ngTemplateOutletContext]="{data: balanceSheetMonthlyReport.plstentBalanceSheetMonthlyReport, header: 'PROFIT AND LOSS ACCOUNT', keyname: 'profitandLossTotal'}">
+         </ng-container>
+
+              <ng-container *ngIf="balanceSheetMonthlyReport.differenceInLiabilityLedgerOpeningBalance !== ''"
+              [ngTemplateOutlet]="totaldata"
+              [ngTemplateOutletContext]="{data: balanceSheetMonthlyReport.plstentBalanceSheetMonthlyReport, header: 'Difference in Opening Balance Liability', keyname: 'differenceInLiabilityLedgerOpeningBalance'}">
+            </ng-container>
+              </table>
+            </div>
+          </div>
+          </div>
+  }
+  </div>
+
+  <ng-template #primarygroup let-data="data" let-items="xm" let-type="type" let-index="index">
+    <tbody class="parent opened report-body" id="{{'tbody'+index}}">
+      <tr>
+        <td class="td-parent" appToggleclass="{{'tbody'+index}}">
+          <div class="d-flex align-items-center">
+            <!-- <ng-container *ngIf="items.ilistOfGroup"> -->
+              <!-- <ng-container *ngIf="items.ilistOfGroup.length > 0"> -->
+                <div class="plus">+</div>
+                <div class="minus">-</div>
+              <!-- </ng-container> -->
+            <!-- </ng-container> -->
+            <!-- <ng-container *ngIf="items.ilistentLedger">
+              <ng-container *ngIf="items.ilistentLedger.length > 0 && items.ilistOfGroup !== 0">
+                <div class="plus">+</div>
+                <div class="minus">-</div>
+              </ng-container>
+            </ng-container> -->
+            <div> {{items.groupName}}</div>
+          </div>
+
+        </td>
+
+        @for (xmonth of data; track $index) {
+          <ng-container [ngTemplateOutlet]="tdgroup"
+          [ngTemplateOutletContext]="{month: xmonth, type:type, id:items.actGroupId}"></ng-container>
+        }
+
+      </tr>
+      @for (child of items.ilistOfGroup; track $index) {
+        <ng-container [ngTemplateOutlet]="trchilddata"
+        [ngTemplateOutletContext]="{data: data, type:type, child:child, id:items.actGroupId, parentId: items.actGroupId}">
+      </ng-container>
+      }
+
+      @for (ledger of items.ilistentLedger; track $index) {
+        <ng-container [ngTemplateOutlet]="trledgerdata"
+          [ngTemplateOutletContext]="{data: data, type:type, ledger:ledger, id:items.actGroupId, parentId: items.actGroupId}">
+        </ng-container>
+      }
+
+    </tbody>
+  </ng-template>
+
+
+  <ng-template #trledgerdata let-data="data" let-ledger="ledger" let-type="type" let-parent="parentId">
+    <tr class="tr-child">
+      <td class="td-ledger">{{ledger.ledgerName}}</td>
+      @for (xmonth of data; track $index) {
+        <ng-container [ngTemplateOutlet]="tdledger"
+        [ngTemplateOutletContext]="{month: xmonth, type:type, id:ledger.actLedgerId, parentId: parent}">
+      </ng-container>
+      }
+    </tr>
+  </ng-template>
+
+
+  <ng-template #tdledger let-month="month" let-type="type" let-id="id" let-parent="parentId">
+    <td class="text-right">
+      {{month | balancesheetmonthly: type: id: 'decClosingBalance': 'ledger': parent}}
+    </td>
+    <td></td>
+  </ng-template>
+
+  <ng-template #trchilddata let-data="data" let-child="child" let-type="type" let-parent="parentId">
+    <tr class="tr-child">
+      <td class="td-child">
+        <div class="d-flex align-items-center">
+          <div class="plus">+</div>
+          <div class="minus">-</div>
+          <div>{{child.groupName}}</div>
+        </div>
+      </td>
+
+
+      @for (xmonth of data; track $index) {
+        <ng-container [ngTemplateOutlet]="tdchild"
+        [ngTemplateOutletContext]="{month: xmonth, type:type, id:child.actGroupId, parentId: parent}">
+      </ng-container>
+      }
+
+    </tr>
+  </ng-template>
+
+  <ng-template #tdchild let-month="month" let-type="type" let-id="id" let-parent="parentId">
+    <td class="text-right">
+      {{month | balancesheetmonthly: type: id: 'decLedgerClosingBalance': 'child': parent}}
+    </td>
+    <td></td>
+  </ng-template>
+
+  <ng-template #tdgroup let-month="month" let-type="type" let-id="id">
+    <td></td>
+    <td class="text-right">
+      {{month | balancesheetmonthly: type: id: 'decLedgerClosingBalance': 'group'}}
+    </td>
+  </ng-template>
+
+
+  <ng-template #totaldata let-data="data" let-header="header" let-keyname="keyname">
+    <tbody class="border-body border-bottom-double">
+      <tr class="tr-border bg-header">
+        <td>{{header}}</td>
+
+
+        @for (xmonth of data; track $index) {
+          <td></td>
+          <td class="text-right">
+            {{xmonth[keyname] | appCurrency}}</td>
+        }
+
+      </tr>
+    </tbody>
+  </ng-template>
+
+
+  <ng-template #totaldatachild let-data="data" let-header="header" let-keyname="keyname">
+    <tbody class="border-body">
+      <tr class="tr-border">
+        <td class="sticky-td">{{header}}</td>
+
+        @for (xmonth of data; track $index) {
+          <td class="text-right">{{xmonth[keyname] | appCurrency}}
+          </td>
+          <td class="text-right">
+          </td>
+        }
+
+      </tr>
+    </tbody>
+  </ng-template>
+
+  <ng-template #searchTemplate>
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-title">Trial Balance Monthly Report</div>
+        <div class="slot-right">
+          <div class="btn-group">
+            <app-icon-button
+              name="search"
+              toolTip="Search"
+              (click)="
+                generateBalanceSheetMonthlyReportWithForm(
+                  balanceSheetMonthlyReport
+                )
+              "
+            ></app-icon-button>
+            <app-icon-button
+              name="clear"
+              toolTip="Clear"
+              (click)="clear()"
+            ></app-icon-button>
+            <app-icon-button
+              name="close"
+              (click)="dialog.closeDialog()"
+            ></app-icon-button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-content">
+        <scroll>
+          <div class="dialog-content-inner">
+            <form #l="ngForm">
+              <row>
+                <div class="col-md-3">
+                  <app-input-control
+                    label="Fiscal Year"
+                    type="select"
+                    [(ngModel)]="balanceSheetMonthlyReport.fiscalYearId"
+                    name="fiscalYearId"
+                    key="id"
+                    keyName="description"
+                    [items]="initialData.DDLValues.DDLFiscalYear"
+                    defaultOption="--Select--"
+                    (onSelect)="clearDate()"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-3">
+                  <app-input-control
+                    label="Region"
+                    type="select"
+                    [(ngModel)]="balanceSheetMonthlyReport.regionValue"
+                    name="regionValue"
+                    [items]="initialData.DDLValues.DDLRegion"
+                    key="constant"
+                    keyName="description"
+                    defaultOption="--Select--"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                  ></app-input-control>
+                </div>
+              </row>
+            </form>
+          </div>
+        </scroll>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #breadCrumb>
+    <div class="breadcrumb">
+      <ul>
+        <li class="screen-name link">
+          <div class="back-btn">
+            <ion-icon src="assets/icons/back.svg"></ion-icon>
+          </div>
+          <ion-icon src="assets/icons/sales.svg"></ion-icon>
+          <div class="screen-text" (click)="navigateToAccount()"> Accounts</div>
+        </li>
+        <li class="screen-name">
+          <div class="screen-text">Balance Sheet Monthly Report</div>
+      </li>
+      </ul>
+    </div>
+  </ng-template>
+
+
+

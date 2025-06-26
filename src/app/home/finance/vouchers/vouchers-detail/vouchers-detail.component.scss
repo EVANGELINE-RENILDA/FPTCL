@@ -1,0 +1,41 @@
+::ng-deep.top-spacer{
+	margin-top: -16px;
+}
+
+.upload-btn {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width:100%;
+    background-color: #2867B2;
+    color: white;
+    cursor: pointer;
+ 
+    margin-top:10px;
+    // border-radius: 50%;
+    .uploadInput {
+        display: none;
+    }
+}
+.logo{
+    img{
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.mh200 {
+    min-height: 150px;
+    max-height: 180px;
+
+    .img-frame {
+        padding: 0 !important;
+    }
+}
+
+.disable{ 
+    opacity: 0.5;
+}
+.mb12{
+margin-bottom: 12px;
+}

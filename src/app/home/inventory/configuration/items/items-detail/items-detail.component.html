@@ -1,0 +1,508 @@
+<div class="v-flex h100" appAccess="ITMSC" [parentId]="pageId">
+  <div class="bg-card">
+    <form #l="ngForm">
+      <row>
+        <div class="col-md-3 border-right">
+          <app-input-control type="text" [(ngModel)]="item.itemName" name="itemName" [required]="true"
+            [errorTrue]="errorTrue" label="Item Name" [maxLength]="50"></app-input-control>
+          <!-- <app-input-control type="text" label="Item Code" [(ngModel)]="item.itemCode" name="itemCode"
+            [btnClicked]="true"></app-input-control> -->
+            <view-label value="{{item.itemReferenceNumber}}" label="Item Reference No">
+
+            </view-label>
+        </div>
+        <div class="col-md-3 border-right">
+          <app-input-control type="select" label="Category" [(ngModel)]="item.invCategoryId" name="invCategoryId"
+            [items]="initialData.DDLValues.CategoryList" key="id" keyName="name" valueType="int" [required]="true"
+            [errorTrue]="errorTrue" (onSelect)="categoryChange($event);item.typeId=0;item.subTypeId=0"></app-input-control>
+          <app-input-control type="select" label="Unit" [(ngModel)]="item.stockUnitValue" name="stockUnitValue"
+            [items]="initialData.DDLValues.configitemStockUnit" key="constant" keyName="description" [required]="true"
+            [errorTrue]="errorTrue"></app-input-control>
+        </div>
+        <div class="col-md-3 border-right">
+          <app-input-control type="select" label="Type" [(ngModel)]="item.typeId" name="typeId"
+            [items]="typeddl" key="id" keyName="name" valueType="int"
+            [required]="true" [errorTrue]="errorTrue" (onSelect)="typeChange($event);item.subTypeId=0"></app-input-control>
+          <app-input-control type="select" label="Sub Type" [(ngModel)]="item.subTypeId" name="subTypeId"
+          [items]="subtypeddl" key="id" keyName="name"  [required]="true" [errorTrue]="errorTrue"></app-input-control>
+        </div>
+        <div class="col-md-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <div> <app-input-control type="text" label="Item Legacy Code" [(ngModel)]="item.itemLegacyCode"
+                name="itemLegacyCode" [maxLength]="50"></app-input-control>
+              <app-input-control type="select" label="Status" [(ngModel)]="item.statusValue" name="statusValue"
+                [items]="initialData.DDLValues.configitemStatus" key="constant" keyName="description" [required]="true"
+                [errorTrue]="errorTrue"></app-input-control>
+            </div>
+            <div class="d-flex">
+              <div class="status-header-box ">
+                <div class="card-box-1">
+                  <!-- <div class="card-content">
+                                <label>Status</label>
+                                <div class="content">er</div>
+                            </div> -->
+                  <div class="card-content btn-group">
+                    @if (selectedTab === 0) {
+                    @if (item.invItemId === 0) {
+                    <app-icon-button name="save" toolTip="Save" (click)="saveItemDetail()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"></app-icon-button>
+                    }@else {
+                    <app-icon-button name="save" toolTip="Update" (click)="saveItemDetail()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                      (click)="getItemDetails(item.invItemId)"></app-icon-button>
+                    }
+                    }
+                  </div>
+                </div>
+                <div>
+                  <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+                    <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </row>
+    </form>
+  </div>
+  <div class="content-body1">
+  <div class="h100">
+    <!-- <div class="bg-card"> -->
+
+      @if(selectedTab === 0){
+      <form #a="ngForm">
+        <row>
+          <div class="col-md-6 border-right">
+            <div class="config-header">
+              Config Detail
+            </div>
+            <div>
+              Inventory Goods
+              <mat-radio-group (change)="radioClick($event)" [(ngModel)]="item.inventoryGoods" name="inventoryGoods" [required]="true">
+                <mat-radio-button value="Y" color="primary" [checked]="true">Yes</mat-radio-button>
+                <mat-radio-button value="N" color="primary">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+         <row>
+          <div class="col-md-6 mt4">
+            <div class="col-md-12">
+  
+              <app-input-control type="select" label="Tax Code" placeholder="Select Tax Label"
+              [(ngModel)]="item.actTaxCodeValue" name="actTaxCodeValue" [items]="initialData.DDLValues.ddlTaxCodes"
+              key="constant" keyName="description" (onSelect)="showTaxName(item.actTaxCodeValue)" [required]="true"
+              [errorTrue]="errorTrue"></app-input-control>
+            </div>
+            <div class="col-md-12">
+              <app-input-control type="select" label="Items Belongs To" placeholder="Select Tax Label"
+              [(ngModel)]="item.itemBelongsToValue" name="itemBelongsToValue" [items]="ddlItem" key="constant" 
+              keyName="description" [required]="true" [errorTrue]="errorTrue" (onSelect)="ledgerClear();ddlSetup()"></app-input-control>
+           
+              <app-input-control type="date" label="Created Date " [btnClicked]="true" [(ngModel)]="item.effectiveDate"
+              name="effectiveDate" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+          
+            </div>
+            
+  
+          </div>
+          <div class="col-md-6">
+            <div class="col-md-12">
+              @if (item.itemBelongsToValue !=='TRADE') {
+                <div class="hei-38">
+                <view-label label="Tax Name" value="{{taxName}}" ></view-label>
+                  </div>
+                }@else if (item.itemBelongsToValue ==='TRADE') {
+                  <div class="hei-58">
+                <view-label label="Tax Name" value="{{taxName}}" ></view-label>
+                </div>
+  
+                <label class="default-label">Item Purchase Ledger</label>
+                <app-search-debit [(ngModel)]="item.ledgerId" name="ledgerId" [displayText]="
+                                item.ledgerName
+                              " [required]="true" [errorTrue]="errorTrue" valueType="int"
+                  (onSelect)="doSelectItemLedger($event)" [getTypeValue]="purchaseCons" [getLedgerValue]="purchaseCons">
+                </app-search-debit>
+  
+                <label class="default-label">Item Sales Ledger</label>
+                <app-search-debit [(ngModel)]="item.creditLedgerId" name="creditLedgerId" [displayText]="
+                                item.creditLedgerName
+                              " [required]="true" [getTypeValue]="salesCons" [errorTrue]="errorTrue" valueType="int" [getLedgerValue]="salesCons"
+                  (onSelect)="doSelectItemCreditLedger($event)">
+                </app-search-debit>
+                }
+            </div>
+            @if(item.itemBelongsToValue !=='TRADE'){
+  
+              <div class="col-md-12 mt20">
+                <label class="default-label">Item Ledger</label> 
+                <app-search-debit [(ngModel)]="item.ledgerId" name="ledgerId" [displayText]="
+                                item.ledgerName
+                              " [required]="true" [getTypeValue]="item.itemBelongsToValue" [errorTrue]="errorTrue" valueType="int" [getLedgerValue]="item.itemBelongsToValue"
+                  (onSelect)="doSelectItemLedger($event)">
+                </app-search-debit>
+              </div>
+            }
+            <!-- @else {
+  
+              <div class="col-md-12 ">
+                <label class="default-label">Item Ledger</label>
+                <app-search-debit [(ngModel)]="item.ledgerId" name="ledgerId" [displayText]="
+                                item.ledgerName
+                              " [required]="true" [getTypeValue]="item.itemBelongsToValue" [errorTrue]="errorTrue" valueType="int"
+                  (onSelect)="doSelectItemLedger($event)">
+                </app-search-debit>
+              </div>
+            } -->
+            <div class="col-md-12">
+              <app-input-control type="number" label="Maximum Dis % " [(ngModel)]="item.maximumDiscount"
+              name="maximumDiscount" [decimal]="2" [max]="99"></app-input-control>
+            </div>
+          </div>
+         </row>
+          </div>
+          @if(otherDetail === true){
+          <div class="col-md-6">
+            <div class="config-header">
+              Other Detail
+            </div>
+            <row>
+              <div class="col-md-6">
+                <app-input-control label="Branch" type="select" [(ngModel)]="item.companyBranchId" name="companyBranchId"
+                  valuetype="int" [items]="initialData.DDLValues.BranchList" key="id" keyName="code"></app-input-control>
+              </div>
+              <div class="col-md-6"></div>
+              <div class="col-md-6"><app-input-control label="Opening Quantity" [(ngModel)]="item.openingQuantity"
+                  name="openingQuantity" [decimal]="0" type="number"></app-input-control></div>
+              <div class="col-md-6"><app-input-control label="Opening Balance" [(ngModel)]="item.openingBalance"
+                  name="openingBalance" [decimal]="2"></app-input-control></div>
+              <div class="col-md-6"><app-input-control label="Min Quantity" [(ngModel)]="item.minQuantity" name="minLevel"  (onChange)="MinMaxQuantity()"
+                [decimal]="0" type="number" ></app-input-control></div>
+              <div class="col-md-6"><app-input-control label="Max Quantity" [(ngModel)]="item.maxQuantity" name="maxLevel"
+                [decimal]="0" type="number" (onChange)="MinMaxQuantity()"></app-input-control></div>
+              <div class="col-md-12"><app-input-control label="Item Description" type="textarea" [maxLength]="250"
+                  className="notes" [(ngModel)]="item.itemDescription" name="itemDescription"></app-input-control></div>
+            </row>
+          </div>
+          }
+        </row>
+      </form>
+      } @else if(selectedTab === 1){
+      <app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+        [dataSource]="item.ilistitementInvNotes" [hasIndex]="true">
+        <ng-template cellHeaderDef="add">
+          <app-icon-button name="add" toolTip="Add New" appButtonAccess="ITNNB"
+            (click)="createNewNotes()"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="notesDetail" let-element>
+          <div>{{element.notesDetail}}</div>
+        </ng-template>
+        <ng-template cellDef="createdFullName" let-element>
+          <div>{{element.createdFullName}}</div>
+        </ng-template>
+        <ng-template cellDef="createdDate" let-element>
+          <div>{{element.createdDate | appDate: "datetime"}}</div>
+        </ng-template>
+      </app-table>
+      } @else if(selectedTab === 2){
+      <div class="v-flex h100">
+        <div class="search_text pl12px">
+          <app-input-control placeholder="Search By Any File Name" type="text" [(ngModel)]="filterFileName"
+            namee="filterFileName" [search]="true"></app-input-control>
+        </div>
+        <div class="flex-1 relative mh100">
+          <scroll>
+            <table class="app-table account-table">
+              <thead class="app-table-head">
+                <tr class="app-table-header-row">
+                  <th class="app-table-header-cell text-center">#</th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">File Name</div>
+                    <div class="header-cell-subtitle">
+                      Created By | Date | Time
+                    </div>
+                  </th>
+                  <th class="app-table-header-cell">File Format</th>
+                  <th class="app-table-header-cell">Size</th>
+                  <th class="app-table-header-cell">
+                    <div class="flex-center">
+                      <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()">
+                      </app-icon-button>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="app-table-body">
+                @for (doc of item.ilistitementInvAttachments | filterAndSort : filterFileName : 'attachmentFileName' :
+                false; track doc;
+                let i = $index) {
+                <tr class="app-table-row">
+                  <td class="app-table-cell text-center">
+                    {{ i + 1 }}
+                  </td>
+                  <td class="app-table-cell">
+                    <div>
+                      {{ doc.attachmentFileName }}
+                    </div>
+                    <div class="table-cell-subtitle">
+                      {{ doc.modifiedByFullName }} |
+                      {{
+                      doc.createdDate
+                      | appDate
+                      : "datetime"
+                      }}
+                    </div>
+                  </td>
+                  <td class="app-table-cell">
+                    {{ doc.attachmentType }}
+                  </td>
+                  <td class="app-table-cell">
+                    {{ doc.attachmentSize }}
+                  </td>
+                  <td class="app-table-cell">
+                    <div class="flex-center">
+                      <app-icon-button name="download" toolTip="Download" appButtonAccess="IADBT"
+                        (click)="downloadDocumentImage(doc)"></app-icon-button>
+                      <app-icon-button name="doc-view" toolTip="View"
+                        (click)="downloadDocumentImage(doc)"></app-icon-button>
+                      <app-icon-button name="doc-delete" toolTip="Delete"
+                        (click)="deleteActAttachmentFile(doc)"></app-icon-button>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </scroll>
+        </div>
+      </div>
+      }
+    <!-- </div> -->
+    <!-- @else if(selectedTab === 3){
+
+
+        <div class="print-wrap">
+            <row>
+                <div class="col-md-4">
+                    <app-input-control type="textarea" [maxLength]="250" className="notes-1"
+                        label="COMMENTS OR SPECIAL INSTRUCTIONS"></app-input-control>
+                    <div class="end">
+                        <app-icon-button name="save" toolTip="Update" class=""></app-icon-button>
+                    </div>
+                </div>
+            </row>
+        </div>
+
+
+
+        }@else if(selectedTab === 4){
+
+        <app-table [columns]="poData" [hideSelectAll]="true" [columnsName]="poDataName" [dataSource]="tableNoteData">
+            <ng-template #slotLeft>
+                <div class="d-flex w100 gap-5">
+                    <div class="col-md-4">
+                        <app-input-control placeholder="Status" type="select"></app-input-control>
+                    </div>
+                    <div class="col-md-1">
+                        <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                    </div>
+                </div>
+            </ng-template>
+        </app-table>
+        } -->
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Details</div>
+        </div>
+        @if (item.invItemId !== 0) {
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        }
+      </div>
+      <!-- <div class="open-arrow" id="trigger{{pageId}}">
+                <ion-icon name="chevron-down-outline"></ion-icon>
+            </div> -->
+    </div>
+    <!-- <div class="panel-footer-expand" id="footerpanel{{pageId}}">
+            <row>
+                <div class="col-md-4 footer-textarea">
+                    <app-input-control type="textarea" [maxLength]="250" className="notes" [applybtn]=true
+                        label="Common Narration Text"></app-input-control>
+                </div>
+                <div class="col-md-2">
+                    <view-label label="Document Currency" value="FJD" class="mb20"></view-label>
+                    <app-input-control label="Conversion Rate" type="number" [required]="true"></app-input-control>
+                </div>
+                <div class="col-md-2">
+                    <div class="justify-end">
+                        <div class="f-content-txt">
+                            <div>Total After Discount</div>
+                            <div>Tax</div>
+                            <div>Net Amount</div>
+                        </div>
+                        <div class="text-end">
+                            <div>1,000.00</div>
+                            <div>1,000.00</div>
+                            <div>0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-sub-box">
+                    <div class="d-flex between">
+                        <div>
+                            <view-label label="Reporting Currency" value="INR" class="mb20"></view-label>
+                        </div>
+                        <div class="justify-end">
+                            <div class="f-content-txt">
+                                <div>Total After Discount</div>
+                                <div>Tax</div>
+                                <div>Net Amount</div>
+                            </div>
+                            <div class="text-end">
+                                <div>1,000.00</div>
+                                <div>1,000.00</div>
+                                <div>0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </row>
+
+
+        </div> -->
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToInventory()">Inventory</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Item</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase
+        Order > Detail >
+        Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" appButtonAccess="ITNSB"
+            (click)="saveItemInNotes()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" appButtonAccess="ITNCB"
+            (click)="notesClear()"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #n="ngForm">
+          <row>
+            <!-- <div class="col-md-6"> <app-input-control type="select" label="Status" key="constant"
+                                defaultOption="--Select--" keyName="description" [errorTrue]="errorTrue"
+                                [required]="true"></app-input-control>
+                        </div> -->
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue" [maxLength]="250"
+                label="Notes" [(ngModel)]="itemNotes.notesDetail" defaultOption="--Select--" name="notesDetail"
+                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Items > Details > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <app-drop-zone [multiple]="true" [accept]="accept" [fileType]="fileType" appButtonAccess="IAUBT"
+          (onUpload)="uploadAttachemnt($event)"></app-drop-zone>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+  <div class="status-table-header">
+    <div class="changed-by_label">
+      Changed By | Changed Date
+    </div>
+    <div class="pl14">
+      Status
+    </div>
+  </div>
+  @for (item of item.ilistitementInvItemStatusHistory; track $index) {
+  <div class="status-table-content">
+    <div class="changed-by">
+      {{item.changedByUsername}}
+      <div class="changed-by_sub">
+        {{item.effectiveDate | appDate:"datetime"}}
+      </div>
+    </div>
+    <div class="status_align pl14">
+      <div class="status-PRSTV">
+        {{item.statusDescription}}
+      </div>
+    </div>
+  </div>
+  }
+  <!-- <div class="mat-menu-drop"> -->
+  <!-- <app-table
+      [hideSelectAll]="true"
+      [showPaginator]="false"
+      [columns]="statusMenu"
+      [columnsName]="statusMenuName"
+      [dataSource]="tableStatusMenuData"
+    >
+      <ng-template cellHeaderDef="fileName">
+        <div class="header-cell-title">Changed By | Effective Date</div>
+      </ng-template>
+      <ng-template cellDef="fileName" let-element>
+        <div class="header-cell-title">{{element.changedBy}}</div>
+        <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+      </ng-template>
+    </app-table> -->
+  <!-- </div> -->
+
+</mat-menu>

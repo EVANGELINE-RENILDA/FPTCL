@@ -1,0 +1,564 @@
+<div class="v-flex h100">
+  <form #l="ngForm">
+    <div class="content-header">
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Vendor Name</label>
+          <app-search-vendor [(ngModel)]="purchaseQuotation.actVendorId" name="vendorId"
+            [displayText]="purchaseQuotation.ientActVendor.vendorName" (onSelect)="onVendorSelect($event)"
+            [required]="true" [errorTrue]="errorTrue" valueType="int"></app-search-vendor>
+        </div>
+        <div class="card-content">
+          <label>Vendor ID </label>
+          <div class="content">
+            {{
+            purchaseQuotation.ientActVendor.vendorCode
+            ? purchaseQuotation.ientActVendor.vendorCode
+            : "-"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Document No</label>
+          <div class="content">
+            {{
+            purchaseQuotation.purchaseQuotationRefNo
+            ? purchaseQuotation.purchaseQuotationRefNo
+            : "-"
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <label>Document Name</label>
+          <div class="content">
+            {{
+            purchaseQuotation.ientActVoucherConfig.voucherName
+            ? purchaseQuotation.ientActVoucherConfig.voucherName
+            : "-"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content ">
+          <label>Branch Name</label>
+          <div class="content">
+            {{
+            purchaseQuotation.ientActCompanyBranch.branchName
+            ? purchaseQuotation.ientActCompanyBranch.branchName
+            : "-"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Posting Date</label>
+          <div class="content">
+            {{purchaseQuotation.verifiedDate | appDate: appSetting.environment.dateViewFormatWithTime}}
+          </div>
+        </div>
+        <div class="card-content">
+          <app-input-control type="date" label="Document Date" [required]="true" [errorTrue]="errorTrue"
+            [(ngModel)]="purchaseQuotation.documentDate" name="documentDate"
+            (change)="documentDateConversionDate()"></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <app-input-control type="date" label="Created Date" [(ngModel)]="purchaseQuotation.preparedDate"
+            name="preparedDate" [btnClicked]="__isDisabled()"></app-input-control>
+        </div>
+        <div class="card-content">
+          <label>Created By</label>
+          <div class="content">
+            {{ purchaseQuotation.pqPreparedBy ? purchaseQuotation.pqPreparedBy : "-" }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Region</label>
+          <div class="content">
+            {{
+            purchaseQuotation.regionDescription
+            ? purchaseQuotation.regionDescription
+            : "-"
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+
+          <view-label label="Status" status="{{purchaseQuotation.statusValue}}"
+            statusValue="{{purchaseQuotation.statusDescription}}"></view-label>
+
+        </div>
+      </div>
+      <div class="status-header-box ">
+        <div class="card-box-1">
+          <div class="card-content btn-group">
+            <app-icon-button name="save" toolTip="Save" (click)="savePurchaseQuotationDetail()"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+
+          </div>
+        </div>
+        <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <div class="v-flex h100">
+      <form #a="ngForm" class="flex-1 relative">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell tw50 text-center">#</th>
+                <th class="app-table-header-cell tw100"></th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">Item | Service Code</div>
+                  <div class="header-cell-subtitle">Name | Description</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Quantity</div>
+                  <div class="header-cell-subtitle">Unit</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Unit Price</div>
+                  <div class="header-cell-subtitle">
+                    {{ purchaseQuotation.currencyValue }}
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Dis %</div>
+                  <div class="header-cell-subtitle">Value</div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">After Discount %</div>
+                  <div class="header-cell-subtitle">
+                    Rep CCY ({{ purchaseQuotation.currencyValue }})
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Tax%</div>
+                  <div class="header-cell-subtitle">Value</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Total</div>
+                  <div class="header-cell-subtitle">
+                    Rep CCY({{ purchaseQuotation.currencyValue }})
+                  </div>
+                </th>
+                @if(__isDisabled()){
+                <th class="app-table-header-cell tw100">
+                  <div class="flex-center">
+                    <app-icon-button name="add" toolTip="Add New" (click)="
+                          addRow(purchaseQuotation.plistentPurQuotationItem.length)
+                        ">
+                    </app-icon-button>
+                  </div>
+                </th>
+                }
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (element of purchaseQuotation.plistentPurQuotationItem; track
+              $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ $index + 1 }}
+                </td>
+                <td></td>
+                <td class="app-table-cell">
+                  <div class="table-cell-header only-input">
+
+                    @if(__isDisabled() && (purchaseQuotation.actVendorId !== 0 &&
+                    purchaseQuotation.documentDate !== '')){
+                    <app-search-item [(ngModel)]="element.ientInvItem.invItemId"
+                      [displayText]="element.ientInvItem.itemName" [required]="true" [errorTrue]="errorTrue"
+                      (onSelect)="doItemSelect($event, element, $index)" name="invItemId{{ $index }}" valueType="int"
+                      [isInventory]="
+                          purchaseQuotation.ientActVoucherConfig.needInventory
+                        "></app-search-item>
+                    } @else{
+                    {{
+                    element.ientInvItem.itemName
+                    ? element.ientInvItem.itemName
+                    : "-"
+                    }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    element.ientInvItem.itemCode
+                    ? element.ientInvItem.itemCode
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabled() && (this.purchaseQuotation.actVendorId !== 0 &&
+                    this.purchaseQuotation.documentDate !== '')){
+                    <app-input-control type="number" [(ngModel)]="element.quantity" name="quantity{{ $index }}"
+                      [decimal]="2" [required]="true" [errorTrue]="errorTrue" valuetype="int"></app-input-control>
+                    }@else{
+                    {{ element.quantity ? element.quantity : "0" }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    element.ientInvItem.stockUnitValue
+                    ? element.ientInvItem.stockUnitValue
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  @if(__isDisabled() && (this.purchaseQuotation.actVendorId !== 0 &&
+                  this.purchaseQuotation.documentDate !== '')){
+                  <app-input-control type="number" [(ngModel)]="element.unitPrice" name="unitPrice{{ $index }}"
+                    [decimal]="2" [required]="true" [errorTrue]="errorTrue" valuetype="int">
+                  </app-input-control>
+                  } @else{
+                  {{ element.unitPrice ? element.unitPrice : "0" }}
+                  }
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabled() && (this.purchaseQuotation.actVendorId !== 0 &&
+                    this.purchaseQuotation.documentDate !== '')){
+                    <app-input-control type="number" [(ngModel)]="element.discountPercentage" [decimal]="2"
+                      type="discountPercentage" name="discountPercentage{{ $index }}"></app-input-control>
+                    }@else{
+                    {{
+                    element.discountPercentage
+                    ? element.discountPercentage
+                    : "0"
+                    }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ element.discountPrice ? element.discountPrice : '-'}}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    {{ element.totalAfterDiscount }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ element.totalAfterDiscountReportingCurrency ? element.totalAfterDiscountReportingCurrency : '-'
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabled() && (this.purchaseQuotation.actVendorId !== 0 &&
+                    this.purchaseQuotation.documentDate !== '')){
+                    <app-input-control type="number" [(ngModel)]="element.taxPercentage"
+                      name="taxPercentage{{ $index }}" [decimal]="2" [btnClicked]="
+                          __isDisabled() ||
+                          (this.purchaseQuotation.actVendorId !== 0 &&
+                            this.purchaseQuotation.documentDate !== '') ||
+                            purchaseQuotation.ientActVoucherConfig.isTaxEditable ===
+                            'N' ||
+                          element.sentInvItem.actTaxCodeValue === 'VAT-C'
+                        "></app-input-control>
+                    }@else{
+                    {{ element.taxPercentage }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">{{ element.vatAmount }}</div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    @if(__isDisabled()){
+                    <item-value [(item)]="
+                          purchaseQuotation.plistentPurQuotationItem[$index]
+                        " discountValue="discountPrice" totalAfterDiscount="totalAfterDiscount"
+                      totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency" total="totalPrice"
+                      totalReportingCurrency="totalPriceReportingCurrency" taxAmount="vatAmount"
+                      [unitPrice]="element.unitPrice" [quantity]="element.quantity"
+                      [taxPercentage]="element.taxPercentage" [discountPercentage]="element.discountPercentage"
+                      [(updateSequence)]="updateSequence" [currencyRate]="purchaseQuotation.currencyRate">
+                      {{ element.totalPrice }}
+                    </item-value>
+                    } @else{
+                    {{ element.totalPrice }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ element.totalPriceReportingCurrency ? element.totalPriceReportingCurrency : '-' }}
+                  </div>
+                </td>
+                @if(__isDisabled()){
+                <td class="app-table-cell">
+
+                  <div class="space-evenly align-items-center">
+                    <app-icon-button name="add" class="table-icon" toolTip="Add" (click)="
+                          addRow(purchaseQuotation.plistentPurQuotationItem.length)
+                        "></app-icon-button>
+                    <app-icon-button name="doc-delete" toolTip="Delete"
+                      (click)="itemsDelete(element,$index)"></app-icon-button>
+                  </div>
+                </td>
+                }
+
+              </tr>
+              }
+            </tbody>
+          </table>
+          @if(__isDisabled()){
+          <total-value discountValue="discountPrice" totalAfterDiscount="totalAfterDiscount"
+            totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency" total="totalPrice"
+            totalReportingCurrency="totalPriceReportingCurrency" taxAmount="vatAmount" [updateSequence]="updateSequence"
+            [items]="purchaseQuotation.plistentPurQuotationItem" (onCalculated)="onTotalValue($event)"
+            (onExchangeRateCal)="getExchangeRateLst($event)"
+            [(exchangeRateArray)]="purchaseQuotation.ilstentActCurrencyExchangerate"
+            [currencyRate]="purchaseQuotation.currencyRate"></total-value>
+          }
+        </scroll>
+      </form>
+    </div>
+    } @else if(selectedTab === 1){
+    <app-purchase-quotation-detail-notes [parentData]="purchaseQuotation" (notesValue)="getNotesValue($event)">
+    </app-purchase-quotation-detail-notes>
+    } @else if(selectedTab === 2){
+    <app-purchase-quotation-detail-attachment
+      [parentData]="purchaseQuotation"></app-purchase-quotation-detail-attachment>
+    }
+    @else if(selectedTab === 3){
+    <app-purchase-quotation-detail-preview></app-purchase-quotation-detail-preview>
+    }
+
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+      </div>
+      <div class="slot-end d-flex align-items-center">
+        <div class="tabs">
+          <div>Gross Amount : {{ purchaseQuotation.totalAfterDiscount }}</div>
+        </div>
+        <div class="tabs">
+          <div>Tax Amount : {{ purchaseQuotation.totalTaxAmount }}</div>
+        </div>
+        <div class="tabs">
+          <div>Net Amount : {{ purchaseQuotation.totalNetAmount }}</div>
+        </div>
+        <div class="open-arrow" id="trigger{{ pageId }}">
+          <ion-icon name="chevron-down-outline"></ion-icon>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{pageId}}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [maxLength]="250" className="notes" [applybtn]="false"
+            label="Common Narration Text" [(ngModel)]="purchaseQuotation.comments" name="comments"
+            [btnClicked]="!__isDisabled()"></app-input-control>
+        </div>
+        <div class="col-md-8 pad-0 d-flex">
+          <div class="d-flex w100 p8">
+            <div class="d-flex justify-content-between w100">
+              <div class="w200">
+                <view-label label="Document Currency" value="{{purchaseQuotation.ientActVendor.currencyValue }}"
+                  class="mb20"></view-label>
+                <app-input-control label="Conversion Rate" type="number" [required]="true"
+                  [(ngModel)]="purchaseQuotation.currencyRate" [errorTrue]="errorTrue" [required]="true"
+                  name="currencyRate" [decimal]="8"></app-input-control>
+              </div>
+              <table class="app-footer-table">
+                @for(currency of exchangeRateLst; track $index){
+                <tr class="app-footer-table-row ">
+                  <td class="app-footer-table-cell footer-header-txt text-end">
+                    {{currency.description}}
+                  </td>
+                  <td class="app-footer-table-cell footer-cnt-txt text-end">
+                    {{currency.documentCurrencyAmount}}
+                  </td>
+                </tr>
+                }
+              </table>
+
+            </div>
+          </div>
+          <div class="d-flex w100 p8 bg-sub-footer p8">
+            <div class="flex-1">
+              <view-label label="Reporting Currency" [value]="purchaseQuotation.currencyValue"
+                class="mb20"></view-label>
+            </div>
+            <table class="app-footer-table">
+              @for(currency of exchangeRateLst; track $index){
+              <tr class="app-footer-table-row ">
+                <td class="app-footer-table-cell footer-header-txt text-end">
+                  {{currency.description}}
+                </td>
+                <td class="app-footer-table-cell footer-cnt-txt text-end">
+                  {{currency.reportingCurrencyAmount}}
+                </td>
+              </tr>
+              }
+            </table>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn"> <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon></div>
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text">Purchase</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Quotation</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+  <div class="status-table-header">
+    <div class="changed-by_label">
+      Changed By | Effective Date
+    </div>
+    <div class="pl14">
+      Status
+    </div>
+  </div>
+  <div class="status-table-content">
+    <div class="changed-by">
+      Chief Finance Officer
+      <div class="changed-by_sub">
+        29/09/2023 10:57 AM
+      </div>
+    </div>
+    <div class="status_align pl14">
+      Pending Submission
+    </div>
+  </div>
+  <!-- <div class="mat-menu-drop"> -->
+  <!-- <app-table
+    [hideSelectAll]="true"
+    [showPaginator]="false"
+    [columns]="statusMenu"
+    [columnsName]="statusMenuName"
+    [dataSource]="tableStatusMenuData"
+  >
+    <ng-template cellHeaderDef="fileName">
+      <div class="header-cell-title">Changed By | Effective Date</div>
+    </ng-template>
+    <ng-template cellDef="fileName" let-element>
+      <div class="header-cell-title">{{element.changedBy}}</div>
+      <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+    </ng-template>
+  </app-table> -->
+  <!-- </div> -->
+
+</mat-menu>
+
+<!-- <ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/sales.svg"></ion-icon>
+      Purchase Quotation > Detail >
+        Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="savePurchaseQuotationNotes()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <row>
+          <div class="col-md-6"> <app-input-control type="select" label="Status" keyName="description"
+              [required]="true" [errorTrue]="errorTrue" [(ngModel)]="purchaseQuotationNotes.statusValue" name="statusValue"  [items]="statusddl" key="constant" keyName="description"></app-input-control>
+          </div>
+          <div class="col-md-12 mb26">
+            <app-input-control type="textarea" className="notes-1" [maxLength]="250" [required]="true"
+              label="Notes" [(ngModel)]="purchaseQuotationNotes.notesDetail" name="notesDetail"></app-input-control>
+          </div>
+        </row>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+<!-- <ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/sales.svg"></ion-icon>
+        Purchase Quotation> Detail >
+        Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <app-drop-zone fileType="pdf" [accept]="accept" [multiple]="true" (onUpload)="uploadAttachemnt($event)"></app-drop-zone>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+<!-- @if(purchaseQuotation.ientActVoucherConfig.needCash === 'N'){
+        <div class="end gap-5 p10">
+          @if(purchaseQuotation.documentDate ==='' && __hideBtn()){
+          <div class="col-md-2 only-input">
+            <app-auto-search-quotation
+              (onSelect)="getPurchaseQuotation($event)"
+              [parentData]="purchaseQuotation"
+            ></app-auto-search-quotation>
+          </div>
+          } @if(purchaseQuotation.documentDate ==='' && __hideBtn()){
+          <app-icon-button
+            name="add"
+            toolTip="Get Item"
+            (click)="getItemsByPurchaseQuotationIdForPurchaseOrder()"
+            appAccess="GETIM"
+            [parentId]="pageId"
+          >
+          </app-icon-button>
+          }
+        </div>
+        } -->

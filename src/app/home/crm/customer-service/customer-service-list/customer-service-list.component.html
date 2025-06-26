@@ -1,0 +1,219 @@
+<!--  -->
+<div class="content-wrapper" [appAccess]="appAccess" [parentId]="pageId">
+    @if(this.type === ''){
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" columnID="customerServiceId"
+        [dataSource]="tableData" (pageChanged)="pageChanged($event)" (onSelect)="onSelect($event)"  [sortColumnsName]="sortColumnName"
+        [hideSelectAll]="isHideSelectedAll">
+        <ng-template cellDef="customerRefNo" let-element>
+            <a href="">{{element.serviceRefNo}}</a>
+        </ng-template>
+        <ng-template cellHeaderDef="customerName">
+            <div class="header-cell-title">Customer Name</div>
+            <div class="header-cell-subtitle">Customer No</div>
+        </ng-template>
+        <ng-template cellDef="customerName" let-element>
+            @if(element.customerName.length>25){
+            <div class="ellipse-text" matTooltip="{{element.customerName}}">{{element.customerName}}</div>
+            <div class="table-cell-subtitle">{{element.customerRefNo}}</div>
+            }
+            @else{
+            <div>{{element.customerName}}</div>
+            <div class="table-cell-subtitle">{{element.customerRefNo}}</div>
+
+            }
+        </ng-template>
+        <ng-template cellHeaderDef="branchDescription">
+            <div class="header-cell-title miw250">Branch</div>
+            <div class="header-cell-subtitle">Service Date | By</div>
+        </ng-template>
+        <ng-template cellDef="branchDescription" let-element>
+            <div>{{element.branchDescription}}</div>
+            <div class="table-cell-subtitle">{{element.serviceDate | appDate}} | {{element.serviceBy}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="duration">
+            <div class="header-cell-title text-right">Duration</div>
+            <div class="header-cell-subtitle  text-right">(days)</div>
+        </ng-template>
+        <ng-template cellDef="duration" let-element>
+            <div class="text-right">{{element.duration}}</div>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.customerServiceId)"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="statusDescription" let-element>
+            <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+        </ng-template>
+        <ng-template cellDef="leadCount" let-element>
+            <div class=" text-right">{{element.leadCount}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="leadCount" >
+            <div class=" text-right">	
+                No of Leads</div>
+        </ng-template>
+        @if(!this.customerId ){
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+        </ng-template>
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+        </ng-template>
+        }
+        <ng-template #slotRight>
+            <app-icon-button name="add" toolTip="Add New" (click)="createNewCustomerService()"
+                [appButtonAccess]="btnAccess"></app-icon-button>
+        </ng-template>
+    </app-table>
+    }
+    @else{
+    <app-table [pagination]="pagination" [columns]="customerColumns" [columnsName]="customerColumnsName"
+        columnID="customerServiceId" [dataSource]="tableData" (pageChanged)="pageChanged($event)"
+        (onSelect)="onSelect($event)" [hideSelectAll]="isHideSelectedAll">
+
+        <ng-template cellDef="serviceRefNo" let-element>
+            <div>{{element.serviceRefNo}}</div>
+            <div class="table-cell-subtitle">{{element.serviceTypeDescription}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="serviceRefNo" let-element>
+            <div class="header-cell-title">Service No</div>
+            <div class="header-cell-subtitle">Service Type</div>
+        </ng-template>
+        <ng-template cellDef="statusDescription" let-element>
+            <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.customerServiceId)"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="leadCount" let-element>
+            <div class="text-center">{{element.leadCount}}</div>
+        </ng-template>
+        <ng-template cellDef="serviceNote" let-element>
+            @if(element.serviceNote.length > 30){ <div class="table-ellipse" [matTooltip]="element.serviceNote">
+                {{element.serviceNote }}
+            </div>
+            }
+            @else{
+            {{element.serviceNote}}
+            }
+        </ng-template>
+        <ng-template cellDef="serviceDate" let-element>
+            {{element.serviceDate | appDate}}
+        </ng-template>
+
+        <ng-template #slotRight>
+            <app-icon-button name="add" toolTip="Add New" (click)="createNewCustomerService()"
+                [appButtonAccess]="btnAccess"></app-icon-button>
+        </ng-template>
+
+    </app-table>
+    }
+</div>
+
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Customer Service Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (ngSubmit)="onSearch()">
+
+                        <row>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Customer No" defaultOption="--Select--"
+                                            [items]="initialData.DDLValues.DDLCustomer" key="id" keyName="code"
+                                            [(ngModel)]="searchParams.customerId" (onEnter)="onSearch()" valueType="int"
+                                            name="customerId"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="input" label="Service No"
+                                            placeholder="Enter Service No" [(ngModel)]="searchParams.serviceRefNo"
+                                            (onEnter)="onSearch()" name="serviceRefNo"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Service Type"
+                                            placeholder="Select Service Type" defaultOption="--Select--"
+                                            [(ngModel)]="searchParams.serviceTypeValue"
+                                            [items]="initialData.DDLValues.DDLServiceType" key="constant"
+                                            keyName="description" (onEnter)="onSearch()"
+                                            name="serviceTypeValue"></app-input-control>
+                                    </div>
+
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Communication Type"
+                                            placeholder="Select Communication Type" (onEnter)="onSearch()"
+                                            [(ngModel)]="searchParams.communicationTypeValue" defaultOption="--Select--"
+                                            [items]="initialData.DDLValues.DDLCommunicationType"
+                                            name="communicationTypeValue" key="constant"
+                                            keyName="description"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Status" placeholder="Select Status"
+                                            [(ngModel)]="searchParams.statusValue" name="statusValue"
+                                            defaultOption="--Select--" (onEnter)="onSearch()"
+                                            [items]="initialData.DDLValues.DDLStatus" key="constant"
+                                            keyName="description" placeholder="Select Status"></app-input-control>
+                                    </div>
+
+                                </row>
+                            </div>
+
+                            <div class="col-md-4">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Branch" placeholder="Select Branch"
+                                            [(ngModel)]="searchParams.branchValue" name="branchValue"
+                                            defaultOption="--Select--" (onEnter)="onSearch()"
+                                            [items]="initialData.DDLValues.DDLBranch" key="constant"
+                                            keyName="description"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Service By"
+                                            placeholder="Select Service By" [(ngModel)]="searchParams.servicedBy"
+                                            name="serviceBy" (onEnter)="onSearch()" defaultOption="--Select--"
+                                            [items]="initialData.DDLValues.DDlAllUser" key="constant"
+                                            keyName="description"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Service Date"
+                                            [maxDate]="searchParams.serviceDateTo" placeholder="Select Service Date "
+                                            [(ngModel)]="searchParams.serviceDate" (onEnter)="onSearch()"
+                                            name="serviceDate"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                        </row>
+
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                <div class="screen-text">Customer Service</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

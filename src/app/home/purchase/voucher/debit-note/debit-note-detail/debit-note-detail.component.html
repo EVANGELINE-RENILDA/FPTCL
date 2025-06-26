@@ -1,0 +1,698 @@
+<div class="v-flex h100">
+  @if(debitNote.statusValue !== 'INPRO'){
+  <form #z="ngForm" class="flex-end pr20 header-bg h55">
+    <div class="col-md-3 header-input">
+      <app-input-control type="select" label="Document Name" [(ngModel)]="voucherConfigId" name="voucherConfigId"
+        [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+        [required]="true" (onSelect)="getVoucherDetail(voucherConfigId)" defaultOption="--Select--"></app-input-control>
+    </div>
+    <div class="col-md-1 end d-flex align-items-center">
+      <app-icon-button name="add" toolTip="Add New" (click)="navigateDetail(z)"></app-icon-button>
+    </div>
+  </form>
+  }
+  <form #a="ngForm" (ngSubmit)="saveDebitNote()" class="content-header">
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Vendor Name</label>
+        @if(debitNote.statusValue === 'INPRO'){
+        <app-search-vendor [displayText]="debitNote.ibusActVendorDetails.vendorName" [hideNewBtn]="true"
+          [hideStatus]="true" statusValue="ACTIV" [(ngModel)]="debitNote.ibusActVendorDetails.actVendorId"
+          name="actVendorId" [required]="true" [errorTrue]="errorTrue" (onSelect)="doVendorSelect($event)"
+          screenType="Debit Note" screenType1="Details" module="Purchase"
+          navigateUrl="/home/purchase/debit-note/search"></app-search-vendor>
+        }@else {
+        {{
+        debitNote.ibusActVendorDetails.vendorName
+        ? debitNote.ibusActVendorDetails.vendorName
+        : "-"
+        }}
+        }
+      </div>
+      <div class="card-content">
+        <label>Vendor Ledger Name</label>
+        <div class="content">
+          {{
+          debitNote.ibusActVendorDetails.ientActLedger.ledgerName
+          ? debitNote.ibusActVendorDetails.ientActLedger.ledgerName
+          : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Document No</label>
+        <div class="content">
+          {{ debitNote.debitNoteRefNo ? debitNote.debitNoteRefNo : "-" }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Document Name</label>
+        <div class="content">
+          {{
+          debitNote.ibusActVoucherConfig.voucherName
+          ? debitNote.ibusActVoucherConfig.voucherName
+          : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Branch Name</label>
+        <div class="content">
+          {{
+          debitNote.ibusActBranch.branchName
+          ? debitNote.ibusActBranch.branchName
+          : "-"
+          }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Posting Date</label>
+        <div class="content">
+          @if(debitNote.approvedDate !== ''){
+          {{
+          debitNote.approvedDate
+          | appDate : appSetting.environment.dateViewFormatWithTime
+          }}
+          } @else{ - }
+        </div>
+      </div>
+      <div class="card-content">
+        <app-input-control type="date" label="Document Date" [(ngModel)]="debitNote.documentDate" name="documentDate"
+          [required]="true" [errorTrue]="errorTrue"
+          [btnClicked]="__isDisabled() && debitNote.actVendorId === 0"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Created Date</label>
+        <div class="content">
+          {{
+          debitNote.enteredDate
+          | appDate : appSetting.environment.dateViewFormatWithTime
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Created By</label>
+        <div class="content">
+          {{ debitNote.createdBy ? debitNote.createdBy : "-" }}
+        </div>
+      </div>
+    </div>
+
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content">
+          <view-label label="Status" status="{{ debitNote.statusValue }}"
+            statusValue="{{ debitNote.statusDescription }}"></view-label>
+        </div>
+        <div class="card-content">
+          <label>Region</label>
+          <div class="content">
+            {{
+            debitNote.regionDescription ? debitNote.regionDescription : "-"
+            }}
+          </div>
+        </div>
+        <div class="card-content btn-group">
+          @if(debitNote.statusValue !=='CANCL' && debitNote.statusValue!=='APROV'){
+          @if(debitNote.actDebitNoteId === 0 ){
+          <app-icon-button name="save" toolTip="Save" (click)="saveDebitNote()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"></app-icon-button>
+          } @else{
+
+          <app-icon-button name="save" toolTip="Update" (click)="saveDebitNote()"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh"
+            (click)="openDebitNote(debitNote.actDebitNoteId)"></app-icon-button>
+          @if(__hideBtn()) {
+          <app-icon-button name="accept" toolTip="Complete" (click)="directApproved()"></app-icon-button>
+          }
+
+          }
+          }
+        </div>
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+
+  <!-- vendors tab -->
+
+  <div class="content-body flex-1 relative h100">
+    @if(selectedTab === 0){
+    <div class="v-flex h100">
+      @if(__isDisabled() && debitNote.actVendorId !== 0 &&
+      debitNote.documentDate !== ''){
+      <div class="end gap-5 p10">
+        <div class="col-md-2 only-input">
+          <app-auto-get-item [partyId]="debitNote.actVendorId" [displayText]="autoSearchText"
+            [voucherType]="debitNote.ibusActVoucherConfig.voucherTypeValue"
+            [voucherConfigId]="debitNote.actVoucherConfigId" [documentDate]="debitNote.documentDate"
+            [(ngModel)]="autoSearchItemId" name="autoSearchItemId" [regionValue]="debitNote.regionValue"
+            (onSelect)="doGetItemSelect($event)"></app-auto-get-item>
+
+        </div>
+        <app-icon-button name="add" toolTip="Get Purchase Invoice Item" (click)="getItemFromDebitNoteItem()"
+          appAccess="GETIM" [parentId]="pageId">
+        </app-icon-button>
+      </div>
+      }
+      <form #b="ngForm" class="flex-1 relative">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell tw50 text-center">#</th>
+                <th class="app-table-header-cell tw150">
+                  <div class="header-cell-title">PI No</div>
+                </th>
+                <th class="app-table-header-cell tw150">
+                  <div class="header-cell-title">Item | Service Code</div>
+                  <div class="header-cell-subtitle">Name | Description</div>
+                </th>
+                <th class="app-table-header-cell tw100 vertical-baseline">
+                  Item Ledger
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Quantity</div>
+                  <div class="header-cell-subtitle">Unit</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Unit Price</div>
+                  <div class="header-cell-subtitle">
+                    {{
+                    debitNote.docCurrencyValue
+                    ? debitNote.docCurrencyValue
+                    : "-"
+                    }}
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">Dis %</div>
+                  <div class="header-cell-subtitle">Value</div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">After Discount</div>
+                  <div class="header-cell-subtitle">Rep CCY</div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">Tax %</div>
+                  <div class="header-cell-subtitle">Value</div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">Total</div>
+                  <div class="header-cell-subtitle">Rep CCY</div>
+                </th>
+                @if(__isDisabled()){
+                <th class="app-table-header-cell tw100 center">
+                  @if (toggleArrow) {
+                  <div class="text-center">
+                    <app-icon-button name="down" toolTip="Narration Down" (click)="toggle()" toolTip="Open Narration">
+                    </app-icon-button>
+                  </div>
+                  }@else{
+                  <div class="text-center">
+                    <app-icon-button name="up" toolTip="Narration Up" (click)="toggle()" toolTip="Close Narration">
+                    </app-icon-button>
+                  </div>
+                  }
+                </th>
+                }
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (item of debitNote.ilistentActDebitNoteItem; track $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ $index + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  {{
+                  item.pentPurPurchaseInvoice.invoiceReferenceNo
+                  ? item.pentPurPurchaseInvoice.invoiceReferenceNo
+                  : "-"
+                  }}
+                </td>
+                <td class="app-table-cell">
+                  <div class="table-cell-header">
+                    {{
+                    item.ientInvItem.itemName
+                    ? item.ientInvItem.itemName
+                    : "-"
+                    }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    item.ientInvItem.itemCode
+                    ? item.ientInvItem.itemCode
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell">
+                  <div class="table-cell-header only-input">
+                    @if(!__isDisabled() && (debitNote.actVendorId !== 0 &&
+                    debitNote.documentDate !== '')){
+                    <app-search-debit [displayText]="item.plentLedger.codeName" [required]="true"
+                      [errorTrue]="errorTrue" [regionValue]="
+                        !!regionDetailValue
+                          ? regionDetailValue
+                          : debitNote.regionValue
+                      " [btnClicked]="
+                        debitNote.ibusActVoucherConfig.isItemLedgerEditable ===
+                        'N'
+                      " [(ngModel)]="item.plentLedger.actLedgerId" name="actLedgerId{{ $index }}"
+                      (onSelect)="onItemSelect($event, $index)" name="invItemId{{ $index }}"></app-search-debit>
+                    } @else{
+                    {{
+                    item.plentLedger.actLedgerId
+                    ? item.plentLedger.actLedgerId
+                    : "-"
+                    }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    item.plentLedger.ledgerName
+                    ? item.plentLedger.ledgerName
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabled() && (debitNote.actVendorId !== 0 &&
+                    debitNote.documentDate !== '')){
+                    <app-input-control type="number" [(ngModel)]="item.quantity" name="quantity{{ $index }}"
+                      [decimal]="2" [required]="true" [errorTrue]="errorTrue" valuetype="int"></app-input-control>
+                    }@else{
+                    {{ item.quantity ? item.quantity : "0" }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    item.ientInvItem.stockUnitValue
+                    ? item.ientInvItem.stockUnitValue
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  @if(__isDisabled() || debitNote.actVendorId !== 0 ){
+                  <app-input-control type="number" [(ngModel)]="item.unitPrice" name="unitPrice{{ $index }}"
+                    [decimal]="2" [required]="true" [errorTrue]="errorTrue" valuetype="int">
+                  </app-input-control>
+                  } @else{
+                  {{ item.unitPrice ? item.unitPrice : "0" }}
+                  }
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    {{
+                    item.discountPercentage ? item.discountPercentage : "0"
+                    }}
+                    <!-- } -->
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ item.discountValue ? item.discountValue : "-" }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    {{ item.totalAfterDiscount }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    item.totalAfterDiscountReportingCurrency
+                    ? item.totalAfterDiscountReportingCurrency
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    {{ item.taxPercentage }}
+                  </div>
+                  <div class="table-cell-subtitle">{{ item.vatAmount }}</div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    @if(__isDisabled()){
+                    <item-value [(item)]="debitNote.ilistentActDebitNoteItem[$index]" discountValue="discountPrice"
+                      totalAfterDiscount="totalAfterDiscount"
+                      totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency" total="totalPrice"
+                      totalReportingCurrency="totalPriceReportingCurrency" taxAmount="vatAmount"
+                      [unitPrice]="item.unitPrice" [quantity]="item.quantity" [taxPercentage]="item.taxPercentage"
+                      [discountPercentage]="item.discountPercentage" [(updateSequence)]="updateSequence"
+                      [currencyRate]="debitNote.currencyRate">
+                      {{ item.totalPrice }}
+                    </item-value>
+                    } @else{
+                    {{ item.totalPrice }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    item.totalPriceReportingCurrency
+                    ? item.totalPriceReportingCurrency
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                @if(__isDisabled()){
+                <td class="app-table-cell">
+                  <div class="flex-center">
+                    <app-icon-button name="doc-delete" toolTip="Delete"
+                      (click)="itemsDelete(item, $index)"></app-icon-button>
+                  </div>
+                </td>
+                }
+              </tr>
+              @if (toggleArrow) {
+              <tr class="app-table-row">
+                <td class="app-table-cell" [colSpan]="2"></td>
+                <td class="app-table-cell" [colSpan]="8">
+                  <app-input-control type="text" placeholder="Narration" [(ngModel)]="item.narration"
+                    name="narration{{ $index }}" [maxLength]="250"
+                    [btnClicked]="item.actVendorId === 0 || item.documentDate === '' && __isDisabled()"></app-input-control>
+                </td>
+              </tr>
+              }
+              }
+            </tbody>
+          </table>
+          @if(__isDisabled()){
+          <total-value discountValue="discountPrice" totalAfterDiscount="totalAfterDiscount"
+            totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency" total="totalPrice"
+            totalReportingCurrency="totalPriceReportingCurrency" taxAmount="vatAmount" [updateSequence]="updateSequence"
+            [(exchangeRateArray)]="debitNote.plstentCurrencyExchangeRate" [items]="debitNote.ilistentActDebitNoteItem"
+            (onCalculated)="onTotalValue($event)" (onExchangeRateCal)="getExchangeRateLst($event)"
+            [currencyRate]="debitNote.currencyRate"></total-value>
+          }
+        </scroll>
+      </form>
+    </div>
+    } @else if(selectedTab === 1){
+    <app-debit-note-detail-notes [parentData]="debitNote"></app-debit-note-detail-notes>
+    } @else if(selectedTab === 2){
+    <app-debit-note-detail-attachment [parentData]="debitNote"></app-debit-note-detail-attachment>
+    } @else if(selectedTab === 3){
+    <div class="flex-1 relative h100">
+      <div class="ab">
+        <div class="rel">
+          <!-- <app-debit-note-detail-preview [parentData]="debitNote"></app-debit-note-detail-preview> -->
+          <div class="print-wrap">
+            <row>
+              <div class="col-md-4">
+                <div class="ptb14"></div>
+                <app-input-control type="textarea" [maxLength]="250" className="notes-2"
+                  label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="debitNote.ibusActVoucherConfig.pdfOtherComments"
+                  name="pdfOtherComments"></app-input-control>
+                <div class="end">
+                  <app-icon-button name="save" toolTip="Update" (click)="viewPurchaseOrderReceipt()"></app-icon-button>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="d-flex gap-5 end">
+                  <button type="submit" class="approve-btn" (click)="openEmailHistory()">Send Email</button>
+                  <!-- <app-send-email [name]="purchaseOrder.sentActVendor
+                    .vendorName" [documentDate]="purchaseOrder.documentDate" [netAmount]="purchaseOrder.netAmount"
+                      [refNumber]="purchaseOrder.purchaseQuotationRefNo"
+                      [voucherName]="purchaseOrder.sentActVoucherConfig.voucherTypeDescription" [emailId]="purchaseOrder.sentActVendor
+                    .emailId" [blob]="blob"></app-send-email> -->
+                  <!-- <app-icon-button name="clear" toolTip="Close"></app-icon-button>-->
+                  <button type="submit" class="cancel-btn" (click)="closePdf()"> Close </button>
+                </div>
+                <div class="pt8"></div>
+                <div class="pdf-viewer">
+                  <div class="ab">
+                    <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+                  </div>
+                </div>
+              </div>
+            </row>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="card-footer h100" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+
+        @if(debitNote.actDebitNoteId>0){
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if(debitNote.statusValue === 'APROV'){
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        }
+        }
+
+      </div>
+      <div class="slot-end d-flex align-items-center">
+        <div class="tabs">
+          <div>Currency : ({{debitNote.docCurrencyValue}})</div>
+        </div>
+        <div class="tabs">
+          <div>Gross Amount : {{ debitNote.totalAfterDiscount }}</div>
+        </div>
+        <div class="tabs">
+          <div>Tax Amount : {{ debitNote.totalTaxAmount }}</div>
+        </div>
+        <div class="tabs">
+          <div>Net Amount : {{ debitNote.totalNetAmount }}</div>
+        </div>
+        <div class="open-arrow" id="trigger{{ pageId }}">
+          <ion-icon name="chevron-down-outline"></ion-icon>
+        </div>
+      </div>
+      <!-- <div class="open-arrow" id="trigger{{ pageId }}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div> -->
+    </div>
+
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [maxLength]="250" className="notes" [(ngModel)]="debitNote.comments"
+            name="comments" label="Notes | Common Narration Text"></app-input-control>
+        </div>
+
+        <div class="col-md-8 pad-0 d-flex">
+          <div class="d-flex w100 p8">
+            <div class="d-flex justify-content-between w100">
+              <div class="w200">
+                <view-label label="Document Currency" value="{{ debitNote.ibusActVendorDetails.currencyValue }}"
+                  class="mb20"></view-label>
+                <app-input-control label="Conversion Rate" type="number" [required]="true"
+                  [(ngModel)]="debitNote.currencyRate" name="currencyRate" [decimal]="8" [btnClicked]="true"
+                  [errorTrue]="errorTrue" [required]="true"></app-input-control>
+              </div>
+              <table class="app-footer-table">
+                @for(currency of exchangeRateLst; track $index){
+                <tr class="app-footer-table-row ">
+                  <td class="app-footer-table-cell footer-header-txt text-end">
+                    {{currency.description}}
+                  </td>
+                  <td class="app-footer-table-cell footer-cnt-txt text-end">
+                    {{currency.documentCurrencyAmount}}
+                  </td>
+                </tr>
+                }
+              </table>
+
+            </div>
+          </div>
+          <div class="d-flex w100 p8 bg-sub-footer p8">
+            <div class="flex-1">
+              <view-label label="Reporting Currency" [value]="debitNote.currencyValue" class="mb20"></view-label>
+            </div>
+            <table class="app-footer-table">
+              @for(currency of exchangeRateLst; track $index){
+              <tr class="app-footer-table-row ">
+                <td class="app-footer-table-cell footer-header-txt text-end">
+                  {{currency.description}}
+                </td>
+                <td class="app-footer-table-cell footer-cnt-txt text-end">
+                  {{currency.reportingCurrencyAmount}}
+                </td>
+              </tr>
+              }
+            </table>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn" (click)="navigateToList()">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToPurchase()">Purchase</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Debit Note</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <div class="status-table-header">
+    <div class="changed-by_label">Changed By | Changed Date</div>
+    <div class="pl14">Status</div>
+  </div>
+  @for (item of debitNote.ilistentActDebitNoteStatusHistory; track $index) {
+  <div class="status-table-content">
+    <div class="changed-by">
+      {{ item.changedByUsername ? item.changedByUsername : "-" }}
+      <div class="changed-by_sub">
+        {{
+        item.effectiveDate
+        ? (item.effectiveDate
+        | appDate : appSetting.environment.dateViewFormatWithTime)
+        : "-"
+        }}
+      </div>
+    </div>
+    <div class="status_align pl14">
+      <div class="status-PRSTV">
+        {{ item.statusDescription ? item.statusDescription : "-" }}
+      </div>
+    </div>
+  </div>
+  }
+</mat-menu>
+
+
+<ng-template #mailTemplate>
+  <div class="dialog-box p-3">
+    <!-- <div class=""> -->
+    <div class="label-value-head">
+      Send Email
+    </div>
+    <div class="ml-auto">
+      <button mat-icon-button (click)="onNoClick()">
+        <!-- <ion-icon name="close-outline" (click)="this.dialog.closeDialog()"></ion-icon> -->
+        <app-icon-button name="close" (click)="dialogService.closeAll()"></app-icon-button>
+      </button>
+      <!-- </div>/ -->
+    </div>
+    <div class="mat-dialog-content">
+      <scroll>
+        <form class="h100" #l="ngForm">
+          <div class="container-fluid h100">
+            <row>
+              <div class="col-md-12">
+                <app-input-control type="email" label="To" [(ngModel)]="mailInfo.toMailList" name="toMailList"
+                  [required]="true" [errorTrue]="errorTrue"></app-input-control>
+              </div>
+              <div class="col-md-12">
+                <app-input-control type="email" label="CC" [(ngModel)]="mailInfo.ccMailList" name="ccMailList"
+                  [multiEmail]="true"></app-input-control>
+              </div>
+              <div class="col-md-12 d-flex align-items-center">
+                <div class="form-group">
+                  <label class="label-value">From : </label>
+                  <div class="form-value">
+                    {{appService.userData.firstName}} {{appService.userData.middleName}}
+                    {{appService.userData.lastName}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt10">
+                <app-input-control label="Subject" [(ngModel)]="fullSubject" name="fullSubject" [required]="true"
+                  [errorTrue]="errorTrue"></app-input-control>
+              </div>
+              <div class="col-md-12">
+                <div class="mail-content mail-box">
+                  <!-- <app-input-control type="textarea" label="Content" [(ngModel)]="fullContent" name="fullContent" [closeBlind]="true" [required]="true" [errorTrue]="errorTrue" [maxlength]="500"></app-input-control> -->
+                  <!-- <label class="label-value"> Content</label> -->
+                  <div class="form-value">
+                    <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                      [required]="true" [(ngModel)]="fullContent" name="fullContent"
+                      label="Content"></app-input-control>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="down-content">
+                  <!-- {{downContent}}
+                     -->
+                  This is an auto-generated email. Please do not reply to this email.
+                  Please find the PDF below :-
+                </div>
+              </div>
+              <!-- <div class="d-flex"> -->
+              <div class="col-md-6 d-flex gap-10  mt20">
+                <app-checkbox [checked]="mailInfo.isIncludePdf === 'Y'" (change)="doPdfChange($event)"
+                  color="primary"></app-checkbox>Include Invoice
+              </div>
+              <div>
+
+              </div>
+              <!-- </div> -->
+              <div class="col-md-6 d-flex gap-10 mt20">
+                <app-checkbox [checked]="mailInfo.isIncludeAttachment === 'Y'" (change)="doAttachment($event)"
+                  color="primary"></app-checkbox>Additional Attachment
+              </div>
+              <ng-container>
+                @if(mailInfo.isIncludeAttachment === 'Y'){
+
+                <div class="p-3">
+                  <app-drop-zone type="set" [multiple]="true" (onUpload)="loadAttachment($event)"></app-drop-zone>
+                </div>
+                }
+              </ng-container>
+            </row>
+            <div mat-dialog-actions class="d-flex align-items-baseline justify-content-end my-1 gap-10 mt30">
+              <button class="approve-btn" (click)="sendEmailforVoucher(l)">
+                Send Mail
+              </button>
+              <button class="complete-btn">
+                Refresh
+              </button>
+            </div>
+          </div>
+        </form>
+      </scroll>
+
+    </div>
+
+  </div>
+</ng-template>

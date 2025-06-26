@@ -1,0 +1,105 @@
+.status-sort {
+    .fos-16 {
+        font-size: 16px;
+    }
+
+    .status {
+        font-size: 10px;
+        line-height: 1.25;
+    }
+
+    .pt6 {
+        padding-top: 6px;
+    }
+
+    .fos-22 {
+        font-size: 22px;
+        font-weight: 500;
+    }
+
+    .pending {
+        color: #F49D1A;
+    }
+
+    .active {
+        color: #367E18;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background-color: transparent;
+
+        span {
+            font-size: 14px;
+            text-wrap: nowrap;
+        }
+    }
+
+    .inactive {
+        color: red;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        span {
+            font-size: 14px;
+            text-wrap: nowrap;
+        }
+    }
+
+    .ellipse {
+        background-color: #F49D1A;
+        border-radius: 50%;
+        height: 12px;
+        width: 12px;
+        margin: 8px 3px;
+    }
+
+    .ellipse-active {
+        background-color: #367E18;
+        border-radius: 50%;
+        height: 12px;
+        width: 12px;
+        margin: 8px 3px;
+    }
+
+    .ellipse-inactive {
+        background-color: red;
+        border-radius: 50%;
+        height: 12px;
+        width: 12px;
+        margin: 8px 3px;
+    }
+}
+
+.pending-sort {
+    cursor: pointer;
+
+    &:hover {
+        border-bottom: 1px solid #F49D1A;
+    }
+}
+
+.active-sort {
+    cursor: pointer;
+
+    &:hover {
+        border-bottom: 1px solid #367E18;
+    }
+}
+
+.inactive-sort {
+    cursor: pointer;
+
+    &:hover {
+        border-bottom: 1px solid red;
+    }
+}
+
+.all-record{
+    font-size: 12px;
+    color: #fff;
+    background-color: var(--app-primary);
+    border-radius: 20px;
+    padding: 4px 8px;
+    text-wrap: nowrap;
+}

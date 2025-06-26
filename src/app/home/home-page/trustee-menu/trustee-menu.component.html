@@ -1,0 +1,65 @@
+<div class="padd-menus" [parentId]="pageId" appAccess="PRTDV">
+    <div class="submenu-container col-md-10">
+        <div class="d-flex w100">
+
+            <div class="col-md-3 border-right">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_other.svg"></ion-icon> Others
+                </div>
+                <a class="submenu-item" cdkMenuItem [routerLink]="'/home/finance/company/detail'"
+                    [appMenuAccess]="'MYCOM' | menuAccess:appService.userData">Cash Counter</a>
+
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/exchange-rate/search"
+                    [appMenuAccess]="'AssignedCashierSubDiv' | menuAccess:appService.userData">Assigned Cashier</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/exchange-rate/search"
+                    [appMenuAccess]="'EXCRT' | menuAccess:appService.userData">Deposit Book</a>
+            </div>
+            <div class="col-md-3 border-right">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_config.svg"></ion-icon> Configuration
+                </div>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/config/posting-matrix/search"
+                    [appMenuAccess]="'MYCOM' | menuAccess:appService.userData">Posting Matrix Config</a>
+
+                <a class="submenu-item" cdkMenuItem routerLink="/home/config/event-creation"
+                    [appMenuAccess]="'EXCRT' | menuAccess:appService.userData">Event S Event Creation</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/config/event-mapping"
+                    [appMenuAccess]="'EXCRT' | menuAccess:appService.userData">Event Mapping On Vouchers</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/deposit-book/search"
+                    [appMenuAccess]="'EXCRT' | menuAccess:appService.userData">Deposit Book</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/deposit-book/search"
+                    [appMenuAccess]="'EXCRT' | menuAccess:appService.userData">Deposit Book</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/finance/cash-counter/search"
+                    [appMenuAccess]="'EXCRT' | menuAccess:appService.userData">Cash Counter</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/config/payment-and-receipt"
+                    [appMenuAccess]="'EXCRT' | menuAccess:appService.userData">Payment and receipt</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/config/journal-receipt"
+                    [appMenuAccess]="'EXCRT' | menuAccess:appService.userData">Journal receipt</a>
+            </div>
+            <div class="col-md-3">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_report.svg"></ion-icon> Report
+                </div>
+                <a class="submenu-item" cdkMenuItem [routerLink]="'/home/finance/company/detail'"
+                    [appMenuAccess]="'MYCOM' | menuAccess:appService.userData">SoA</a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text">Trust</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">T&E</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

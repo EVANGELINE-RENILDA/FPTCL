@@ -1,0 +1,94 @@
+<app-auto-complete [disabled]="__btnClicked" [displayText]="displayText" [items]="ledgerSearchList"
+    (onInput)="getSearchData($event)" keyName="description" (onSelect)="valueSelected($event)"
+    (onSearch)="searchData($event)" [errorTrue]="control?.control?.invalid && __errorTrue" [errorText]="__errorText"
+    [label]="__label" [required]="__required" (onClear)="onAction('clear')" [disabled]="__btnClicked"
+    (onSearch)="openSearch($event)">
+</app-auto-complete>
+
+<ng-template #LedgerSearchPopupDialog>
+    <div class="content-wrapper">
+        <div class="ab h100">
+            <app-table [hideSelectAll]="true" [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"
+                [dataSource]="tableData" (pageChanged)="pageChanged($event)">
+
+                <ng-template cellDef="refNo" let-element>
+                    <div (click)="onSelectedValue(element)" class="pointer">
+                        {{element.ledgerName}}
+                    </div>
+                </ng-template>
+                <ng-template cellDef="name" let-element>
+                    <!-- {{element.aliasName}} -->
+                    {{element.ledgerAliasName}}
+                </ng-template>
+
+                <ng-template cellDef="type" let-element>
+                    {{element.natureOfGroup}}
+                </ng-template>
+                <ng-template cellDef="date" let-element>
+                    {{element.effectiveDate |appDate}}
+                </ng-template>
+                <ng-template cellDef="status" let-element>
+                    {{element.groupName}}
+                </ng-template>
+                <ng-template cellDef="action" let-element>
+                    {{element.codeName}}
+                </ng-template>
+                <ng-template cellDef="type" let-element>
+                    {{element.ledgerType}}
+                </ng-template>
+                <ng-template #slotLeft>
+                    <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+                </ng-template>
+                <!-- <ng-template #slotRight>
+                    <app-icon-button name="add" toolTip="Add New"> </app-icon-button>
+                </ng-template> -->
+            </app-table>
+        </div>
+    </div>
+
+
+
+    <ng-template #searchTemplate>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">Ledger Search</div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        <app-icon-button name="search" toolTip="Search" (click)="onSearchData()"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="clearAllSearch()"></app-icon-button>
+                        <app-icon-button name="close" (click)="appSearch.close();"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <scroll>
+                    <div class="dialog-content-inner">
+                        <row>
+                            <div class="col-md-4"><app-input-control label="Ledger Name"
+                                    [(ngModel)]="searchParams.istrLedgerName" name="istrLedgerName"></app-input-control>
+                            </div>
+                            <div class="col-md-4"><app-input-control label="Alias Name"
+                                    [(ngModel)]="searchParams.aliasName" name="aliasName"></app-input-control>
+                            </div>
+                            <div class="col-md-4">
+                                <app-input-control label="Code Name" [(ngModel)]="searchParams.codeName"
+                                    name="codeName"></app-input-control>
+                            </div>
+                            @if (isItemSearch !== 'Y') {
+                            <div class="col-md-4"><app-input-control label="Ledger Type" type="select"
+                                    [(ngModel)]="searchParams.istrLedgerTypeValue" name="istrLedgerTypeValue"
+                                    [items]="initialData.DDLValues.configLedgerLedgerType" key="constant"
+                                    keyName="description" defaultOption="--Select--"></app-input-control>
+                            </div>
+                            }
+
+                        </row>
+                    </div>
+                </scroll>
+            </div>
+
+        </div>
+    </ng-template>
+
+</ng-template>
+<!-- {{items.aliasName}} -->

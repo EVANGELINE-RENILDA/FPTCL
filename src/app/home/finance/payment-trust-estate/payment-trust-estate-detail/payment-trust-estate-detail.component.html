@@ -1,0 +1,2025 @@
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn" (click)="navigateToList()"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name link" (click)="navigateToList()">
+
+
+        <div class="screen-text">Payment Trust And Estate</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<div class="content-wrapper">
+
+  @if(paymentTrustEstate.transactionPostingId!==0 && paymentTrustEstate.isDirectApproval==='Y'){
+  @if((paymentTrustEstate.statusValue==='PNDSB' || paymentTrustEstate.statusValue==='PDNVR') &&
+  paymentTrustEstate.isDirectApproval === 'Y' ){
+
+  <div class="col-md-1 ml-auto m-8px" appButtonAccess="JornlVochrReversNewBtn">
+    <button type="submit" class="approve-btn" (click)="saveTransactionPostingNotes('APPRD')">Complete</button>
+
+  </div>
+  }
+  }
+  @if(paymentTrustEstate.transactionPostingId!==0){
+  @if(paymentTrustEstate.statusValue==='APPRD' ){
+  <div class="col-md-1 ml-auto m-8px" appButtonAccess="JornlVochrReversNewBtn">
+    <button type="submit" class="complete-btn" (click)="saveTransactionPostingNotes('CNCLD')">Cancel</button>
+
+  </div>
+
+  }
+  }
+  <app-multi-page-url [id]="" url="/home/trust/trust-application/detail"></app-multi-page-url>
+  <div class="card ">
+    <div class="cus-card">
+      <div class="item-content">
+        <table>
+          <tr>
+            <td>
+              <div class="t-head">Document Number</div>
+              <div class="t-body">{{paymentTrustEstate.documentNumber ? paymentTrustEstate.documentNumber:"-"}}</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="t-head">Document Date</div>
+              <div class="t-body">{{paymentTrustEstate.documentDate ? (paymentTrustEstate.documentDate | appDate):"-" }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="item-content">
+        <table>
+          <tr>
+            <td>
+              <div>
+                <label class="branch">Branch Name</label>
+                <div class="branch-value">
+                  {{branchName ? branchName : '-'}}
+
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="t-head">Paid Amount ({{currency}})</div>
+              <div class="t-body">{{paymentTrustEstate.inputValue | appCurrency}}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="item-content">
+        <table>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Created By</div>
+              <div class="t-body el" [matTooltip]="paymentTrustEstate.enterByFullName" [matTooltipPosition]="'above'">
+                {{paymentTrustEstate.enterByFullName ? paymentTrustEstate.enterByFullName:"-"}}</div>
+            </td>
+          </tr>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Created Date</div>
+              <div class="t-body">{{paymentTrustEstate.enteredDate ? (paymentTrustEstate.enteredDate | appDate):"-"}}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="item-content">
+        <table>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Posted By</div>
+              <div class="t-body el" [matTooltip]="paymentTrustEstate.postedByFullName" [matTooltipPosition]="'above'">
+                {{paymentTrustEstate.postedByFullName ? paymentTrustEstate.postedByFullName:"-"}}
+              </div>
+            </td>
+          </tr>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Posted Date</div>
+              <div class="t-body">{{paymentTrustEstate.postedDate ? (paymentTrustEstate.postedDate | appDate):"-"}}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="item-content">
+        <table>
+          <tr class="v-flex">
+            <td>
+              <!-- <div class="t-head">Status</div>
+              <div class="t-body">{{paymentTrustEstate.statusDescription ? paymentTrustEstate.documentNumber:"-"}}</div> -->
+              <view-label label="Status" status="{{ paymentTrustEstate.statusValue }}"
+                statusValue="{{ paymentTrustEstate.statusDescription }}"></view-label>
+            </td>
+          </tr>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Assigned Officer</div>
+              <div class="t-body el" [matTooltip]="assignedOfficerName" [matTooltipPosition]="'above'">
+                {{assignedOfficerName? assignedOfficerName : '-'}}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="card">
+    <div class="d-flex">
+      <div class="color1">
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+      </div>
+      <div class="color">Customer Information</div>
+    </div>
+    <div class="border mb26 mt10"></div>
+    <div class="d-flex gap25 w100">
+      <div class="voucher-detail">
+        <view-label label=" Account Number" value="{{paymentTrustEstate.customerAccountNumber}}"></view-label>
+        <view-label label="Customer Name" value="{{paymentTrustEstate.pentCustomer.customerName}}"></view-label>
+      </div>
+      <div class="voucher-detail border-right-cus">
+        <view-label label="File Type" value="{{paymentTrustEstate.fileTypeDescription}}"></view-label>
+        <view-label label="Account Type" value="{{paymentTrustEstate.accountTypeDescription}}"></view-label>
+      </div>
+      <div class="voucher-detail ">
+        <view-label label="Date of birth"
+          value="{{paymentTrustEstate.pentCustomer.dateOfBirth | appDate}}"></view-label>
+        <view-label label="Gender" value="{{paymentTrustEstate.pentCustomer.genderDescription}}"></view-label>
+      </div>
+      <div class="voucher-detail">
+        <view-label label="Contact No
+        " value="{{paymentTrustEstate.pentCustomer.contactNo}}"></view-label>
+        <view-label label="Email Id" value="{{paymentTrustEstate.pentCustomer.emailId}}"></view-label>
+      </div>
+
+    </div>
+
+
+  </div> -->
+
+
+
+
+  <app-tab-group (tabChange)="onTabChange($event)">
+    <app-tab tabTitle="Application">
+      <accordion>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title open-visible">
+                <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                <div class="">Payment Information</div>
+              </div>
+              <div class="accordion-title open-hide">
+                <row class="row-w100">
+                  <div class="accordion-title">
+                    <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                    <div class="">Payment Information</div>
+                  </div>
+                </row>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="accordian-content">
+              @if(paymentTrustEstate.transactionPostingId>0){
+              <form #financeInformation="ngForm">
+                <row>
+                  <div class="col-md-4 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/application.svg" class="pr5px"></ion-icon>
+                      Account Information
+                    </div>
+                    @if(editTrust === false){
+                    <view-label label="Payment Mode" class="pb10"
+                      value="{{paymentTrustEstate.paymentModeDescription}}"></view-label>
+                    <view-label label="Payment For" class="pb10"
+                      value="{{paymentTrustEstate.paymentForDescription}}"></view-label>
+
+                    <view-label class="pb10" label="File Type"
+                      value="{{paymentTrustEstate.fileTypeDescription}}"></view-label>
+                    <view-label class="pb10" label="Account Type"
+                      value="{{paymentTrustEstate.accountTypeDescription}}"></view-label>
+
+                    <!-- <view-label class="pb10" label="Account  Number"
+                      value="{{paymentTrustEstate.customerAccountNumber}}"></view-label> -->
+
+                    }
+                    @else {
+                    <div class="col-md-12 ">
+                      <app-input-control type="select" label="Payment Mode"
+                        [(ngModel)]="paymentTrustEstate.paymentModeValue" name="paymentModeValue" [required]="true"
+                        [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLPayment" key="constant"
+                        keyName="description" defaultOption="--Select--"
+                        (onSelect)="changePaymentMode();getWithDrawalbyOrganizationandPaymentMode()">
+                      </app-input-control>
+
+                    </div>
+                    <div class="col-md-12 ">
+                      <app-input-control type="select" label="Payment For"
+                        [(ngModel)]="paymentTrustEstate.paymentForValue" name="paymentForValue" [required]="true"
+                        [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLPaymentFor" key="constant"
+                        keyName="description" defaultOption="--Select--"
+                        (onSelect)="changePayment();getWithDrawalbyOrganizationandPaymentMode();paymentTrustEstate.appOrganizationId =0">
+                      </app-input-control>
+
+                    </div>
+                    @if (paymentTrustEstate.paymentForValue==='ORGNZ') {
+
+
+                    <div class="col-md-12 ">
+                      <app-input-control type="select" label="Organization name"
+                        [(ngModel)]="paymentTrustEstate.appOrganizationId" name="appOrganizationId" [required]="true"
+                        [errorTrue]="errorTrue" [items]="organizationddl" key="id" keyName="name"
+                        defaultOption="--Select--"
+                        (onSelect)=" getWithDrawalbyOrganizationandPaymentMode();changeOrganization()">
+                      </app-input-control>
+                    </div>
+                    }
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="File Type" [(ngModel)]="paymentTrustEstate.fileTypeValue"
+                        name="fileTypeValue" [items]="initialData.DDLValues.DDLFileType" key="constant"
+                        keyName="description" [required]="true" [errorTrue]="errorTrue"
+                        (onSelect)="fileData(paymentTrustEstate.fileTypeValue);paymentTrustEstate.customerAccountNumber=0;paymentTrustEstate.accountTypeValue=''"
+                        defaultOption="--Select--">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Account Type"
+                        [(ngModel)]="paymentTrustEstate.accountTypeValue" name="accountTypeValue"
+                        [items]="casAccountType" key="constant" keyName="description" [required]="true"
+                        [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.fileTypeValue===''"
+                        (onSelect)="accountNum(paymentTrustEstate.accountTypeValue)" defaultOption="--Select--">
+                      </app-input-control>
+                    </div>
+                    <!-- <div class="col-md-12">
+
+                      <app-input-control type="select" label=" Account Number"
+                        [(ngModel)]="paymentTrustEstate.customerAccountNumber" name="customerAccountNumber"
+                        [items]="accountNumber" key="ledgerId" keyName="code"
+                        (onSelect)="bankCode(paymentTrustEstate.customerAccountNumber , true)"></app-input-control>
+                    </div> -->
+
+                    }
+
+                  </div>
+                  <div class="col-md-4 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon name="person-outline" class="pr5px"></ion-icon>
+                      Configuration Information
+                    </div>
+                    @if(editTrust === false){
+
+                    <view-label class="pb10" label="Event" value="{{paymentTrustEstate.eventName}}"></view-label>
+                    <view-label class="pb10" label="Sub Event" value="{{paymentTrustEstate.subEventName}}"></view-label>
+                    <view-label class="pb10" label="Posting Matrix"
+                      value="{{paymentTrustEstate.postingMatrix}}"></view-label>
+                    <view-label class="pb10" label="Transaction Code"
+                      value="{{paymentTrustEstate.transactionCode}}"></view-label>
+                    @if (paymentTrustEstate.paymentModeValue==='CHEQU') {
+                    <view-label class="pb10" label="Cheque Date"
+                      value="{{paymentTrustEstate.chequeTransactionDate}}"></view-label>
+                    <view-label class="pb10" label="Cheque Number"
+                      value="{{paymentTrustEstate.chequeTransactionNumber}}"></view-label>
+                    }
+                    @else{
+                    <view-label class="pb10" label="Transaction Date"
+                      value="{{paymentTrustEstate.chequeTransactionDate | appDate}}"></view-label>
+                    <view-label class="pb10" label="Transaction Number"
+                      value="{{paymentTrustEstate.chequeTransactionNumber}}"></view-label>
+                    }
+                    }
+                    @else {
+                    <div class="col-md-12 ">
+                      <app-input-control type="select" label="Event" [(ngModel)]="paymentTrustEstate.eventId"
+                        name="eventId"
+                        (onSelect)="getListOfSubEventByEventId(paymentTrustEstate.eventId);paymentTrustEstate.appEventMappingId=0;paymentTrustEstate.subEventId=0;"
+                        [items]="eventddl" key="id" keyName="name" defaultOption="--Select--" [required]="true"
+                        [errorTrue]="errorTrue" valueType="int"> </app-input-control>
+                    </div>
+
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Sub Event" [(ngModel)]="paymentTrustEstate.subEventId"
+                        name="subEventId"
+                        (onSelect)="getEventMappingIdPostingMatrixByEventandSubEventId(paymentTrustEstate.subEventId);paymentTrustEstate.appEventMappingId=0;onSubTypeSelect(paymentTrustEstate.subEventId)"
+                        key="id" keyName="name" [items]="subeventddl" defaultOption="--Select--" [required]="true"
+                        [errorTrue]="errorTrue"> </app-input-control>
+
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Posting Matrix"
+                        [(ngModel)]="paymentTrustEstate.appEventMappingId" name="appEventMappingId"
+                        [items]="postingMatrixddl" key="id" keyName="description" (onSelect)="transactionData($event);"
+                        [required]="true" defaultOption="--Select--"> </app-input-control>
+
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Transaction Code"
+                        [(ngModel)]="paymentTrustEstate.transactionCode" name="transactionCode" [btnClicked]="true">
+                      </app-input-control>
+
+                    </div>
+                    @if(paymentTrustEstate.paymentModeValue==='CHEQU'){
+
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Cheque Date"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionDate" name="chequeTransactionDate"
+                        [minDate]="paymentTrustEstate.documentDate">
+                      </app-input-control>
+
+
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="number" label="Cheque Number"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber"
+                        [maxLength]="20">
+                      </app-input-control>
+
+
+                    </div>
+                    }
+                    @else if(paymentTrustEstate.paymentModeValue==='BKTRN'){
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Transaction Date"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionDate" name="chequeTransactionDate"
+                        [minDate]="paymentTrustEstate.documentDate">
+                      </app-input-control>
+
+
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="number" label="Transaction Number"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber"
+                        [maxLength]="20">
+                      </app-input-control>
+
+
+                    </div>
+                    }
+                    }
+
+
+                  </div>
+
+
+                  <div class="col-md-4">
+
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/customer-service.svg" class="pr5px"></ion-icon>
+                      Document Information
+                    </div>
+                    @if(editTrust === false){
+
+                    <view-label class="pb10" label="Document  Date"
+                      value="{{paymentTrustEstate.documentDate | appDate}}"></view-label>
+                    <row>
+                      <div class="pr20">
+                        <view-label class="pb10" label="Primary Value ({{currency}})"
+                          value="{{paymentTrustEstate.inputValue | appCurrency}}"></view-label>
+                      </div>
+                      <div class="">
+                        <view-label class="pb10 " label="Auto Posting Value ({{currency}})"
+                          value="{{paymentTrustEstate.postingValue | appCurrency}}"></view-label>
+                      </div>
+                    </row>
+                    } @else {
+                    <!-- <div class="col-md-12">
+                        <app-input-control type="select" label="Branch" [(ngModel)]="paymentTrustEstate.branchId"
+                          name="branchId" [items]="DDLBranch" key="branchId" keyName="branchDescription" [required]="true"
+                          [errorTrue]="errorTrue"> </app-input-control>
+                      </div> -->
+
+                    <row>
+                      <div class="col-md-12">
+                        <app-input-control type="date" label="Document Date"
+                          [(ngModel)]="paymentTrustEstate.documentDate" name="documentDate"
+                          [minDate]="paymentTrustEstate.documentDate" [required]="true" [errorTrue]="errorTrue">
+                        </app-input-control>
+                      </div>
+                      <div class="col-md-6">
+                        <view-label class="pb10 pr20" label="Primary Value ({{currency}})"
+                          value="{{paymentTrustEstate.inputValue}}"></view-label>
+                        <!-- <app-input-control type="text" label="Primary Value" (onChange)="calculatePostingValue()"
+                      [(ngModel)]="paymentTrustEstate.inputValue" name="inputValue" [required]="true"
+                      [errorTrue]="errorTrue" [min]="1"> </app-input-control> -->
+                      </div>
+                      <div class="">
+                        <!-- <app-input-control type="number" label="Auto Posting Value" [min]="1"
+                      [(ngModel)]="paymentTrustEstate.postingValue" name="postingValue"  [btnClicked]="true"> </app-input-control> -->
+                        <view-label class="pb10" label="Auto Posting Value ({{currency}})"
+                          value="{{paymentTrustEstate.postingValue}}"></view-label>
+                      </div>
+                    </row>
+                    }
+
+                    @if(editTrust === false){
+                    <div class=" textarea-cus">
+
+                      <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue" [maxLength]="250"
+                        [required]="true" [(ngModel)]="paymentTrustEstate.narrative" name="narrative" label="Narrative"
+                        [btnClicked]="true"></app-input-control>
+                    </div>
+
+                    }
+                    @else{
+                    <div class="col-md-12 textarea-cus">
+
+                      <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue" [maxLength]="250"
+                        [required]="true" [(ngModel)]="paymentTrustEstate.narrative" name="narrative" label="Narrative"
+                        [btnClicked]="true"></app-input-control>
+                    </div>
+
+                    }
+                  </div>
+                  <!-- <div class="col-md-3 mb26">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/customer-service.svg" class="pr5px"></ion-icon>
+                      Payment Information
+                    </div>
+                    @if(editTrust === false){
+                    <view-label class="pb10" label="Payment Mode"
+                      value="{{paymentTrustEstate.paymentModeDescription}}"></view-label>
+                      @if(paymentTrustEstate.paymentModeDescription !== 'Cash' ){
+                        <view-label class="pb10" label="Bank Code"
+                          value="{{ customerBank.ientBank.bankCode }}"></view-label>
+                        <view-label class="pb10" label="Bank Account Number"
+                          value="{{ paymentTrustEstate.bankAccountNumber }}"></view-label>
+                        <view-label class="pb10" label="Transaction Date"
+                          value="{{ paymentTrustEstate.chequeTransactionDate }}"></view-label>
+                        <view-label class="pb10" label="Transaction Number"
+                          value="{{ paymentTrustEstate.chequeTransactionNumber }}"></view-label>
+                        }
+
+                    }
+                    @else {
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Payment Mode"
+                        [(ngModel)]="paymentTrustEstate.paymentModeValue" name="paymentModeValue" [required]="true"
+                        [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLPayment" key="constant"
+                        keyName="description" defaultOption="--Select--" (onSelect)="getBankDetails()">
+                      </app-input-control>
+                    </div>
+                    @if(this.paymentTrustEstate.paymentModeValue==='CHEQU'){
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Bank Code" [(ngModel)]="paymentTrustEstate.bankId"
+                        (onSelect)="getAccountNo(paymentTrustEstate.bankId)" name="bankId" [required]="true"
+                        [errorTrue]="errorTrue" defaultOption="--Select--" [items]="checkcodeDDl" key="bankId"
+                        keyName="bankCode" [showExtraSpace]="true">
+
+                        <add-bank [referenceId]="paymentTrustEstate.referenceId" [branchName]="branchName" (onComplete)="this.bankCode(this.paymentTrustEstate.customerAccountNumber)" (onClose)="getDDL()"></add-bank>
+
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Bank Account Number"
+                        [(ngModel)]="paymentTrustEstate.bankAccountNumber" name="accountNo" [required]="true"
+                        [errorTrue]="errorTrue" [btnClicked]="true"> </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Cheque Date"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionDate" name="chequeTransactionDate "
+                        [minDate]="paymentTrustEstate.enteredDate" [required]="true" [errorTrue]="errorTrue"
+                        [btnClicked]="paymentTrustEstate.bankId===0">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Cheque Number"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber"
+                        [required]="true" [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.bankId===0"
+                        [minLength]="8" [maxLength]="25">
+                      </app-input-control>
+                    </div>
+                    }
+                    @if (this.paymentTrustEstate.paymentModeValue==='BNKTF') {
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Bank Code" [(ngModel)]="paymentTrustEstate.bankId"
+                        (onSelect)="getAccountNo(paymentTrustEstate.bankId)" name="bankId" [required]="true"
+                        [errorTrue]="errorTrue" defaultOption="--Select--" [items]="checkcodeDDl"
+                        key="bankId" keyName="bankCode" [showExtraSpace]="true">
+
+                        <add-bank [referenceId]="paymentTrustEstate.referenceId" [branchName]="branchName" (onComplete)="this.bankCode(this.paymentTrustEstate.customerAccountNumber)" (onClose)="getDDL()"></add-bank>
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Bank Account Number"
+                        [(ngModel)]="paymentTrustEstate.bankAccountNumber" name="accountNo" [required]="true"
+                        [errorTrue]="errorTrue" [btnClicked]="true"> </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Transaction Date"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionDate" name="chequeTransactionDate "
+                        [required]="true" [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.bankId===0" [minDate]="paymentTrustEstate.enteredDate">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Transaction Number"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber"
+                        [required]="true" [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.bankId===0"  [maxLength]="25">
+                      </app-input-control>
+                    </div>
+                    }
+
+                    }
+                  </div> -->
+
+                </row>
+              </form>
+              }
+              @else{
+              <form #financeInformation="ngForm">
+                <row>
+
+
+                  <div class="col-md-4 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/application.svg" class="pr5px"></ion-icon>
+                      Account Information
+                    </div>
+
+                    <div class="col-md-12 ">
+                      <app-input-control type="select" label="Payment Mode"
+                        [(ngModel)]="paymentTrustEstate.paymentModeValue" name="paymentModeValue" [required]="true"
+                        [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLPayment" key="constant"
+                        keyName="description" defaultOption="--Select--" (onSelect)="changePaymentMode()">
+                      </app-input-control>
+                      <!-- <view-label label="Branch" value="{{branchName}}"></view-label> -->
+
+                    </div>
+                    <div class="col-md-12 ">
+                      <app-input-control type="select" label="Payment For"
+                        [(ngModel)]="paymentTrustEstate.paymentForValue" name="paymentForValue" [required]="true"
+                        [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLPaymentFor" key="constant"
+                        keyName="description" defaultOption="--Select--"
+                        (onSelect)="changePayment(); paymentTrustEstate.appOrganizationId =0">
+                      </app-input-control>
+                    </div>
+
+                    <!-- if condition -->
+                    @if (paymentTrustEstate.paymentForValue==='ORGNZ') {
+
+
+                    <div class="col-md-12 ">
+                      <app-input-control type="select" label="Organization name"
+                        [(ngModel)]="paymentTrustEstate.appOrganizationId" name="appOrganizationId" [required]="true"
+                        [errorTrue]="errorTrue" [items]="organizationddl" key="id" keyName="name"
+                        defaultOption="--Select--"
+                        (onSelect)="getWithDrawalbyOrganizationandPaymentMode();changeOrganization()">
+                      </app-input-control>
+                    </div>
+                    }
+
+
+
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="File Type" [(ngModel)]="paymentTrustEstate.fileTypeValue"
+                        name="fileTypeValue" [items]="initialData.DDLValues.DDLFileType" key="constant"
+                        keyName="description" [required]="true" [errorTrue]="errorTrue"
+                        (onSelect)="fileData(paymentTrustEstate.fileTypeValue);changeFileMode()"
+                        defaultOption="--Select--">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Account Type"
+                        [(ngModel)]="paymentTrustEstate.accountTypeValue" name="accountTypeValue"
+                        [items]="casAccountType" key="constant" keyName="description" [required]="true"
+                        [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.fileTypeValue===''"
+                        (onSelect)="accountNum(paymentTrustEstate.accountTypeValue);changeAccount()"
+                        defaultOption="--Select--">
+                      </app-input-control>
+                    </div>
+
+
+                  </div>
+                  <div class="col-md-4 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon name="person-outline" class="pr5px"></ion-icon>
+                      Configuration Information
+                    </div>
+
+                    <div class="col-md-12 ">
+                      <app-input-control type="select" label="Event" [(ngModel)]="paymentTrustEstate.eventId"
+                        name="eventId"
+                        (onSelect)="getListOfSubEventByEventId(paymentTrustEstate.eventId);paymentTrustEstate.subEventId=0;paymentTrustEstate.appEventMappingId=0"
+                        [items]="eventddl" key="id" keyName="name" defaultOption="--Select--" [required]="true"
+                        [errorTrue]="errorTrue" valueType="int"> </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Sub Event" [(ngModel)]="paymentTrustEstate.subEventId"
+                        name="subEventId"
+                        (onSelect)="getEventMappingIdPostingMatrixByEventandSubEventId(paymentTrustEstate.subEventId);paymentTrustEstate.appEventMappingId=0;onSubTypeSelect(paymentTrustEstate.subEventId)"
+                        key="id" keyName="name" [items]="subeventddl" defaultOption="--Select--" [required]="true"
+                        [errorTrue]="errorTrue" valueType="int"> </app-input-control>
+
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Posting Matrix" (onSelect)="transactionData($event)"
+                        [(ngModel)]="paymentTrustEstate.appEventMappingId" name="appEventMappingId"
+                        [items]="postingMatrixddl" key="id" keyName="description" valueType="int"
+                        defaultOption="--Select--"> </app-input-control>
+
+                    </div>
+
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Transaction Code"
+                        [(ngModel)]="paymentTrustEstate.transactionCode" name="transactionCode" [btnClicked]="true">
+                      </app-input-control>
+
+
+                    </div>
+                    @if(paymentTrustEstate.paymentModeValue==='CHEQU'){
+
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Cheque Date"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionDate" name="chequeTransactionDate"
+                        [minDate]="paymentTrustEstate.documentDate">
+                      </app-input-control>
+
+
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="number" label="Cheque Number"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber"
+                        [maxLength]="20">
+                      </app-input-control>
+
+
+                    </div>
+                    }
+                    @else if(paymentTrustEstate.paymentModeValue==='BKTRN'){
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Transaction Date"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionDate" name="chequeTransactionDate"
+                        [minDate]="paymentTrustEstate.documentDate">
+                      </app-input-control>
+
+
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="number" label="Transaction Number"
+                        [(ngModel)]="paymentTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber"
+                        [maxLength]="20">
+                      </app-input-control>
+
+
+                    </div>
+                    }
+
+                  </div>
+                  <div class="col-md-4 ">
+
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/customer-service.svg" class="pr5px"></ion-icon>
+                      Document Information
+                    </div>
+
+                    <row>
+                      <div class="col-md-12">
+                        <app-input-control type="date" label="Document Date"
+                          [(ngModel)]="paymentTrustEstate.documentDate" name="documentDate"
+                          [minDate]="paymentTrustEstate.documentDate" [required]="true" [errorTrue]="errorTrue">
+                        </app-input-control>
+                      </div>
+                      <div class="col-md-6">
+                        <view-label class="pb10" label="Primary Value ({{currency}})"
+                          value="{{paymentTrustEstate.inputValue | appCurrency}}"></view-label>
+                        <!-- <app-input-control type="text" label="Primary Value" (onChange)="calculatePostingValue()"
+                        [(ngModel)]="paymentTrustEstate.inputValue" name="inputValue" [required]="true"
+                        [errorTrue]="errorTrue" valueType="int"> </app-input-control> -->
+                      </div>
+                      <div class="col-md-6">
+                        <view-label class="pb10" label="Auto Posting Value ({{currency}})"
+                          value="{{paymentTrustEstate.postingValue | appCurrency}}"></view-label>
+                        <!-- <app-input-control type="number" label="Auto Posting Value" [min]="1"
+                        [(ngModel)]="paymentTrustEstate.postingValue" name="postingValue" [required]="true"
+                        [errorTrue]="errorTrue"> </app-input-control> -->
+                      </div>
+                      <div class="col-md-12">
+                        <!-- <label class="label"> Narrative</label> -->
+                        <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue" [maxLength]="250"
+                          label="Narrative" [required]="true" [(ngModel)]="paymentTrustEstate.narrative"
+                          name="narrative"></app-input-control>
+                      </div>
+                    </row>
+                  </div>
+
+
+                  <!-- payment information -->
+                  <!-- <div class="col-md-3 mb26 ">
+                    <div class=" pr5px mb44">
+                      <div class="col-md-12 textarea-cus">
+                        <div class="view-label-container-title mb26">
+                          <ion-icon src="assets/icons/accordian/customer-service.svg" class="pr5px"></ion-icon>
+                          Payment Information
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="select" label="Payment Mode"
+                            [(ngModel)]="paymentTrustEstate.paymentModeValue" name="paymentModeValue" [required]="true"
+                            [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLPayment" key="constant"
+                            keyName="description" defaultOption="--Select--"
+                            (onSelect)="(paymentTrustEstate.referenceId)">
+                          </app-input-control>
+                        </div>
+                        @if(this.paymentTrustEstate.paymentModeValue==='CHEQU'){
+                        <div class="col-md-12">
+                          <app-input-control type="select" label="Bank Code" [(ngModel)]="paymentTrustEstate.bankId"
+                            (onSelect)="getAccountNo(paymentTrustEstate.bankId)" name="bankId" [required]="true"
+                            [errorTrue]="errorTrue" defaultOption="--Select--" [items]="checkcodeDDl" key="bankId"
+                            keyName="bankCode" [showExtraSpace]="true">
+
+                            <add-bank [referenceId]="paymentTrustEstate.referenceId" [branchName]="branchName" (onComplete)="this.bankCode(this.paymentTrustEstate.customerAccountNumber)" (onClose)="getDDL()"></add-bank>
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Bank Account Number"
+                            [(ngModel)]="paymentTrustEstate.bankAccountNumber" name="bankAccountNumber"
+                            [required]="true" [errorTrue]="errorTrue" [btnClicked]="true">
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="date" label="Cheque Date"
+                            [(ngModel)]="paymentTrustEstate.chequeTransactionDate" name="chequeTransactionDate"
+                            [required]="true" [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.bankId===0"
+                            [minDate]="paymentTrustEstate.enteredDate">
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Cheque Number"
+                            [(ngModel)]="paymentTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber"
+                            [required]="true" [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.bankId===0"
+                            [minLength]="8" [maxLength]="25">
+                          </app-input-control>
+                        </div>
+                        }
+                        @if (this.paymentTrustEstate.paymentModeValue==='BNKTF') {
+                        <div class="col-md-12">
+
+                          <app-input-control type="select" label="Bank Code" [(ngModel)]="paymentTrustEstate.bankId"
+                            (onSelect)="getAccountNo(paymentTrustEstate.bankId)" name="bankId" [required]="true"
+                            [errorTrue]="errorTrue" defaultOption="--Select--" [items]="checkcodeDDl" key="bankId"
+                            keyName="bankCode" [showExtraSpace]="true">
+
+                            <add-bank [referenceId]="paymentTrustEstate.referenceId" [branchName]="branchName" (onComplete)="this.bankCode(this.paymentTrustEstate.customerAccountNumber)" (onClose)="getDDL()"></add-bank>
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Bank Account Number"
+                            [(ngModel)]="paymentTrustEstate.bankAccountNumber" name="bankAccountNumber"
+                            [required]="true" [errorTrue]="errorTrue" [btnClicked]="true">
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="date" label="Transaction Date"
+                            [(ngModel)]="paymentTrustEstate.chequeTransactionDate" name="chequeTransactionDate"
+                            [required]="true" [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.bankId===0"
+                            [minDate]="paymentTrustEstate.enteredDate">
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Transaction Number"
+                            [(ngModel)]="paymentTrustEstate.chequeTransactionNumber" name="chequeTransactionDate"
+                            [required]="true" [errorTrue]="errorTrue" [btnClicked]="paymentTrustEstate.bankId===0" [maxLength]="25">
+                          </app-input-control>
+                        </div>
+                        }
+
+                      </div>
+                    </div>
+                  </div> -->
+                </row>
+              </form>
+              }
+
+
+              <div class="d-flex end gap-10">
+                @if(this.paymentTrustEstate.transactionPostingId===0 && editAccess){
+                <app-icon-button name="save" toolTip="Save" (click)="saveTransactionPosting()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="Clear()"></app-icon-button>
+                }
+                @else {
+                @if(this.editTrust===false && editAccess){
+
+                <app-icon-button name="edit" toolTip="Edit" (click)="editTransaction()"></app-icon-button>
+                }
+                @else if(paymentTrustEstate.transactionPostingId!==0 && editAccess) {
+                <div class="col-md-3 d-flex gap-10 end"> <app-icon-button name="save"
+                    (click)="updateTransactionPosting()" toolTip="Update"></app-icon-button>
+                  <app-icon-button name="refresh" toolTip="Refresh"
+                    (click)="openTransactionPosting(paymentTrustEstate.transactionPostingId, 'refresh')"></app-icon-button>
+                </div>
+                }
+                }
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+        @if(paymentTrustEstate.transactionPostingId > 0){
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title open-visible">
+                <ion-icon src="assets/icons/accordian/application.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Transaction List</div>
+                </div>
+              </div>
+              <div class="accordion-title open-hide">
+                <row class="row-w100">
+                  <div class="accordion-title">
+                    <ion-icon src="assets/icons/accordian/application.svg"></ion-icon>
+                    <div class="accordion-title-content">
+                      <div>Transaction List</div>
+                    </div>
+                  </div>
+                </row>
+              </div>
+            </div>
+          </accordion-header>
+
+          <accordion-body>
+
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <!-- <div class=" justify-content-end gap1">
+                  <div class="d-flex trans gap">
+                    <div class="gap1">Total Debit</div>
+                    <div class="color"> {{paymentTrustEstate.totalDebit}}</div>
+                  </div>
+                  <div class="d-flex trans gap mr40">
+                    <div class="gap">Total Credit</div>
+                    <div class="color">{{paymentTrustEstate.totalCredit}}</div>
+                  </div>
+                </div> -->
+
+                <div class="v-flex h100" appAccess="FUDTN">
+                  <div class="relat scroller">
+                    <!-- <scroll>
+                      <table class="app-table account-table">
+                        <thead class="app-table-head">
+                          <tr class="app-table-header-row">
+                            <th class="app-table-header-cell pl50">
+                               <div class="header-cell-title">Account No</div>
+                              <div class="header-cell-subtitle">Account Name</div>
+                            </th>
+                            <th class="app-table-header-cell ">
+                               <div class="header-cell-title center">Withdrawal Application No</div>
+                              </th>
+                            <th class="app-table-header-cell ">
+                               <div class="header-cell-title ">Requested amount</div>
+                              </th>
+                            <th class="app-table-header-cell ">
+                              <div class="header-cell-title center">Bank Name</div>
+                              <div class="header-cell-subtitle center">Bank A/C No</div>
+                              </th>
+                              @if(paymentTrustEstate.paymentModeValue==='CHEQU'){
+
+                                <th class="app-table-header-cell ">
+                                  <div class="header-cell-title center">Cheque No</div>
+
+                                  </th>
+                              }
+                              @else{
+                                <th class="app-table-header-cell ">
+                                  <div class="header-cell-title center">Transaction No</div>
+
+                                  </th>
+                              }
+                              @if(entertableData===false){
+                                @if( paymentTrustEstate.paymentModeValue!=='CHEQU'){
+
+                                  <th class="app-table-header-cell ">
+                                    <div class="header-cell-title">Add / Delete</div>
+
+                                    </th>
+                                }
+                            }
+                            </tr>
+                          </thead>
+                          <tbody class="app-table-body">
+                            @for (element of paymentTrustEstate.lstentTransactionPostingPaymentList;
+                            track $index) {
+
+
+
+                              <tr>
+                                <td>
+                                 <div class="col-md-10">
+                                  <app-input-control type="select" [(ngModel)]="element.trustAccountNumer" name="trustAccountNumer{{$index}}" (onSelect)="showChangeAlert();getWithDrawalDeatilsbyIdAndOrganization($event)" [btnClicked]="entertableData" [items]="transacationAccountNumber" key="id" keyName="constant"></app-input-control>
+                                 </div>
+                                </td>
+                                <td class="pl30">{{element.withdrawalApplicationNo}}</td>
+                                <td class="">{{element.amount ? element.amount : '0'}}</td>
+                                <td class="pl30">{{element.bankName}}</td>
+                                <td class="center">
+                                  <div class="col-md-6">
+                                    <app-input-control type="number" [(ngModel)]="element.transactionNumber" name="transactionNumber{{$index}}" [btnClicked]="entertableData"  (click)="showChangeAlert()" [maxLength]="25"></app-input-control>
+                                   </div>
+                                </td>
+                                <td class="">
+                                  <div class="flex-center gap-5">
+                                    @if(entertableData===false){
+
+                                       @if (paymentTrustEstate.lstentTransactionPostingPaymentList.length === $index+1 ) {
+                                        @if( paymentTrustEstate.paymentModeValue!=='CHEQU'){
+                                        <app-icon-button
+                                        name="add"
+                                        toolTip="Add New"  (click)="
+                                        addRow(
+                                          paymentTrustEstate.lstentTransactionPostingPaymentList.length
+                                        )
+                                      "
+                                      >
+                                      </app-icon-button>
+                                    }
+                                       }
+                                       @else {
+                                        <app-icon-button
+                                        name="doc-delete"
+                                        toolTip="Delete"  (click)="itemsDelete(element, $index)"
+
+                                      ></app-icon-button>
+                                      }
+
+
+                                    }
+
+                                    </div>
+                                 </td>
+                              </tr>
+
+
+                            }
+
+                            </tbody>
+
+                          </table>
+                          </scroll> -->
+                    <app-table class="sub-table" [pagination]="pagination" [columns]="columns"
+                      [columnsName]="columnsName" [dataSource]="paymentTrustEstate.lstentTransactionPostingPaymentList"
+                      [hasHeader]="false" [showPaginator]="false" [hideSelectAll]="true">
+
+                      <ng-template cellHeaderDef="action" let-element>
+                        <div class="d-flex">
+                          @if((paymentTrustEstate.paymentModeValue!=='CHEQU' &&
+                          paymentTrustEstate.lstentTransactionPostingPaymentList.length === 0) ||
+                          paymentTrustEstate.paymentModeValue==='BKTRN'){
+                            @if (paymentTrustEstate.statusValue!=='APPRD') {
+
+                              <app-icon-button name="add" toolTip="Add New" (click)="createTransactionList(true,0)">
+                              </app-icon-button>
+                            }
+                          }
+
+                        </div>
+                      </ng-template>
+                      <ng-template cellDef="action" let-element>
+                        <div class="d-flex">
+                          
+                          <app-icon-button name="edit" toolTip="Edit"
+                          (click)="createTransactionList(true,element.transactionPostingPaymentListId)"></app-icon-button>
+                          @if (paymentTrustEstate.statusValue!=='APPRD') {
+                          <app-icon-button name="doc-delete" toolTip="Delete"
+                            (click)="deleteItemType(element.transactionPostingPaymentListId)"></app-icon-button>
+                          }
+
+                        </div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="accno" let-element>
+                        <div class="header-cell-title">Account No</div>
+                        <div class="header-cell-subtitle">Account Name</div>
+                      </ng-template>
+                      <ng-template cellDef="accno" let-element>
+                        <div class="header-cell-title">{{element.trustAccountNumer}}</div>
+                        <div class="header-cell-subtitle">{{element.accountName}}</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="ledgerName" let-element>
+                        <div class="header-cell-title center pl40">Withdrawal Application No</div>
+
+                      </ng-template>
+                      <ng-template cellDef="ledgerName" let-element>
+                        <div class="header-cell-title center pl40">{{element.withdrawalApplicationNo}}</div>
+
+                      </ng-template>
+
+                      <ng-template cellHeaderDef="amount" let-element>
+                        <div class="header-cell-title text-right">Requested amount ({{currency}})</div>
+                      </ng-template>
+                      <ng-template cellDef="amount" let-element>
+                        <div class="header-cell-title text-right">{{element.amount}}</div>
+                      </ng-template>
+
+                      <ng-template cellHeaderDef="bankAccountNumber" let-element>
+                        <div class="header-cell-title center">Bank Name</div>
+                        <div class="header-cell-subtitle center">Bank A/C No</div>
+                      </ng-template>
+                      <ng-template cellDef="bankAccountNumber" let-element>
+                        <div class="header-cell-title center">{{element.bankName}}</div>
+                        <div class="header-cell-subtitle center">{{element.bankAccountNumber}}</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="transactionNumber" let-element>
+                        @if(paymentTrustEstate.paymentModeValue==='CHEQU'){
+                        <div class="header-cell-title">Cheque No</div>
+                        }
+                        @else{
+                        <div class="header-cell-title">Transaction No</div>
+                        }
+                      </ng-template>
+                      <ng-template cellDef="transactionNumber" let-element>
+                       {{element.transactionNumber}}
+                      </ng-template>
+                      <ng-template cellDef="belongsto" let-element>
+                       {{element.description}}
+                      </ng-template>
+
+
+
+
+
+
+
+                    </app-table>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title open-visible">
+                <ion-icon src="assets/icons/accordian/application.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Transaction Preview</div>
+                </div>
+              </div>
+              <div class="accordion-title open-hide">
+                <row class="row-w100">
+                  <div class="accordion-title">
+                    <ion-icon src="assets/icons/accordian/application.svg"></ion-icon>
+                    <div class="accordion-title-content">
+                      <div>Transaction Preview</div>
+                    </div>
+                  </div>
+                </row>
+              </div>
+            </div>
+          </accordion-header>
+
+          <accordion-body>
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <div class="justify-content-end gap1">
+                  <div class="d-flex trans gap">
+                    <div class="gap1">Total Debit ({{currency}})</div>
+                    <div class="color">{{ paymentTrustEstate.totalDebit }}</div>
+                  </div>
+                  <div class="d-flex trans gap mr40">
+                    <div class="gap">Total Credit ({{currency}})</div>
+                    <div class="color">
+                      {{ paymentTrustEstate.totalCredit }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="v-flex" appAccess="FUDTN">
+                  <div class="relat scroller">
+                    <app-table class="sub-table" [pagination]="pagination" [columns]="previewcolumns"
+                      [columnsName]="previewcolumnsName" [dataSource]="tableDataList" [hasHeader]="false"
+                      [showPaginator]="false" [hideSelectAll]="true">
+                      <ng-template cellHeaderDef="groupName" let-element>
+                        <div >Group Name</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="ledgerName" let-element>
+                        <div >Ledger Name</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="postingType" let-element>
+                        <div >Posting Nature</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="postingValue" let-element>
+                        <div class="text-right">Posting Value ({{currency}}) </div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="postingType2" let-element>
+                        <div >Posting Type</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="postingBooks" let-element>
+                        <div>Posting Books</div>
+                      </ng-template>
+                      <ng-template cellDef="groupName" let-element>
+                        <div>{{ element.groupName }}</div>
+                      </ng-template>
+                      <ng-template cellDef="ledgerName" let-element>
+                        <div>{{ element.ledgerName }}</div>
+                      </ng-template>
+
+                      <ng-template cellDef="postingValue" let-element>
+                       
+                           <div class="text-right">
+                            {{ element.postingValue }}
+                           </div>
+                        
+                       
+                      </ng-template>
+
+                      <ng-template cellDef="postingType2" let-element>
+                        @if(element.isPrimaryPosting==='N'){
+                        <div>Auto Posting</div>
+                        } @else {
+                        <div>Primary Posting</div>
+
+                        }
+                      </ng-template>
+                      
+
+                      <ng-template cellDef="postingBooks" let-element>
+                        @if(element.isCorporateGl==='N'){
+                        <div class="">Trust&Estate</div>
+                        } @else {
+                        <div class="">Corporate</div>
+
+                        }
+                      </ng-template>
+                      <ng-template cellDef="postingType" let-element>
+                        <div class="">{{ element.postingNatureDescription }}</div>
+                      </ng-template>
+                    </app-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+        }
+      </accordion>
+    </app-tab>
+
+    @if(paymentTrustEstate.transactionPostingId !==0 ){
+    <app-tab tabTitle="History">
+      <accordion>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon name="notifications-outline"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Notes</div>
+                  <div class="accordian-title-count">{{paymentTrustEstate.plstentTransactionPostingNotes.length}}</div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <div class="p16px pb26 wrap-content">
+                  <!-- @if(this.paymentTrustEstate.transactionPostingId===0){ -->
+                  <div class="justify-content-end d-flex">
+                    <!-- @if(  editAccess){ -->
+                   
+                    @if(editAccess && (paymentTrustEstate.statusValue!=='CNCLD' &&
+                    paymentTrustEstate.statusValue!=='APPRD' && paymentTrustEstate.statusValue!=='APVIP') ){
+
+                    <app-icon-button name="add" toolTip="Create" (click)="createNotes()"></app-icon-button>
+                    }
+                    <!-- } -->
+                  </div>
+                  <!-- } -->
+
+                  @for (item of notesList; track $index) {
+                  <div class="border-bottom  notes-list">
+                    <div class="mx10">{{item.notes}}</div>
+                    <div class="d-flex justify-content-end notes-context">
+                      <div style="padding-right:5px ;">
+                        {{item.enteredByFullName}}</div>
+                      <div class=" notes-border-left">
+                        {{item.enteredDate | appDate : appSetting.environment.dateViewFormatWithTime}}
+                      </div>
+                      <div style="padding-right:5px ;"></div>
+                      <!-- <div class=" notes-border-left status-{{item.actionStatusValue}}">
+                                              {{item.actionStatusDescription}}
+                                          </div> -->
+                      <div style="padding-right:5px ;"></div>
+                      <div class=" notes-border-left status-{{item.statusValue}}">
+                        {{item.statusDescription}}
+                      </div>
+                      <div class="card-1-header-label px-2 ">
+
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Assigned Officer</div>
+                  <div class="accordian-title-count">{{assignOfficerData.length}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+
+                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                  [hasPagination]="true" [dataSource]=" assignOfficerData" [hideSelectAll]="true">
+                  <!-- <ng-template cellDef="statusDescription" let-element>
+                    <div class=" status-{{element.statusValue}}">{{element.statusDescription}}</div>
+                </ng-template> -->
+
+
+
+
+                  <ng-template cellHeaderDef="assignedOfficerFullName" let-element>
+                    <div class="header-cell-title ml38">Assigned Officer</div>
+
+                  </ng-template>
+                  <ng-template cellDef="assignedOfficerFullName" let-element>
+                    <div class="header-cell-title ">{{element.assignedOfficerFullName}}</div>
+
+                  </ng-template>
+                  <ng-template cellHeaderDef="assignedByFullName" let-element>
+                    <div class="header-cell-title pl50">Assigned By</div>
+                  </ng-template>
+                  <ng-template cellDef="assignedByFullName" let-element>
+                    <div class="header-cell-title center">{{element.assignedByFullName}}</div>
+
+                  </ng-template>
+                  <ng-template cellDef="assignedDate" let-element>
+                    <div>
+
+                      {{ element.assignedDate | appDate : appSetting.environment.dateViewFormatWithTime}}
+
+
+                    </div>
+                  </ng-template>
+                  <ng-template cellHeaderDef="statusDescription" let-element>
+                    <div class="center pl50">Status</div>
+                  </ng-template>
+                  <ng-template cellDef="statusDescription" let-element>
+                    <div class=" center status-{{element.statusValue}}">
+                      {{element.statusDescription}}
+                    </div>
+                  </ng-template>
+                  <ng-template #slotRight>
+                    <!-- @if(paymentTrustEstate.assignedOfficerFlag === true){ -->
+                    <div class="d-flex align-items-center">
+                      @if(this.paymentTrustEstate.reAssignFlag === true && 
+                      (paymentTrustEstate.statusValue==='PNDSB' || paymentTrustEstate.statusValue==='PDNVR'||
+                      paymentTrustEstate.statusValue==='PNDAP')){
+                      <form #p="ngForm" class="col-md-10 w250">
+                        <app-input-control type="select" [(ngModel)]="assignedOfficer.assingedOfficier"
+                          name="assingedOfficier" [items]="initialData.DDLValues.Assigned_Officer_DDl" key="constant"
+                          [errorTrue]="errorTrue" [required]="true" keyName="description"></app-input-control>
+                      </form>
+                      <div class="col-md-2">
+                        <div class="col-md-2"><app-icon-button name="reassign" toolTip="Reassign"
+                            (click)="reAssignTransactionPostingAssignedOfficer(assignedOfficer.assingedOfficier)"></app-icon-button>
+                        </div>
+                      </div>
+                      }
+                      @if(this.paymentTrustEstate.selfAssignFlag === true &&
+                      (paymentTrustEstate.statusValue==='PNDSB' || paymentTrustEstate.statusValue==='PDNVR'||
+                      paymentTrustEstate.statusValue==='PNDAP')){
+                      <div class="col-md-2"><app-icon-button name="self-assign"
+                          (click)="selfAssignTransactionPostingAssignedHistory()"
+                          toolTip="Self Assign"></app-icon-button></div>
+                      }
+                    </div>
+                    <!-- } -->
+                  </ng-template>
+                </app-table>
+              </div>
+            </div>
+
+          </accordion-body>
+        </accordion-item>
+      </accordion>
+      <div class="bg-white-padd">
+
+        <app-tab-sub-group>
+          <app-sub-tab tabTitle="Status History">
+            <div class="status-padding">
+              <!-- @if (paymentTrustEstate.plstentTransactionPostingStatusHistory.length > 0) { -->
+              <div class="status-history">
+                <ul>
+                  @for (x of paymentTrustEstate.plstentTransactionPostingStatusHistory; track $index) {
+                  <li>
+
+
+                    <div class="status-history-title status-{{x.statusValue}}">{{x.statusDescription}}</div>
+
+                    <div class="status-history-subtitle">{{x.changedByFullName}} | {{x.changedDate |appDate}} |
+                      {{x.changedDate
+                      |appDate: 'hh:mm a'}}</div>
+                  </li>
+                  }
+                </ul>
+              </div>
+              <!-- } -->
+            </div>
+          </app-sub-tab>
+          <app-sub-tab tabTitle="Communication History">
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+
+                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName" [hasPagination]="true"
+                  [dataSource]="emailHistoryTableData" [hideSelectAll]="true">
+                  <ng-template cellHeaderDef="toEmailId">
+                    <div class=" ml38">To</div>
+                  </ng-template>
+                  <ng-template cellDef="toEmailId" let-element>
+                    {{element.ientCommunicationTracking?.toEmailId}}
+                  </ng-template>
+                  <ng-template cellDef="sentDate" let-element>
+
+                    {{ element.sendDate | appDate : appSetting.environment.dateViewFormatWithTime}}
+
+                  </ng-template>
+                  <ng-template cellHeaderDef="sentDate" let-element>
+                    <div class="center pl20">
+                      Date Time
+                    </div>
+
+                  </ng-template>
+                  <ng-template cellHeaderDef="sentStatusDescription" let-element>
+
+                    <div class="ml38">
+                      Status
+                    </div>
+                  </ng-template>
+                  <ng-template cellDef="sentStatusDescription" let-element>
+                    <!-- <div class="status-{{element.ientCommunicationTracking?.sentStatusValue}}">
+                      {{element.statusDescription}}
+                    </div> -->
+                    <div class=" status-{{element.statusValue}}">
+                      {{element.statusDescription}}
+                    </div>
+                  </ng-template>
+
+                  <ng-template cellDef="action" let-element>
+                    <!-- <app-icon-button name="add" toolTip="Create" ></app-icon-button> -->
+                    <app-icon-button name="open" toolTip="Open" (click)="viewEmailDetail(element)"></app-icon-button>
+                  </ng-template>
+                </app-table>
+              </div>
+            </div>
+          </app-sub-tab>
+        </app-tab-sub-group>
+      </div>
+
+    </app-tab>
+    @if( paymentTrustEstate.statusValue === 'APPRD' ){
+
+    <app-tab tabTitle="Print">
+      <div class="v-flex h100">
+        <div class="bg-white-padd p16px h300" >
+          <div class="outer-content-wrapper h100">
+            <div class=" content-wrapper overflow-none m-8px">
+              <!-- <row> -->
+                <!-- <div class="wrap-content col-md-4">
+                  <app-input-control type="textarea" [maxLength]="250" className="notes-2" name="pdfOtherComments"
+                  [(ngModel)]="paymentTrustEstate" 
+                  label="COMMENTS OR SPECIAL INSTRUCTIONS"></app-input-control>
+                  <div class="end">
+                    <app-icon-button name="save" toolTip="Update" class=""></app-icon-button>
+                  </div>
+                </div> -->
+
+                <div class="wrap-content col-md-12 h100">
+                  <div class="pdf-viewer">
+                    <object type="application/pdf" [data]="fileUrl | appSafe: 'resourceUrl'"></object>
+                  </div>
+                </div>
+              <!-- </row> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </app-tab>
+    }
+    @if(paymentTrustEstate.lstentTransactionPostingErrorMessage?.length > 0) {
+    <app-tab tabTitle="Error Message">
+      <accordion>
+
+        <accordion-item [isOpen]="true">
+
+          <accordion-body>
+
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+
+                <app-table [columns]="errormsgColumns" [columnsName]="errormsgColumnsName"
+                  [dataSource]="paymentTrustEstate.lstentTransactionPostingErrorMessage" [hideSelectAll]="true"
+                  [showPaginator]="false">
+                  <!-- <ng-template cellDef="assignedOfficerFullName" let-element let-index>{{index}} </ng-template>
+                <ng-template cellHeaderDef="assignedOfficerFullName" let-element>
+                  <div class="center">S No</div>
+                </ng-template> -->
+                  <ng-template cellDef="assignedDate" let-element>
+                    <div class="center">{{element.messageDesc}}</div>
+                  </ng-template>
+                  <ng-template cellHeaderDef="assignedDate" let-element>
+                    <div class="center">Error Message Description</div>
+                  </ng-template>
+                  <ng-template cellDef="assignedByFullName" let-element>
+                    <div class="center">{{element.insertedByFullname}}</div>
+                  </ng-template>
+                  <ng-template cellHeaderDef="assignedByFullName" let-element>
+                    <div class="center">Inserted By</div>
+                  </ng-template>
+                  <ng-template cellDef="statusDescription" let-element>
+                    <div class="center">{{element.insertedDate| appDate}}</div>
+                  </ng-template>
+                  <ng-template cellHeaderDef="statusDescription" let-element>
+                    <div class="center">Inserted Date</div>
+                  </ng-template>
+                </app-table>
+              </div>
+            </div>
+
+          </accordion-body>
+        </accordion-item>
+      </accordion>
+
+
+    </app-tab>
+    }
+    }
+  </app-tab-group>
+
+
+  <ng-template #notesDialog>
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-title">
+          <ion-icon class="fos-20" src="assets/icons/human-icon.svg"></ion-icon>Payment Trust And Estate
+          Application >
+          Detail >
+          Add Notes
+        </div>
+
+
+
+
+        <div class="slot-right">
+          <div class="btn-group">
+            <app-icon-button name="save" toolTip="Save" (click)="saveTransactionPostingNotes(false)"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="clearNotes()"></app-icon-button>
+            <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-content">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <div class="dialog-content-inner h100">
+          <form #notesForm="ngForm">
+            <row>
+              <div class="col-md-4 mb26"> <app-input-control type="select" label="Status"
+                  [(ngModel)]="paymentEstateNotes.statusValue" name="statusValue" [items]="statusddl" key="constant"
+                  keyName="description"></app-input-control></div>
+              <!-- <div class="col-md-4 mb26"> <app-input-control type="select" label="Action Status"
+                                    [required]="true"></app-input-control>
+                              </div>
+                              <div class="col-md-4 mb26"> <app-input-control type="select" label="Application Stage"
+
+                                      [required]="true"></app-input-control></div> -->
+              <div class="col-md-12 mb26">
+                <app-input-control type="textarea" className="notes" label="Notes"
+                  [(ngModel)]="paymentEstateNotes.notes" name="notes" [maxLength]="500"></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+</div>
+
+
+
+<ng-template #bankDialog>
+
+  <div class="dialog-container">
+    @if(this.viewBank){
+    <div class="dialog-header">
+      <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+          src="assets/icons/accordian/customer-service.svg"></ion-icon>
+        Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+          class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+        View
+        Bank
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="edit" toolTip="Edit" (click)="editBankDetails()"
+            appButtonAccess="CrmCustAppEditBtn"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+            appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <scroll>
+          <div class="p10">
+            <row>
+              <div class="col-md-4">
+                <div class="box h100">
+                  <div class="box-header">
+                    Bank Information
+                  </div>
+                  <div class="box-pad">
+                    <row>
+                      <div class="col-md-12"><view-label label="Bank Name" class="mb26"
+                          value="{{customerBank.ientBank.bankName}}"></view-label></div>
+                      <div class="col-md-12"><view-label label="Bank Code" class="mb26"
+                          value="{{customerBank.ientBank.bankCode}}"></view-label></div>
+                      <div class="col-md-12"><view-label label="Branch " class="mb26"
+                          value="{{customerBank.ientBank.branchTypeDescription}}"></view-label>
+                      </div>
+
+                      <div class="col-md-12"><view-label label="Swift Code" class="mb26"
+                          value="{{customerBank.ientBank.swiftCode}}"></view-label></div>
+                      <!-- <div class="col-md-12"><view-label label="IFSC Code" class="mb26"
+                          value="{{customerBank.ientBank.ifscCode}}"></view-label></div> -->
+                      @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                      <div class="col-md-12"><view-label label="Head Office Bank"
+                          value="{{customerBank.headOfficeBank}}" class="mb26"></view-label>
+                      </div>
+                      }
+
+                    </row>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="box h100">
+                  <div class="box-header ">
+                    Additional Information
+                  </div>
+                  <div class="box-pad">
+                    <row>
+                      <div class="col-md-12"><view-label label="Account No" class="mb26"
+                          value="{{customerBank.accountNo}}"></view-label></div>
+                      <div class="col-md-12"><view-label label="Effective Date " class="mb26"
+                          value="{{customerBank.effectiveDate  | appDate}}"></view-label>
+                      </div>
+                      <div class="col-md-12"><view-label label="Account Status  "
+                          class="mb26 status-{{customerBank.statusValue}}"
+                          value="{{customerBank.statusDescription}}"></view-label></div>
+                    </row>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="box h100">
+                  <div class="box-header ">
+                    Bank Address
+                  </div>
+                  <div class="box-pad">
+                    <row>
+                      <div class="col-md-12"><view-label label="Line 1" class="mb26"
+                          value="{{customerBank.ientBank.ientAddress.line1}}"></view-label>
+                      </div>
+                      <div class="col-md-12"><view-label label="Line 2" class="mb26"
+                          value="{{customerBank.ientBank.ientAddress.line2}}"></view-label>
+                      </div>
+                      <div class="col-md-12"><view-label label="Line 3 " class="mb26"
+                          value="{{customerBank.ientBank.ientAddress.line3}}"></view-label>
+                      </div>
+
+                      <div class="col-md-12"><view-label label="Province" class="mb26"
+                          value="{{customerBank.ientBank.ientAddress.provinceDescription}}"></view-label>
+                      </div>
+                      <div class="col-md-12"><view-label label="Island" class="mb26"
+                          value="{{customerBank.ientBank.ientAddress.islandDescription}}"></view-label>
+                      </div>
+                      <div class="col-md-12"><view-label label="Tikina" class="mb26"
+                          value="{{customerBank.ientBank.ientAddress.tikinaDescription}}"></view-label>
+                      </div>
+                      <div class="col-md-12"><view-label label="Village" class="mb26"
+                          value="{{customerBank.ientBank.ientAddress.village}}"></view-label>
+                      </div>
+                      <div class="col-md-12"><view-label label="PO Box No" class="mb26"
+                          value="{{customerBank.ientBank.ientAddress.poBoxNo}}"></view-label>
+                      </div>
+
+                    </row>
+                  </div>
+                </div>
+              </div>
+            </row>
+
+
+
+          </div>
+        </scroll>
+
+      </div>
+    </div>
+
+    }
+    @if(this.createBank){
+    <div class="dialog-header">
+      <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+          src="assets/icons/accordian/customer-service.svg"></ion-icon>
+        Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+          class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+        Create
+        Bank
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveBankDetails()"
+            appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearBankDetails()"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+            appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <scroll>
+          @if(data.showErrorMessage){
+          <div class="error-panel">
+            <app-error-message></app-error-message>
+          </div>
+          }
+          <div class="p10">
+            <div class="view-label-container-title mb26">Enter Bank Code and to continue</div>
+            <form #q="ngForm">
+              <row>
+                <div class="col-md-8">
+                  <form #x="ngForm" class="d-flex align-items-center" (ngSubmit)="viewBankDetailsBasedOnBankCode(x)">
+
+                    <div class="col-md-6"> <app-input-control label="Bank Code" [errorTrue]="errorTrue"
+                        [required]="true" [(ngModel)]="bankCodeValue" [maxLength]="20"
+                        name="bankCodeValue"></app-input-control></div>
+                    <div class="col-md-6"> <button type="submit" class="info-btn">Get Info<ion-icon class="pl10px"
+                          name="information-outline"></ion-icon></button></div>
+
+
+
+                  </form>
+                </div>
+              </row>
+              @if(createNewBankInfoValues){
+
+              <row>
+                <div class="col-md-4">
+                  <div class="box h100">
+                    <div class="box-header ">
+                      Bank Information
+                    </div>
+                    <div class="box-pad">
+                      <row>
+                        <div class="col-md-12 mb26"><app-input-control type="text" label="Bank Name"
+                            [(ngModel)]="customerBank.ientBank.bankName" [errorTrue]="errorTrue" [required]="true"
+                            [maxLength]="50" [btnClicked]="this.customerBank.editableFlag ==='N'"
+                            name="bankName"></app-input-control></div>
+                        <div class="col-md-12 mb26"><app-input-control type="text" [errorTrue]="errorTrue"
+                            [required]="true" label="Bank Code" [(ngModel)]="customerBank.ientBank.bankCode"
+                            [btnClicked]="true" [maxLength]="20" name="bankCode"></app-input-control></div>
+                        <div class="col-md-12 mb26">
+                          <view-label label="Branch" value="{{branchName}}"></view-label>
+                        </div>
+
+                        <div class="col-md-12 mb26"><app-input-control type="text" label=""
+                            [(ngModel)]="customerBank.ientBank.ifscCode" [maxLength]="20" [errorTrue]="errorTrue"
+                            [required]="true" [btnClicked]="this.customerBank.editableFlag ==='N'"
+                            name="ifscCode"></app-input-control></div>
+                        <div class="col-md-12 mb26"><app-input-control type="text" label="Swift Code"
+                            [(ngModel)]="customerBank.ientBank.swiftCode" [errorTrue]="errorTrue" [required]="true"
+                            [maxLength]="20" [btnClicked]="this.customerBank.editableFlag ==='N'"
+                            name="swiftCode"></app-input-control></div>
+                        <div class="col-md-12 mb26">
+                          @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                          <app-input-control type="select" label="Head Office Bank"
+                            [items]="initialData.getHeadOfficeBankDDL.DDLBank" key="id" keyName="code"
+                            [errorTrue]="errorTrue" [required]="true"
+                            [btnClicked]="this.customerBank.editableFlag ==='N'"
+                            [(ngModel)]="customerBank.ientBank.headOfficeBankId"
+                            name="headOfficeBankId"></app-input-control>
+                          }
+                        </div>
+                      </row>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="box h100">
+                    <div class="box-header ">
+                      Additional Information
+                    </div>
+                    <div class="box-pad">
+                      <row>
+                        <div class="col-md-12 mb26"><app-input-control type="number" label="Account No"
+                            [(ngModel)]="customerBank.accountNo" name="accountNo" [errorTrue]="errorTrue"
+                            [required]="true" [maxLength]="20"></app-input-control></div>
+                        <div class="col-md-12 mb26"><app-input-control type="date" label="Effective Date"
+                            [(ngModel)]="customerBank.effectiveDate" name="effectiveDate"></app-input-control></div>
+                        <div class="col-md-12 mb26"><app-input-control type="select" label="Account Status"
+                            [(ngModel)]="customerBank.statusValue" name="statusValue" [errorTrue]="errorTrue"
+                            [required]="true" [btnClicked]="true" [items]="initialData.DDLValues.DDLActiveAndInActive"
+                            key="constant" keyName="description"></app-input-control>
+                        </div>
+                      </row>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="box h100">
+                    <div class="box-header ">
+                      Bank Address
+                    </div>
+                    <div class="box-pad">
+                      <app-address-edit [ientAddress]="customerBank.ientBank.ientAddress"
+                        [btnClicked]="this.customerBank.editableFlag ==='N'" [errorTrue]="errorTrue"
+                        type="bank"></app-address-edit>
+                    </div>
+
+                  </div>
+                </div>
+              </row>
+              }
+            </form>
+
+          </div>
+        </scroll>
+      </div>
+    </div>
+    }
+
+    @if(this.editBank){
+    <div class="dialog-header">
+      <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+          src="assets/icons/accordian/customer-service.svg"></ion-icon>
+        Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+          class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+        Edit
+        Bank
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Update" (click)="saveEditBankDetails()"
+            appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="openBankDetails()"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+            appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+
+        <scroll>
+          @if(data.showErrorMessage){
+          <div class="error-panel">
+            <app-error-message></app-error-message>
+          </div>
+          }
+          <div class="p10">
+            <form #q="ngForm">
+              <row>
+                <div class="col-md-4">
+                  <div class="box h100">
+                    <div class="box-header ">
+                      Bank Information
+                    </div>
+                    <div class="box-pad">
+                      <row>
+                        <div class="col-md-12 mb26"><app-input-control type="text" label="Bank Name"
+                            [(ngModel)]="customerBank.ientBank.bankName" [errorTrue]="errorTrue" [required]="true"
+                            [maxLength]="50" [btnClicked]="this.customerBank.editableFlag ==='N'"
+                            name="bankName"></app-input-control></div>
+                        <div class="col-md-12 mb26"><app-input-control type="text" label="Bank Code"
+                            [(ngModel)]="customerBank.ientBank.bankCode" [btnClicked]="true" [maxLength]="20"
+                            name="bankCode"></app-input-control></div>
+                        <div class="col-md-12 mb26">
+                          <view-label label="Branch" value="{{branchName}}"></view-label>
+
+                        </div>
+
+                        <!-- <div class="col-md-12 mb26"><app-input-control type="text" label="IFSC Code"
+                            [(ngModel)]="customerBank.ientBank.ifscCode" [maxLength]="20" [errorTrue]="errorTrue"
+                            [required]="true" [btnClicked]="this.customerBank.editableFlag ==='N'"
+                            name="ifscCode"></app-input-control></div> -->
+                        <div class="col-md-12 mb26"><app-input-control type="text" label="Swift Code"
+                            [(ngModel)]="customerBank.ientBank.swiftCode" [errorTrue]="errorTrue" [required]="true"
+                            [maxLength]="20" [btnClicked]="this.customerBank.editableFlag ==='N'"
+                            name="swiftCode"></app-input-control></div>
+
+                        <div class="col-md-12 mb26">
+                          @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                          <app-input-control type="select" label="Head Office Bank"
+                            [items]="initialData.getHeadOfficeBankDDL.DDLBank" key="id" keyName="code"
+                            [errorTrue]="errorTrue" [required]="true"
+                            [btnClicked]="this.customerBank.editableFlag ==='N'"
+                            [(ngModel)]="customerBank.ientBank.headOfficeBankId"
+                            name="headOfficeBankId"></app-input-control>
+                          }
+                        </div>
+                      </row>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="box">
+                    <div class="box-header ">
+                      Additional Information
+                    </div>
+                    <div class="box-pad">
+                      <row>
+                        <div class="col-md-12 mb26"><app-input-control type="number" label="Account No"
+                            [(ngModel)]="customerBank.accountNo" name="accountNo" [errorTrue]="errorTrue"
+                            [required]="true" [maxLength]="20"></app-input-control></div>
+                        <div class="col-md-12 mb26"><app-input-control type="date" label="Effective Date"
+                            [(ngModel)]="customerBank.effectiveDate" name="effectiveDate"></app-input-control></div>
+                        <div class="col-md-12 mb26"><app-input-control type="select" label="Account Status"
+                            [(ngModel)]="customerBank.statusValue" name="statusValue" [errorTrue]="errorTrue"
+                            [required]="true" [items]="initialData.DDLValues.DDLActiveAndInActive" key="constant"
+                            keyName="description"></app-input-control>
+                        </div>
+                      </row>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="box">
+                    <div class="box-header ">
+                      Bank Address
+                    </div>
+                    <div class="box-pad">
+                      <app-address-edit [ientAddress]="customerBank.ientBank.ientAddress"
+                        [btnClicked]="this.customerBank.editableFlag ==='N' " [errorTrue]="errorTrue"
+                        type="bank"></app-address-edit>
+                    </div>
+
+                  </div>
+                </div>
+              </row>
+            </form>
+          </div>
+        </scroll>
+      </div>
+    </div>
+    }
+  </div>
+
+</ng-template>
+
+<ng-template #transactionDialog>
+  <div class="dialog-container">
+    @if(this.transactionPaymentList.transactionPostingPaymentListId >0){
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/human-icon.svg"></ion-icon>Transaction >
+        Detail >Edit
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Update" (click)="saveTransactionPostingPaymentList()"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh"
+            (click)="openTransactionPostingPaymentList(transactionPaymentList.transactionPostingPaymentListId, 'refresh')"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    }@else {
+
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/human-icon.svg"></ion-icon>Transaction >
+        Detail > Add
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveTransactionPostingPaymentList()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear"
+            (click)="createTransactionPostingPaymentList()"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    }
+    <div class="dialog-content">
+      @if(data.showErrorMessage){
+      <div class="error-panel">
+        <app-error-message></app-error-message>
+      </div>
+      }
+      <div class="dialog-content-inner h100">
+        <form #transactionForm="ngForm">
+          <row>
+            <div class="col-md-4 pb26 border-right">
+              <app-input-control type="select" [(ngModel)]="transactionPaymentList.trustAccountNumer"
+                name="trustAccountNumer" [btnClicked]="noTransactionEdit"
+                (onSelect)="showChangeAlert();getWithDrawalDeatilsbyIdAndOrganization();showAuotPosting(true)"
+                [items]="transacationAccountNumber" key="constant" keyName="constant" label="Account Number"
+                [required]="true" [errorTrue]="errorTrue" valueType="int"></app-input-control>
+            </div>
+
+            @if(transactionPaymentList.description!=='Settlement'){
+
+              <div class="col-md-4 pb26 border-right">
+                <view-label label="Withdrawal Application Number"
+                  value="{{transactionPaymentList.withdrawalApplicationNo}}"></view-label>
+              
+              </div>
+            }
+            @else {
+              <div class="col-md-4 pb26 border-right">
+              <view-label label="Settlement Application Number"
+              value="{{transactionPaymentList.withdrawalApplicationNo}}"></view-label>
+          </div>
+             
+            }
+            <div class="col-md-4 pb26 ">
+              <view-label label="Bank Name" value="{{transactionPaymentList.bankName}}"></view-label>
+             
+            </div>
+          </row>
+          <row>
+            <div class="col-md-4 pb26 border-right">
+              <view-label label="Account Name" value="{{transactionPaymentList.accountName}}"></view-label>
+
+
+            </div>
+            <div class="col-md-4 pb26 border-right">
+              <view-label label="Requested Amount ({{currency}})"
+                value="{{transactionPaymentList.amount}}"></view-label>
+            </div>
+            <div class="col-md-4 pb26 ">
+              <view-label label="Bank Account Number" value="{{transactionPaymentList.bankAccountNumber}}"></view-label>
+            </div>
+          </row>
+          <row>
+            <div class="col-md-4 pb26 border-right">
+              <view-label label="Belongs To" value="{{transactionPaymentList.description}}"></view-label>
+            </div>
+            @if(transactionPaymentList.transactionPostingPaymentListId > 0 && transactionPaymentList.trustAccountNumer
+            === temptrustAccountNumer){
+            <div class="col-md-4 pb26 border-right">
+              <view-label label="Auto Posting Amount" value="{{transactionPaymentList.postingValue}}"></view-label>
+
+            </div>
+            }
+            <div class="col-md-4 pb26 border-right">
+              <app-input-control type="number" label="Transaction Number" [(ngModel)]="transactionPaymentList.transactionNumber"  [btnClicked]="noTransactionEdit" name="transactionNumber"></app-input-control>
+            </div>
+          </row>
+          <row>
+              <div class="col-md-4 pb26 border-right">
+                <view-label label="Settlement Amount"
+                value="{{transactionPaymentList.settlementAmount}}"></view-label>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+<!-- <div class="text-icon d-flex" (click)="createBankDetail()">
+                              <ion-icon name="add-outline"></ion-icon>
+                              <div>
+                                Add Bank
+                              </div>
+                            </div> -->

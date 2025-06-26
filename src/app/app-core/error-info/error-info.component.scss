@@ -1,0 +1,40 @@
+.success-box {
+    border-radius: 6px;
+    background: red;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.50);
+    width: 100%;
+    padding: 20px;
+
+
+
+    .success-icon {
+        padding-left: 11px !important;
+        display: flex;
+        align-items: center;
+
+        ion-icon {
+            width: 27px;
+            height: 27px;
+        }
+    }
+
+    .success-info {
+        padding-left: 27px;
+        color: #FFF;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 22px;
+    }
+
+    .success-close-icon {
+        display: flex;
+        align-items: center;
+        padding-left: 25px;
+
+        ion-icon {
+            width: 22px;
+            height: 22px;
+            color: #FFF;
+        }
+    }
+}

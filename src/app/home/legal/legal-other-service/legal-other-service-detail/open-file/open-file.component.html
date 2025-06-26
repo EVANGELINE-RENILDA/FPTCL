@@ -1,0 +1,83 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/open-file.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Open File</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <row>
+            <div class="col-md-9">
+                <row>
+                    <div class="col-md-4"> <view-label label="Assigned Officer"
+                            value="{{application.ientLegalApplicationAssignedOfficerHistory.assignedToFullname}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="Assigned Date"
+                            value="{{application.ientLegalApplicationAssignedOfficerHistory.assignedDate | appDate}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="TAT"
+                            value="{{application.ientLegalApplicationAssignedOfficerHistory.statusValue}}"></view-label>
+                    </div>
+                </row>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex">
+                    @if(this.type.isEditable === 'Y' ){
+                    @if(this.application.reAssignFlag === 'True'){
+                    <form #p="ngForm" class="col-md-10 w250">
+                        <app-input-control type="select" key="constant" keyName="description" placeholder="Officer"
+                            [items]="assignedOfficerDDL" defaultOption="--Select--"
+                            [(ngModel)]="legalAssignedOfficer.assignedTo" name="assignedTo"></app-input-control>
+
+                    </form>
+                    <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                            toolTip="Reassign"></app-icon-button>
+                    </div>
+                    }
+                    @if(this.application.selfAssignFlag ===' True'){
+                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                            toolTip="Self Assign"></app-icon-button></div>
+                    }
+                    }
+                </div>
+            </div>
+        </row>
+        <div class="mb20"></div>
+        <row>
+            <div class="col-md-3">
+                <app-input-control type="text" label="Folder Name" [(ngModel)]="application" name="" />
+            </div>
+            <div class="col-md-3 pl15">
+                <app-input-control type="text" label="File Number" [(ngModel)]="application" name="" />
+            </div>
+        </row>
+        <form #notiForm="ngForm" class="col-md-12">
+            <app-input-control type="textarea" className="notes" label="Notes" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="notesMessage" name="notesMessage" [maxLength]="250"></app-input-control>
+        </form>
+        @if(this.type.isEditable === 'Y' && this.application.assignedOfficerFlag ===' True' ){
+        <div class="col-md-12 end">
+            <app-icon-button name="save" toolTip="Save" (click)="saveLegalNotes()"></app-icon-button>
+        </div>
+        }
+
+
+
+
+
+
+        <div class="col-md-12 end">
+            <div class="col-md-12 end">
+                @if(this.type.isEditable === 'Y' && this.application.assignedOfficerFlag ===' True'){
+                <button type="submit" class="approve-btn" (click)="completeApplicationStage()">File Opened</button>
+                }
+            </div>
+        </div>
+
+
+    </accordion-body>
+</accordion-item>

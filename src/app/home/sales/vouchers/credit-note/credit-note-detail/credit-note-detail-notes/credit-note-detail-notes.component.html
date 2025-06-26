@@ -1,0 +1,102 @@
+
+<div class="flex-1 relative h100">
+	<scroll>
+	  <table class="app-table account-table">
+		<thead class="app-table-head">
+		  <tr class="app-table-header-row">
+			<th class="app-table-header-cell text-center"><div>#</div></th>
+			<th class="app-table-header-cell">
+			  <div class="header-cell-title">Notes</div>
+			  <div class="header-cell-subtitle">Created By | Date | Time</div>
+			</th>
+			<th class="app-table-header-cell">
+                @if(creditNote.statusValue !== 'CANCL'){
+			  <app-icon-button
+				name="add"
+				toolTip="Add New"
+				(click)="openDialogNotes()"
+			  ></app-icon-button>
+                }
+			</th>
+		  </tr>
+		</thead>
+		<tbody class="app-table-body">
+		  @for (notes of parentData.plstentSalNotes; track notes; let i
+		  = $index) {
+		  <tr class="app-table-row">
+			<td class="app-table-cell text-center">
+			  {{ i + 1 }}
+			</td>
+			<td class="app-table-cell">
+			  <div>
+				{{ notes.notesDetail }}
+			  </div>
+			  <div class="table-cell-subtitle">
+				{{ notes.createdFullName }} |
+				{{
+				  notes.createdDate
+					| appDate
+				}}
+			  </div>
+			</td>
+			<td></td>
+		  </tr>
+		  }
+		</tbody>
+	  </table>
+	</scroll>
+  </div>
+
+
+
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/sales.svg"></ion-icon>
+              Credit Note > Detail >
+                Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveNotesForCreditNote()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="notesClear()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            @if(this.data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+            <div class="dialog-content-inner h100">
+
+               <form #notesform="ngForm" (ngSubmit)="creditNotestab.statusValue !== 'CANCL' ? saveNotesForCreditNote() : changeReversal()">
+                <row>
+                  <!-- <div class="col-md-12"> -->
+					<div class="col-md-4"> <app-input-control type="select" label="Status"
+						[(ngModel)]="creditNotestab.statusValue" name="statusValue" [items]="notesddl" key="constant"
+						keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+				</div>
+				@if(creditNotestab.statusValue==='CANCL'){
+				<div class="col-md-6">
+					<app-input-control type="date" label="Reversal Effective Date"
+					[(ngModel)]="creditNotestab.temporaryDocumentDate"
+					name="temporaryDocumentDate" [minDate]="creditNote.documentDate"
+					></app-input-control>
+				</div>
+			}
+				  <!-- </div> -->
+                    <div class="col-md-12 mb26">
+                        <app-input-control type="textarea" className="notes-1" [maxLength]="250" label="Notes"
+                            [(ngModel)]="creditNotestab.notesDetail" name="notesDetail"></app-input-control>
+                    </div>
+                </row>
+               </form>
+            </div>
+        </div>
+    </div>
+
+</ng-template>

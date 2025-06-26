@@ -1,0 +1,151 @@
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/sales.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToSales()">Sales</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Statement of Account Customer Summary</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<div class="content-wrapper" appAccess="CUSTR">
+
+    <div class="between">
+        <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+        <div class="flex-end align-items-center p-2">
+            Report Generating Date & Time : {{ currentDate | appDate }}
+        </div>
+    </div>
+
+    <div class="sub-table">
+        <table class="w100">
+            <thead class="h40">
+                <tr>
+                    <th>#</th>
+                    <th>Customer Code</th>
+                    <th>Customer Name</th>
+                    <th class="text-right">Total Balance Due</th>
+                    <th class="text-right">0 - 30 Days Due</th>
+                    <th class="text-right">31 - 60 Days Due</th>
+                    <th class="text-right">61 - 90 Days Due</th>
+                    <th class="text-right">90 Days Due</th>
+                    <th>Open</th>
+                    <th>SOA</th>
+                </tr>
+            </thead>
+
+            @if(customerTableData && customerTableData.length > 0){
+            <tbody>
+                @for(element of customerTableData; track $index){
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ element.CUSTOMER_REF_NO }}</td>
+                    <td>{{ element.CUSTOMER_NAME }}</td>
+                    <td class="text-right">{{ element.Total_Bal_Amt | appCurrency }}</td>
+                    <td class="text-right">{{ element.DaysDue0to30 | appCurrency }}</td>
+                    <td class="text-right">{{ element.DaysDue31to60 | appCurrency }}</td>
+                    <td class="text-right">{{ element.DaysDue61to90 | appCurrency }}</td>
+                    <td class="text-right">{{ element.DaysDue90 | appCurrency }}</td>
+                    <td class="text-center">
+                        <app-icon-button name="open" toolTip="Open" (click)="soaDetail(element)"></app-icon-button>
+                    </td>
+                    <td class=" text-center" (click)="soaSOA(element)">
+                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="app-table-footer bold" colspan="3">Subtotal</td>
+                    <td class="text-center bold">{{reportResultAmount[0].Total_Balance_Amount | appCurrency }}</td>
+                    <td class="text-center bold">{{reportResultAmount[0].Total_DaysDue0to30 | appCurrency }}</td>
+                    <td class="text-center bold">{{reportResultAmount[0].Total_DaysDue31to60 | appCurrency }}</td>
+                    <td class="text-center bold">{{reportResultAmount[0].Total_DaysDue61to90 | appCurrency }}</td>
+                    <td class="text-center bold">{{reportResultAmount[0].Total_DaysDue90 | appCurrency }}</td>
+                </tr>
+            </tfoot>
+            }
+        </table>
+    </div>
+
+</div>
+
+
+<!-- <app-table [columns]="columns" [columnsName]="columnsName" [showPaginator]="false" [dataSource]="customerTableData"
+    columnID="customerId" [hasIndex]="true" indexHeaderName="SlNo" (onSelect)="onSelect($event)" [hideSelectAll]="true">
+
+    <ng-template cellDef="action" let-element></ng-template>
+
+    <ng-template cellDef="detail" let-element>
+        <app-icon-button name="open" toolTip="Open Selected" (click)="soaDetail(element)">
+        </app-icon-button>
+    </ng-template>
+
+    <ng-template cellDef="detail2">
+        <app-icon-button name="open" toolTip="Open Selected" (click)="navigateToDetail2()"></app-icon-button>
+    </ng-template>
+
+    <ng-template #slotLeft>
+        <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+    </ng-template>
+
+    <ng-template #slotRight>
+        <div class="d-flex align-items-center w100">
+            <div class="px10">
+                <view-label label="Report Generating Date & Time" [value]="currentDate | appDate"></view-label>
+            </div>
+
+            <app-icon-button name="download" toolTip="Export To Excel" appButtonAccess="CrmCustAppAddBtn"
+                (click)="generateDebtorsSummaryReportExcel()"></app-icon-button>
+        </div>
+    </ng-template>
+</app-table>
+</div> -->
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Statement Of Account Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearReport()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-6 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Statement Date" defaultOption="DD/MM/YYYY"
+                                        [(ngModel)]="searchParams.toDate" name="toDate" tabIndex="100"
+                                        (keyup.enter)="onSearch()"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-6 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Currency Value" defaultOption="--Select--"
+                                        valueType="string" [items]="initialData.DDLValues.ddlCurrecy"
+                                        [(ngModel)]="searchParams.currencyValue" name="currencyValue" key="constant"
+                                        keyName="description" tabIndex="100"
+                                        (keyup.enter)="onSearch()"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                    </row>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>

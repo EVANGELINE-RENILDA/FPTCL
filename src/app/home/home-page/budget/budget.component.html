@@ -1,0 +1,35 @@
+<div class="padd-menus">
+    <div class="submenu-container col-md-10">
+        <div class="d-flex">
+            <div class="col-md-3">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_config.svg"></ion-icon> Configuration
+                </div>
+
+                <a class="submenu-item" cdkMenuItem
+                    routerLink="/home/budget/configuration/budget-configuration/search">Budget
+                    Configuration</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/budget/configuration/budget-request/search">Budget
+                    Request</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/budget/configuration/budget-review/search">Budget
+                    Review</a>
+                <a class="submenu-item" cdkMenuItem
+                    routerLink="/home/budget/configuration/budget-ceiling/search">Budget Ceiling</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                <div class="screen-text">Corporate</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Budget</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

@@ -1,0 +1,22 @@
+.mh200 {
+  // max-height: 100px;
+}
+
+accordion-body {
+  position: relative;
+}
+
+.pb15 {
+  position: absolute;
+  right: 20px;
+  top: 21px;
+}
+
+::ng-deep .mat-mdc-checkbox-touch-target {
+  height: 45px !important;
+  width: 45px !important;
+}
+
+.min-width100 {
+  min-width: 100px;
+}

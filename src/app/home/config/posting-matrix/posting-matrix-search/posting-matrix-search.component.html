@@ -1,0 +1,949 @@
+<div class="v-flex h100 content-wrapper" appAccess="FUDTN" [parentId]="pageId">
+  <!-- <form #l="ngForm" (ngSubmit)="navigateToDetail(l)" class="flex-end pt8 pr20 header-bg">
+        <div class="col-md-3">
+            <app-input-control type="select" label="Document Name" [(ngModel)]="voucherId" name="voucherId"
+                [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+                [required]="true" (onSelect)="getVoucherDetail(voucherId)" type="select"
+                defaultOption="--Select--"></app-input-control>
+        </div>
+        <app-icon-button name="add" toolTip="Add New" appButtonAccess="FunTraNotNewBtn"></app-icon-button>
+    </form> -->
+
+
+  <!-- <ng-template #slotLeft> -->
+  <div class="p-2 border-bottom bg-white d-flex justify-content-between align-items-center ">
+    <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+    <div class="d-flex justify-content-between align-items-center">
+      <app-paginator [length]="pagination.totalCount" [pageIndex]="pagination.pageNumber"
+        [pageSize]="pagination.pageSize" (page)="pageChanged($event)"></app-paginator>
+      <div>
+        <app-icon-button name="add" toolTip="Add New" (click)="matrixPopUp(0)"></app-icon-button>
+      </div>
+    </div>
+
+  </div>
+  <!-- </ng-template> -->
+
+  <!-- <ng-template #slotRight>
+            <div class="d-flex align-items-center w100">
+
+                <div class="col-md-1">
+                    <app-icon-button name="add" toolTip="Add New" ></app-icon-button>
+                </div>
+            </div>
+        </ng-template> -->
+
+  <div class="flex-1 relative bg-white">
+    <div class="ab">
+      <div class="rel h100">
+        <table class="app-table cus-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <!-- <th class="app-table-header-cell text-center">Sl.No</th> -->
+              <!-- <th rowspan="2" class="app-table-header-cell">
+                                <div class="header-cell-title">Type</div>
+
+                            </th> -->
+              <th class="app-table-header-cell voucher-w">
+                Voucher Type
+                <div class="header-cell-subtitle">
+                  Percentage type
+                </div>
+              </th>
+              <th class="app-table-header-cell">Description</th>
+              <th class="app-table-header-cell ">
+                Primary %
+              </th>
+              <th class="app-table-header-cell">
+                Secondary %
+              </th>
+              <th class="app-table-header-cell header-w-percentage">
+                Range
+              </th>
+              <!-- <th colspan="3" class="app-table-header-cell text-center border-none">
+                                Between Value
+                            </th> -->
+              <th class="app-table-header-cell voucher-w">
+                Added Value
+              </th>
+              <th class="app-table-header-cell">
+                VAT
+              </th>
+              <th class="app-table-header-cell">
+                Status
+              </th>
+              <th class="app-table-header-cell text-center">
+                Action
+              </th>
+            </tr>
+            <!-- <tr class="app-table-header-row">
+                                <th rowspan="2" class="app-table-header-cell text-center">
+                                    {{lessThanOrEqual}}%
+                                </th>
+                                <th rowspan="2" class="app-table-header-cell text-center">
+                                    {{greaterThan}}%
+                                </th>
+                                <th rowspan="2" class="app-table-header-cell text-center">
+                                    Value
+                                </th>
+                            </tr> -->
+          </thead>
+          <tbody class="app-table-body">
+            @for (doc of tableData; track doc; let i = $index) {
+
+            <tr class="app-table-row">
+              <!-- <td class="app-table-cell text-center">
+                                <div>{{ (pagination.pageNumber - 1) * pagination.pageSize + i + 1 }}</div>
+                            </td> -->
+              <td class="app-table-cell">
+                <div>
+                  {{ doc.vocher}}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{ doc.percentage}}
+                </div>
+              </td>
+
+              <td class="app-table-cell ">
+                <div class="elipsis" matTooltip="{{ doc.configurationDescription }}">
+                  {{ doc.configurationDescription }}
+                </div>
+              </td>
+
+              <td class="app-table-cell align-left">
+                {{ doc.primaryPercentageValue === "0.00" ? '-' : (doc.primaryPercentageValue | number:
+                '1.2-2') }}
+              </td>
+
+              <td class="app-table-cell align-left">
+                {{ doc.secondaryPercentageValue === "0.00" ? '-' : (doc.secondaryPercentageValue |
+                number:
+                '1.2-2') }}
+              </td>
+
+              <td class="app-table-cell text-center align-left">
+                {{ doc.rangeValue === "0.00" ? '-' : (doc.rangeValue | number: '1.2-2') }}
+              </td>
+
+              <td class="app-table-cell align-left">
+                {{ doc.addedValue === "0.00" ? '-' : (doc.addedValue | number: '1.2-2') }}
+              </td>
+
+              <td class="app-table-cell ">
+                {{ doc.vatvalue }}
+              </td>
+
+              <td class="app-table-cell text-center">
+                <accouts-status-table [statusDescription]="doc.status"></accouts-status-table>
+              </td>
+
+              <td class="app-table-cell text-center">
+                <app-icon-button name="open" toolTip="Open"
+                  (click)="matrixPopUp(doc.appPostingMatrixConfigurationId)"></app-icon-button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Posting Matrix Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search"
+            (click)="isSearchButtonClicked = true; onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearSearch()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialogClose()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner">
+        <div class="ab">
+          <form #i="ngForm" (submit)="onSearch()" class="relat scroller-searchparams">
+            <row>
+              <div class="col-md-4 border-right py-3">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="select" tabIndex="100" label="Voucher Type"
+                      [(ngModel)]="searchParams.voucherTypeValue" defaultOption="--Select--" name="voucherTypeValue"
+                      [items]="initialData.DDLValues.DDLVoucherType" key="constant" keyName="description"
+                      (keyup.enter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="text" tabIndex="100" label="Post Matrix Description"
+                      [(ngModel)]="searchParams.configurationDescription" name="configurationDescription"
+                      [maxLength]="50" (keyup.enter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="select" tabIndex="100" label="Percentage Type"
+                      [(ngModel)]="searchParams.percentageTypeValue" defaultOption="--Select--"
+                      name="percentageTypeValue" [items]="initialData.DDLValues.DDLPercentageType" key="constant"
+                      keyName="description" valueType="string" (onSelect)="checkType(searchParams.percentageTypeValue)"
+                      (keyup.enter)="onSearch()"></app-input-control>
+                  </div>
+
+                  @if(percentageValue!=='' && percentageValue!=='NA'){
+                  <div class="col-md-12 py-3">
+                    <row>
+                      @if(percentageValue==='ON'){
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Percentage From"
+                          [(ngModel)]="searchParams.primaryPercentageValueFrom" [decimal]="2" defaultOption="--Select--"
+                          name="primaryPercentageValueFrom" [errorTrue]="errorTrue" [max]="99"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Percentage To" [decimal]="2"
+                          [(ngModel)]="searchParams.primaryPercentageValueTo" defaultOption="--Select--"
+                          name="primaryPercentageValueTo" [errorTrue]="errorTrue" [max]="99"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      }
+
+                      @else if(percentageValue==='BTWPV'){
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" [decimal]="2" label="Primary Percentage From"
+                          [(ngModel)]="searchParams.primaryPercentageValueFrom" name="fromPercentageValueFrom"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [max]="99"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Primary Percentage To"
+                          [(ngModel)]="searchParams.primaryPercentageValueTo" [decimal]="2"
+                          name="primaryPercentageValueTo" defaultOption="--Select--" [errorTrue]="errorTrue" [max]="99"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Secondary Percentage From"
+                          [(ngModel)]="searchParams.secondaryPercentageValueFrom" [decimal]="2"
+                          name="secondaryPercentageValueFrom" defaultOption="--Select--" [errorTrue]="errorTrue"
+                          [max]="99" (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Secondary Percentage To"
+                          [(ngModel)]="searchParams.secondaryPercentageValueTo" [decimal]="2"
+                          name="secondaryPercentageValueTo" defaultOption="--Select--" [errorTrue]="errorTrue"
+                          [max]="99" (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Range Value From"
+                          [(ngModel)]="searchParams.rangeValueFrom" name="rangeValueFrom" [decimal]="2"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [maxLength]="10"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Range Value To"
+                          [(ngModel)]="searchParams.rangeValueTo" name="rangeValueTo" [decimal]="2"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [maxLength]="10"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Added Value From"
+                          [(ngModel)]="searchParams.addedValueFrom" name="addedValueFrom" [decimal]="2"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [maxLength]="10"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Added Value To"
+                          [(ngModel)]="searchParams.addedValueTo" name="addedValueTo" [decimal]="2"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [maxLength]="10"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      }
+
+                      @else if(percentageValue==='BETPG'){
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Primary Percentage From"
+                          [(ngModel)]="searchParams.primaryPercentageValueFrom" name="primaryPercentageValueFrom"
+                          defaultOption="--Select--" [decimal]="2" [errorTrue]="errorTrue" [max]="99"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Primary Percentage To"
+                          [(ngModel)]="searchParams.primaryPercentageValueTo" name="primaryPercentageValueTo"
+                          defaultOption="--Select--" [decimal]="2" [errorTrue]="errorTrue" [max]="99"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Secondary Percentage From"
+                          [(ngModel)]="searchParams.secondaryPercentageValueFrom" [decimal]="2"
+                          name="secondaryPercentageValueFrom" defaultOption="--Select--" [errorTrue]="errorTrue"
+                          [max]="99" (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Secondary Percentage To"
+                          [(ngModel)]="searchParams.secondaryPercentageValueTo" [decimal]="2"
+                          name="secondaryPercentageValueTo" defaultOption="--Select--" [errorTrue]="errorTrue"
+                          [max]="99" (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Range Value From"
+                          [(ngModel)]="searchParams.rangeValueFrom" name="rangeValueFrom" [decimal]="2"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [maxLength]="10"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Range Value To"
+                          [(ngModel)]="searchParams.rangeValueTo" name="rangeValueTo" [decimal]="2"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [maxLength]="10"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      }
+
+                      @else if(percentageValue==='VALUE'){
+
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Value From"
+                          [(ngModel)]="searchParams.addedValueFrom" name="addedValueFrom" [decimal]="2"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [maxLength]="10"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      <div class="col-md-12 mb26">
+                        <app-input-control type="number" tabIndex="100" label="Value To"
+                          [(ngModel)]="searchParams.addedValueTo" name="addedValueTo" [decimal]="2"
+                          defaultOption="--Select--" [errorTrue]="errorTrue" [maxLength]="10"
+                          (keyup.enter)="onSearch()"></app-input-control>
+                      </div>
+                      }
+
+                    </row>
+                  </div>
+                  }
+                </row>
+              </div>
+              <div class="col-md-4 py-3 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="date" tabIndex="100" label="Created Date From"
+                      [(ngModel)]="searchParams.effectiveDateFrom" [maxDate]="searchParams.effectiveDateTo"
+                      name="effectiveDateFrom" (keyup.enter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="date" tabIndex="100" label="Created Date To"
+                      [(ngModel)]="searchParams.effectiveDateTo" [minDate]="searchParams.effectiveDateFrom"
+                      name="effectiveDateTo" (keyup.enter)="onSearch()"></app-input-control>
+                  </div>
+
+                </row>
+              </div>
+
+              <div class="col-md-4 py-3">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="select" tabIndex="100" label="Vat" [(ngModel)]="searchParams.vatValue"
+                      defaultOption="--Select--" name="vatValue" [items]="initialData.DDLValues.DDLVatType"
+                      key="constant" keyName="description" (keyup.enter)="onSearch()"></app-input-control>
+                  </div>
+
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="select" label="Status" defaultOption="--Select--"
+                      [(ngModel)]="searchParams.statusValue" name="statusValue"
+                      [items]="initialData.DDLValues.DDLStatusType" key="constant" keyName="description" tabIndex="100"
+                      (keyup.enter)="onSearch()"></app-input-control>
+                  </div>
+                </row>
+              </div>
+            </row>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #postingMatrix>
+  <div class="dialog-container custom-padding">
+    <div class="dialog-header">
+      <div class="dialog-title">Posting Matrix > Detail > {{openFlag}}</div>
+
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(openFlag === 'New') {
+          <app-icon-button name="save" toolTip="Save" (click)="savePostingMatrixConfiguration()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearAdd()"></app-icon-button>
+          }
+          @if(openFlag === 'Edit') {
+          @if(tab !== 1){
+          <app-icon-button name="save" toolTip="Update" (click)="savePostingMatrixConfiguration()"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh"
+            (click)="openPostingMatrixConfiguration(postMatrixConfig.appPostingMatrixConfigurationId,'refresh')"></app-icon-button>
+          }
+          }
+
+          <app-icon-button name="close" (click)="dialogClose()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <!-- <scroll> -->
+      <div class="ab">
+        <div class="rel">
+
+          <scroll>
+
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+              <app-error-message></app-error-message>
+            </div>
+            }
+
+            <div class="dialog-content-inner h100 temp">
+
+              @if(tab===0){
+
+              <div class="relat scroller-postMatrix">
+                <form #p="ngForm" (submit)="savePostingMatrixConfiguration()">
+                  <row>
+                    <div class="col-md-4 border-right py-3">
+                      <row>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="select" label="Voucher Type"
+                            [(ngModel)]="postMatrixConfig.voucherTypeValue" defaultOption="--Select--"
+                            name="voucherTypeValue" [items]="initialData.DDLValues.DDLVoucherType" key="constant"
+                            keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="select" label="Percentage Type"
+                            [(ngModel)]="postMatrixConfig.percentageTypeValue" defaultOption="--Select--"
+                            name="percentageTypeValue" [items]="initialData.DDLValues.DDLPercentageType" key="constant"
+                            keyName="description" valueType="string" (onChange)="onPercentageValueChange($event)"
+                            (onSelect)="checkType(postMatrixConfig.percentageTypeValue)" [required]="true"
+                            [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+
+                      </row>
+                    </div>
+                    <div class="col-md-4 border-right py-3">
+                      <row>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="select" label="Vat" type="select" label="Vat"
+                            [(ngModel)]="postMatrixConfig.vatValue" defaultOption="--Select--" name="vatValue"
+                            [items]="initialData.DDLValues.DDLVatType" key="constant" keyName="description"
+                            [required]="true" [btnClicked]="postMatrixConfig.percentageTypeValue === 'NA'"
+                            [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="special" label="Description"
+                            [(ngModel)]="postMatrixConfig.configurationDescription" name="configurationDescription"
+                            [maxLength]="50" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                      </row>
+                    </div>
+                    <div class="col-md-4 border-right py-3">
+                      <row>
+                        <div class="col-md-12 mb47">
+                          <view-label label="Created Date"
+                            [value]="postMatrixConfig.effectiveDate | appDate"></view-label>
+                        </div>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="select" label="Status" defaultOption="--Select--"
+                            [(ngModel)]="postMatrixConfig.statusValue" name="statusValue"
+                            [items]="initialData.DDLValues.DDLStatusType" key="constant" keyName="description"
+                            [required]="true" [btnClicked]="this.postMatrixConfig.appPostingMatrixConfigurationId === 0"
+                            [errorTrue]="errorTrue"></app-input-control>
+
+                        </div>
+                      </row>
+                    </div>
+                    @if(percentageValue!=='NA'){
+                    <div class="col-md-4 border-right py-3">
+                      <row>
+                        @if(percentageValue==='ON'){
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Percentage" [decimal]="2" [min]="1"
+                            [(ngModel)]="postMatrixConfig.primaryPercentageValue" name="fromPercentageValue"
+                            [required]="true" [max]="99" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        }
+
+                        @else if(percentageValue==='BTWPV'){
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Primary Percentage" [decimal]="2" [min]="1"
+                            [(ngModel)]="postMatrixConfig.primaryPercentageValue" name="fromPercentageValue"
+                            [required]="true" [max]="99" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Secondary Percentage" [decimal]="2" [min]="1"
+                            [(ngModel)]="postMatrixConfig.secondaryPercentageValue" name="toPercentageValue"
+                            [required]="true" [max]="99" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Range Value" [(ngModel)]="postMatrixConfig.rangeValue"
+                            name="rangeValue" [decimal]="2" [required]="true" [min]="1" [maxLength]="10"
+                            [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Added Value" [(ngModel)]="postMatrixConfig.addedValue"
+                            name="addedValue" [decimal]="2" [required]="true" [min]="1" [maxLength]="10"
+                            [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        }
+
+                        @else if(percentageValue==='BETPG'){
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Primary Percentage" [decimal]="2" [min]="1"
+                            [(ngModel)]="postMatrixConfig.primaryPercentageValue" name="fromPercentageValue" [max]="99"
+                            [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Secondary Percentage" [decimal]="2" [min]="1"
+                            [(ngModel)]="postMatrixConfig.secondaryPercentageValue" name="toPercentageValue"
+                            [required]="true" [max]="99" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Range Value" [decimal]="2"
+                            [(ngModel)]="postMatrixConfig.rangeValue" name="rangeValue" [required]="true" [min]="1"
+                            [maxLength]="10" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        }
+
+                        @else if(percentageValue==='VALUE'){
+
+                        <div class="col-md-12 mb26">
+                          <app-input-control type="number" label="Value" [decimal]="2"
+                            [(ngModel)]="postMatrixConfig.addedValue" name="addedValue" [required]="true" [min]="1"
+                            [maxLength]="10" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        }
+
+                      </row>
+                    </div>
+                    }
+                  </row>
+                </form>
+              </div>
+
+
+
+              <!-- <form #p="ngForm" (submit)="onSearch()">
+
+                                    <div class=" w100  d-flex flex-wrap">
+
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="select" label="Voucher Type"
+                                                [(ngModel)]="searchParams.branchValue" defaultOption="--Select--" name="branchValue"
+                                                [items]="appService.branchDDL" key="branchValue" keyName="branchDescription"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="select" label="percentage type" [(ngModel)]="percentageValue"
+                                                defaultOption="--Select--" name="percentageValue" [items]="percentageDDL"
+                                                key="constant" keyName="description" [required]="true" [errorTrue]="errorTrue"
+                                                valueType="string" (onSelect)="checkType(percentageValue)"></app-input-control>
+                                        </div>
+
+
+                                        @if(percentageValue==='on'){
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="text" label="Percentage"
+                                                [(ngModel)]="searchParams.cashcounterName" name="cashcounterName" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+                                        }
+                                        @else if(percentageValue==='between' || percentageValue==='bwv'){
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="text" label="Primary Percentage"
+                                                [(ngModel)]="searchParams.cashcounterName" name="cashcounterName" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="text" label="Secondary Percentage"
+                                                [(ngModel)]="searchParams.cashcounterName" name="cashcounterName" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+                                        }
+                                        @if(percentageValue==='between'||percentageValue==='bwv'){
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="text" label="Range Value"
+                                                [(ngModel)]="searchParams.cashcounterName"
+                                                name="cashcounterName"></app-input-control>
+                                        </div>
+                                        }
+                                        @if(percentageValue==='bwv'){
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="text" label="Added Value"
+                                                [(ngModel)]="searchParams.cashcounterName"
+                                                name="cashcounterName"></app-input-control>
+                                        </div>
+                                        }
+
+
+                                        @if(percentageValue==='value'){
+
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="text" label="Value" [(ngModel)]="searchParams.cashcounterName"
+                                                name="cashcounterName"></app-input-control>
+                                        </div>
+                                        }
+
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="select" label="Vat" [(ngModel)]="searchParams.branchValue"
+                                                defaultOption="--Select--" name="branchValue" [items]="appService.branchDDL"
+                                                key="branchValue" keyName="branchDescription" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="date" label="Created Date"
+                                                [(ngModel)]="searchParams.cashcounterName" name="cashcounterName" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control type="select" label="Status" defaultOption="--Select--"
+                                                [(ngModel)]="searchParams.cashcounterName" name="cashcounterName"
+                                                [items]="appService.branchDDL" key="branchValue" keyName="branchDescription"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+                                        <div class="col-md-3 mb26">
+                                            <app-input-control className="notes" type="textarea" label="Description"
+                                                [(ngModel)]="searchParams.branchValue" name="branchValue"
+                                                [items]="appService.branchDDL" [required]="true" [maxLength]="500"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+
+                                    </div>
+
+
+
+                                </form> -->
+              }
+
+              @else if(tab===1){
+
+
+              <div class="outer-content-wrapper">
+                @if(postMatrixConfig.plstentPostingMatrixConfigurationUpdateHistory.length > 0 ){
+                <div class="content-wrapper">
+                  <row>
+                    <div class="col-md-8">
+                      <div class="event-title">Update History</div>
+
+                      <div class="scroller">
+                        <app-table class="subTable" [hasIndex]="false" indexHeaderName="Sl.No" [pagination]="pagination"
+                          [columns]="subColumns" [columnsName]="subColumnsName"
+                          [dataSource]="postMatrixConfig.plstentPostingMatrixConfigurationUpdateHistory"
+                          [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false"
+                          (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)">
+                          <ng-template cellHeaderDef="voucherTypeDescription" (click)="openPostingMatrixBox()">
+                            <div class="header-cell-title t-header pb-3">Voucher Type</div>
+                            <div class="header-cell-subtitle">Percentage type</div>
+                          </ng-template>
+                          <ng-template cellDef="voucherTypeDescription" let-element>
+                            <div>{{ element.voucherTypeDescription }}</div>
+                            <div class="table-cell-subtitle">
+                              {{ element.percentageTypeDescription }}
+                            </div>
+                          </ng-template>
+
+                          <ng-template cellHeaderDef="changedDate" let-element>
+                            <div class="a">Changed By</div>
+                            <div class="a">Changed Date</div>
+                          </ng-template>
+
+                          <ng-template cellDef="changedDate" let-element>
+                            <div>{{ element.changedByFullName }}</div>
+                            <div class="table-cell-subtitle">
+                              {{ element.changedDate | appDate }}
+                            </div>
+                          </ng-template>
+
+                          <ng-template cellDef="statusDescription" let-element>
+
+                            <div>
+                              <accouts-status-table
+                                [statusDescription]="element.statusDescription"></accouts-status-table>
+                            </div>
+
+                          </ng-template>
+
+                          <ng-template cellDef="action" let-element>
+                            <app-icon-button name="open" tooltip="open"
+                              (click)="getOldValues(element)"></app-icon-button>
+                          </ng-template>
+                        </app-table>
+                      </div>
+
+                    </div>
+                    <div class="col-md-4">
+                      <div class="content-wrapper content">
+                        <div class="event-title2">Posting Matrix Details with Previous Value
+                        </div>
+
+                        <div class="border detail p10">
+                          @if(postMatrixConfig.plstentPostingMatrixConfigurationUpdateHistory.length
+                          > 0){
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Voucher Type"
+                                [value]="voucherOldData?.voucherTypeDescription"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.voucherTypeDescription !==
+                            voucherInitalOldData.voucher_type_description) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{voucherInitalOldData.voucher_type_description}}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Percentage Type"
+                                [value]="voucherOldData?.percentageTypeDescription"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.percentageTypeDescription !==
+                            voucherInitalOldData.percentage_type_description) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{voucherInitalOldData.percentage_type_description}}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Vat" [value]="voucherOldData?.vatDescription"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.vatDescription !==
+                            voucherInitalOldData.vat_description) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{voucherInitalOldData.vat_description}}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Created Date"
+                                value="{{voucherOldData?.effectiveDate | appDate}}"></view-label>
+                            </div>
+
+                            @if((voucherOldData?.effectiveDate | appDate) !==
+                            (voucherInitalOldData?.effective_date |
+                            date:dateFormat) ) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{ voucherInitalOldData?.effective_date |
+                                date:dateFormat }}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Status" [value]="voucherOldData?.statusDescription"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.statusDescription !==
+                            voucherInitalOldData.status_description) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{voucherInitalOldData.status_description}}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Description"
+                                [value]="voucherOldData.configurationDescription"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.configurationDescription !==
+                            voucherInitalOldData.configuration_description) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{voucherInitalOldData.configuration_description }}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Primary Value"
+                                [value]="(voucherOldData?.primaryPercentageValue === '0.00' ? '-' : voucherOldData?.primaryPercentageValue)"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.primaryPercentageValue !==
+                            voucherInitalOldData.primary_percentage_value.toFixed(2)) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{voucherInitalOldData.primary_percentage_value.toFixed(2)
+                                === '0.00' ? '-' :
+                                voucherInitalOldData.primary_percentage_value.toFixed(2)}}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Secondary Value"
+                                [value]="(voucherOldData?.secondaryPercentageValue === '0.00' ? '-' : voucherOldData?.secondaryPercentageValue)"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.secondaryPercentageValue !==
+                            voucherInitalOldData.secondary_percentage_value.toFixed(2)) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{voucherInitalOldData.secondary_percentage_value.toFixed(2)
+                                === '0.00' ? '-' :
+                                voucherInitalOldData.secondary_percentage_value.toFixed(2)}}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Range"
+                                [value]="(voucherOldData?.rangeValue === '0.00' ? '-' : voucherOldData?.rangeValue)"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.rangeValue !==
+                            voucherInitalOldData.range_value.toFixed(2)) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{voucherInitalOldData.range_value.toFixed(2) === '0.00'
+                                ? '-' : voucherInitalOldData.range_value.toFixed(2)}}
+                              </div>
+                            </div>}
+                          </row>
+
+                          <row>
+                            <div class="col-md-6">
+                              <view-label label="Value"
+                                [value]="voucherOldData?.addedValue === '0.00' ? '-' : voucherOldData?.addedValue"></view-label>
+                            </div>
+
+                            @if(voucherOldData?.addedValue !==
+                            ( voucherInitalOldData.added_value.toFixed(2))) {
+                            <div class="col-md-6">
+                              <div class="colorRed bold">
+                                {{ voucherInitalOldData.added_value.toFixed(2) ===
+                                '0.00' ? '-' :
+                                voucherInitalOldData.added_value.toFixed(2)}}
+                              </div>
+                            </div>}
+                          </row>
+                          }
+                        </div>
+
+                      </div>
+                    </div>
+                  </row>
+                </div>
+                }
+                @else {
+                <div class="content-wrapper">
+                  <row>
+                    <div class="col-md-12">
+                      <div class="event-title">Update History</div>
+
+                      <div class="scroller1">
+                        <app-table class="subTable" [hasIndex]="false" indexHeaderName="Sl.No" [pagination]="pagination"
+                          [columns]="subColumns" [columnsName]="subColumnsName"
+                          [dataSource]="postMatrixConfig.plstentPostingMatrixConfigurationUpdateHistory"
+                          [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false"
+                          (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)">
+                          <ng-template cellHeaderDef="voucherTypeDescription" (click)="openPostingMatrixBox()">
+                            <div class="header-cell-title t-header pb-3">Voucher Type</div>
+                            <div class="header-cell-subtitle">Percentage type</div>
+                          </ng-template>
+                          <ng-template cellDef="voucherTypeDescription" let-element>
+                            <div>{{ element.voucherTypeDescription }}</div>
+                            <div class="table-cell-subtitle">
+                              {{ element.percentageTypeDescription }}
+                            </div>
+                          </ng-template>
+
+                          <ng-template cellHeaderDef="changedDate" let-element>
+                            <div class="a">Changed By</div>
+                            <div class="a">Changed Date</div>
+                          </ng-template>
+
+                          <ng-template cellDef="changedDate" let-element>
+                            <div>{{ element.changedByFullName }}</div>
+                            <div class="table-cell-subtitle">
+                              {{ element.changedDate | appDate }}
+                            </div>
+                          </ng-template>
+
+                          <ng-template cellDef="statusDescription" let-element>
+
+                            <div>
+                              <accouts-status-table
+                                [statusDescription]="element.statusDescription"></accouts-status-table>
+                            </div>
+
+                          </ng-template>
+
+                          <ng-template cellDef="action" let-element>
+                            <app-icon-button name="open" tooltip="open"
+                              (click)="getOldValues(element)"></app-icon-button>
+                          </ng-template>
+                        </app-table>
+                      </div>
+
+                    </div>
+                  </row>
+                </div>
+                }
+              </div>
+
+              }
+
+
+              @if(openFlag === 'Edit') {
+              <div class="d-flex dialog-footer">
+                <div class="accordion-title-card pr10 flex-none pointer" [ngClass]="{'active-tab': tab === 0}"
+                  (click)="openStatusValue(0)">
+                  <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                  <div class="accordion-title-content">
+                    <div>Post Matrix</div>
+                  </div>
+                </div>
+
+                <div class="accordion-title-card pl10 pointer border-left" (click)="openStatusValue(1)"
+                  [ngClass]="{'active-tab': tab === 1}">
+                  <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                  <div class="accordion-title-content">
+                    <div>Update History</div>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </scroll>
+        </div>
+      </div>
+      <!-- </scroll> -->
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name">
+
+        <div class="screen-text">Posting Matrix</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

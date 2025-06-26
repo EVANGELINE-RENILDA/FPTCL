@@ -1,0 +1,282 @@
+<div class="content-wrapper">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="trustSettlementApplicationId" [sortColumnsName]="sortColumns" (onSelect)="onSelect($event)">
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.trustSettlementApplicationId)"></app-icon-button>
+        </ng-template>
+        <ng-template cellHeaderDef="applicationRefNo">
+            <div class="header-cell-title">Trust Settlement Ref No</div>
+            <div class="header-cell-subtitle"> Lead No</div>
+        </ng-template>
+        <ng-template cellDef="applicationRefNo" let-element>
+            <div>{{element.applicationRefNo}}</div>
+            <div class="table-cell-subtitle"> {{element.leadRefNo}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="beneficiaryCustomerName">
+            <div class="header-cell-title">Benificiary Name</div>
+            <div class="header-cell-subtitle">Guardian Name</div>
+        </ng-template>
+        <ng-template cellDef="beneficiaryCustomerName" let-element>
+            <div>{{element.beneficiaryCustomerName}}</div>
+            <div class="table-cell-subtitle">{{element.gaurdianName}}</div>
+        </ng-template>
+        <!-- <ng-template cellHeaderDef="type">
+            <div class="header-cell-title">Settlement Type</div>
+            <div class="header-cell-subtitle">Settlement Sub Type</div>
+        </ng-template>
+        <ng-template cellDef="type">
+            <div>Maintainance </div>
+            <div class="table-cell-subtitle">Living Allowance</div>
+        </ng-template> -->
+        <ng-template cellHeaderDef="trustAccountNo">
+            <div class="header-cell-title">Trust Account No</div>
+
+        </ng-template>
+        <ng-template cellDef="trustAccountNo" let-element>
+            <div>{{element.trustAccountNo}}</div>
+
+        </ng-template>
+        <ng-template cellHeaderDef="enteredByFullname">
+            <div class="header-cell-title">Entered Date</div>
+            <div class="header-cell-subtitle">Entered By | Applied Branch</div>
+        </ng-template>
+        <ng-template cellDef="enteredByFullname" let-element>
+            <div>{{element.enteredDate | appDate}} </div>
+            <div class="table-cell-subtitle">{{element.enteredByFullname}} | {{element.appliedBranchDescription}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="applicationStageDescription">
+            <div class="header-cell-title">Application Stage</div>
+            <div class="header-cell-subtitle">Action Status | Assigned Officer</div>
+        </ng-template>
+        <ng-template cellDef="applicationStageDescription" let-element>
+            <div>{{element.applicationStageDescription}} </div>
+            <div class="table-cell-subtitle">{{element.actionStatusDescription}} | {{element.assignedOfficer}}</div>
+        </ng-template>
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+
+            <form #l="ngForm">
+                <div class="d-flex justify-content-end align-items-center">
+
+                    <div class="col-md-12 mt10 w200">
+                        <app-input-control type="select" defaultOption="--Select--" placeholder="Select Lead No"
+                            [(ngModel)]="trustLeadId" name="voucherConfigId" [items]="initialData.DDLValues.DDLLead"
+                            key="id" keyName="code" [errorTrue]="errorTrue" [required]="true"
+                            valueType="int"></app-input-control>
+                    </div>
+                    <div>
+
+                        <app-icon-button name="add" toolTip="Add New" (click)="createNewWillApplication()">
+                        </app-icon-button>
+                    </div>
+                </div>
+            </form>
+
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Trust Settlement Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-4"><app-input-control label="Trust Settlement Ref No"
+                                [(ngModel)]="searchParams.applicationRefNo" name="applicationRefNo"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Trust Account No"
+                                [(ngModel)]="searchParams.trustAccountNo" name="trustAccountNo" type="select"
+                                defaultOption="All" [items]="initialData.DDLValues.DDLTrust" key="code" keyName="code"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Lead No" [(ngModel)]="searchParams.leadRefNo"
+                                name="leadRefNo" [items]="initialData.DDLValues.DDLLead" key="constant"
+                                keyName="description"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Guardian Name"
+                                [(ngModel)]="searchParams.gaurdianName" name="gaurdianName"></app-input-control></div>
+                        <!-- <div class="col-md-4"><app-input-control label="Settlement Type" [(ngModel)]="searchParams.type" name=""></app-input-control></div> -->
+                        <!-- <div class="col-md-4"><app-input-control label="Settlement Sub Type" [(ngModel)]="searchParams." name=""></app-input-control></div> -->
+                        <div class="col-md-4"><app-input-control label="Applied Branch"
+                                [(ngModel)]="searchParams.appliedBranchValue" type="select" defaultOption="All"
+                                name="appliedBranchValue" [items]="initialData.DDLValues.DDLBranch" key="constant"
+                                keyName="description"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Applied Date" type="date"
+                                [(ngModel)]="searchParams.appliedDate" name="appliedDate"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Entered By" type="select" defaultOption="All"
+                                [(ngModel)]="searchParams.enteredBy" name="enteredBy"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Entered Date" type="date"
+                                [(ngModel)]="searchParams.enteredDate" name="enteredDate"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Settlement From Amount"
+                                [(ngModel)]="searchParams.availableAmountFrom"
+                                name="availableAmountFrom"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Settlement To Amount"
+                                [(ngModel)]="searchParams.availableAmountTo"
+                                name="availableAmountTo"></app-input-control></div>
+
+                        <div class="col-md-4"><app-input-control label="Application Status" type="select"
+                                defaultOption="All" [items]="initialData.DDLValues.DDLSettlementApplicationStatus"
+                                key="constant" keyName="description" [(ngModel)]="searchParams.statusValue"
+                                name="statusValue"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Application Stage" type="select"
+                                defaultOption="All" [(ngModel)]="searchParams.applicationStageValue"
+                                name="applicationStageValue"
+                                [items]="initialData.DDLValues.DDLSettlementApplicationStage" key="constant"
+                                keyName="description"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Action Status" type="select" defaultOption="All"
+                                [(ngModel)]="searchParams.actionStatusValue" name="actionStatusValue"
+                                [items]="initialData.DDLValues.DDLSettlementActionStatus" key="constant"
+                                keyName="description"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Assigned Officer" type="select"
+                                defaultOption="All" [(ngModel)]="searchParams.assignedOfficer" name="assignedOfficer"
+                                [items]="initialData.DDLValues.Assigned_Officer_DDl" key="constant"
+                                keyName="description"></app-input-control>
+                        </div>
+                    </row>
+                </div>
+            </scroll>
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/will.svg"></ion-icon>
+                <div class="screen-text">Trust Settlement</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #willInfo>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/trust.svg"></ion-icon>
+                Trust Settlement <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Add New
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveTrustSettlement()"
+                        appButtonAccess="CrmCustAppSaveInfoBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearDetail()"
+                        appButtonAccess="CrmCustAppRefreshInfoBtn"></app-icon-button>
+
+                    <app-icon-button name="close" toolTip="Close" appButtonAccess="CrmCustAppCancelBtn"
+                        (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <row class="row-h100">
+                    <scroll>
+                        @if(data.showErrorMessage){
+                        <div class="error-panel">
+                            <app-error-message></app-error-message>
+                        </div>
+                        }
+                        <form #x="ngForm" class="dialog-content-inner">
+                            <row>
+                                <div class="col-md-4"><app-input-control label="Trust Account No" type="select"
+                                        defaultOption="--Select--" [(ngModel)]="trustSettlement.trustId" name="trustId"
+                                        valueType="int" (onSelect)="getValuesOfAccNo($event)"
+                                        [items]="accountsDDL" [errorTrue]="errorTrue"
+                                        [required]="true" key="id" keyName="code"
+                                        defaultOption="--Select--"></app-input-control>
+                                </div>
+
+                                <div class="col-md-4"><app-input-control label="Payment Mode"
+                                        [items]="initialData.DDLValues.DDLPaymentMode" type="select"
+                                        defaultOption="--Select--" key="constant" [errorTrue]="errorTrue"
+                                        [required]="true" keyName="description"
+                                        [(ngModel)]="trustSettlement.paymentModeValue" defaultOption="--Select--"
+                                        name="paymentModeValue"></app-input-control></div>
+
+                                <div class="col-md-4"><app-input-control label="Mode Of Application"
+                                        [items]="initialData.DDLValues.DDLModeOfApplication" type="select"
+                                        defaultOption="--Select--" key="constant" keyName="description"
+                                        [errorTrue]="errorTrue" [required]="true"
+                                        [(ngModel)]="trustSettlement.modeOfApplicationValue"  valueType="string"
+                                        name="modeOfApplicationValue"></app-input-control></div>
+                                <div class="col-md-4"><app-input-control label="Withdrawal Mode" [btnClicked]="true"
+                                        [items]="initialData.DDLValues.DDLWithDrawalMode" type="select"
+                                        defaultOption="--Select--" key="constant" [errorTrue]="errorTrue"
+                                        [required]="true" keyName="description"
+                                        [(ngModel)]="trustSettlement.withdrawalModeValue" defaultOption="--Select--"
+                                        name="withdrawalModeValue"></app-input-control></div>
+                                <div class="col-md-4"><app-input-control label="Payment Options"
+                                        [items]="initialData.DDLValues.DDLPaymentOption" type="select"
+                                        defaultOption="--Select--" key="constant" [errorTrue]="errorTrue"
+                                        [required]="true" keyName="description"
+                                        [(ngModel)]="trustSettlement.paymentOptionValue" defaultOption="--Select--"
+                                        name="paymentOptionValue"></app-input-control></div>
+                                <!-- <div class="col-md-4">
+                                    <div class="pb10 checkbox-label">
+                                        Withdrawal By Organization
+                                    </div>
+                                    <div>
+                                        <app-checkbox (click)="withdrawalByOrg($event)"
+                                            [checked]="trustSettlement.withdrawlForOrganization==='Y'"></app-checkbox>
+                                    </div>
+                                </div> -->
+                                <!-- <div class="col-md-4"><app-input-control label="Relationship" [errorTrue]="errorTrue"
+                                        [required]="true" [items]="initialData.DDLValues.DDLRelationship" type="select" defaultOption="--Select--" 
+                                        key="constant" keyName="description"
+                                        [(ngModel)]="trustSettlement.relationshipTypeValue" defaultOption="--Select--"
+                                        name="relationshipTypeValue"></app-input-control></div>
+                                <div class="col-md-4 pb20"><view-label label="Stage"
+                                        value="{{trustSettlement.applicationStageDescription}}"></view-label></div> -->
+                                <div class="col-md-4 pb20">
+                                    <view-label label="Action Status"
+                                        value="{{trustSettlement.actionStatusDescription}}"></view-label>
+                                </div>
+                                <div class="col-md-4 pb20"><view-label label="Application Status"
+                                        value="{{trustSettlement.statusDescription}}"></view-label>
+                                </div>
+                                <div class="col-md-4 pb20"><view-label label="Applied Date"
+                                        value="{{trustSettlement.appliedDate | appDate}}"></view-label>
+                                </div>
+                                <div class="col-md-4"><view-label label="Applied Branch"
+                                        value="{{trustSettlement.appliedBranchDescription}}"></view-label></div>
+                                <div class="col-md-12 mt10">
+                                    <app-input-control type="textarea" className="notes" label="Reason"
+                                        [(ngModel)]="trustSettlement.reason" name="reason"
+                                        [maxLength]="250"></app-input-control>
+                                </div>
+                            </row>
+                        </form>
+
+                    </scroll>
+                </row>
+            </div>
+        </div>
+    </div>
+</ng-template>

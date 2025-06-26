@@ -1,0 +1,87 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/complete-trust-creation.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Complete Trust Creation</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <row>
+            <div class="col-md-7">
+                <row>
+                    <div class="col-md-4"> <view-label label="Assigned Officer"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedToFullname}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="Assigned Date"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedDate | appDate}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="TAT"
+                            value=" {{application.ientTrustApplicationAssignedOfficer.tatDays}} Days"></view-label>
+                    </div>
+                </row>
+            </div>
+            <div class="col-md-5">
+                <div class="d-flex">
+                    @if(this.type.isEditable === 'Y' ){
+
+
+                    @if(this.application.reAssignFlag === 'True'){
+                    <form #p="ngForm" class="col-md-10 w250">
+                        <app-input-control type="select" key="constant" keyName="description" placeholder="Officer"
+                            [items]="assignedOfficerDDL" defaultOption="--Select--"
+                            [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                            name="assignedTo"></app-input-control>
+                    </form>
+                    <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                            toolTip="Reassign"></app-icon-button></div>
+                    }
+
+                    @if(this.application.selfAssignFlag ===' True'){
+                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                            toolTip="Self Assign"></app-icon-button></div>
+                    }
+                    }
+                </div>
+            </div>
+        </row>
+        <div class="mb26"></div>
+        <row>
+            <!-- <div class="col-md-7 border-right">
+                <div class="outer-content-wrapper">
+
+                    <div class="content-wrapper">
+                        <app-table [columns]="completeTrustCreationColumns"
+                            [columnsName]="completeTrustCreationColumnsName"
+                            [dataSource]="completeTrustCreationTableData" [hasPagination]="true"
+                            columnID="trustApplicationId"></app-table>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-md-12">
+                <form #notiForm="ngForm">
+                    <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                        [(ngModel)]="notesMessage" name="notesMessage" [maxLength]="250" [required]="true"
+                        label="Notes"></app-input-control>
+                </form>
+                <div class="end gap-10 mb26">
+                    @if(type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveTrustApplication()"></app-icon-button>
+                    }
+                    <!-- <app-icon-button name="clear" toolTip="Clear"
+                    (click)="clearCourtOrderNotes()"></app-icon-button> -->
+                </div>
+            </div>
+        </row>
+        <div class="col-md-12 end">
+            @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+            <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Trust Created</button>
+            }
+        </div>
+
+    </accordion-body>
+</accordion-item>

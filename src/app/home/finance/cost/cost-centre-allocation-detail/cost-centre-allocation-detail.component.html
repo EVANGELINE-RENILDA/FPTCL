@@ -1,0 +1,312 @@
+<div class="v-flex h100" appAccess="TAX" [parentId]="pageId">
+    <form #x="ngForm" class="content-header">
+        <div class=" d-flex w100">
+            <div class="card-content border-right col-md-4">
+                <app-input-control type="select" label="Fiscal Year" [errorTrue]="errorTrue" [required]="true"
+                    [(ngModel)]="companyTax.taxCode" name="taxCode" [items]="initialData.DDLValues.ddlTaxLabel"
+                    defaultOption="--Select--" [btnClicked]="companyTax.actCompanyTaxId !== 0" key="constant"
+                    keyName="description"></app-input-control>
+                <!-- (onSelect)="taxCodeChanged(companyTax.taxCode)" -->
+            </div>
+            <div class="card-content col-md-4">
+                <!-- <view-label label="Ledger Name" value="{{companyTax.taxName}}"></view-label> -->
+                <app-input-control type="text" label="Ledger Name" [errorTrue]="errorTrue" [required]="true"
+                    [(ngModel)]="companyTax.taxCode" name="taxCode" [items]="initialData.DDLValues.ddlTaxLabel"
+                    defaultOption="--Select--" [btnClicked]="companyTax.actCompanyTaxId !== 0" key="constant"
+                    keyName="description"></app-input-control>
+            </div>
+        </div>
+        <!-- <div class="status-header-box">
+            <div class="card-box-1">
+                <div class="card-content text">
+                    <view-label label="Status" status="{{companyTax.statusValue}}"
+                        statusValue="{{companyTax.statusDescription}}"></view-label>
+                </div>
+                @if(companyTax.actCompanyTaxId>0){
+                @if(this.companyTax.statusValue !== 'PENAP' &&
+                selectedTab === 0){
+                <div class="card-content btn-group">
+                    <app-icon-button name="save" toolTip="Update" (click)="saveTax()"
+                        appButtonAccess="TaxUpdateBtn"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openTaxDetail(companyTax.actCompanyTaxId)"
+                        appButtonAccess="TaxRefreshBtn"></app-icon-button>
+                </div>
+                }
+                }@else {
+                <div class="card-content btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveTax()" appButtonAccess="CrmCustAppSaveBtn"
+                        appButtonAccess="TaxSaveBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="createNewTax()"
+                        appButtonAccess="TaxClearBtn"></app-icon-button>
+                </div>
+                }
+            </div>
+            <div>
+                <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+                    <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+                </a>
+            </div>
+        </div> -->
+        <div class="card-content btn-group">
+            <app-icon-button name="save" toolTip="Update" (click)="saveTax()"
+                appButtonAccess="TaxUpdateBtn"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Refresh" (click)="openTaxDetail(companyTax.actCompanyTaxId)"
+                appButtonAccess="TaxRefreshBtn"></app-icon-button>
+        </div>
+    </form>
+    <div class="content-body flex-1">
+        @if(selectedTab === 0){
+        <div class="v-flex h100">
+            <div class="flex-1 relative mh100">
+                <scroll>
+                    <table class="app-table account-table">
+                        <thead class="app-table-head">
+                            <tr class="app-table-header-row">
+                                <th class="app-table-header-cell text-center">Sl.No</th>
+                                <th class="app-table-header-cell">
+                                    <div class="header-cell-title">Cost Category Name</div>
+                                    <!-- <div class="header-cell-subtitle">
+                                        Created By | Date | Time
+                                    </div> -->
+                                </th>
+                                <th class="app-table-header-cell">Cost Centre Name</th>
+                                <th class="app-table-header-cell">Allocated Percentage</th>
+                                <th class="app-table-header-cell">Changed By</th>
+                                <th class="app-table-header-cell">Changed Date</th>
+                                <th class="app-table-header-cell">
+                                    <div class="flex-center">
+                                        <!-- @if(fundTransferNote.statusValue !=='APROV' &&
+                          fundTransferNote.statusValue !=='CANCD'){ -->
+                                        <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"
+                                            appButtonAccess="FunTraNotAtchNewBtn">
+                                        </app-icon-button>
+                                        <!-- } -->
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="app-table-body">
+                            @for (doc of tableTaxData ;
+                            track doc; let i = $index) {
+                            |
+                            <!-- filterAndSort : filterFileName : 'attachmentFileName' : false -->
+                            <tr class="app-table-row">
+                                <td class="app-table-cell text-center">
+                                    {{ i + 1 }}
+                                </td>
+                                <td class="app-table-cell">
+                                    <div>
+                                        <!-- {{ doc.attachmentFileName }} -->
+                                    </div>
+                                    <div class="table-cell-subtitle">
+                                        <!-- {{ doc.modifiedByFullName }} |
+                          {{
+                          doc.createdDate
+                          | appDate
+                          : appSetting.environment.dateViewFormatWithTime
+                          }} -->
+                                    </div>
+                                </td>
+                                <td class="app-table-cell">
+                                    <!-- {{ doc.attachmentType }} -->
+                                </td>
+                                <td class="app-table-cell">
+                                    <!-- {{ doc.attachmentType }} -->
+                                </td>
+                                <td class="app-table-cell">
+                                    <!-- {{ doc.attachmentType }} -->
+                                </td>
+                                <td class="app-table-cell">
+                                    <!-- {{ doc.attachmentSize }} -->
+                                </td>
+                                <td class="app-table-cell">
+                                    <div class="flex-center">
+
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </scroll>
+            </div>
+        </div>
+        }
+        <!-- @if(this.id !== 0){ -->
+        @if(selectedTab === 1){
+        <app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+            [dataSource]="companyTax.ilstentActNotes" [hasIndex]="true">
+            <ng-template cellHeaderDef="add">
+                @if(companyTax.actCompanyTaxId>0){
+                <div class="end">
+                    @if(this.companyTax.statusValue !== 'APROV' && this.companyTax.statusValue !== 'CANCL'){
+
+                    <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"
+                        appButtonAccess="TaxNotNewBtn"></app-icon-button>
+                    }
+                </div>
+                }
+            </ng-template>
+            <ng-template cellDef="actCompanyId" let-element>
+                <div>{{element.actCompanyId}}</div>
+
+            </ng-template>
+            <ng-template cellHeaderDef="notes" let-element>
+                <div>
+                    <div class="header-cell-title">Notes</div>
+                    <div class="header-cell-subtitle">Created By | Date | Time</div>
+                </div>
+            </ng-template>
+            <ng-template cellDef="notes" let-element>
+                <div class="header-cell-title"> {{element.notesDetail}}</div>
+                <div class="header-cell-subtitle">
+                    {{ element.createdFullName }} | {{ element.createdDate | appDate }}
+                </div>
+            </ng-template>
+        </app-table>
+        }
+        <!-- } -->
+    </div>
+    <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+        <div class="footer-tab">
+            <div class="d-flex">
+                <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+                    <ion-icon name="podium-outline"></ion-icon>
+                    <div>Create/Update Detail</div>
+                </div>
+                <!-- @if(this.id !== 0){ -->
+                <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+                    <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+                    <div>Update History</div>
+                </div>
+                <!-- <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+                    <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+                    <div>Attachments</div>
+                </div> -->
+                <!-- } -->
+            </div>
+            <!-- <div class="open-arrow" id="trigger{{ pageId }}">
+            <ion-icon name="chevron-down-outline"></ion-icon>
+          </div> -->
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn">
+                    <ion-icon src="assets/icons/back.svg"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                <div class="screen-text">Cost Centre Allocation</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                Cost Centre Allocation > Detail >
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveAccountsTaxNotes()"
+                        appButtonAccess="TaxNotSaveBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="createNewTaxNote(0)"
+                        appButtonAccess="TaxNotClearBtn"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <form #y="ngForm">
+                    <row>
+                        <div class="col-md-12">
+                            <app-input-control type="select" label="Cost Category Name" key="constant"
+                                keyName="description" [errorTrue]="errorTrueNotes" [required]="true"
+                                [(ngModel)]="companyTax.pentActNotes.statusValue" name="statusValue"
+                                [items]="notesStatus" key="constant" keyName="description" defaultOption="--Select--"
+                                key="constant" keyName="description"></app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                            <app-input-control type="select" label="Cost Centre Name" key="constant"
+                                keyName="description" [errorTrue]="errorTrueNotes" [required]="true"
+                                [(ngModel)]="companyTax.pentActNotes.statusValue" name="statusValue"
+                                [items]="notesStatus" key="constant" keyName="description" defaultOption="--Select--"
+                                key="constant" keyName="description"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="text" label="Creted By"
+                                [(ngModel)]="companyTax.pentActNotes.notesDetail"
+                                name="notesDetail"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="text" label="Creted Date"
+                                [(ngModel)]="companyTax.pentActNotes.notesDetail"
+                                name="notesDetail"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="text" label="Allocated Percentage"
+                                [(ngModel)]="companyTax.pentActNotes.notesDetail"
+                                name="notesDetail"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                Tax > Detail > Add Documents
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <!-- <app-drop-zone fileType="pdf" [accept]="accept" [multiple]="true"
+            (onUpload)="uploadTaxAttachment($event)"></app-drop-zone> -->
+                <app-input-control type="text" label="attachment"> </app-input-control>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+    <div class="status-table-header">
+        <div class="changed-by_label">Changed By | Effective Date</div>
+        <div class="pl14">Status</div>
+    </div>
+    @for(data of companyTax.ilistentCompanyTaxStatusHistory; track $index){
+
+    <div class="status-table-content">
+        <div class="changed-by">
+            {{data.changedByUserName}}
+            <div class="changed-by_sub">{{data.effectiveDate | appDate :
+                appSetting.environment.dateViewFormatWithTime}}</div>
+        </div>
+        <div class="status_align pl14"> <accouts-status-table
+                [statusDescription]="data.statusDescription"></accouts-status-table></div>
+    </div>
+    }
+</mat-menu>
+
+<app-documents #DocumentsComponent class="none"></app-documents>

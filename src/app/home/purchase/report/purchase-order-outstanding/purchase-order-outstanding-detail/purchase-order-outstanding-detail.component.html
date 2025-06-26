@@ -1,0 +1,42 @@
+<div class="content-wrapper">
+
+    <div class="v-flex h100">
+        <app-table [pagination]="pagination" class="h100" [columns]="columns" [columnsName]="columnsName"
+            [dataSource]="tableData" (pageChanged)="pageChanged($event)" [showPaginator]="false"
+            columnID="purchaseRegisterid" [hideSelectAll]="true">
+            <ng-template #slotLeft>
+                <div class="col-md-2">
+                    <view-label label="PO No" value="Name of the item" ></view-label>
+                </div>
+                <div class="col-md-2">
+                    <view-label label="Name of the item" value="High Wheels"  ></view-label>
+                </div>
+            </ng-template>
+            <ng-template #slotRight>
+                <div class="px10">
+                    <view-label label="Report Generating Date & Time" value="06/04/2024 10:03 AM"></view-label>
+                </div>
+                <app-icon-button name="download" toolTip="Export To Excel"
+                    appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+            </ng-template>
+
+        </app-table>
+        <!-- <div class="card">
+            total
+        </div> -->
+    </div>
+</div>
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text">Purchase</div>
+
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Purchase Order Outstanding Detail Report</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

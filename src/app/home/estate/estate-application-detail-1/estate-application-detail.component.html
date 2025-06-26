@@ -1,0 +1,1033 @@
+<div class="content-wrapper">
+    <app-multi-page-url [id]="id" url="/home/estate/estate-application/detail"></app-multi-page-url>
+    <div class="sticky-card p15">
+        <row>
+            <div class="col-md-3 mb15">
+                <view-label label="Est Ref No" [value]="estateApplicationDetail.estateApplicationRefNo"></view-label>
+            </div>
+            <div class="col-md-3 mb15">
+                <view-label label="Lead Ref No" [value]="estateApplicationDetail.leadRefNo"></view-label>
+            </div>
+
+            <div class="col-md-3 mb15">
+                <view-label label="Type" value="Estate"></view-label>
+            </div>
+            <div class="col-md-3 mb15">
+                <view-label label="Applied Date" [value]="estateApplicationDetail.appliedDate"></view-label>
+            </div>
+            <div class="col-md-3 mb15"><view-label label="Application Stage"
+                    [value]="estateApplicationDetail.applicationStageDescription"></view-label></div>
+            <div class="col-md-3 mb15"> <view-label label="Application Status"
+                    [value]="estateApplicationDetail.statusDescription"></view-label>
+            </div>
+            <div class="col-md-3 mb15"> <view-label label="Action Status" class="status-NEGOM"
+                    [value]="estateApplicationDetail.actionStatusDescription"></view-label></div>
+
+        </row>
+    </div>
+    <app-tab-group (tabChange)="onTabChange($event)">
+        <app-tab tabTitle="Application">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div> Estate Information</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <row>
+                            <!-- <div class="col-md-6 border-right">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Client Information
+                                    </div>
+                                </div>
+                                <row>
+                                    <div class="col-md-6 mb15">
+                                        <view-label label="Name" value="{{estateApplicationDetail}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6 mb15">
+                                        <view-label label="DOB" value="12 May 2001"></view-label>
+                                    </div>
+                                    <div class="col-md-6 mb15">
+                                        <view-label label="DOD(Age)" value="15 Jun 2024 (23)"></view-label>
+                                    </div>
+                                    <div class="col-md-6 mb15">
+                                        <view-label label="BRN" value="BRN45623018"></view-label>
+                                    </div>
+                                </row>
+                            </div> -->
+                            <div class="col-md-6">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon src="assets/icons/estate.svg" class="pr5"></ion-icon>
+                                        Estate Information
+                                    </div>
+                                </div>
+                                <row>
+                                    <div class="col-md-6 mb15">
+                                        <view-label label="Estate No"
+                                            [value]="estateApplicationDetail.estateApplicationRefNo"></view-label>
+                                    </div>
+                                    <div class="col-md-6 mb15">
+                                        <view-label label="File Number"
+                                            [value]="estateApplicationDetail.fileNo"></view-label>
+                                    </div>
+                                    <!-- <div class="col-md-6 mb15">
+                                        <view-label label="Cash Amount" [value]="estateApplicationDetail.c"></view-label>
+                                    </div> -->
+                                    <!-- <div class="col-md-6 mb15">
+                                        <view-label label=" Non Cash Amount" value="321.06"></view-label>
+                                    </div> -->
+                                    <div class="col-md-6 mb15">
+                                        <view-label label="Total Benificiary" value=""></view-label>
+                                    </div>
+                                </row>
+                            </div>
+                        </row>
+                    </accordion-body>
+                </accordion-item>
+                <div class="card-accordion">
+                    <div class="card-accordion-header">
+                        <div class="d-flex  col-md-10">
+                            <div class="border-right  tab-sub-header" (click)="cardTabChange(1)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent===1}">Deceased Person Details</div>
+                            <div class="border-right tab-sub-header" (click)="cardTabChange(2)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent===2}">Deceased Person Will Details
+                            </div>
+                            <div class="border-right tab-sub-header" (click)="cardTabChange(3)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent===3}">Deceased Person Marriage
+                                Details</div>
+                        </div>
+
+                        @if(accordionOpen === true){
+                        <div class="pr16 col-md-2 end" (click)="openAccordion()"><ion-icon
+                                name="chevron-down-outline"></ion-icon></div>
+
+                        }
+                        @if(accordionOpen === false){ <div class="pr16 col-md-2 end" (click)="closeAccordion()">
+                            <ion-icon name="chevron-up-outline"></ion-icon>
+                        </div>}
+
+
+                    </div>
+                    @if(accordionOpen === true){
+                    <div class="accordion-card-content">
+                        @if(cardAccordionContent ===1){
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                @if(editDecesedEstate === false){
+                                <!-- <row>
+                                    <div class="col-md-3 border-right">
+                                        <view-label label="First Name" class="mb15"
+                                            value="{{deceasedPerson.firstName}}"></view-label>
+                                        <view-label label="Middle Name" class="mb15"
+                                            value="{{deceasedPerson.middleName}}"></view-label>
+                                        <view-label label="Last Name" class="mb15"
+                                            value="{{deceasedPerson.lastName}}"></view-label>
+                                        <view-label label="Date Of Birth" class="mb15"
+                                            value="{{deceasedPerson.dob}}"></view-label>
+                                        <view-label label="Gender" class="mb15"
+                                            value="{{deceasedPerson.genderDescription}}"></view-label>
+                                        <view-label label="Maritial Status" class="mb15"
+                                            value="{{deceasedPerson.maritalStatusDescription}}"></view-label>
+                                    </div>
+                                    <div class="col-md-3 border-right pl15">
+                                        <view-label label="Father Name" class="mb15"
+                                            value="{{deceasedPerson.fatherName}}"></view-label>
+                                        <view-label label="Mother Name" class="mb15"
+                                            value="{{deceasedPerson.motherName}}"></view-label>
+
+                                        <view-label label="Client BRN" class="mb15"
+                                            value="{{deceasedPerson.brnNo	}}"></view-label>
+                                        <view-label label="Date Of Death" class="mb15"
+                                            value="{{deceasedPerson.dateOfDeath }}"></view-label>
+                                        <view-label label="Death Certificate Ref No" class="mb15"
+                                            value="{{deceasedPerson.deathCertificateRefNo}}"></view-label>
+                                        <view-label label="Last Place of Residence" class="mb15"
+                                            value="{{deceasedPerson.lastPlaceOfResidence}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <div class="box" style="padding: 8px 16px;">
+
+                                            <div class="mb20"></div>
+                                            <app-drop-zone type="1" fileType="pdf" [accept]="accept" [btnClicked]="true"
+                                                (onUpload)="uploadDeceasedPersonAttachment($event)"></app-drop-zone>
+
+                                        </div>
+                                        <div class="single-document">
+                                            <div class="title">Uploaded Document</div>
+                                            <row>
+                                                <div class="col-md-6 pl8 mb20"><view-label label="File Name"
+                                                        value=""></view-label>
+                                                </div>
+                                                <div class="col-md-6 pl8 mb20"><view-label label="File Size"
+                                                        value=""></view-label>
+                                                </div>
+                                                <div class="col-md-6 pl8 mb20"> <view-label label="Format"
+                                                        value=""></view-label>
+                                                </div>
+
+                                            </row>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 end">
+                                        <app-icon-button name="edit" (click)="editDecesedEstateDetils()"
+                                            toolTip="Edit"></app-icon-button>
+                                    </div>
+                                </row> -->
+                                }
+                                @else{
+                                <form #PersonDetails="ngForm">
+                                    <!-- <row>
+                                        <div class="col-md-3 border-right">
+                                            <app-input-control type="" label="First Name"
+                                                [(ngModel)]="deceasedPerson.firstName" name="firstName"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            <app-input-control type="" label="Middle Name"
+                                                [(ngModel)]="deceasedPerson.middleName"
+                                                name="middleName"></app-input-control>
+                                            <app-input-control type="" label="Last Name"
+                                                [(ngModel)]="deceasedPerson.lastName" name="lastName" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                            <app-input-control type="date" label="Date Of Birth"
+                                                [(ngModel)]="deceasedPerson.dob" name="dob"></app-input-control>
+                                            <app-input-control type="select" label="Gender"
+                                                [(ngModel)]="deceasedPerson.genderValue"
+                                                [items]="initialData.DDLValues.DDLGender" key="constant"
+                                                keyName="description" defaultOption="--Select--" name="genderValue"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            <app-input-control type="select" label="Maritial Status"
+                                                [(ngModel)]="deceasedPerson.maritalStatusValue"
+                                                name="maritalStatusValue"
+                                                [items]="initialData.DDLValues.DDLMaritalStatus" key="constant"
+                                                keyName="description" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+                                        <div class="col-md-3 pl15 border-right">
+                                            <app-input-control type="" label="Father Name" class="mb15"
+                                                [(ngModel)]="deceasedPerson.fatherName" name="fatherName"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            <app-input-control type="" label="Mother Name" class="mb15"
+                                                [(ngModel)]="deceasedPerson.motherName" name="motherName"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+
+                                            <app-input-control type="" label="Client BRN" class="mb15"
+                                                [(ngModel)]="deceasedPerson.brnNo" name="brnNo"></app-input-control>
+                                            <app-input-control type="date" label="Date Of Death" class="mb15"
+                                                [(ngModel)]="deceasedPerson.dateOfDeath" name="dateOfDeath"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            <app-input-control type="" label="Death Certificate Ref No" class="mb15"
+                                                [(ngModel)]="deceasedPerson.deathCertificateRefNo"
+                                                name="deathCertificateRefNo" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                        </div>
+                                        <div class="col-md-6 ">
+                                            <div class="title">
+                                                Death Certificate
+                                            </div>
+                                            <div class="box" style="padding: 8px 16px;">
+
+                                                <div class="mb20"></div>
+                                                <div class="col-md-8 mt8">
+                                                    <app-input-control type="select" label="Document Type" key="code"
+                                                        defaultOption="--Select--"
+                                                        keyName="fullName"></app-input-control>
+                                                </div>
+                                                <app-drop-zone type="1" fileType="pdf" [accept]="accept"
+                                                    (onUpload)="uploadDeceasedPersonAttachment($event)"></app-drop-zone>
+
+                                            </div>
+                                            <div class="single-document">
+                                                <div class="title">Uploaded Document</div>
+                                                <row>
+                                                    <div class="col-md-6 pl8 mb20"><view-label label="File Name"
+                                                            value=""></view-label>
+                                                    </div>
+                                                    <div class="col-md-6 pl8 mb20"><view-label label="File Size"
+                                                            value=""></view-label>
+                                                    </div>
+                                                    <div class="col-md-6 pl8 mb20"> <view-label label="Format"
+                                                            value=""></view-label>
+                                                    </div>
+
+                                                </row>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 end d-flex gap-10">
+                                            @if(deceasedPerson.deceasedPersonId === 0){
+
+                                            <app-icon-button name="save" toolTip="Save"
+                                                (click)="saveDeceasedPerson()"></app-icon-button>
+                                            <app-icon-button name="clear" toolTip="Clear"
+                                                (click)="clearDeceasedperson()"></app-icon-button>
+                                            }
+                                            @else {
+                                            <app-icon-button name="save" toolTip="Update"
+                                                (click)="saveDeceasedPerson()"></app-icon-button>
+                                            <app-icon-button name="refresh" toolTip="refresh"
+                                                (click)="openDeceasedPerson(deceasedPerson.deceasedPersonId)"></app-icon-button>
+                                            }
+                                        </div>
+                                    </row> -->
+                                </form>
+
+                                }
+                            </div>
+                        </div>
+                        }
+                        @if(cardAccordionContent ===2){
+                        <!-- <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                @if(editDecesedPersonWill === false){
+                                <row>
+                                    <div class="col-md-6">
+                                        <view-label label="Will File No" class="mb15"
+                                            value="{{deceasedPersonWill.willFileNo}}"></view-label>
+                                        <view-label label="Start Date" class="mb15"
+                                            value="{{deceasedPersonWill.startDate	}}"></view-label>
+                                        <view-label label="Testator Marriage Date" class="mb15"
+                                            value="{{deceasedPersonWill.testatorMarriageDate}}"></view-label>
+                                        <view-label label="Will Held By" class="mb15"
+                                            value="{{deceasedPersonWill.willHeldBy}}"></view-label>
+
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <div class="box" style="padding: 8px 16px;">
+
+                                            <div class="mb20"></div>
+                                            <app-drop-zone type="1" fileType="pdf" [accept]="accept" [btnClicked]="true"
+                                                (onUpload)="uploadDeceasedEstateAttachment($event)"></app-drop-zone>
+
+                                        </div>
+                                        <div class="single-document">
+                                            <div class="title">Uploaded Document</div>
+                                            <row>
+                                                <div class="col-md-6 pl8 mb20"><view-label label="File Name"
+                                                        value=""></view-label>
+                                                </div>
+                                                <div class="col-md-6 pl8 mb20"><view-label label="File Size"
+                                                        value=""></view-label>
+                                                </div>
+                                                <div class="col-md-6 pl8 mb20"> <view-label label="Format"
+                                                        value=""></view-label>
+                                                </div>
+
+                                            </row>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 end">
+                                        <app-icon-button name="edit" (click)="editDecesedEstateWill()"
+                                            toolTip="Edit"></app-icon-button>
+                                    </div>
+                                </row>
+                                }
+                                @else{
+                                <row>
+                                    <div class="col-md-6">
+                                        <app-input-control type="" label="Will File No" class="mb15"
+                                            [(ngModel)]="deceasedPersonWill.willFileNo"
+                                            name="willFileNo"></app-input-control>
+                                        <app-input-control type="date" label="Start Date" class="mb15"
+                                            [(ngModel)]="deceasedPersonWill.startDate"
+                                            name="startDate"></app-input-control>
+                                        <app-input-control type="date" label="Testator Marriage Date" class="mb15"
+                                            [(ngModel)]="deceasedPersonWill.testatorMarriageDate"
+                                            name="testatorMarriageDate"></app-input-control>
+                                        <app-input-control type="" label="Will Held By" class="mb15"
+                                            [(ngModel)]="deceasedPersonWill.willHeldBy"
+                                            name="willHeldBy"></app-input-control>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <div class="box" style="padding: 8px 16px;">
+
+                                            <div class="mb20"></div>
+                                            <div class="col-md-8 mt8">
+                                                <app-input-control type="select" label="Document Type" key="code"
+                                                    defaultOption="--Select--" keyName="fullName"></app-input-control>
+                                            </div>
+                                            <app-drop-zone type="1" fileType="pdf" [accept]="accept"
+                                                (onUpload)="uploadDeceasedPersonAttachment($event)"></app-drop-zone>
+
+                                        </div>
+                                        <div class="single-document">
+                                            <div class="title">Uploaded Document</div>
+                                            <row>
+                                                <div class="col-md-6 pl8 mb20"><view-label label="File Name"
+                                                        value=""></view-label>
+                                                </div>
+                                                <div class="col-md-6 pl8 mb20"><view-label label="File Size"
+                                                        value=""></view-label>
+                                                </div>
+                                                <div class="col-md-6 pl8 mb20"> <view-label label="Format"
+                                                        value=""></view-label>
+                                                </div>
+
+                                            </row>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 end d-flex gap-10">
+                                        <app-icon-button name="save" toolTip="Save"
+                                            (click)="saveDeceasedPersonWill()"></app-icon-button>
+                                        <app-icon-button name="clear" toolTip="Clear" (click)="clearWill()">
+                                        </app-icon-button>
+                                    </div>
+                                </row>
+                                }
+                            </div>
+                        </div> -->
+                        }
+                        @if(cardAccordionContent ===3){
+                        <div class="content-wrapper">
+                            @if(editDeceasedMarriage === false){
+                            <row>
+                                <div class="col-md-6 mb15">
+                                    <view-label label="Place Of Marriage"
+                                        value="{{deceasedPersonMarriageDetail.placeOfMarriage}}"></view-label>
+                                </div>
+                                <div class="col-md-6 mb15">
+                                    <view-label label="Married to"
+                                        value="{{deceasedPersonMarriageDetail.marriedTo}}"></view-label>
+                                </div>
+                                <div class="col-md-6 mb15">
+                                    <view-label label="Maiden name of deceased if any"
+                                        value="{{deceasedPersonMarriageDetail.maidenName}}"></view-label>
+                                </div>
+                                <div class="col-md-6 mb15">
+                                    <view-label label="Is spouse still living"
+                                        value="{{deceasedPersonMarriageDetail.isSpouseLiving}}"></view-label>
+                                </div>
+                                <div class="col-md-6 mb15">
+                                    <view-label label="Place Of Death"
+                                        value="{{deceasedPersonMarriageDetail.placeOfDeath}}"></view-label>
+                                </div>
+                                <div class="col-md-6 mb15">
+                                    <!-- <view-label label="Date Of Death"
+                                        value="{{deceasedPersonMarriageDetail.dateOfDeath}}"></view-label> -->
+                                </div>
+                                <div class="col-md-12 end">
+                                    <app-icon-button name="edit" (click)="editDecesedMarriageWill()"
+                                        toolTip="Edit"></app-icon-button>
+                                </div>
+                            </row>
+                            }
+                            @else {
+                            <form #marraigeDetails="ngForm">
+                                <row>
+                                    <div class="col-md-6">
+                                        <app-input-control label="Place Of Marriage"
+                                            [(ngModel)]="deceasedPersonMarriageDetail.placeOfMarriage"
+                                            name="placeOfMarriage" [required]="true"
+                                            [errorTrue]="errorTrue"></app-input-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <app-input-control label="Married to"
+                                            [(ngModel)]="deceasedPersonMarriageDetail.marriedTo"
+                                            name="marriedTo"></app-input-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <app-input-control label="Maiden name of deceased if any"
+                                            [(ngModel)]="deceasedPersonMarriageDetail.maidenName"
+                                            name="maidenName"></app-input-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <app-input-control label="Is spouse still living"
+                                            [(ngModel)]="deceasedPersonMarriageDetail.isSpouseLiving"
+                                            name="isSpouseLiving" [required]="true"
+                                            [errorTrue]="errorTrue"></app-input-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <app-input-control label="Place Of Death"
+                                            [(ngModel)]="deceasedPersonMarriageDetail.placeOfDeath"
+                                            name="placeOfDeath"></app-input-control>
+                                    </div>
+                                    <!-- <div class="col-md-6">
+                                        <app-input-control label="Date Of Death"
+                                            [(ngModel)]="deceasedPersonMarriageDetail.dateOfDeath"
+                                            name="dateOfDeath"></app-input-control>
+                                    </div> -->
+                                    <div class="col-md-12 end">
+                                        <app-icon-button name="save" (click)="saveDeceasedPersonMarriageDetail()"
+                                            toolTip="Save"></app-icon-button>
+                                    </div>
+                                </row>
+                            </form>
+
+                            }
+                        </div>
+                        }
+                    </div>
+                    }
+
+                </div>
+                <div class="mb20"></div>
+                <div class="card-accordion">
+                    <div class="card-accordion-header">
+                        <div class="d-flex  col-md-7">
+                            <div class="border-right  tab-sub-header" (click)="cardTabChange1(1)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent1===1}">Beneficiary</div>
+                            <div class="border-right tab-sub-header" (click)="cardTabChange1(2)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent1===2}">Executor</div>
+                            <div class="border-right tab-sub-header" (click)="cardTabChange1(3)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent1===3}">Creditor</div>
+                        </div>
+
+                        @if(accordionOpen1 === true){
+                        <div class="pr16 col-md-5 end" (click)="openAccordion1()"><ion-icon
+                                name="chevron-down-outline"></ion-icon></div>
+
+                        }
+                        @if(accordionOpen1 === false){ <div class="pr16 col-md-5 end" (click)="closeAccordion1()">
+                            <ion-icon name="chevron-up-outline"></ion-icon>
+                        </div>}
+
+
+                    </div>
+                    @if(accordionOpen1 === true){
+                    <div class="accordion-card-content">
+                        @if(cardAccordionContent1 === 1){
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="beneficiaryColumns" [columnsName]="beneficiaryColumnsName"
+                                    [dataSource]="estateApplicationDetail.lstentEstateApplicationBeneficiary" [hasPagination]="true" [hideSelectAll]="true">
+
+
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createEstateApplicationBeneficiary()"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                        }
+                        @if(cardAccordionContent1 ===2){
+                        <row>
+                            <div class="col-md-12 p20">
+
+                                @if(editExecutor === false){
+
+                                <!-- <row>
+                                    <div class="col-md-3">
+
+                                        <div class="mb20">
+                                            <view-label label="First Name"
+                                                value="{{estateApplicationExecutor.firstName}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Middle Name"
+                                                value="{{estateApplicationExecutor.middleName}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Last Name"
+                                                value="{{estateApplicationExecutor.lastName}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Date Of Birth"
+                                                value="{{estateApplicationExecutor.dateOfBirth}}"></view-label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb20">
+                                            <view-label label="Date Of Death"
+                                                value="{{estateApplicationExecutor.dateOfDeath}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Place Of Death"
+                                                value="{{estateApplicationExecutor.placeOfDeath}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Occupation"
+                                                value="{{estateApplicationExecutor.occupation}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Marital Status"
+                                                value="{{estateApplicationExecutor.maritalStatusDescription}}"></view-label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <div class="mb20">
+                                            <view-label label="Relationship to Deceased"
+                                                value="{{estateApplicationExecutor.relationshipDescription}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Is Deceased"
+                                                value="{{estateApplicationExecutor.isDeceased}}"></view-label>
+                                        </div>
+
+                                        <div class="mb20">
+                                            <view-label label="Is Female" value="Yes"></view-label>
+                                        </div>
+
+                                        <div class="mb20">
+                                            <view-label label="Is The Executor Benificiary or Spouse Of Benificary"
+                                                value="No"></view-label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <div class=" ">
+
+                                            <div class="">
+                                                <div class=" gap-10 align-items-end">
+                                                    <view-label label="Address"
+                                                        value="{{estateApplicationExecutor.ientestateApplicationExecutorAddress.line1}}"></view-label>
+                                                    <view-label
+                                                        value="{{estateApplicationExecutor.ientestateApplicationExecutorAddress.line2}}"></view-label>
+                                                    <view-label
+                                                        value="{{estateApplicationExecutor.ientestateApplicationExecutorAddress.line3}}"></view-label>
+                                                </div>
+                                                <div class="align-items-center d-flex gap-10">
+                                                    <view-label
+                                                        value="{{estateApplicationExecutor.ientestateApplicationExecutorAddress.provinceDescription}}"></view-label>
+                                                    <view-label
+                                                        value="{{estateApplicationExecutor.ientestateApplicationExecutorAddress.islandDescription}}"></view-label>
+                                                    <view-label
+                                                        value="{{estateApplicationExecutor.ientestateApplicationExecutorAddress.village}}"></view-label>
+                                                </div>
+
+                                                <view-label
+                                                    value="{{estateApplicationExecutor.ientestateApplicationExecutorAddress.poBoxNo}}"></view-label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 end">
+                                        <app-icon-button name="edit" toolTip="Edit"
+                                            (click)="editExecutorData()"></app-icon-button>
+                                    </div>
+                                </row> -->
+                                }
+                                @else {
+                                <form #executor="ngForm">
+                                    <!-- <row>
+                                        <div class="col-md-4 pr10">
+                                            <app-input-control label="First Name"
+                                                [(ngModel)]="estateApplicationExecutor.firstName" name="firstName"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            <app-input-control label="Middle Name"
+                                                [(ngModel)]="estateApplicationExecutor.middleName"
+                                                name="middleName"></app-input-control>
+                                            <app-input-control label="Last Name"
+                                                [(ngModel)]="estateApplicationExecutor.lastName" name="lastName"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            <div class="mb20">
+                                                <div class="checkbox-label">Is Deceased</div>
+                                                <div class="d-flex gap-5">
+                                                    <mat-radio-group [(ngModel)]="estateApplicationExecutor.isDeceased"
+                                                        name="isDeceased" [required]="true" [errorTrue]="errorTrue">
+                                                        <mat-radio-button value="Y"
+                                                            color="primary">Yes</mat-radio-button>
+                                                        <mat-radio-button value="N"
+                                                            color="primary">No</mat-radio-button>
+                                                    </mat-radio-group>
+                                                </div>
+                                            </div>
+                                            <app-input-control label="Date Of Death" type="date"
+                                                [(ngModel)]="estateApplicationExecutor.dateOfDeath"
+                                                name="dateOfDeath"></app-input-control>
+                                            <app-input-control label="Place Of Death"
+                                                [(ngModel)]="estateApplicationExecutor.placeOfDeath"
+                                                name="placeOfDeath"></app-input-control>
+                                        </div>
+                                        <div class="col-md-4 pr10 border-right">
+                                            <app-input-control label="Occupation"
+                                                [(ngModel)]="estateApplicationExecutor.occupation" name="occupation"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            <app-input-control label="Relationship To The Deceased"
+                                                [(ngModel)]="estateApplicationExecutor.relationshipDescription"
+                                                name="relationshipDescription" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                            <app-input-control label="Date Of Birth (Age)" type="date"
+                                                [(ngModel)]="estateApplicationExecutor.dateOfBirth" name="dateOfBirth"
+                                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            <div class="mb20">
+                                                <div class="checkbox-label">Is Female</div>
+                                                <div class="d-flex gap-5">
+                                                    <mat-radio-group [(ngModel)]="estateApplicationExecutor">
+                                                        <mat-radio-button value="Y"
+                                                            color="primary">Yes</mat-radio-button>
+                                                        <mat-radio-button value="N"
+                                                            color="primary">No</mat-radio-button>
+                                                    </mat-radio-group>
+                                                </div>
+                                            </div>
+                                            <app-input-control label="Martial Status" type="select"
+                                                [(ngModel)]="estateApplicationExecutor.maritalStatusValue"
+                                                name="maritalStatusValue"
+                                                [items]="initialData.DDLValues.DDLMaritalStatus" key="constant"
+                                                keyName="description" [required]="true"
+                                                [errorTrue]="errorTrue"></app-input-control>
+                                            <div class="mb20">
+                                                <div class="checkbox-label">Is The Executor Benificiary or Spouse Of
+                                                    Benificary</div>
+                                                <div class="d-flex gap-5">
+                                                    <mat-radio-group [(ngModel)]="estateApplicationExecutor">
+                                                        <mat-radio-button value="Y"
+                                                            color="primary">Yes</mat-radio-button>
+                                                        <mat-radio-button value="N"
+                                                            color="primary">No</mat-radio-button>
+                                                    </mat-radio-group>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <app-address-edit type="residential"
+                                                [ientAddress]="estateApplicationExecutor.ientestateApplicationExecutorAddress"></app-address-edit>
+                                        </div>
+                                        <div class="col-md-12 end">
+                                            <app-icon-button name="save" toolTip="save"
+                                                (click)="saveEstateApplicationExecutor()"></app-icon-button>
+                                        </div>
+                                    </row> -->
+                                </form>
+
+                                }
+                            </div>
+
+
+
+                        </row>
+                        }
+                        @if(cardAccordionContent1 ===3){
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="creditorColumns" [columnsName]="creditorColumnsName"
+                                    [dataSource]="creditorTableData" [hasPagination]="true" [hideSelectAll]="true">
+
+
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createEstateCreditor()"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+
+                </div>
+                <div class="mb20"></div>
+                <div class="card-accordion">
+                    <div class="card-accordion-header">
+                        <div class="d-flex  col-md-8">
+                            <div class="border-right  tab-sub-header" (click)="cardTabChange2(1)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent2===1}">Real Estate</div>
+                            <div class="border-right tab-sub-header" (click)="cardTabChange2(2)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent2===2}">Bank / Financial Institution
+                            </div>
+                            <div class="border-right tab-sub-header" (click)="cardTabChange2(3)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent2===3}">Share / Stock / Investments
+                            </div>
+                            <div class="border-right tab-sub-header" (click)="cardTabChange2(4)"
+                                [ngClass]="{'tabActive-text': cardAccordionContent2===4}">Vehicle</div>
+                        </div>
+
+                        @if(accordionOpen2 === true){
+                        <div class="pr16 col-md-4 end" (click)="openAccordion2()"><ion-icon
+                                name="chevron-down-outline"></ion-icon></div>
+
+                        }
+                        @if(accordionOpen2 === false){ <div class="pr16 col-md-4 end" (click)="closeAccordion2()">
+                            <ion-icon name="chevron-up-outline"></ion-icon>
+                        </div>}
+
+
+                    </div>
+                    @if(accordionOpen2 === true){
+                    <div class="accordion-card-content">
+                        @if(cardAccordionContent2 === 1){
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="realEstateColumns" [columnsName]="realEstateColumnsName"
+                                    [dataSource]="estateApplicationDetail.lstentEstateApplicationRealestate" [hasPagination]="true" [hideSelectAll]="true">
+
+
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createEstateApplicationRealestate()"></app-icon-button>
+                                        <!-- (click)="editInfo('realestate')" -->
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                        }
+                        @if(cardAccordionContent2 ===2){
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="creditorColumns" [columnsName]="creditorColumnsName"
+                                    [dataSource]="creditorTableData" [hasPagination]="true" [hideSelectAll]="true">
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createEstateApplicationFinanceDetails()"></app-icon-button>
+                                        <!-- (click)="editInfo('bank')" -->
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                        }
+                        @if(cardAccordionContent2 ===3){
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="shareColumns" [columnsName]="shareColumnsName"
+                                    [dataSource]="shareTableData" [hasPagination]="true" [hideSelectAll]="true">
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createEstateApplicationInvestmentDetails()"></app-icon-button>
+                                        <!--  (click)="editInfo('share')" -->
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                        }
+                        @if(cardAccordionContent2 ===4){
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="vehicleColumns" [columnsName]="vehicleColumnsName"
+                                    [dataSource]="vehicleTableData" [hasPagination]="true" [hideSelectAll]="true">
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createEstateApplicationVehicleDetails()"></app-icon-button>
+                                        <!-- (click)="editInfo('vehicle')" -->
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+
+                </div>
+
+            </accordion>
+        </app-tab>
+        <app-tab tabTitle="Process">
+            <accordion>
+                <app-notify-deceased-estate></app-notify-deceased-estate>
+                <app-conduct-initial-interview></app-conduct-initial-interview>
+                <app-obtain-detail-ins></app-obtain-detail-ins>
+                <app-open-file></app-open-file>
+                <app-estate-account></app-estate-account>
+                <app-receipt-fund></app-receipt-fund>
+                <app-identity-validate-debit></app-identity-validate-debit>
+                <app-confirm-assets></app-confirm-assets>
+                <app-obtain-grant></app-obtain-grant>
+                <app-collect-assets></app-collect-assets>
+                <app-provision-claims></app-provision-claims>
+                <app-obtain-tax-clearance></app-obtain-tax-clearance>
+                <app-arrange-payment></app-arrange-payment>
+            </accordion>
+        </app-tab>
+        <app-tab tabTitle="History">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Notes</div>
+                                    <div class="accordian-title-count">{{notesList?.length}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <div class="p16px pb26 wrap-content">
+                                    <!-- <div class="justify-content-end d-flex">
+                                        <app-icon-button name="add" toolTip="Create" (click)="createNotes()"
+                                            appButtonAccess="CrmCustAppAddNoteBtn"></app-icon-button>
+                                    </div> -->
+                                    @for (item of notesList; track $index) {
+                                    <div class="border-bottom  notes-list">
+                                        <div class="mx10">{{item.notes}}</div>
+                                        <div class="d-flex justify-content-end notes-context">
+                                            <div style="padding-right:5px ;">
+                                                {{item.enteredByFullname}}</div>
+                                            <div class=" notes-border-left">
+                                                {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm a'}}
+                                            </div>
+                                            <div style="padding-right:5px ;"></div>
+                                            <div class=" notes-border-left status-{{item.customerStatusValue}}">
+                                                {{item.statusDescription}}
+                                            </div>
+                                            <div class="card-1-header-label px-2 ">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Assigned Officer</div>
+                                    <div class="accordian-title-count">{{tableAssignOffice.length}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                                    [hasPagination]="true" [dataSource]="tableAssignOffice" [hideSelectAll]="true">
+                                    <ng-template cellDef="statusDescription" let-element>
+                                        <div class="status status-{{element.statusValue}}">{{element.statusDescription}}
+                                        </div>
+                                    </ng-template>
+                                    <ng-template cellDef="assignedDate" let-element>
+                                        {{element.assignedDate | appDate}}
+                                    </ng-template>
+                                    <!-- @if(customerUpdate.assignedOfficerFlag === 'True'){ -->
+                                    <ng-template #slotRight>
+                                        <div class="d-flex align-items-center">
+
+                                            <!-- @if(this.trustApplication.assignedOfficerFlag === 'True'){
+                                        @if(this.trustApplication.reAssignFlag === 'True'){
+                                        <form #p="ngForm" class="col-md-10 w250">
+                                            <app-input-control type="select" key="constant" keyName="description"
+                                                placeholder="Officer" [items]="assignedOfficerDDL"
+                                                defaultOption="--Select--"
+                                                [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                                                name="assignedTo"></app-input-control>
+                                        </form>
+                                        <div class="col-md-2"><app-icon-button name="reassign"
+                                                (click)="reAssignTrust()" toolTip="Reassign"></app-icon-button>
+                                        </div>
+                                        }
+                                        @if(this.trustApplication.selfAssignFlag ===' True'){
+                                        <div class="col-md-2"><app-icon-button name="add"
+                                                (click)="selfAssignTrust()" toolTip="Self Assign"></app-icon-button>
+                                        </div>
+                                        }
+                                        } -->
+
+                                        </div>
+                                    </ng-template>
+                                    <!-- } -->
+                                </app-table>
+                            </div>
+                        </div>
+
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+            <div class="bg-white-padd">
+                <app-tab-sub-group>
+                    <app-sub-tab tabTitle="Status History">
+                        <div class="status-padding">
+                            <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+                        </div>
+                    </app-sub-tab>
+                    <app-sub-tab tabTitle="Communication History">
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName"
+                                    [hasPagination]="true" [dataSource]="emailHistoryTableData" [hideSelectAll]="true">
+                                    <ng-template cellDef="toEmailId" let-element>
+                                        {{element.ientCommunicationTracking.toEmailId}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentDate" let-element>
+                                        {{element.ientCommunicationTracking.sentDate |
+                                        appDate
+                                        }} |
+                                        {{element.ientCommunicationTracking.sentDate
+                                        | appDate: 'hh:mm a'}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentStatusDescription" let-element>
+                                        <div class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                                            {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+                                    </ng-template>
+
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open" (click)="viewEmailDetail(element)"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                    </app-sub-tab>
+                </app-tab-sub-group>
+            </div>
+
+
+        </app-tab>
+    </app-tab-group>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/trust.svg"></ion-icon>
+                <div class="screen-text">Estate Application</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/trust.svg"></ion-icon>
+                <div class="screen-text">Estate Application</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

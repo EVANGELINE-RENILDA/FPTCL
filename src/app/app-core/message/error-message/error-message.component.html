@@ -1,0 +1,81 @@
+<div class="error-message-panel">
+    <div class="error-message-header">{{data.message.errorMessage}}
+        <div class="error-message-title">
+            <!-- <ion-icon src="assets/icons/error-message-icon.svg"></ion-icon> -->
+        </div>
+        <div class="error-message-right-panel">
+            <ul>
+                @if ((data.message.errorMessage | errorPipe:2: 'msgType').length > 0) {
+                <li class="error" [class.active]="{'active': activeTab === 'error'}" (click)="setActiveTab('error')">
+                    <span class="icon">
+                        <svg width="13" height="13" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8.64875 1.25013L15.7934 13.6252C16.0005 13.9839 15.8776 14.4426 15.5189 14.6496C15.4049 14.7155 15.2756 14.7502 15.1439 14.7502H0.854492C0.440275 14.7502 0.104492 14.4144 0.104492 14.0002C0.104492 13.8685 0.139142 13.7392 0.20497 13.6252L7.34967 1.25013C7.55682 0.891403 8.01545 0.768501 8.37417 0.975606C8.48825 1.04143 8.5829 1.13611 8.64875 1.25013ZM2.15353 13.2502H13.8449L7.99917 3.12513L2.15353 13.2502ZM7.24917 11.0002H8.74917V12.5002H7.24917V11.0002ZM7.24917 5.75013H8.74917V9.50015H7.24917V5.75013Z"
+                                fill="currentColor" />
+                        </svg>
+                    </span> Error
+                    <span class="error-number">{{(data.message.errorMessage | errorPipe:2: 'msgType')?.length}}</span>
+                </li>
+                }
+                @if ((data.message.errorMessage | errorPipe:1: 'msgType').length > 0) {
+                <li class="warning" [class.active]="{'active': activeTab === 'warning'}"
+                    (click)="setActiveTab('warning')">
+                    <span class="icon">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8 15.5C3.85786 15.5 0.5 12.1421 0.5 8C0.5 3.85786 3.85786 0.5 8 0.5C12.1421 0.5 15.5 3.85786 15.5 8C15.5 12.1421 12.1421 15.5 8 15.5ZM8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14ZM8 6.93935L10.1213 4.81802L11.1819 5.87868L9.06065 8L11.1819 10.1213L10.1213 11.1819L8 9.06065L5.87868 11.1819L4.81802 10.1213L6.93935 8L4.81802 5.87868L5.87868 4.81802L8 6.93935Z"
+                                fill="currentColor" />
+                        </svg>
+                    </span>
+                    Warning <span class="error-number">{{(data.message.errorMessage | errorPipe:1:
+                        'msgType').length}}</span>
+                </li>
+                }
+                @if(data.message.infoMessage?.msgDescription && data.message.errorMessage.length === 0){
+                <li class="info" [class.active]="{'active': activeTab === 'info'}" (click)="setActiveTab('info')">
+                    <span class="icon">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8 15.5C3.85786 15.5 0.5 12.1421 0.5 8C0.5 3.85786 3.85786 0.5 8 0.5C12.1421 0.5 15.5 3.85786 15.5 8C15.5 12.1421 12.1421 15.5 8 15.5ZM8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14ZM7.25 4.25H8.75V5.75H7.25V4.25ZM7.25 7.25H8.75V11.75H7.25V7.25Z"
+                                fill="currentColor" />
+                        </svg>
+                    </span>
+                    Information
+                    <span class="error-number">1</span>
+                </li>
+                }
+
+            </ul>
+        </div>
+        <div class="ml-auto">
+            <ion-icon src="assets/icons/error-close.svg" (click)="doClose()"></ion-icon>
+        </div>
+    </div>
+    <div class="error-message-body {{activeTab}}">
+        <div class="error-message">
+            @if(activeTab === 'warning'){
+            <ul>
+                @for (message of data.message.errorMessage; track $index) {
+                @if (message.msgType === 1) {
+                <li>{{message.msgDescription}}</li>
+                }
+                }
+            </ul>
+            }
+            @if(activeTab === 'info'){
+            <ul>
+                <li>{{data.message.infoMessage?.msgDescription}}</li>
+            </ul>
+            }
+            @if(activeTab === 'error'){
+            <ul>
+                @for (message of data.message.errorMessage; track $index) {
+                @if (message.msgType === 2) {
+                <li>{{message.msgDescription}}</li>
+                }
+                }
+            </ul>
+            }
+        </div>
+    </div>
+</div>

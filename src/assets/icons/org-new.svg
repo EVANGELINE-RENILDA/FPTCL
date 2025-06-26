@@ -1,0 +1,18 @@
+ <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.64062 22.5V1.5H19.6406V22.5H4.64062Z" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M9.64062 22.5V14.5H14.6406V22.5H9.64062Z" fill="currentColor" stroke="#000000"
+                        stroke-miterlimit="10" />
+                      <path d="M6.81055 11.6902L8.88055 11.6702" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M6.78125 9.05003L8.85125 9.03003" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M6.75 6.67015L8.82 6.65015" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M6.73047 4.35008L8.80047 4.33008" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M11.1406 11.6902L13.2106 11.6702" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M11.1113 9.05003L13.1813 9.03003" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M11.0898 6.67015L13.1598 6.65015" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M11.0605 4.35008L13.1305 4.33008" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M15.4805 11.6902L17.5505 11.6702" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M15.4512 9.05003L17.5212 9.03003" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M15.4199 6.67015L17.4899 6.65015" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M15.4004 4.35008L17.4704 4.33008" stroke="#000000" stroke-miterlimit="10" />
+                      <path d="M1 22.5H23.27" stroke="#000000" stroke-miterlimit="10" />
+                    </svg>

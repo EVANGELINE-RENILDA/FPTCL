@@ -1,0 +1,8 @@
+<app-auto-complete [disabled]="__btnClicked" [displayText]="displayText" [items]="items"
+    (onInput)="getSearchData($event)" keyName="vendorName" (onSelect)="valueSelected($event)"
+    [errorTrue]="control?.control?.invalid && __errorTrue" [errorText]="__errorText" [label]="__label"
+    [required]="__required" (onClear)="onAction('clear')">
+    <ng-template #option let-item>
+        {{item.name}}
+    </ng-template>
+</app-auto-complete>

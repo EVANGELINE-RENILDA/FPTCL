@@ -1,0 +1,18 @@
+.page-select {
+    display: flex;
+    align-items: center;
+    // gap: 5px;
+    justify-content: end;
+    height: 24px;
+    font-size: 13px;
+    color: var(--text-dark-color);
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,85 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/receipt-fund.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Identify and Validate Debts</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="outer-content-wrapper">
+
+            <div class="content-wrapper">
+                <app-table [columns]="identityColumns" [columnsName]="identityColumnsName"
+                    [dataSource]="identityTableData" [hasPagination]="true" [hideSelectAll]="true"
+                    columnID="trustApplicationId">
+                    <ng-template cellDef="dis">
+                        <div class="d-flex pl20">
+                            <app-checkbox></app-checkbox>
+                        </div>
+                    </ng-template>
+                </app-table>
+                <div class="mb26"></div>
+                <div class="mb26"></div>
+
+
+                <div class="sub-table w100">
+                    <div class="sub-table-header pb10">
+                        Approvals
+                    </div>
+                    <table class="w100">
+                        <tr>
+                            <th>Designation</th>
+                            <th>User Name</th>
+                            <th>Verified Check</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <td>Estate Officer</td>
+                            <td>Estate Officer</td>
+                            <td>
+                                <app-checkbox></app-checkbox>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Manager Estate & Trust</td>
+                            <td>Manager Estate & Trust</td>
+                            <td>
+                                <app-checkbox></app-checkbox>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Cheif Executor Officer</td>
+                            <td>Cheif Executor Officer</td>
+                            <td>
+                                <app-checkbox></app-checkbox>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 end">
+            <button class="approve-btn">Debts Identified</button>
+        </div>
+
+    </accordion-body>
+</accordion-item>

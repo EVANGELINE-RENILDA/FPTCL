@@ -1,0 +1,102 @@
+@if(data.showErrorMessage){
+    <div class="admin-error-panel">
+        <app-error-message></app-error-message>
+    </div>
+    }
+
+
+<div class="admin-btn ">
+    <div class="approve-sub-btn">
+        <a href="{{appSettings.environment.goToAdmin}}">
+            <div>Admin Login </div>
+            <div>
+                <ion-icon name="log-in-outline"></ion-icon>
+            </div>
+        </a>
+    </div>
+</div>
+<div class="login">
+    <div class="login-slot-left">
+        <img src="assets/img/login-side.png" alt="">
+    </div>
+    <div class="login-slot-right">
+        <div class="login-box">
+            <div class="login-brand">
+                <img src="assets/logo.png" alt="">
+            </div>
+            <div class="login-title">Login</div>
+            <form #l="ngForm" (ngSubmit)="onSubmit(l)">
+
+                <app-input-control label="User Name" type="text" [(ngModel)]="login.userLoginId" name="userLoginId"
+                  [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                <div class="spacer-1"></div>
+                <app-input-control label="Password" type="password" [(ngModel)]="login.password" name="password"
+                    [errorTrue]="errorTrue" [required]="true"></app-input-control>
+
+
+                <div class="spacer-1"></div>
+                <button class="btn-login">Login Now</button>
+                <div class="spacer-1"></div>
+                <div class="text-center">
+                    <a href="/forgot-password" class="btn-link">Forgot password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<ng-template #reminderDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title gap-10"> <ion-icon name="hourglass-outline"></ion-icon>Reminder List
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="close" toolTip="Close" (click)="dialogClose()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="p24">
+                    <div class="end">
+                        <button class="complete-btn" (click)="addNewRemainder()">Add Remainder</button>
+
+                    </div>
+                    <div class="overflowy-auto">
+                        <div class="sub-table bor-table w100">
+
+
+                            <table class="w100">
+                                <tr>
+                                    <th class="w600 start-content">Title</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Priority</th>
+
+                                </tr>
+
+                                @for (item of reminderTableData; track $index) {
+                                <tr>
+                                    <td class="start-content pointer td-underline"
+                                        (click)="openRemainder(item.diaryEntryId)">
+                                        {{item.title}}
+                                    </td>
+                                    <td>{{item.date | appDate }}</td>
+                                    <td>{{item.time}}</td>
+                                    <td>{{item.priorityDescription}}</td>
+                                </tr>
+
+                                }
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </scroll>
+
+        </div>
+
+
+    </div>
+</ng-template>

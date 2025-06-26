@@ -1,0 +1,111 @@
+<div class="content-wrapper" appAccess="CUSTR">
+  <div class="between">
+    <app-search #appSearch [searchTemplate]=" searchTemplate" maxHeight="200px"></app-search>
+    <app-icon-button name="download" toolTip="Export To Excel" appButtonAccess="CrmCustAppAddBtn"
+      (click)="generateCreditorsSummaryReportAsExcel()"></app-icon-button>
+  </div>
+  <div class="outer-content-wrapper">
+    <div class="content-wrapper acc-back">
+      <div class="sub-table w100">
+        <table class="w100">
+          <thead class="h40 thead-th">
+            <tr>
+              <th>#</th>
+              <th>Vendor Code</th>
+              <th>Vendor Name</th>
+              <th class="text-right">Total Balance Due</th>
+              <th class="text-right">0 - 30 Days Due</th>
+              <th class="text-right">31 - 60 Days Due</th>
+              <th class="text-right">61 - 90 Days Due</th>
+              <th class="text-right">90 Days Due</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          @if(reportResult.length !==0){
+          @for (element of reportResult; track $index) {
+          <tr>
+            <td>{{$index + 1}}</td>
+            <td>{{element.VENDOR_CODE}}</td>
+            <td>{{element.VENDOR_NAME}}</td>
+            <td class="text-right">{{element.Total_Bal_Amt | appCurrency}}</td>
+            <td class="text-right">{{element.DaysDue0to30 | appCurrency}}</td>
+            <td class="text-right">{{element.DaysDue31to60 | appCurrency}}</td>
+            <td class="text-right">{{element.DaysDue61to90 | appCurrency}}</td>
+            <td class="text-right">{{element.DaysDue90 | appCurrency}}</td>
+            <td class="text-center">
+              <app-icon-button name="open" toolTip="Open Selected"
+                (click)="creditorDetail(element.ACT_VENDOR_ID)"></app-icon-button>
+            </td>
+          </tr>
+          }
+          @if(reportResult.length >0){
+          <tr class="tfoot-td">
+            <td colspan="3" class="text-center "><b>Subtotal</b></td>
+            <td class="text-right "><b>{{amountSummary[0].Total_Balance_Amount | appCurrency}}</b></td>
+            <td class="text-right "><b>{{amountSummary[0].Total_DaysDue0to30 | appCurrency}}</b></td>
+            <td class="text-right "><b>{{amountSummary[0].Total_DaysDue31to60 | appCurrency}}</b></td>
+            <td class="text-right "><b>{{amountSummary[0].Total_DaysDue61to90 | appCurrency}}</b></td>
+            <td class="text-right "><b>{{amountSummary[0].Total_DaysDue90 | appCurrency}}</b></td>
+            <td></td>
+          </tr>
+          }
+          }
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Creditors Summary Report Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search"
+            (click)="generateCreditorsSummaryReportlist(true)"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm" autocomplete="off">
+            <row>
+              <div class="col-md-4">
+                <app-input-control [(ngModel)]="purchaseReport.toDate" name="toDate" label="Statement Date" type="text"
+                  type="date"></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control [(ngModel)]="purchaseReport.currencyValue" name="currencyValue" label="Currency"
+                  [items]="initialData.DDLValues.Currency" type="select" [(ngModel)]="purchaseReport.currencyValue"
+                  key="constant" keyName="description"></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control [(ngModel)]="purchaseReport.regionValue" name="regionValue" label="Region"
+                  type="select" [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"
+                  [errorTrue]="errorTrue" [required]="true"></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text " (click)="navigateToPurchase()">Purchase</div>
+
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Creditors Summary Report</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

@@ -1,0 +1,321 @@
+<div class="dialog-container" appAccess="CUSEV" [parentId]="pageId">
+    <div class="dialog-header">
+        <div class="dialog-title">
+            <ion-icon class="dialog-header-icon" src="assets/icons/accordian/customer-service.svg"></ion-icon>
+            Customer Service<ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Detail<ion-icon
+                class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+            @if(this.customerService.customerServiceId === 0){
+            Add
+            }@else {
+            Edit
+            }
+        </div>
+        <div class="slot-right">
+            <div class="btn-group">
+                @if(this.customerService.customerServiceId === 0){
+
+                <app-icon-button name="save" toolTip="Save" (click)="saveCustomerForm()"
+                    appButtonAccess="CrmCustServAppSaveBtn"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clear()"
+                    appButtonAccess="CrmCustServAppClearBtn"></app-icon-button>
+                }
+                @else {
+                <app-icon-button name="save" toolTip="Update" (click)="saveCustomerForm()"
+                    appButtonAccess="CrmCustServAppSaveBtn"></app-icon-button>
+                <app-icon-button name="refresh" toolTip="Refresh" (click)="openCustomerForm()"></app-icon-button>
+                }
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <scroll>
+            <div class="dialog-content-inner">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #l="ngForm">
+                    @if(this.serviceId ===0){
+
+                    <div class="d-flex align-items-center">
+                        <div class="col-md-4">
+                            <app-input-control label="Customer No" type="select" defaultOption="--Select--"
+                                label="Customer No" [search]="true" [(ngModel)]="customerService.customerId"
+                                name="customerId" [errorTrue]="errorTrue" [required]="true" valueType="int"
+                                [btnClicked]="this.serviceId !==0" [items]="initialData.DDLValues.DDLCustomer" key="id"
+                                keyName="code" [search]="true"
+                                (onSelect)="createCustomerService($event)"></app-input-control>
+                        </div>
+                        <div class="col-md-1">
+                            <app-icon-button name="search" toolTip="Search"
+                                (click)="searchCustomerData()"></app-icon-button>
+                        </div>
+                    </div>
+                    }
+
+
+
+                    <div class="box box-pad bgc">
+                        <row>
+                            <div class="col-md-2">
+
+                                <view-label label="Customer Name" value="{{customerService.customerName}}"></view-label>
+                            </div>
+                            @if(this.serviceId ===0){
+                            <div class="col-md-2"> <view-label label="Contact No"  
+                                    value="{{customerService.customerContactNo}}"></view-label></div>
+
+                            <div class="col-md-3"> <view-label label="Email Id"
+                                    value="{{customerService.customerEmailId}}"></view-label>
+                            </div>
+                            <div class="col-md-2"> <view-label label="Gender"
+                                    value="{{customerService.customerGenderDescription}}"></view-label>
+                            </div>
+
+                            <div class="col-md-3"><view-label label="Date Of Birth"
+                                    value="{{customerService.customerDateOfBirth | appDate}}"></view-label></div>
+                            }
+                            @if(this.serviceId !== 0){
+                            <div class="col-md-2">
+                                <view-label label="Customer Ref No"
+                                    value="{{customerService.customerRefNo}}"></view-label>
+                            </div>
+                            <div class="col-md-2"> <view-label label="Contact No"
+                                    value="{{customerService.customerContactNo}}"></view-label></div>
+
+                            <div class="col-md-2"> <view-label label="Email Id"
+                                    value="{{customerService.customerEmailId}}"></view-label>
+                            </div>
+                            <div class="col-md-2"> <view-label label="Gender"
+                                    value="{{customerService.customerGenderDescription}}"></view-label>
+                            </div>
+
+                            <div class="col-md-2"><view-label label="Date Of Birth"
+                                    value="{{customerService.customerDateOfBirth | appDate}}"></view-label></div>
+                            }
+
+                        </row>
+                    </div>
+                    <div class="box box-pad">
+                        <row>
+                            <div class="col-md-4">
+                                <app-input-control type="select" defaultOption="--Select--" label="Service Type"
+                                    placeholder="Select Service Type" [(ngModel)]="customerService.serviceTypeValue"
+                                    [errorTrue]="errorTrue" [required]="true"
+                                    [items]="initialData.DDLValues.DDLServiceType" key="constant" keyName="description"
+                                    name="serviceTypeValue"></app-input-control>
+                            </div>
+                            <div class="col-md-4">
+                                <app-input-control type="select" defaultOption="--Select--" label="Contact Mode"
+                                    placeholder="Enter Contact Mode" [(ngModel)]="customerService.contactModeValue"
+                                    name="contactModeValue" [errorTrue]="errorTrue" [required]="true"
+                                    [items]="initialData.DDLValues.DDLContactMode" key="constant"
+                                    keyName="description"></app-input-control>
+                            </div>
+                            <div class="col-md-4">
+                                <app-input-control type="select" defaultOption="--Select--" label="Branch"
+                                    placeholder="Select Branch"
+                                    [btnClicked]="this.customerService.customerServiceId !==0"
+                                    [(ngModel)]="customerService.branchValue" name="branchValue" [errorTrue]="errorTrue"
+                                    [required]="true" [items]="branchDDL" key="constant"
+                                    keyName="description"></app-input-control>
+                            </div>
+                            <div class="col-md-4">
+                                <app-input-control type="select" defaultOption="--Select--" label="Communication Type"
+                                    placeholder="Select Communication Type" [errorTrue]="errorTrue" [required]="true"
+                                    [(ngModel)]="customerService.communicationTypeValue"
+                                    [items]="initialData.DDLValues.DDLCommunicationType" name="communicationTypeValue"
+                                    key="constant" keyName="description"></app-input-control>
+                            </div>
+                            <div class="col-md-4">
+                                <app-input-control type="select" defaultOption="--Select--" label="Status"
+                                    placeholder="Select Status" [(ngModel)]="customerService.statusValue"
+                                    name="statusValue" [errorTrue]="errorTrue" [required]="true"
+                                    [btnClicked]="this.customerService.customerServiceId ===0"
+                                    [items]="initialData.DDLValues.DDLStatus" key="constant" keyName="description"
+                                    placeholder="Select Status"></app-input-control>
+                            </div>
+
+                        </row>
+                    </div>
+
+
+                </form>
+            </div>
+        </scroll>
+    </div>
+</div>
+
+<ng-template #customerSearchDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>List
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="mb20"></div>
+        <div class="dialog-content">
+            <div class="content-wrapper">
+                <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"
+                    [dataSource]="tableData" (pageChanged)="pageChanged($event)" columnID="customerId"
+                    [hideSelectAll]="true">
+
+
+                    <ng-template cellDef="customerRefNo" let-element>
+                        <div (click)="getRefNo(element.customerId)" class="pointer text-underline">
+                            {{element.customerRefNo}}</div>
+                    </ng-template>
+                    <ng-template cellDef="statusdescription" let-element>
+                        <div class="status status-{{element.statusValue}}">{{element.statusdescription}}</div>
+                    </ng-template>
+                    <ng-template cellDef="customerName" let-element>
+                        @if(element.customerName.length>25){
+                        <div class="ellipse-text" matTooltip="{{element.customerName}}">{{element.customerName}}</div>
+                        }
+                        @else{
+                        <div>{{element.customerName}}</div>
+                        }
+                    </ng-template>
+                    <ng-template cellDef="emailId" let-element>
+                        @if(element.emailId.length>25){
+                        <div class="ellipse-text" matTooltip="{{element.emailId}}">{{element.emailId}}</div>
+                        }
+                        @else{
+                        <div>{{element.emailId}}</div>
+                        }
+                    </ng-template>
+                    <!-- <ng-template #slotLeft>
+                        <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+                    </ng-template> -->
+
+                </app-table>
+            </div>
+        </div>
+    </div>
+
+    <!-- <ng-template #searchTemplate>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">Customer Search</div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                        <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <scroll>
+                    <div class="dialog-content-inner">
+                        <form #l="ngForm" (submit)="onSearch()">
+                            <row>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Customer No"
+                                                [(ngModel)]="searchParams.customerRefNo" name="customerRefNo"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" defaultOption="--Select--" label="Customer Status"
+                                                [(ngModel)]="searchParams.customerStatusValue"
+                                                name="customerStatusValue"
+                                                [items]="initialData.DDLValues.DDLCustomerStatus" key="constant"
+                                                keyName="description" (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="First Name"
+                                                [(ngModel)]="searchParams.firstName" name="firstName"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Middle Name"
+                                                [(ngModel)]="searchParams.middleName" name="middleName"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Last Name"
+                                                [(ngModel)]="searchParams.lastName" name="lastName"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" defaultOption="--Select--" label="Gender"
+                                                [(ngModel)]="searchParams.genderValue" name="genderValue"
+                                                [items]="initialData.DDLValues.DDLGender" key="constant"
+                                                keyName="description" placeholder="Select Gender"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="date" label="Date of Birth "
+                                                [(ngModel)]="searchParams.dateOfBirth" name="dateOfBirth"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="email" label="Email ID"
+                                                [(ngModel)]="searchParams.emailId" name="emailId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="number" label="Contact Number" [minLength]="5"
+                                                [maxLength]="20" [(ngModel)]="searchParams.contactNo" name="contactNo"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="FNPF No"
+                                                [(ngModel)]="searchParams.pfNo" name="pfNo"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Driving License No"
+                                                [(ngModel)]="searchParams.drivingLicenseNo"
+                                                name="drivingLicenseNo"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Voter ID"
+                                                [(ngModel)]="searchParams.voterId" name="voterId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="National ID"
+                                                [(ngModel)]="searchParams.nationalId" name="nationalId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="TIN No" [(ngModel)]="searchParams.tin"
+                                                name="tin" (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Passport ID"
+                                                [(ngModel)]="searchParams.passportNo" name="passportNo"
+                                                (onEnter)="onSearch()"> </app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                            </row>
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+    </ng-template> -->
+</ng-template>

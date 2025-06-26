@@ -1,0 +1,471 @@
+<div class="v-flex h100">
+  <div class="content-header">
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Customer Name</label>
+        <div class="content">
+          {{
+          customer.customerName?
+          customer.customerName:"-"
+
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Customer ID</label>
+        <div class="content">
+          {{
+          customer.customerRefno?
+          customer.customerRefno:"-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label> Contact No</label>
+        <div class="content">
+          {{
+          customer.contactNo?
+          customer.contactNo:"-"
+
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Customer Type</label>
+        <div class="content">
+          {{
+          customer.customerSubTypeDescription?
+          customer.customerSubTypeDescription:"-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label> Customer Tin No</label>
+        <div class="content">
+          {{
+          customer.customerTinNumber?
+          customer.customerTinNumber:"-"
+
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Customer Ledger</label>
+        <div class="content">
+          <!-- {{
+              customer.ientActLedger.ledgerName?
+              customer.ientActLedger.ledgerName:"-"
+
+            }} -->
+        </div>
+      </div>
+    </div>
+
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label> Email ID</label>
+        <div class="content">
+          {{
+          customer.emailId?
+          customer.emailId:"-"
+
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+
+        <div class="content">
+          <view-label label="Status" status="{{ customer.statusValue }}"
+            statusValue="{{ customer.statusDescription }}"></view-label>
+        </div>
+      </div>
+    </div>
+    <div class="status-header-box ">
+      <div class="card-box-1">
+        <div class="card-content">
+          <!-- <label>Status</label>
+            <div class="content">Pending Submission</div> -->
+        </div>
+        <div class="card-content btn-group ">
+          @if(customer.actCustomerId>0){
+          <app-icon-button name="save" toolTip="Update" (click)="saveSalesCustomer()"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="openSalesCustomer()"></app-icon-button>
+          }
+          @else {
+          <app-icon-button name="save" toolTip="Save" (click)="saveSalesCustomer()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearCustomer()"></app-icon-button>
+          }
+        </div>
+      </div>
+      <!-- <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div> -->
+    </div>
+  </div>
+  <div class="content-body">
+    @if(selectedTab === 0){
+    <form #detailstab="ngForm">
+      <div class="p-3">
+        <row>
+          <div class="col-md-4 ">
+            <app-input-control type="text" label="Customer Name" [(ngModel)]="customer.customerName" name="customerName"
+              [required]="true" [errorTrue]="errorTrue">
+
+            </app-input-control>
+          </div>
+          <div class="col-md-4">
+            <app-input-control type="text" label="Customer Ref No" [(ngModel)]="customer.customerLegacyCode"
+              name="customerLegacyCode">
+
+            </app-input-control>
+          </div>
+          <div class="col-md-4">
+            <app-input-control type="email" label="Email Id" [required]="true" [errorTrue]="errorTrue" [maxLength]="250"
+              [email]="true" [(ngModel)]="customer.emailId" name="emailId">
+
+            </app-input-control>
+          </div>
+
+        </row>
+
+        <row>
+          <div class="col-md-4">
+            <app-input-control type="number" label="Contact No" [required]="true" [errorTrue]="errorTrue"
+              [minLength]="5" [maxLength]="15" [(ngModel)]="customer.contactNo" name="contactNo">
+
+            </app-input-control>
+          </div>
+          <div class="col-md-4">
+            <app-input-control type="select" label="Customer Type" [required]="true" [errorTrue]="errorTrue"
+              defaultOption="--Select--" [(ngModel)]="customer.customerSubTypeValue" name="customerSubTypeValue"
+              [items]="initialData.DDLValues.configCustSubtype" key="constant" keyName="description"  (onChange)="ddlSetup(true)">
+
+            </app-input-control>
+          </div>
+          <div class="col-md-4">
+            <app-input-control [search]="true" label="Customer Ledger" [required]="true" [errorTrue]="errorTrue"
+              [(ngModel)]="customer.ientActLedger.ledgerName" name="ledgerName">
+
+            </app-input-control>
+          </div>
+        </row>
+
+        <row>
+          <div class="col-md-4">
+            <app-input-control type="text" label="Fax No" [(ngModel)]="customer.faxNo" name="faxNo"></app-input-control>
+
+          </div>
+          <div class="col-md-4">
+            <app-input-control type="special" label="Website Address" [(ngModel)]="customer.webAddress"
+              name="webAddress">
+
+            </app-input-control>
+          </div>
+          <div class="col-md-4">
+            <app-input-control type="text" label="Customer Tin No" [(ngModel)]="customer.customerTinNumber"
+              name="customerTinNumber">
+
+            </app-input-control>
+          </div>
+        </row>
+
+        <row>
+          <div class="col-md-4">
+            <app-input-control type="select" label="Currency Value" [required]="true" [errorTrue]="errorTrue"
+              [(ngModel)]="customer.currencyCodeValue" name="currencyCodeValue" [items]="DDLCurrencyValue"
+              key="constant" keyName="description"></app-input-control>
+          </div>
+          <div class="col-md-4">
+            <app-input-control type="select" label="Status" [required]="true" [errorTrue]="errorTrue"
+              [(ngModel)]="customer.statusValue" name="statusValue" [items]="initialData.DDLValues.configCustStatus"
+              key="constant" keyName="description">
+
+            </app-input-control>
+          </div>
+          <div class="col-md-4">
+            <app-input-control type="number" label="Credit Period In Days" [(ngModel)]="customer.creditPeriod"
+              name="creditPeriod">
+
+            </app-input-control>
+          </div>
+        </row>
+      </div>
+    </form>
+
+
+    }
+    @else if(selectedTab === 1 && customer.actCustomerId>0){
+    <app-customer-detail-address [parentData]="customer"
+      (notesValue)="getNotesValue($event)"></app-customer-detail-address>
+    } @else if(selectedTab === 2 && customer.actCustomerId>0){
+    <app-customer-detail-contact [parenData]="customer"></app-customer-detail-contact>
+    }@else if(selectedTab === 3 && customer.actCustomerId>0){
+    <app-customer-detail-notes></app-customer-detail-notes>
+    }
+    @else if (selectedTab === 4 && customer.actCustomerId>0) {
+    <app-customer-detail-attachment [parenData]="customer"></app-customer-detail-attachment>
+    }
+    @else if (selectedTab === 5 && customer.actCustomerId>0) {
+      <app-table [hasHeader]="false" [columns]="region" [hideSelectAll]="true" [columnsName]="regionName"
+    [dataSource]="customer.plstentActCustomerRegionAccess" [hasIndex]="true">
+    <ng-template cellDef="index" let-element let-index>
+      {{element.index}}
+      </ng-template>
+    <ng-template cellHeaderDef="add" let-element>
+      <app-icon-button name="add" toolTip="Add New" (click)="createNewRegion(0)"></app-icon-button>      
+  </ng-template>
+    <ng-template cellDef="matmenu" let-element>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"  (click)="openRegionStatus(regionAccess.actCustomerRegionAccessId)"></ion-icon>
+        </a>
+      </div>      
+  </ng-template>
+    <ng-template cellDef="add" let-element>
+      <app-icon-button name="open" (click)="createNewRegion(element.actCustomerRegionAccessId)"></app-icon-button>      
+  </ng-template>
+    <ng-template cellDef="date" let-element>
+     <div>
+      {{element.createdDate | appDate}}
+     </div>      
+  </ng-template>
+    <ng-template cellDef="modifiedDate" let-element>
+     <div>
+      {{element.modifiedDate | appDate}}
+     </div>      
+  </ng-template>
+
+
+      </app-table>
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon name="analytics-outline" class="mr-1"></ion-icon>
+          <div>Details</div>
+        </div>
+        @if(customer.actCustomerId>0){
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon name="location-outline" class="mr-1"></ion-icon>
+          <div>Address</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon name="call-outline" class="mr-1"></ion-icon>
+          <div>Contact</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(4)" [ngClass]="{ tabClass: selectedTab === 4 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachment</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(5)" [ngClass]="{ tabClass: selectedTab === 4 }">
+          <ion-icon src="assets/icons/region-value.svg"></ion-icon>
+          <div>Region Access</div>
+        </div>
+        }
+
+      </div>
+      <div class="open-arrow" id="trigger{{pageId}}">
+        <!-- <ion-icon name="chevron-down-outline"></ion-icon> -->
+      </div>
+    </div>
+    <!-- <div class="panel-footer-expand" id="footerpanel{{pageId}}">
+        <row>
+          <div class="col-md-8">
+            <row>
+              <div class="col-md-5 footer-textarea">
+                <app-input-control type="textarea" [maxLength]="250" className="notes"
+                  label="Common Narration Text"></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <view-label label="Document Currency" value="INR" class="mb20"></view-label>
+                <div class="col-md-10">
+                  <app-input-control type="text" label="Conversion Rate"></app-input-control>
+                </div>
+
+              </div>
+              <div class="col-md-4">
+                <div class="justify-end">
+                  <div class="f-content-txt">
+                    <div>Total After Discount</div>
+                    <div>Tax</div>
+                    <div>Round off</div>
+                    <div>Net Amount</div>
+                  </div>
+                  <div class="text-end">
+                    <div>1,000.00</div>
+                    <div>1,000.00</div>
+                    <div>1,000.00</div>
+                    <div>0</div>
+                  </div>
+                </div>
+              </div>
+            </row>
+          </div>
+          <div class="col-md-4">
+            <row>
+              <div class="col-md-5">
+                <view-label label="Reporting Currency"></view-label>
+              </div>
+              <div class="col-md-7">
+                <div class="justify-end">
+                  <div class="f-content-txt">
+                    <div>Total After Discount</div>
+                    <div>Tax</div>
+                    <div>Round off</div>
+                    <div>Net Amount</div>
+                  </div>
+                  <div class="text-end">
+                    <div>1,000.00</div>
+                    <div>1,000.00</div>
+                    <div>1,000.00</div>
+                    <div>0</div>
+                  </div>
+                </div>
+              </div>
+            </row>
+          </div>
+        </row>
+
+
+      </div> -->
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToSales()">Sales</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Customer</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+  <div class="status-table-header">
+    <div class="changed-by_label">
+      Changed By | Effective Date
+    </div>
+    <div class="pl14">
+      Status
+    </div>
+  </div>
+  <div class="status-table-content">
+    <div class="changed-by">
+      Chief Finance Officer
+      <div class="changed-by_sub">
+        29/09/2023 10:57 AM
+      </div>
+    </div>
+    <div class="status_align pl14">
+      Pending Submission
+    </div>
+  </div>
+  <!-- <div class="mat-menu-drop"> -->
+  <!-- <app-table
+      [hideSelectAll]="true"
+      [showPaginator]="false"
+      [columns]="statusMenu"
+      [columnsName]="statusMenuName"
+      [dataSource]="tableStatusMenuData"
+    >
+      <ng-template cellHeaderDef="fileName">
+        <div class="header-cell-title">Changed By | Effective Date</div>
+      </ng-template>
+      <ng-template cellDef="fileName" let-element>
+        <div class="header-cell-title">{{element.changedBy}}</div>
+        <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+      </ng-template>
+    </app-table> -->
+  <!-- </div> -->
+
+</mat-menu>
+<ng-template #regionDialog>
+  <div class="dialog-container">
+      <div class="dialog-header">
+          <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Sales >
+              Customer > Detail >
+              @if(regionAccess.actCustomerRegionAccessId===0){
+              Add Region
+              }
+              @else {
+              Edit Region
+              }
+          </div>
+          <div class="slot-right">
+              <div class="btn-group">
+                @if(regionAccess.actCustomerRegionAccessId===0){
+
+
+                  <app-icon-button name="save" toolTip="Save" (click)="saveCustomerRegionAccess()"></app-icon-button>
+                  <app-icon-button name="clear" toolTip="Clear" (click)="regionClear()"
+                     ></app-icon-button>
+                  }
+                  @else {
+                  <app-icon-button name="save" toolTip="Update" (click)="saveCustomerRegionAccess()"
+                     ></app-icon-button>
+                  <app-icon-button name="refresh" toolTip="Refresh" (click)="openRegionStatus(regionAccess.actCustomerRegionAccessId,'refresh')"
+                     ></app-icon-button>
+                  }
+                  <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+              </div>
+          </div>
+      </div>
+      <div class="dialog-content">
+          <div class="dialog-content-inner h100">
+              @if(data.showErrorMessage){
+              <div class="error-panel">
+                  <app-error-message></app-error-message>
+              </div>
+              }
+              <form #region="ngForm">
+                  <row>
+                      <div class="col-md-12"><app-input-control label="Region" [required]="true"
+                          type="select"  [(ngModel)]="regionAccess.regionValue" name="regionValue"
+                              [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"></app-input-control>
+                      </div>
+                     
+                  </row>
+                  <row>
+                    <div class="col-md-12"><app-input-control label="Entered By"
+                      type="text"  [(ngModel)]="regionAccess.enteredByFullName" name="enteredByFullName" [required]="true"
+                      [errorTrue]="errorTrue" name="enteredByFullName" [btnClicked]="true"></app-input-control>
+                  </div>
+                  </row>
+                  <row>
+               <div class="col-md-12">
+                <label class="default-label"> Ledger</label> 
+
+                <app-search-debit [(ngModel)]="regionAccess.ledgerId" name="ledgerId" 
+               [required]="true" [errorTrue]="errorTrue" valueType="int" 
+                (onSelect)="doSelectRegionLedger($event)" [displayText]="regionAccess.ledgerName">
+</app-search-debit>
+               </div>
+                  </row>
+              </form>
+          </div>
+      </div>
+  </div>
+</ng-template>

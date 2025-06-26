@@ -1,0 +1,28 @@
+@if (__id.array.length > 1) {
+<div class="page-select">
+    Page {{ __id.currentIndex + 1 }} of {{ __id.array.length }} |
+
+    @if(previousUrl === ''){
+    <a class="previous-url pointer-none">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+    </a>
+    } @else {
+    <a [routerLink]="[url, previousUrl]" class="previous-url">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+    </a>
+    }
+
+    @if (nextUrl === '') {
+    <a class="next-url pointer-none">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+    </a>
+    } @else {
+    <a [routerLink]="[ url, nextUrl ]" class="next-url">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+    </a>
+    }
+
+</div>
+
+
+}

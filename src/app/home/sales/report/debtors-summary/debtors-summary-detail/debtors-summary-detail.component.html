@@ -1,0 +1,112 @@
+<!-- [parentId]="pageId" -->
+<div class="content-wrapper" appAccess="CUSTR">
+    <app-table [pagination]="false" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        [hideSelectAll]="true" columnID="customerId" (onSelect)="onSelect($event)" [showPaginator]="false"
+        [hideSelectAll]="true">
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"></app-icon-button>
+        </ng-template>
+
+        <ng-template cellHeaderDef="Doc">
+            <div class="header-cell-title ">Doc Number</div>
+            <div class="header-cell-subtitle">Doc Date</div>
+        </ng-template>
+        <ng-template cellDef="Doc" let-element>
+            <div>{{element.SI_REF_NO}}</div>
+            <div class="table-cell-subtitle">{{element.DOCUMENT_DATE | date:dateFormat}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="name">
+            <div class="header-cell-title ">Customer Name</div>
+            <div class="header-cell-subtitle">Currency</div>
+        </ng-template>
+        <ng-template cellDef="name" let-element>
+            <div>{{element.CUSTOMER_NAME}}</div>
+            <div class="table-cell-subtitle ">{{element.CURRENCY_NAME}}</div>
+        </ng-template>
+
+
+        <ng-template #slotLeft>
+            <div class="col-md-4">
+                <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+            </div>
+        </ng-template>
+        <ng-template #slotRight>
+            <div class="px10">
+                <view-label label="Report Generating Date & Time sad" value="{{currentDate | appDate}}"></view-label>
+            </div>
+            @if(!clearReports){
+            <app-icon-button name="download" toolTip="Export To Excel asd" appButtonAccess="CrmCustAppAddBtn"
+                (click)="getDebtorsDetailsReportAsExcel()"></app-icon-button>
+            } @else if (clearReports) {
+            <app-icon-button name="download" toolTip="Export To Excel adsa" appButtonAccess="CrmCustAppAddBtn"
+                (click)="getDebtorsDetailsReportAsExcelWithoutcustomerId()"></app-icon-button>
+            }
+
+        </ng-template>
+
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Debtors Summary Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-3">
+                            <app-search-customer label="Customer Name" (onSelect)="doCustomerSelect($event)"
+                                [(ngModel)]="debtorsDetails.customerId" name="customerId"
+                                valueType="int"></app-search-customer>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="Statement Date" type="select" [(ngModel)]="debtorsDetails.toDate"
+                                name="toDate"></app-input-control>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="Currency Value" type="select"
+                                [(ngModel)]="debtorsDetails.currencyValue" name="currencyValue"
+                                [items]="initialData.DDLValues.ddlCurrecy" key="constant"
+                                keyName="description"></app-input-control>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="Region" type="select" [(ngModel)]="debtorsDetails.regionValue"
+                                name="regionValue" [items]="initialData.DDLValues.DDLRegion" key="constant"
+                                keyname="description"></app-input-control>
+                        </div>
+                    </row>
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn" (click)="navigateToList()"> <ion-icon src="assets/icons/back.svg"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/sales.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToSales()">Sales</div>
+            </li>
+            <li class="screen-name link">
+                <div class="screen-text" (click)="navigateToList()">Debtors Summary</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Detail</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

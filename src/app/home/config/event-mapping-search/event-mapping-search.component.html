@@ -1,0 +1,274 @@
+<div class="content-wrapper" appAccess="CUSTR">
+  <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+    [hideSelectAll]="true" (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)">
+    <ng-template cellHeaderDef="eventName">
+      <div class="header-cell-title">Event Name</div>
+      <div class="header-cell-subtitle">Sub Event Name</div>
+    </ng-template>
+    <ng-template cellDef="eventName" let-element>
+      <div class="ellipse-text" matTooltip="{{ element.eventName }}">
+        {{ element.eventName }}
+      </div>
+      <div class="table-cell-subtitle">{{ element.subEventName }}</div>
+    </ng-template>
+
+    <ng-template cellHeaderDef="filetypedescription">
+      <div class="header-cell-title">File Type</div>
+      <div class="header-cell-subtitle">Account Type</div>
+    </ng-template>
+    <ng-template cellDef="filetypedescription" let-element>
+      <div class="ellipse-text">{{ element.filetypedescription }}</div>
+      <div class="table-cell-subtitle">
+        {{ element.accounttypedescription }}
+      </div>
+    </ng-template>
+    <ng-template cellDef="createdDate" let-element>
+      <div class="ellipse-text">{{ element.effectiveDate | appDate }}</div>
+    </ng-template>
+
+    <ng-template cellDef="action" let-element>
+      <app-icon-button name="open" toolTip="Open"
+        (click)="navigateToDetail(element.eventMappingId)"></app-icon-button>
+    </ng-template>
+
+    <ng-template #slotLeft>
+      <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+    </ng-template>
+    <ng-template #slotRight>
+      <div>
+        <app-icon-button name="add" toolTip="Add New" (click)="openEventMappingDialog()"></app-icon-button>
+      </div>
+    </ng-template>
+  </app-table>
+</div>
+
+<ng-template #openEventMapping>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Event Mapping > Detail > New</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveEventMapping()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="createNewEventMapping()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner h100">
+          <form #p="ngForm" (submit)="saveEventMapping()">
+            <row class="row-w100">
+              <!-- <div class="d-flex gap-10"> -->
+              <!-- Row-1 -->
+              <!-- Column-1 -->
+              <div class="col-md-3 border-right">
+                <div class="col-md-12 mb26">
+                  <app-input-control type="select" label="Event Type" placeholder="Select Event"
+                    defaultOption="--Select--" [(ngModel)]="eventMapping.eventId" name="eventId" [items]="DDLEvent"
+                    key="id" keyName="name" (onSelect)="getListOfSubEventByEventIdNew(eventMapping.eventId)"
+                    [required]="true" [errorTrue]="errorTrue" valueType="int" ></app-input-control>
+                </div>
+                <div class="col-md-12 mb26">
+                  <app-input-control type="select" label="Sub Event Type" placeholder="Select Sub Event"
+                    defaultOption="--Select--" [(ngModel)]="eventMapping.subEventId" name="subEventId"
+                    [items]="subEventDDL" key="id" keyName="name"  [required]="true" [errorTrue]="errorTrue" valueType="int"></app-input-control>
+                </div>
+                <div class="col-md-12 mb26">
+                  <app-input-control type="select" defaultOption="--Select--" label="Voucher Type"
+                    [(ngModel)]="eventMapping.voucherTypeValue" name="voucherTypeValue"
+                    [required]="true" [errorTrue]="errorTrue"
+                    [items]="initialData.DDLValues.DDLVoucherType" key="constant" keyName="description" (onSelect)="
+                        getListOfPostingMatrixByVoucherType(
+                          eventMapping.voucherTypeValue,true
+                        )
+                      "></app-input-control>
+                </div>
+
+              </div>
+              <!-- Column-2 -->
+              <div class="col-md-3 border-right">
+                <div class="col-md-12 mb26">
+                  <app-input-control type="select" label="File Type" defaultOption="--Select--"
+                    [(ngModel)]="eventMapping.fileTypeValue" name="fileTypeValue"
+                    [items]="initialData.DDLValues.DDLFileType" key="constant"
+                    [required]="true" [errorTrue]="errorTrue" 
+                    (onSelect)="getAccountType(eventMapping.fileTypeValue,true)"
+                    keyName="description"></app-input-control>
+                </div>
+                <div class="col-md-12 mb26">
+                  <app-input-control type="select" label="Account Type" defaultOption="--Select--"
+                    [(ngModel)]="eventMapping.accountTypeValue" name="accountTypeValue"
+                    [items]="casAccountType" key="constant"
+                    [required]="true" [errorTrue]="errorTrue" 
+                    keyName="description"></app-input-control>
+                </div>
+                <div class="col-md-12 mb26">
+                  <app-input-control type="select" label="Posting Matrix Type" defaultOption="--Select--"
+                    [(ngModel)]="eventMapping.postingMatrixConfigurationId" name="postingMatrixConfigurationId"
+                    [required]="true" [errorTrue]="errorTrue" valueType="int"
+                    [items]="postMatrixDDl" key="id" keyName="description"></app-input-control>
+                </div>
+                <div class="col-md-12 mb26">
+                  <app-input-control type="text" label="Transaction Code"
+                    [(ngModel)]="eventMapping.transactionCodeDescription"
+                    [required]="true" [errorTrue]="errorTrue" [maxLength]="20"
+                    name="transactionCodeDescription"></app-input-control>
+                </div>
+              </div>
+              <!-- Column-3 -->
+              <div class="col-md-3 border-right">
+                <div class="col-md-12 d-flex align-items-center p-2">
+                  <div class="cus-check-box checkbox-p mb26">
+                    Bank Fee
+                    <app-checkbox color="primary" [checked]="eventMapping.isBankFee === 'Y'" 
+                    (change)="isChecked($event)"  [required]="true" [errorTrue]="errorTrue"></app-checkbox>
+                  </div>
+                </div>
+                <div class="col-md-12 mb26">
+                  @if(eventMapping.isBankFee === 'Y'){
+                    <app-input-control type="number" [label]="'Bank Fee Value ('+companySymbolValue +')'" [required]="true" 
+                      [errorTrue]="errorTrue" [(ngModel)]="eventMapping.bankFeeValue"  [min]="1"
+                      [maxLength]="10" [decimal]="2"
+                      [disabled]="eventMapping.isBankFee !== 'Y'" name="bankFeeValue"></app-input-control>
+                  }
+                </div>
+              </div>
+              <!-- Column-4 -->
+              <div class="col-md-3 border-right">
+                <div class="col-md-12 mb26">
+                  <view-label label="Created By" value="{{ eventMapping.addedByFullName }}">
+                  </view-label>
+                </div>
+                <div class="col-md-12 mb26">
+                  <view-label label="Created Date" value="{{ eventMapping.addedDate | appDate }}">
+                  </view-label>
+                </div>
+                <div class="col-md-12 mb26">
+                  <view-label label="Changed By" value="{{ eventMapping.changedByFullName }}">
+                  </view-label>
+                </div>
+                <div class="col-md-12 mb26">
+                  <view-label label="Changed Date" value="{{ eventMapping.changedDate | appDate }}">
+                  </view-label>
+                </div>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Event Mapping Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner">
+        <row>
+          <div class="col-md-4 border-right">
+            <row>
+              <div class="col-md-12 mb26">
+                <app-input-control type="select" label="Event Type" defaultOption="--Select--"
+                  [(ngModel)]="searchParams.appEventId" name="eventId" [items]="DDLEvent" key="id" keyName="name"
+                  (onSelect)="
+                    getListOfSubEventByEventId(searchParams.appEventId,true)
+                  "></app-input-control>
+              </div>
+
+              <div class="col-md-12 mb26">
+                <app-input-control type="select" label="Sub Event Type" defaultOption="--Select--"
+                  [(ngModel)]="searchParams.subEventId" name="subEventId" [items]="subEventDDL" key="id"
+                  keyName="name"></app-input-control>
+              </div>
+
+              <div class="col-md-12 mb26">
+                <app-input-control type="select" label="Voucher Type" defaultOption="--Select--"
+                  [(ngModel)]="searchParams.voucherTypeValue" name="voucherTypeValue"
+                  [items]="initialData.DDLValues.DDLVoucherType" key="constant"
+                  keyName="description"></app-input-control>
+              </div>
+            </row>
+          </div>
+
+          <div class="col-md-4 border-right">
+            <row>
+              <div class="col-md-12 mb26">
+                <app-input-control type="text" label="Transaction Code" [(ngModel)]="searchParams.transactionCodeDescription"
+                  name="transactionCodeDescription"></app-input-control>
+              </div>
+
+              <div class="col-md-12 mb26">
+                <div class="col-md-12 mb26">
+                  <app-input-control type="select" label="File Type" defaultOption="--Select--"
+                    [(ngModel)]="searchParams.fileTypeValue" name="fileTypeValue"(onSelect)="getAccountType(searchParams.fileTypeValue,true)"
+                    [items]="initialData.DDLValues.DDLFileType" key="constant" keyName="description"></app-input-control>
+                </div>
+                <app-input-control type="select" label="Account Type" defaultOption="--Select--"
+                  [(ngModel)]="searchParams.accountTypeValue" name="accountTypeValue"
+                  [items]="casAccountType" key="constant"
+                  keyName="description"></app-input-control>
+              </div>
+              
+            </row>
+          </div>
+
+          <div class="col-md-4 border-right">
+            <row>
+              <div class="col-md-12 mb26">
+                <app-input-control type="date" label="Created Date From" valueType="int"
+                  [(ngModel)]="searchParams.effectiveDateFrom" name="effectiveDateFrom"
+                  [maxDate]="searchParams.effectiveDateTo "></app-input-control>
+              </div>
+              <div class="col-md-12 mb26">
+                <app-input-control type="date" label="Created Date To" [(ngModel)]="searchParams.effectiveDateTo"
+                  name="effectiveDateTo" [minDate]="searchParams.effectiveDateFrom"></app-input-control>
+              </div>
+              <div class="col-md-12 ">
+
+
+              </div>
+              <!-- You this in if condition searchParams?.bankFee !=="Yes" -->
+              @if (searchParams) {
+              <div class="col-md-12 mb26">
+
+                <app-input-control type="number" label="Bank Fee Value From" [(ngModel)]="searchParams.bankFeeValueFrom"
+                  name="bankFeeValueFrom" [maxLength]="10"></app-input-control>
+              </div>
+              <div class="col-md-12 mb26">
+
+                <app-input-control type="number" label="Bank Fee Value To" [(ngModel)]="searchParams.bankFeeValueTo"
+                  name="bankFeeValueTo" [maxLength]="10" ></app-input-control>
+              </div>
+              }
+            </row>
+          </div>
+        </row>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Event Mapping Search</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

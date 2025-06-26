@@ -1,0 +1,149 @@
+<div class="v-flex h100 content-wrapper" appAccess="POSMX" [parentId]="pageId">
+  <div class="h100">
+    <app-table
+      [pagination]="pagination"
+      [columns]="columns"
+      [columnsName]="columnsName"
+      [sortColumnsName]="sortColumnName"
+      [dataSource]="tableData"
+      [hideSelectAll]="true"
+      [showPaginator]="true"
+      [hasHeader]="true"
+      (pageChanged)="pageChanged($event)"
+      columnID="customerId"
+      (onSelect)="onSelect($event)"
+    >
+      <ng-template cellDef="effectiveDate" let-element>
+        <div>{{ element.effectiveDate | appDate }}</div>
+      </ng-template>
+
+      <ng-template cellDef="action" let-element>
+        <app-icon-button
+          name="open"
+          toolTip="Open"
+          appButtonAccess="AssignedCashierDetailViewBtn"
+          (click)="assignedCashierDetail(element.cashCounterId)"
+        ></app-icon-button>
+      </ng-template>
+
+      <ng-template #slotLeft>
+        <app-search
+          maxHeight="270px"
+          #appSearch
+          [searchTemplate]="searchTemplate"
+        ></app-search>
+      </ng-template>
+    </app-table>
+  </div>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Assigned Cashier Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button
+            name="search"
+            toolTip="Search"
+            appButtonAccess="AssignedCashierSearchBtn"
+            (click)="searchAssignedCashier()"
+          ></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            appButtonAccess="AssignedCashierClearBtn"
+            (click)="clear()"
+          ></app-icon-button>
+          <app-icon-button
+            name="close"
+            (click)="appSearch.close()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row>
+              <div class="col-md-4 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="number"
+                      label="Counter Number"
+                      [(ngModel)]="assignedCashSearch.cashCounterNo"
+                      name="cashCounterNo"
+                    ></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="text"
+                      label="Counter Name"
+                      [(ngModel)]="assignedCashSearch.cashcounterName"
+                      name="cashcounterName"
+                    ></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-4 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="date"
+                      label="Effective Date From"
+                      [(ngModel)]="assignedCashSearch.effectiveDateFrom"
+                      [maxDate]="assignedCashSearch.effectiveDateTo"
+                      name="dtmDocumentDateFrom"
+                    ></app-input-control>
+                  </div>
+
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="date"
+                      label="Effective Date To"
+                      [(ngModel)]="assignedCashSearch.effectiveDateTo"
+                      [minDate]="assignedCashSearch.effectiveDateFrom"
+                      name="effectiveDateTo"
+                    ></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-4">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="select"
+                      label=" Assigned Cashier "
+                      [(ngModel)]="assignedCashSearch.assignedUserId"
+                      name="AssignedCashierName"
+                      defaultOption="--Select--"
+                      [items]="cashCounterDDL"
+                      key="id"
+                      keyName="fullName"
+                    ></app-input-control>
+                  </div>
+                </row>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon name="person-outline"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Assigned Cashier</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

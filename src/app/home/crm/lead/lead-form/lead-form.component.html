@@ -1,0 +1,120 @@
+<!--  -->
+<div class="dialog-container" appAccess="CULED" [parentId]="pageId">
+    <div class="dialog-header">
+        <div class="dialog-title">
+            <ion-icon class="dialog-header-icon" src="assets/icons/accordian/customer-service.svg"></ion-icon>
+            Lead<ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Detail<ion-icon class="arrow-icon"
+                src="assets/icons/arrow.svg"></ion-icon>
+            @if(this.customerLead.leadId === 0){
+            Add
+            }@else {
+            Edit
+            }
+        </div>
+        <div class="slot-right">
+            <div class="btn-group">
+                @if(this.customerLead.leadId === 0){
+
+                <app-icon-button name="save" toolTip="Save" (click)="saveLeadForm()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                }
+                @else{
+                <app-icon-button name="save" toolTip="Update" (click)="saveLeadForm()"></app-icon-button>
+                <app-icon-button name="refresh" toolTip="Refresh" (click)="openLead()"></app-icon-button>
+                }
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <scroll>
+            <div class="dialog-content-inner">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <div class="box box-pad bgc mb20">
+
+                    <row>
+                        <div class="col-md-2">
+
+                            <view-label label="Customer Name" value="{{customerLead.customerName}}"></view-label>
+                        </div>
+                        <div class="col-md-2">
+                            <view-label label="Customer Ref No" value="{{customerLead.customerRefNo}}"></view-label>
+                        </div>
+                        <div class="col-md-2"> <view-label label="Contact No"
+                                value="{{customerLead.customerContactNo}}"></view-label>
+                        </div>
+
+                        <div class="col-md-2"> <view-label label="Email Id"
+                                value="{{customerLead.customerEmailId}}"></view-label>
+                        </div>
+                        <div class="col-md-2"> <view-label label="Gender"
+                                value="{{customerLead.customerGenderDescription}}"></view-label>
+                        </div>
+
+                        <div class="col-md-2"><view-label label="Date Of Birth"
+                                value="{{customerLead.customerDateOfBirth | appDate}}"></view-label>
+                        </div>
+
+
+                    </row>
+                </div>
+                <div class="box box-pad bgc mb20">
+                    <row class="row-w100">
+                        <div class="col-md-2"> <view-label label="Service No"
+                                value="{{customerService.serviceRefNo}}"></view-label>
+                        </div>
+                        <div class="col-md-2"> <view-label label="Service Type"
+                                value="{{customerService.serviceTypeDescription}}"></view-label>
+                        </div>
+                        <div class="col-md-3"> <view-label label="Branch"
+                                value="{{customerService.branchDescription}}"></view-label></div>
+                        <div class="col-md-3"> <view-label label="Service Date | Time"
+                                value="{{customerService.serviceDatetime | appDate}} | {{customerService.serviceDatetime | appDate: 'hh:mm a' }} "></view-label>
+                        </div>
+                        <div class="col-md-2"> <view-label label="Status" status="{{customerService.statusValue}}"
+                                statusValue="{{customerService.statusDescription}}"></view-label></div>
+                    </row>
+                </div>
+                <form #l="ngForm">
+                    <row>
+                        @if(this.serviceId===0){
+
+                        <div class="col-md-4"><app-input-control label="Customer No" type="text" [btnClicked]="true"
+                                [(ngModel)]="customerLead.customerRefNo" name="customerRefNo"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label=" Service No" [items]="serviceNoDDL" key="id"
+                                keyName="constant" valueType="int" [btnClicked]="this.serviceId!==0"
+                                (onSelect)="openCustomerServiceForServiceNo(this.customerLead.customerServiceId)"
+                                type="select" defaultOption="--Select--" [(ngModel)]="customerLead.customerServiceId"
+                                name="serviceNo" [errorTrue]="errorTrue" [required]="true"></app-input-control></div>
+                        }
+
+                        <div class="col-md-4"><app-input-control label="Lead Type" type="select"
+                                defaultOption="--Select--" [(ngModel)]="customerLead.leadTypeValue" name="leadTypeValue"
+                                [errorTrue]="errorTrue" [required]="true" [items]="initialData.DDLValues.DDLLeadType"
+                                key="constant" keyName="description"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Product Type" type="select"
+                                defaultOption="--Select--" [(ngModel)]="customerLead.productTypeValue"
+                                name="productTypeValue" [btnClicked]="this.customerLead.leadId !==0"
+                                [errorTrue]="errorTrue" [required]="true" (onSelect)="getDepartmentDDL(customerLead)"
+                                [items]="initialData.DDLValues.DDLProductType" key="constant"
+                                keyName="description"></app-input-control></div>
+                        <!-- <div class="col-md-4"><app-input-control label="Product Sub Type" type="select" defaultOption="--Select--" 
+                                [(ngModel)]="customerLead.productSubTypeValue" name="productSubTypeValue"
+                                [btnClicked]="this.customerLead.productTypeValue === ''" [errorTrue]="errorTrue"
+                                [required]="true" [items]="productSubTypeDDl" key="constant"
+                                keyName="description"></app-input-control></div> -->
+                        <div class="col-md-4"><app-input-control label="Assigned Department" type="select"
+                                defaultOption="--Select--" [(ngModel)]="customerLead.assignedDepartmentValue"
+                                name="assignedDepartmentValue" [errorTrue]="errorTrue" [required]="true"
+                                [btnClicked]="this.customerLead.leadId !==0" [items]="departmentDDL" key="constant"
+                                [btnClicked]="true" keyName="description"></app-input-control></div>
+                    </row>
+                </form>
+            </div>
+        </scroll>
+    </div>
+</div>

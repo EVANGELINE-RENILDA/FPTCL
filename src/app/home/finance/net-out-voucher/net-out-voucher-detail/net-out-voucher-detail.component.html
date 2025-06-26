@@ -1,0 +1,558 @@
+<div class="v-flex h100 ov-hid">
+  <div class="flex-end pt8 pr20 header-bg h55">
+    @if(selectedTab === 0){
+    <div class="radio-value margin">
+      <mat-radio-group [(ngModel)]="netOutVoucherOption" (change)="doTypeChange($event)">
+        <mat-radio-button value="SALES" color="primary" [disabled]="
+            netOutVoucher.statusValue === 'APROV' ||
+            netOutVoucher.statusValue === 'CANCL' ||
+            netOutVoucher.actNetoutVoucherId !== 0
+          ">Sales</mat-radio-button>
+        <mat-radio-button color="primary" value="PUR" color="primary" [disabled]="
+            netOutVoucher.statusValue === 'APROV' ||
+            netOutVoucher.statusValue === 'CANCL' ||
+            netOutVoucher.actNetoutVoucherId !== 0
+          ">Purchase</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    @if(netOutVoucher.statusValue === 'APROV' || netOutVoucher.statusValue ===
+    'CANCL'){
+    <form class="ml-auto d-flex align-items-center" #z="ngForm">
+      <div class="col-md-9">
+        <app-input-control type="select" label="Document Name" [(ngModel)]="voucherId" name="voucherId"
+          [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+          [required]="true" (onSelect)="getVoucherDetail(voucherId)" defaultOption="--Select--"></app-input-control>
+      </div>
+      <!-- <div class="col-md-3">
+			<app-input-control
+			  label="Region"
+			  [items]="regionValueDDL"
+			  key="constant"
+			  keyName="description"
+			  [(ngModel)]="regionValue"
+			  name="regionValue"
+			  type="select"
+			  defaultOption="--Select--"
+			></app-input-control>
+		  </div> -->
+      <div class="col-md-3 end d-flex align-items-center">
+        <app-icon-button name="add" toolTip="Add New" (click)="navigateDetail(z)"></app-icon-button>
+      </div>
+    </form>
+
+    @if(netOutVoucher.actNetoutVoucherId > 0 && (netOutVoucher.statusValue !==
+    'APROV' && netOutVoucher.statusValue !== 'CANCL')){
+    <div class="submit-btn bor-rad" (click)="directApproved()">Complete</div>
+    } } }
+  </div>
+
+  <form #l="ngForm">
+    <div class="content-header">
+      <div class="card-box border-right w100">
+        <div class="card-content">
+          <app-input-control type="date" label="Document Date" [(ngModel)]="netOutVoucher.documentDate"
+            name="documentDate" [required]="true" [errorTrue]="errorTrue"
+            [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+        </div>
+        <div class="card-content">
+          <label>Branch Name</label>
+          <div class="content">
+            {{
+            netOutVoucher.ientActCompanyBranch.branchName
+            ? netOutVoucher.ientActCompanyBranch.branchName
+            : ""
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        @if(netOutVoucher.netoutVoucherTypeValue === 'SALES' ){
+        @if(netOutVoucher.statusValue !== 'INPRO'){
+        <div class="card-content">
+          <label>Customer Name</label>
+          <div class="content">
+            {{
+            netOutVoucher.pentActCustomerDetails.customerName
+            ? netOutVoucher.pentActCustomerDetails.customerName
+            : "-"
+            }}
+          </div>
+        </div>
+        } @else{
+        <app-search-customer label="Customer Name" [displayText]="netOutVoucher.pentActCustomerDetails.customerName"
+          (onSelect)="doSelectCustomer($event)" [(ngModel)]="netOutVoucher.partyId" name="partyId"
+          [errorTrue]="errorTrue" [hideStatus]="true" [required]="true" [hideNewBtn]="true" valueType="int"
+          [disabled]="hideBtnBasedonStatus()" statusValue="ACTIV">
+        </app-search-customer>
+        <!-- [breadcrumb]="customerSearchBreadcrumb" -->
+        } }@else if(netOutVoucher.netoutVoucherTypeValue === 'PUR'){
+        @if(netOutVoucher.statusValue !== 'INPRO'){
+        <div class="card-content">
+          <label>Vendor Name</label>
+          <div class="content">
+            {{
+            netOutVoucher.pentActVendor.vendorName
+            ? netOutVoucher.pentActVendor.vendorName
+            : "-"
+            }}
+          </div>
+        </div>
+        } @else{ } }
+        <div class="card-content">
+          <label>Document No</label>
+          <div class="content">
+            {{
+            netOutVoucher.netoutVoucherNo ? netOutVoucher.netoutVoucherNo : "-"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Created Date</label>
+          <div class="content">
+            {{
+            netOutVoucher.enteredDate
+            | appDate : appSetting.environment.dateViewFormatWithTime
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <label>Created By</label>
+          <div class="content">{{ netOutVoucher.enteredByUserName }}</div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label> Doc Currency</label>
+          <div class="content">{{ netOutVoucher.docCurrencyDescription }}</div>
+        </div>
+        <div class="card-content">
+          <app-input-control label="Total Netout Value" type="number" [(ngModel)]="netOutVoucher.totalNetoutValue"
+            name="totalNetoutValue" [min]="1" [errorTrue]="errorTrue" [required]="true" [decimal]="2"
+            (change)="validCheckbox(netOutVoucher.totalNetoutValue)" [btnClicked]="
+            netOutVoucher.statusValue === 'APROV' ||
+            netOutVoucher.statusValue === 'CANCL'
+          "></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Exchange Gain</label>
+          <div class="content">{{ netOutVoucher.exchangeGain }}</div>
+        </div>
+        <div class="card-content">
+          <label>Exchange Loss</label>
+          <div class="content">{{ netOutVoucher.exchangeLoss }}</div>
+        </div>
+      </div>
+      <div class="status-header-box">
+        <div class="card-box-1">
+
+          <div class="card-content">
+            <label>Region</label>
+            <div class="content">
+              {{
+              netOutVoucher.regionDescription
+              ? netOutVoucher.regionDescription
+              : "-"
+              }}
+            </div>
+          </div>
+          <div class="card-content">
+            <label>Status</label>
+            <div class="content">{{ netOutVoucher.statusDescription }}</div>
+          </div>
+        </div>
+        <div class="card-box-1">
+
+          <div class="card-content">
+            <!-- <label>Region</label>
+          <div class="content">
+            {{
+              netOutVoucher.regionDescription
+                ? netOutVoucher.regionDescription
+                : "-"
+            }}
+          </div> -->
+
+          </div>
+          <div class="card-content d-flex gap1">
+            @if(netOutVoucher.actNetoutVoucherId===0){
+            <app-icon-button name="save" toolTip="Save" (click)="savenetOutVoucher()"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"></app-icon-button>
+            }
+          </div>
+        </div>
+        <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <!-- <div class="v-flex h100 ">
+        <div class="flex-1 relative">
+          <div class="ab pt-2">
+            <div class="rel"> -->
+    <div class="table-responsive h100">
+      <app-netout-item-table [voucher]="netOutVoucher.netoutVoucherTypeValue"
+        [items]="netOutVoucher.ilstentActNetoutVoucherDetail" [errorTrue]="errorTrue"
+        [documentDate]="netOutVoucher.documentDate" (getitems)="getAllItems($event)" [(dataset)]="netOutVoucher"
+        [totalAmount]="netOutVoucher.totalNetoutValue" #netOutVoucherChild></app-netout-item-table>
+    </div>
+    <!-- </div>
+          </div>
+        </div>
+      </div> -->
+    }
+    @else if(selectedTab === 1){
+    <div class="flex-1 relative mh100">
+      <scroll>
+        <table class="app-table account-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <th class="app-table-header-cell pl12px">
+                <div class="header-cell-title">Notes</div>
+                <div class="header-cell-subtitle">Created By | Date | Time</div>
+              </th>
+              <th class="app-table-header-cell tw100">
+                <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"></app-icon-button>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="app-table-body">
+            @for (notes of netOutVoucher.ilstentActNotes; track notes; let i =
+            $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ i + 1 }}
+              </td>
+              <td class="app-table-cell">
+                <div>
+                  {{ notes.notesDetail }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{ notes.createdFullName }} |
+                  {{
+                  notes.createdDate
+                  | appDate : appSetting.environment.dateViewFormatWithTime
+                  }}
+                </div>
+              </td>
+              <td></td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </scroll>
+    </div>
+
+    }
+    @else if(selectedTab === 2){
+
+    <div class="v-flex h100">
+      <div class="search_text pl12px">
+        <app-input-control placeholder="Search By Any File Name" type="text" [(ngModel)]="filterFileName"
+          name="filterFileName" [search]="true"></app-input-control>
+      </div>
+      <div class="flex-1 relative h100">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center"></th>
+                <th class="app-table-header-cell pl12px">
+                  <div class="header-cell-title">File Name</div>
+                  <div class="header-cell-subtitle">
+                    Created By | Date & Time
+                  </div>
+                </th>
+                <th class="app-table-header-cell">File Format</th>
+                <th class="app-table-header-cell">Size</th>
+                <th class="app-table-header-cell tw100">
+                  <div class="flex-center">
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"
+                      appButtonAccess="RerJornlVochrAtchNewBtn"></app-icon-button>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (doc of netOutVoucher.ilstActAttachments | filterAndSort : filterFileName :
+              'attachmentFileName' : false; track
+              doc; let i = $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div>
+                    {{ doc.attachmentFileName }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ doc.createdFullName }} |
+                    {{
+                    doc.createdDate
+                    | appDate
+                    : appSetting.environment.dateViewFormatWithTime
+                    }}
+                  </div>
+                </td>
+                <td class="mat-cell">
+                  {{ doc.attachmentType }}
+                </td>
+                <td class="mat-cell">
+                  {{ doc.attachmentSize }}
+                </td>
+                <td class="mat-cell">
+                  <div class="flex-center">
+                    <app-icon-button name="download" toolTip="Download" (click)="downloadAttachment(doc, 'down')"
+                      appButtonAccess="RerJornlVochrAtchDownBtn"></app-icon-button>
+                    <app-icon-button name="doc-view" toolTip="View" (click)="downloadAttachment(doc, 'view')"
+                      appButtonAccess="RerJornlVochrAtchViewBtn"></app-icon-button>
+                    <app-icon-button name="doc-delete" toolTip="Delete" (click)="deleteActAttachmentFile(doc)"
+                      appButtonAccess="RerJornlVochrAtchDeleBtn"></app-icon-button>
+
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </div>
+    </div>
+    }
+    @else if(selectedTab === 3){
+    <div class="print-wrap flex-1 relative h100">
+      <div class="ab">
+        <div class="rel m-8px">
+          <row className="h100">
+            <div class="col-md-4">
+              <app-input-control type="textarea" [maxLength]="250" className="notes-2"
+                label="COMMENTS OR SPECIAL INSTRUCTIONS"
+                [(ngModel)]="netOutVoucher.ientActVoucherConfig.pdfOtherComments"
+                name="pdfOtherComments"></app-input-control>
+              <div class="end">
+                <!-- <app-icon-button
+            name="save"
+            toolTip="Update"
+            (click)="viewSalAdvanceReceiptNoteReceipt()" [parentId]="pageId"
+            ></app-icon-button> -->
+                <app-icon-button name="save" toolTip="Update" class=""
+                  (click)="viewNetOutVoucherReceipt()"></app-icon-button>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="pdf-viewer">
+                <div class="ab">
+                  <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+                </div>
+              </div>
+            </div>
+
+          </row>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon name="layers-outline" class="mr-1"></ion-icon>
+          <div>Items</div>
+        </div>
+        @if(netOutVoucher.actNetoutVoucherId > 0){
+
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if(netOutVoucher.statusValue === 'APROV'){
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        } }
+      </div>
+      <div class="open-arrow" id="trigger{{ pageId }}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [maxLength]="250" className="notes"
+            label="Doc Header Text"></app-input-control>
+        </div>
+        <!-- <div class="col-md-4">
+			  <view-label label="Reporting Currency" value="INR"></view-label>
+			</div> -->
+        <div class="col-md-8">
+          <div class="justify-end">
+            <div class="f-content-txt">
+              <div>Total Debit</div>
+              <div>Total Credit</div>
+              <div>Difference</div>
+            </div>
+            <div class="text-end">
+              <div>
+                {{
+                netOutVoucher.actNetoutVoucherId === 0 &&
+                netOutVoucher.ilstentActNetoutVoucherDetail.length === 0
+                ? "0.00"
+                : totalDebit
+                }}
+              </div>
+              <div>
+                {{
+                netOutVoucher.actNetoutVoucherId === 0 &&
+                netOutVoucher.ilstentActNetoutVoucherDetail.length === 0
+                ? "0.00"
+                : totalCredit
+                }}
+              </div>
+              <div>
+                {{
+                netOutVoucher.actNetoutVoucherId === 0 &&
+                netOutVoucher.ilstentActNetoutVoucherDetail.length === 0
+                ? "0.00"
+                : totalDifference
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Net Out Voucher</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Net Out Voucher > Detail > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="
+              netOutVoucherforNotes.statusValue !== 'CANCL'
+                ? savenetOutVoucherNotes(n)
+                : changeReversal(n)
+            "></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="doNotesClear()"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #n="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Status" [(ngModel)]="netOutVoucherforNotes.statusValue"
+                name="statusValue" [items]="initialData.DDLValues.NoVoucherStatus" key="constant" keyName="description"
+                [required]="true" [errorTrue]="errorTrue">
+              </app-input-control>
+            </div>
+
+            @if(netOutVoucherforNotes.statusValue=== 'CANCL' && netOutVoucher.statusValue==='APROV'){
+            <div class="col-md-6">
+              <app-input-control type="date" label="Reversal Effective Date"
+                [(ngModel)]="netOutVoucherforNotes.temporaryDocumentDate" name="temporaryDocumentDate"
+                [minDate]="netOutVoucher.documentDate" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+            </div>
+            }
+
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1" [maxLength]="250" label="Notes"
+                [(ngModel)]="netOutVoucherforNotes.notesDetail" name="notesDetail"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Net Out Voucher > Detail > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <app-drop-zone [multiple]="true" [accept]="accept" [fileType]="fileType"
+          (onUpload)="uploadAttachemnt($event)"></app-drop-zone>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of statusLst; track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByUserName ? status.changedByUserName : "-" }}
+          </div>
+          <div class="sub-status_by">{{ status.effectiveDate | appDate }}</div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>

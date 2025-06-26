@@ -1,0 +1,268 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div> Notified Deceased Estate</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="bg-white-padd">
+
+            <app-tab-sub-group (tabChange)="onChange($event)">
+                <app-sub-tab tabTitle="Detail">
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+                            <row>
+                                <div class="col-md-9">
+                                    <row>
+                                       
+                                        <div class="col-md-4"> <view-label label="Assigned Officer"
+                                                value="{{application.ientEstateApplicationAssignedOfficerHistory.assignedToFullname}}"></view-label>
+                                        </div>
+                                        <div class="col-md-4"> <view-label label="Assigned Date"
+                                                value="{{application.ientEstateApplicationAssignedOfficerHistory.assignedDate | appDate}}"></view-label>
+                                        </div>
+                                        <!-- <div class="col-md-4"> <view-label label="TAT"
+                                                value=" {{application.ientEstateApplicationAssignedOfficerHistory.tatDays}} Days"></view-label>
+                                        </div> -->
+                                    </row>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex">
+                                        @if(this.type.isEditable === 'Y'){
+
+                                        @if(this.application.reAssignFlag === 'True'){
+                                        <form #p="ngForm" class="col-md-10 w250">
+                                            <app-input-control type="select" key="constant" keyName="description"
+                                                placeholder="Officer" [items]="assignedOfficerDDL"
+                                                defaultOption="--Select--"
+                                                [(ngModel)]="estateApplicationAssignedOfficer.assignedTo"
+                                                name="assignedTo"></app-input-control>
+                                        </form>
+                                        <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignEstate()"
+                                                toolTip="Reassign"></app-icon-button></div>
+                                        }
+
+                                        @if(this.application.selfAssignFlag ===' True'){
+                                        <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignEstate()"
+                                                toolTip="Self Assign"></app-icon-button></div>
+                                        }
+                                        }
+                                    </div>
+                                </div>
+                            </row>
+                            <div class="outer-content-wrapper">
+                                <div class="content-wrapper">
+                                    <div class="border p10">
+                                        <row>
+                                            @if(editNotify === false){
+                                                <div class="col-md-3 pb16"> <view-label label="Customer" value=""></view-label> </div>
+                                                <div class="col-md-3 pb16"> <view-label label="Death Notice ref No" value=""></view-label> </div>
+                                                <div class="col-md-3 pb16"> <view-label label="Noticed date" value=""></view-label> </div>
+                                                <div class="col-md-3 pb16"> <view-label label=" Notified By" value=""></view-label> </div>
+                                                <div class="col-md-3"> <view-label label="Date of Death" value=""></view-label> </div>
+                                                <div class="col-md-9 end">
+                                                    <app-icon-button name="edit" toolTip="Edit"></app-icon-button>
+                                                </div>
+                                            }
+                                        </row>
+                                    </div>
+                                    <div class="h280">
+                                        <!-- @if (loading) { -->
+                                        <app-table [columns]="courtOrderColumns" [columnsName]="courtOrderColumnsName"
+                                            [hideSelectAll]="true"
+                                  
+                                            [showPaginator]="false" >
+                                            <ng-template cellDef="verificationDate" let-element>
+                                                {{element.verificationDate | appDate}}
+                                            </ng-template>
+                                            <ng-template cellDef="action" let-element>
+                                                <!-- @if(element.statusValue==='OBDOC'){ -->
+                                                <app-icon-button name="open" toolTip="Open"
+                                                    (click)="createNotesDialog()"></app-icon-button>
+                                                <!-- } -->
+                                            </ng-template>
+
+                                        </app-table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb20"></div>
+
+                           
+                           
+                        </div>
+                    </div>
+
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Linked Document">
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+                            <app-table [columns]="linkedColumns" [columnsName]="linkedColumnsName"
+                                [hideSelectAll]="true" [hasPagination]="true" [dataSource]="tableLinkedData">
+                                <ng-template cellDef="action" let-element>
+                                    <app-icon-button name="doc-download"
+                                        (click)="downloadLinkedFile(element)"></app-icon-button>
+                                </ng-template>
+                            </app-table>
+                        </div>
+                    </div>
+                </app-sub-tab>
+
+            </app-tab-sub-group>
+            <div class="col-md-12 end gap-10">
+                @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Notified</button>
+                <button type="submit" class="complete-btn" (click)="cancelProcess()"> Cancel</button>
+                }
+            </div>
+        </div>
+    </accordion-body>
+</accordion-item>
+
+<ng-template #Template>
+    <div class="ab bgc">
+        <div class="rel">
+            <div class="p-fix d-flex">
+                <div class="download-button">
+                    <button color="primary" (click)="downloadImageFile()">
+                        Download
+                    </button>
+                </div>
+                <div class="close-button">
+                    <button color="danger" (click)="dialog.closeDialog()">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+            <div class="d-flex align-items-center h100 justify-content-center w100">
+                <div class="d-flex align-items-center h100 justify-content-center w100 relative">
+                    <div class="ab">
+                        <div class="rel">
+                            <div class="dis-none wcheck active">
+                                <img [src]="filePath" alt="PreviewImages">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                Estate Application > Detail > Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveNotes()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialogClose()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #x="ngForm">
+                    <row>
+                        <div class="col-md-4">
+                            <app-input-control label="Action Status" type="select"
+                                [(ngModel)]="estateApplicationNotes.actionStatusValue" defaultOption="--Select--"
+                                [items]="actionStatusDDL" key="constant" keyName="description" name="actionStatusValue"
+                                [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control label="Application Status" type="select" defaultOption="All"
+                                [(ngModel)]="estateApplicationNotes.statusValue" name="statusValue"
+                                [items]="appStatusDDL" key="constant" keyName="description" [errorTrue]="errorTrue"
+                                [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <view-label label="Application Stage"
+                                value="{{application.applicationStageDescription}}"></view-label>
+                        </div>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="estateApplicationNotes.notes" name="notes" [maxLength]="250"
+                                [required]="true" label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #cancelAlert>
+    <div class="dialog-container">
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+                <div class="notification-header">
+                    <div class="notification-icon">
+                        <ion-icon name="warning-outline"></ion-icon>
+                    </div>
+                    <div class="notification-title">Alert</div>
+                </div>
+                <div class="text-center p10">
+                    Are you sure you want to cancel this process
+                </div>
+                <div class="center">
+                    <div class="notification-button">
+                        <button class="btn-notification" (click)="cancelNotesDialog()">Yes</button>
+                        <button class="btn-notification cancel-btn" (click)="dialog.closeAll()">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #notesCancelDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/estate.svg"></ion-icon>
+                Reason For Cancellation
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="cancelApplicationStage()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearCancelNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #g="ngForm">
+                    <row>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="cancelNotesDescription" name="cancelNotesDescription" [maxLength]="250"
+                                [required]="true" label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

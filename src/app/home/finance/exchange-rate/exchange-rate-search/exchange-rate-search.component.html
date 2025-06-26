@@ -1,0 +1,155 @@
+<div class="content-wrapper" appAccess="EXRSC" [parentId]="pageId">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        [hideSelectAll]="true" (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)"
+        [hasPagination]="true">
+
+
+        <ng-template cellHeaderDef="docNo">
+            <div class="header-cell-title ">Reporting Currency</div>
+
+        </ng-template>
+        <ng-template cellDef="docNo" let-element>
+            <div>{{element.docNo}}</div>
+            <!-- <div class="table-cell-subtitle ">{{element.docName }}</div> -->
+        </ng-template>
+
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open Selected"
+                (click)="openExchangeRate(element.exchangeRateId)"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="enteredDate" let-element>
+            <div>
+                {{element.enteredDate | appDate}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="effectiveDate" let-element>
+            <div>
+                {{element.effectiveDate | appDate}}
+            </div>
+        </ng-template>
+
+        <ng-template cellDef="statusDescription" let-element>
+            <accouts-status-table [statusDescription]="element.statusDescription"></accouts-status-table>
+        </ng-template>
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate" maxHeight="250px"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+            <div class="d-flex align-items-center w100">
+                <!-- <div class="col-md-10 mt10">
+                    <app-input-control type="select" placeholder="Document Name"></app-input-control>
+                </div> -->
+                <div class="col-md-1">
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewExchangeRate(0)"
+                        appButtonAccess="NEWBT"></app-icon-button>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template #slotMiddle>
+            <div class="d-flex">
+                <div (click)="statusSortSearch('INPRO')"><table-status-sort type="processing"
+                        [processingCount1]="totalInprogressCount"></table-status-sort>
+                </div>
+                <div (click)="statusSortSearch('APROV')">
+                    <table-status-sort type="approving" [approvedCount1]="totalApprovedCount"></table-status-sort>
+                </div>
+            </div>
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Exchange Rate Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" appButtonAccess="SCHBT"
+                        (click)="searchExchangeRate()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" appButtonAccess="SCLBT"
+                        (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+
+                    <row>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Document Currency
+                                    " [(ngModel)]="searchParams.istrTargetCurrencyValue" name="istrTargetCurrencyValue"
+                                        [items]="initialData.DDLValues.ddlERTargetCurrency" key="constant"
+                                        keyName="description" defaultOption="--Select--"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Status"
+                                        [(ngModel)]="searchParams.istrStatusValue" name="istrStatusValue"
+                                        [items]="initialData.DDLValues.ddlERStatusValue" key="constant"
+                                        keyName="description" defaultOption="--Select--"></app-input-control>
+                                </div>
+
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Reporting Currency"
+                                        [(ngModel)]="searchParams.istrBaseCurrencyValue" name="istrBaseCurrencyValue"
+                                        [items]="initialData.DDLValues.ddlERTargetCurrency" key="constant"
+                                        keyName="description" defaultOption="--Select--"></app-input-control>
+                                </div>
+
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Effective Date (From)"
+                                        placeholder="Select Date" [(ngModel)]="searchParams.idtmEffectiveDateFrom"
+                                        name="idtmEffectiveDateFrom"
+                                        [maxDate]="searchParams.idtmEffectiveDateTo"></app-input-control>
+                                </div>
+
+                            </row>
+                        </div>
+                        <div class="col-md-3 ">
+                            <row>
+
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Effective Date (To)" placeholder="Select Date"
+                                        [(ngModel)]="searchParams.idtmEffectiveDateTo" name="idtmEffectiveDateTo"
+                                        [minDate]="searchParams.idtmEffectiveDateFrom"></app-input-control>
+                                </div>
+
+                            </row>
+                        </div>
+                    </row>
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Exchange Rate </div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

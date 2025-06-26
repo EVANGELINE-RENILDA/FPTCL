@@ -1,0 +1,21 @@
+<div class="print-wrap">
+	<row>
+	  <div class="col-md-4">
+		<app-input-control
+		  type="textarea"
+		  [maxLength]="250"
+		  className="notes-2"
+		  label="COMMENTS OR SPECIAL INSTRUCTIONS"
+		  [(ngModel)]="parentData.ientActVoucherConfig.pdfOtherComments"
+		  name="pdfOtherComments"
+		></app-input-control>
+		<div class="end">
+		  <app-icon-button
+			name="save"
+			toolTip="Update"
+			(click)="viewPurchaseOrderReceipt()"
+		  ></app-icon-button>
+		</div>
+	  </div>
+	</row>
+  </div>

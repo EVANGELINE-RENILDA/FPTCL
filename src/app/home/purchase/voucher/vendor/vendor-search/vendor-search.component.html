@@ -1,0 +1,146 @@
+<!-- [parentId]="pageId" -->
+<div class="content-wrapper" appAccess="CUSTR">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        [hideSelectAll]="true" (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)"
+        [sortColumnsName]="sortColumnName" [hasPagination]="true">
+        <ng-template cellDef="vendorCode" let-element>
+            <div (click)="dataSelectedFn(element)">{{element.vendorCode}}</div>
+        </ng-template>
+        <ng-template cellDef="statusDescription" let-element>
+            <accouts-status-table [statusDescription]="element.statusDescription"></accouts-status-table>
+        </ng-template>
+        <ng-template cellDef="effectiveDate" let-element>
+            <div>
+                {{element.effectiveDate | appDate}}
+            </div>
+        </ng-template>
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+            <div class="d-flex align-items-center w100">
+                <!-- <div class="col-md-10 mt10">
+                    <app-input-control type="select" placeholder="Document Name"></app-input-control>
+                </div> -->
+                <div class="col-md-1">
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewVendor(0)"></app-icon-button>
+                    <!-- <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button> -->
+                </div>
+            </div>
+        </ng-template>
+        <ng-template #slotMiddle>
+            <div class="d-flex">
+                <div (click)="searchStatus('ACTIV')">
+                    <table-status-sort [activeCount]="activeCount"></table-status-sort>
+                </div>
+                <div (click)="searchStatus('INACT')">
+                    <table-status-sort [inActiveCount]="inActiveCount"></table-status-sort>
+                </div>
+            </div>
+        </ng-template>
+
+
+        <!-- <ng-template #slotMiddle>
+          <table-status-sort [activeCount]="activeCount" [inActiveCount]="inActiveCount"></table-status-sort>
+      </ng-template> -->
+        <ng-template cellDef="action" let-element>
+            @if(this.openStatus){
+
+            <app-icon-button name="open" toolTip="Open" (click)="openVendor(element.actVendorId)"></app-icon-button>
+            }
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Vendor Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-3"> <app-input-control type="text" label="Vendor  Name"
+                                [(ngModel)]="searchParams.vendorName" name="vendorName" tabIndex="100"
+                                (keyup.enter)="onSearch()"></app-input-control>
+                        </div>
+                        <div class="col-md-3"> <app-input-control type="text" label="Vendor  ID"
+                                [(ngModel)]="searchParams.vendorCode" name="vendorCode" tabIndex="100"
+                                (keyup.enter)="onSearch()"></app-input-control>
+                        </div>
+                        <div class="col-md-3"> <app-input-control type="text" label="Vendor  Ref No"
+                                [(ngModel)]="searchParams.vendorLegacyCode" name="vendorLegacyCode" tabIndex="100"
+                                (keyup.enter)="onSearch()"></app-input-control>
+                        </div>
+                        <div class="col-md-3"> <app-input-control type="select" label="Vendor  Type"
+                                [(ngModel)]="searchParams.vendorTypeValue" name="vendorTypeValue"
+                                [items]="initialData.DDLValues.configVendorSubType" key="constant" keyName="description"
+                                tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+                        </div>
+                    </row>
+                    <row>
+                        @if(hideStatus){
+                        <div class="col-md-3"> <app-input-control type="select" label="Status"
+                                [(ngModel)]="searchParams.statusvalue" name="statusvalue"
+                                [items]="initialData.DDLValues.ConfigStatus" key="constant" keyName="description"
+                                tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+                        </div>
+                        }
+                        <div class="col-md-3"> <app-input-control type="select" label="Currency"
+                                [(ngModel)]="searchParams.currencyValue" name="currencyValue"
+                                [items]="initialData.DDLValues.configCurrency" key="constant" keyName="description"
+                                tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+                        </div>
+                        <div class="col-md-3"> <app-input-control type="date" label="Created Date From"
+                                [(ngModel)]="searchParams.dtmEffectiveDatefrom" name="dtmEffectiveDatefrom"
+                                [maxDate]="searchParams.dtmEffectiveDateto" tabIndex="100"
+                                (keyup.enter)="onSearch()"></app-input-control>
+                        </div>
+                        <div class="col-md-3"> <app-input-control type="date" label="Created Date To"
+                                [(ngModel)]="searchParams.dtmEffectiveDateto" name="dtmEffectiveDateto"
+                                [minDate]="searchParams.dtmEffectiveDatefrom" tabIndex="100"
+                                (keyup.enter)="onSearch()"></app-input-control>
+                        </div>
+                    </row>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <!-- @if(screenType1){
+
+                <div class="back-btn">
+                    <ion-icon src="assets/icons/back.svg"></ion-icon>
+                </div>
+                } -->
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToPurchase()">{{module}}</div>
+            </li>
+            <li class="screen-name" (click)="router.navigateByUrl(navigateUrl)">
+                <div class="screen-text">{{screenType}}</div>
+            </li>
+            <!-- @if(screenType1){
+
+              <li class="screen-name">
+                  <div class="screen-text">{{screenType1}}</div>
+              </li>
+            } -->
+        </ul>
+    </div>
+</ng-template>

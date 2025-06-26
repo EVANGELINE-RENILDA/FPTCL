@@ -1,0 +1,1722 @@
+<div class="content-wrapper" appAccess="CUSUP" [parentId]="pageId">
+    <app-multi-page-url [id]="id" url="/home/crm/customer-update/detail"></app-multi-page-url>
+    <div class="card">
+        <row>
+            <div class="col-md-12">
+                <row>
+                    <div class="col-md-3">
+                        <view-label label="Customer  No" value="{{customerUpdate.customerNo}}"></view-label>
+                    </div>
+                    <div class="col-md-3">
+                        <view-label label="Created By" value="{{customerUpdate.enteredByFullname}}"></view-label>
+                    </div>
+                    <div class="col-md-3">
+                        <view-label label="Created Date" value="{{customerUpdate.enteredDate | appDate}}"></view-label>
+                    </div>
+                    <div class="col-md-3">
+                        <view-label label="Customer  Status" class="status-{{customerUpdate.customerStatusValue}}"
+                            value="{{customerUpdate.customerStatus}}"></view-label>
+                    </div>
+                </row>
+            </div>
+        </row>
+    </div>
+    <accordion>
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title open-visible">
+                        <ion-icon src="assets/icons/customer_info.svg"></ion-icon>
+                        <div class="">Customer Information</div>
+                    </div>
+                    <div class="accordion-title open-hide">
+                        <row class="row-w100">
+                            <div class="col-md-2"> <view-label label="Name" [ellipse]="true" value="{{customerUpdate.firstName}}
+                                {{customerUpdate.middleName}} {{customerUpdate.lastName}}"></view-label></div>
+                            <div class="col-md-2"><view-label label="Customer Update No"
+                                    value="{{customerUpdate.customerUpdateRefNo}}"></view-label></div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <view-label src="assets/icons/mobile.svg" [flex]="true" [ellipse]="true"
+                                    value="{{customerUpdate.contactNo}}"></view-label>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <view-label src="assets/icons/dob.svg" [flex]="true"
+                                    value="{{customerUpdate.dateOfBirth | appDate}}"></view-label>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <view-label src="assets/icons/email.svg" [ellipse]="true" [flex]="true"
+                                    value="{{customerUpdate.emailId}}"></view-label>
+                            </div>
+                            <div class="col-md-2">
+                                <view-label label="Status" class="status-{{customerUpdate.statusValue}}"
+                                    value="{{customerUpdate.statusDescription}}"></view-label>
+                            </div>
+                        </row>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="box-container">
+                    <row>
+                        <div class="col-md-12 ">
+                            @if(this.customerInfoEdit === false){
+                            <row>
+                                <div class="col-md-3 customer-profile-box">
+                                    <div class="v-flex align-items-center justify-content-center ">
+                                        <div class="customer-profile-img center">
+                                            <img
+                                                [src]="customerUpdate.ientCustomerUpdatePhoto.fileContent?customerUpdate.ientCustomerUpdatePhoto.fileContent:'assets/img/human-face.svg'">
+                                        </div>
+                                        <div class="status-content center">
+                                            <div class="customer-profile-title center">
+                                                <app-tooltip value="{{customerUpdate.firstName}}
+                            {{customerUpdate.middleName}} {{customerUpdate.lastName}}"></app-tooltip>
+                                            </div>
+                                            <div
+                                                class="customer-profile-subtitle status-{{customerUpdate.statusValue}}">
+                                                {{customerUpdate.statusDescription}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <view-label class="mb26" label="Customer Update No"
+                                        value="{{customerUpdate.customerUpdateRefNo}}"></view-label>
+                                    <view-label class="mb26" label="Date of Birth"
+                                        oldValue="{{updateOldValue?.DateOfBirth | appDate}}"
+                                        value="{{customerUpdate.dateOfBirth | appDate}}"></view-label>
+                                    <view-label class="mb26" label="Gender"
+                                        oldValue="{{updateOldValue?.GenderDescription}}"
+                                        value="{{customerUpdate.genderDescription}}"></view-label>
+                                    <view-label class="mb26" label="Nationality"
+                                        oldValue="{{updateOldValue?.NationalityDescription}}"
+                                        value="{{customerUpdate.nationalityDescription}}"></view-label>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <view-label class="mb26" label="Contact No" value="{{customerUpdate.contactNo}}"
+                                        oldValue="{{updateOldValue?.ContactNo}}"></view-label>
+                                    <view-label class="mb26" label="Alternate Contact No"
+                                        oldValue="{{updateOldValue?.AlternateContactNo}}"
+                                        value="{{customerUpdate.alternateContactNo}}"></view-label>
+                                    <view-label class="mb26" label="Email ID" value="{{customerUpdate.emailId}}"
+                                        oldValue="{{updateOldValue?.EmailId}}"></view-label>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <view-label class="mb26" label="Father Name"
+                                        oldValue="{{updateOldValue?.FatherName}}"
+                                        value="{{customerUpdate.fatherName}}"></view-label>
+                                    <view-label class="mb26" label="Mother Name"
+                                        oldValue="{{updateOldValue?.MotherName}}"
+                                        value="{{customerUpdate.motherName}}"></view-label>
+                                    <view-label class="mb26" label="Guardian Name"
+                                        oldValue="{{updateOldValue?.GaurdianName}}"
+                                        value="{{customerUpdate.gaurdianName}}"></view-label>
+                                    <div class="end">
+                                        @if(this.customerUpdate.statusValue !=='CNCLD' &&
+                                        this.customerUpdate.statusValue !=='APRVD' &&
+                                        this.customerUpdate.statusValue !=='PNDAP' &&
+                                        this.customerUpdate.assignedOfficerFlag === 'True'){
+                                        @if(infoEditBtn===true){
+
+                                        <app-icon-button name="edit" toolTip="Edit" (click)="editCustomer()"
+                                            appButtonAccess="CustUpAppEditBtn"></app-icon-button>
+                                        }
+                                        }
+                                    </div>
+                                </div>
+                            </row>
+                            }
+                            @if(this.customerInfoEdit === true){
+                            <form #i="ngForm">
+                                <row>
+                                    <div class="col-md-3">
+                                        <div class="customer-profile relative">
+                                            <div class="p-3 image-upload">
+                                                <div class="single-image">
+                                                    <img
+                                                        [src]="customerUpdate.ientCustomerUpdatePhoto.fileContent?customerUpdate.ientCustomerUpdatePhoto.fileContent:'assets/img/human-face.svg'">
+                                                </div>
+                                                <div class="selectButton" (click)="triggerClick()">
+                                                    <input type="file" class="uploadInput" #fileInput
+                                                        (change)="loadImageFromDevice($event)" id="file-input"
+                                                        accept="image/jpg, image/jpeg , image/png">
+
+                                                    <ion-icon src="assets/icons/upload.svg"></ion-icon>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <row>
+                                            <div class="col-md-4 mb20">
+                                                <view-label class="" label="Customer Update No"
+                                                    value="{{customerUpdate.customerUpdateRefNo}}"></view-label>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="number" label="Contact Number"
+                                                    [oldValue]="updateOldValue?.ContactNo"
+                                                    [(ngModel)]="customerUpdate.contactNo" name="contactNo"
+                                                    [minLength]="5" [maxLength]="10" [errorTrue]="errorTrue"
+                                                    [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="text" label="Father Name" [maxLength]="250"
+                                                    [(ngModel)]="customerUpdate.fatherName"
+                                                    [oldValue]="updateOldValue?.FatherName"
+                                                    [errorTrue]="customerUpdate.motherName===''&& customerUpdate.gaurdianName==='' && errorTrue "
+                                                    [required]="customerUpdate.motherName===''&& customerUpdate.gaurdianName==='' "
+                                                    name="fatherName"></app-input-control>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="date" label="Date of Birth " [oldDate]="true"
+                                                    [maxDate]="currentDate" [(ngModel)]="customerUpdate.dateOfBirth"
+                                                    name="dateOfBirth" [oldValue]="updateOldValue?.DateOfBirth"
+                                                    [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="number" label=" Alternate Contact Number"
+                                                    [oldValue]="updateOldValue?.AlternateContactNo" [minLength]="5"
+                                                    [maxLength]="15" [(ngModel)]="customerUpdate.alternateContactNo"
+                                                    name="alternateContactNo"></app-input-control>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="text" label="Mother Name" [maxLength]="250"
+                                                    [(ngModel)]="customerUpdate.motherName"
+                                                    [oldValue]="updateOldValue?.MotherName"
+                                                    [errorTrue]="customerUpdate.fatherName===''&& customerUpdate.gaurdianName==='' && errorTrue "
+                                                    [required]="customerUpdate.fatherName===''&& customerUpdate.gaurdianName==='' "
+                                                    name="motherName"></app-input-control>
+                                            </div>
+                                        </row>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-3 mb20"> <app-input-control type="text" label="First Name"
+                                            [oldValue]="updateOldValue?.FirstName" [maxLength]="250"
+                                            [(ngModel)]="customerUpdate.firstName" [errorTrue]="errorTrue"
+                                            [required]="true" name="firstName"></app-input-control>
+                                    </div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="select" label="Gender"
+                                            [(ngModel)]="customerUpdate.genderValue" name="genderValue"
+                                            [items]="initialData.DDLValues.DDLGender" key="constant"
+                                            [oldValue]="updateOldValue?.GenderValue"
+                                            [oldValueDescription]="updateOldValue?.GenderDescription"
+                                            keyName="description" placeholder="Select Gender" [errorTrue]="errorTrue"
+                                            [required]="true"></app-input-control></div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="email" label="Email ID"
+                                            [maxLength]="250" [oldValue]="updateOldValue?.EmailId" [email]="true"
+                                            [(ngModel)]="customerUpdate.emailId" [errorTrue]="errorTrue"
+                                            name="emailId"></app-input-control>
+                                    </div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="text" label="Guardian Name"
+                                            [maxLength]="250" [(ngModel)]="customerUpdate.gaurdianName"
+                                            [oldValue]="updateOldValue?.GaurdianName"
+                                            [errorTrue]="customerUpdate.motherName===''&& customerUpdate.fatherName==='' && errorTrue "
+                                            [required]="customerUpdate.motherName===''&& customerUpdate.fatherName==='' "
+                                            name="guardianName"></app-input-control></div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="text" label="Middle Name"
+                                            [maxLength]="250" [oldValue]="updateOldValue?.MiddleName"
+                                            [(ngModel)]="customerUpdate.middleName"
+                                            name="middleName"></app-input-control></div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="select" label="Nationality"
+                                            [(ngModel)]="customerUpdate.nationalityId" name="nationalityId"
+                                            [items]="initialData.DDLValues.DDLNationality" key="id"
+                                            [oldValue]="updateOldValue?.NationalityId"
+                                            [oldValueDescription]="updateOldValue?.NationalityDescription"
+                                            keyName="description" placeholder="Select Nationality"></app-input-control>
+                                    </div>
+                                    <div class="col-md-3 mb20"></div>
+                                    <div class="col-md-3 mb20"></div>
+                                    <div class="col-md-3"> <app-input-control type="text" label="Last Name"
+                                            [maxLength]="250" [oldValue]="updateOldValue?.LastName"
+                                            [(ngModel)]="customerUpdate.lastName" name="lastName"
+                                            [errorTrue]="errorTrue" [required]="true"></app-input-control></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3 d-flex gap-10 end"> <app-icon-button name="save"
+                                            toolTip="Update" appButtonAccess="CustUpAppUpdateInfoBtn"
+                                            (click)="saveCustomerInfo()"></app-icon-button>
+                                        <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshCustomer()"
+                                            appButtonAccess="CustUpAppRefreshInfoBtn"></app-icon-button>
+                                    </div>
+                                </row>
+                            </form>
+                            }
+                            <div class="border mb26"></div>
+                            <div class="view-label-container-title mb26">Employer Information</div>
+                            @if(employerInfoEdit === false){
+
+                            <row>
+                                <div class="col-md-3">
+                                    <div class="col-md-12"> <view-label class="mb26" label="Employer Name"
+                                            oldValue="{{updateOldValue?.EmployerName}}"
+                                            value="{{customerUpdate.employerName}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Occupation"
+                                            oldValue="{{updateOldValue?.Occupation}}"
+                                            value="{{customerUpdate.occupation}}"></view-label></div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="col-md-12"> <view-label class="mb26" label="Net Salary(FJD)"
+                                            oldValue="{{updateOldValue?.NetSalary}}"
+                                            value="{{customerUpdate.netSalary}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="School Name"
+                                            oldValue="{{updateOldValue?.SchoolName}}"
+                                            value="{{customerUpdate.schoolName}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="Student ID"
+                                            oldValue="{{updateOldValue?.StudentId}}"
+                                            value="{{customerUpdate.studentId}}"></view-label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class=" mb26">
+                                        <div class="d-flex align-items-center address-header">
+                                            <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                            <view-label value="Employer Address" class="pl10"></view-label>
+                                        </div>
+                                        <div class="address-content">
+                                            {{customerUpdate.iEmployerAddress.line1}}&nbsp;
+                                            {{customerUpdate.iEmployerAddress.line2?customerUpdate.iEmployerAddress.line2:''}}&nbsp;
+                                            {{customerUpdate.iEmployerAddress.line3?customerUpdate.iEmployerAddress.line3:''}}&nbsp;
+                                            {{customerUpdate.iEmployerAddress.village}}&nbsp;
+                                            {{customerUpdate.iEmployerAddress.tikinaDescription}}&nbsp;
+                                            {{customerUpdate.iEmployerAddress.islandDescription}}&nbsp;
+                                            {{customerUpdate.iEmployerAddress.provinceDescription}}&nbsp;
+                                            -
+                                            {{customerUpdate.iEmployerAddress.poBoxNo?customerUpdate.iEmployerAddress.poBoxNo:''}}.&nbsp;
+                                        </div>
+
+                                    </div>
+                                    <div class="mb26">
+                                        <view-label label="Date Of Death" value="{{customerUpdate.dateOfDeath}}"
+                                            oldValue="{{updateOldValue?.DateOfDeath}}"></view-label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 align-items-end end">
+                                    @if(this.customerUpdate.statusValue !=='CNCLD' &&
+                                    this.customerUpdate.statusValue !=='APRVD' &&
+                                    this.customerUpdate.statusValue !=='PNDAP' &&
+                                    this.customerUpdate.assignedOfficerFlag === 'True'){
+                                    @if(employerEditBtn === true){
+
+                                    <app-icon-button name="edit" toolTip="Edit" (click)="customerEmployerEdit()"
+                                        appButtonAccess="CustUpAppEditBtn"></app-icon-button>
+                                    }
+                                    }
+                                </div>
+                            </row>
+                            }
+                            @if(employerInfoEdit === true){
+                            <form #g="ngForm">
+                                <row>
+                                    <div class="col-md-3">
+                                        <div> <app-input-control type="text" label="Employer Name" [maxLength]="250"
+                                                [(ngModel)]="customerUpdate.employerName" name="employerName"
+                                                [oldValue]="updateOldValue?.EmployerName"
+                                                name="employerName"></app-input-control></div>
+                                        <div>
+                                            <app-input-control type="text" label="Occupation" [maxLength]="250"
+                                                [(ngModel)]="customerUpdate.occupation" name="occupation"
+                                                [oldValue]="updateOldValue?.Occupation"
+                                                name="occupation"></app-input-control>
+                                        </div>
+                                        <div>
+                                            <app-input-control type="date" label="Date Of Death"
+                                                [(ngModel)]="customerUpdate.dateOfDeath" name="dateOfDeath"
+                                                [oldValue]="updateOldValue?.DateOfDeath"></app-input-control>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div> <app-input-control type="number" label="Net Salary(FJD)" [maxLength]="20"
+                                                [(ngModel)]="customerUpdate.netSalary" [decimal]="2"
+                                                [oldValue]="updateOldValue?.NetSalary"
+                                                name="netSalary"></app-input-control></div>
+                                        <div>
+                                            <app-input-control type="text" label="Student Id"
+                                                [(ngModel)]="customerUpdate.studentId" [maxLength]="20"
+                                                [errorTrue]="customerUpdate.schoolName !=='' && errorTrue"
+                                                [required]="customerUpdate.schoolName !==''"
+                                                [oldValue]="updateOldValue?.StudentId"
+                                                name="studentId"></app-input-control>
+                                        </div>
+                                        <div>
+                                            <app-input-control type="text" label="School Name"
+                                                [(ngModel)]="customerUpdate.schoolName" [maxLength]="500"
+                                                [errorTrue]="customerUpdate.studentId !=='' && errorTrue"
+                                                [required]="customerUpdate.studentId !==''"
+                                                [oldValue]="updateOldValue?.SchoolName"
+                                                name="schoolName"></app-input-control>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <row>
+                                          <div class="col-md-6">
+                                              <app-input-control label="Line 1" type="special"
+                                                  [(ngModel)]="customerUpdate.iEmployerAddress.line1"
+                                                  [errorTrue]="this.customerUpdate.iEmployerAddress.provinceId!==0 && errorTrue"
+                                                  [required]="this.customerUpdate.iEmployerAddress.provinceId!==0"
+                                                  name="line1"   [oldValue]="updateOldValue?.IEmployerAddress?.Line1"></app-input-control>
+                                          </div>
+                                          <div class="col-md-6">
+                                            <app-input-control label="Island" [items]="islandDDL" key="islandId"
+                                            keyName="islandName" type="select" defaultOption="--Select--"
+                                            (onChange)="getTikinaDDLFromIslandandProvince(customerUpdate.iEmployerAddress.provinceId,customerUpdate.iEmployerAddress.islandId)"
+                                            [(ngModel)]="customerUpdate.iEmployerAddress.islandId"
+                                            [errorTrue]="(this.customerUpdate.iEmployerAddress.line1!=='' || customerUpdate.iEmployerAddress.provinceId!==0 )&& errorTrue"
+                                            [required]="this.customerUpdate.iEmployerAddress.line1!=='' || customerUpdate.iEmployerAddress.provinceId!==0 "
+                                            [oldValue]="updateOldValue?.IEmployerAddress?.islandId"
+                                            [oldValueDesription]="updateOldValue?.IEmployerAddress?.IslandDescription"
+                                            name="islandId"></app-input-control>
+                                          </div>
+                                          <div class="col-md-6">
+                                              <app-input-control label="Line 2" type="special"
+                                                  [(ngModel)]="customerUpdate.iEmployerAddress.line2"
+                                                  name="line2" [oldValue]="updateOldValue?.IEmployerAddress?.Line2"></app-input-control>
+                                          </div>
+                                          <div class="col-md-6">
+                                             <app-input-control label="Tikina"
+                                             [oldValue]="updateOldValue?.IEmployerAddress?.TikinaId"
+                                             [oldValueDesription]="updateOldValue?.IEmployerAddress?.TikinaDescription"
+                                                  [(ngModel)]="customerUpdate.iEmployerAddress.tikinaId"
+                                                  [errorTrue]="this.customerUpdate.iEmployerAddress.line1!=='' && errorTrue"
+                                                  [required]="this.customerUpdate.iEmployerAddress.line1!==''"
+                                                  name="tikinaId" type="select" defaultOption="--Select--"
+                                                  [items]="TikinaDDL" key="tikinaId"  keyName="tikinaName" valueType="int"
+                                                  keyName="tikinaName"></app-input-control>
+                                          </div>
+                                          <div class="col-md-6">
+                                              <app-input-control label="Line 3" type="special"
+                                                  [(ngModel)]="customerUpdate.iEmployerAddress.line3"
+                                                  name="line3"></app-input-control>
+                                          </div>
+                                          <div class="col-md-6">
+                                              <app-input-control label="Village" [items]="villageDDL" key="constant"
+                                                  keyName="description" type="text"
+                                                  [oldValue]="updateOldValue?.IEmployerAddress?.Village"
+
+                                                  [(ngModel)]="customerUpdate.iEmployerAddress.village"
+                                                  [errorTrue]="(this.customerUpdate.iEmployerAddress.line1!=='' || customerUpdate.iEmployerAddress.provinceId!==0) && errorTrue"
+                                                  [required]="this.customerUpdate.iEmployerAddress.line1!=='' || customerUpdate.iEmployerAddress.provinceId!==0 "
+                                                  name="village"></app-input-control>
+                                          </div>
+                                          <div class="col-md-6">
+                                            <app-input-control label="Province"
+                                                 (onChange)="getIslandFromProvince(customerUpdate.iEmployerAddress.provinceId)"
+                                                [(ngModel)]="customerUpdate.iEmployerAddress.provinceId"
+                                                [errorTrue]="this.customerUpdate.iEmployerAddress.line1!=='' && errorTrue"
+                                                [required]="this.customerUpdate.iEmployerAddress.line1!==''"
+                                                name="provinceId" type="select" defaultOption="--Select--"
+                                                [items]="initialData.DDLValues.DDLProvince" key="id" valueType="int"
+                                                keyName="description" [oldValue]="updateOldValue?.IEmployerAddress?.ProvinceValue"
+                                                [oldValueDesription]="updateOldValue?.IEmployerAddress?.ProvinceDescription"></app-input-control>
+                                        </div>
+                                          <div class="col-md-6">
+                                              <app-input-control label="PO Box No" type="number" [maxLength]="10"
+                                                  [(ngModel)]="customerUpdate.iEmployerAddress.poBoxNo"
+                                                  name="poBoxNo"   [oldValue]="updateOldValue?.IEmployerAddress?.PoBoxNo"></app-input-control>
+                                          </div>
+                                      </row>
+                                  </div>
+                                    <div class="col-md-12 end d-flex gap-10">
+                                        <app-icon-button name="save" toolTip="Update"
+                                            appButtonAccess="CustUpAppUpdateInfoBtn"
+                                            (click)="saveCustomerEmployer()"></app-icon-button>
+                                        <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshCustomer()"
+                                            appButtonAccess="CustUpAppRefreshInfoBtn"></app-icon-button>
+                                    </div>
+                                </row>
+                            </form>
+                            }
+                        </div>
+
+                        <!-- <div class="col-md-4">
+                            <div class="border-right h100">
+                                <div class="customer-profile-box">
+                                    <div class="d-flex">
+                                        <div class="customer-profile-img center">
+                                            <img
+                                                [src]="customerUpdate.ientCustomerUpdatePhoto.fileContent?customerUpdate.ientCustomerUpdatePhoto.fileContent:'assets/img/human-face.svg'">
+                                        </div>
+                                        <div class="status-content">
+                                            <div class="customer-profile-title">{{customerUpdate.firstName}}
+                                                {{customerUpdate.middleName}}{{customerUpdate.lastName}}</div>
+                                            <div
+                                                class="customer-profile-subtitle status-{{customerUpdate.statusValue}}">
+                                                {{customerUpdate.statusDescription}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="center pb15"> @if(this.customerUpdate.statusValue !=='CNCLD' &&
+                                        this.customerUpdate.statusValue !=='APRVD' &&
+                                        this.customerUpdate.statusValue !=='PNDAP' &&
+                                        this.customerUpdate.assignedOfficerFlag === 'True'){
+                                        <app-icon-button name="edit" toolTip="Edit" (click)="editCustomer()"
+                                            appButtonAccess="CustUpAppEditBtn
+                                            "></app-icon-button>
+                                        }
+                                    </div>
+
+                                </div>
+                                <row>
+                                    <div class="col-md-6"> <view-label class="mb26" label="Customer Name"
+                                            oldValue="{{updateOldValue?.FirstName}}&nbsp;{{updateOldValue?.MiddleName}}&nbsp;{{updateOldValue?.LastName}}"
+                                            value="{{customerUpdate.firstName}}&nbsp;{{customerUpdate.middleName}}&nbsp;{{customerUpdate.lastName}}"></view-label>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Gender"
+                                            oldValue="{{updateOldValue?.GenderDescription}}"
+                                            value="{{customerUpdate.genderDescription}}"></view-label>
+                                    </div>
+
+                                    <div class="col-md-6"> <view-label class="mb26" label="Email ID"
+                                            value="{{customerUpdate.emailId}}"
+                                            oldValue="{{updateOldValue?.EmailId}}"></view-label></div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Nationality"
+                                            oldValue="{{updateOldValue?.NationalityDescription}}"
+                                            value="{{customerUpdate.nationalityDescription}}"></view-label>
+                                    </div>
+
+                                    <div class="col-md-6"> <view-label class="mb26" label="Contact No"
+                                            value="{{customerUpdate.contactNo}}"
+                                            oldValue="{{updateOldValue?.ContactNo}}"></view-label></div>
+                                    <div class="col-md-6"> <view-label class="mb26" label="Father Name"
+                                            oldValue="{{updateOldValue?.FatherName}}"
+                                            value="{{customerUpdate.fatherName}}"></view-label></div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Alternate Contact No"
+                                            oldValue="{{updateOldValue?.AlternateContactNo}}"
+                                            value="{{customerUpdate.alternateContactNo}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Mother Name"
+                                            oldValue="{{updateOldValue?.MotherName}}"
+                                            value="{{customerUpdate.motherName}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Date of Birth"
+                                            oldValue="{{updateOldValue?.DateOfBirth | appDate}}"
+                                            value="{{customerUpdate.dateOfBirth | appDate}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Guardian Name"
+                                            oldValue="{{updateOldValue?.GaurdianName}}"
+                                            value="{{customerUpdate.gaurdianName}}"></view-label>
+                                    </div>
+                                </row>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ">
+                            <div class="border-right h100">
+                                <div class="view-label-container-title mb26">Employer Information</div>
+                                <row>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Employer Name"
+                                            oldValue="{{updateOldValue?.EmployerName}}"
+                                            value="{{customerUpdate.employerName}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Net Salary(FJD)"
+                                            oldValue="{{updateOldValue?.NetSalary}}"
+                                            value="{{customerUpdate.netSalary}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Occupation"
+                                            oldValue="{{updateOldValue?.Occupation}}"
+                                            value="{{customerUpdate.occupation}}"></view-label></div>
+                                </row>
+                                <div class="view-label-container mb26">
+                                    <div class="d-flex align-items-center address-header">
+                                        <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                        <view-label value="Employer Address" class="pl10"></view-label>
+                                    </div>
+                                    <div class="address-content">
+                                        {{customerUpdate.iEmployerAddress.line1}}&nbsp;
+                                        {{customerUpdate.iEmployerAddress.line2?customerUpdate.iEmployerAddress.line2:''}}&nbsp;
+                                        {{customerUpdate.iEmployerAddress.line3?customerUpdate.iEmployerAddress.line3:''}}&nbsp;
+                                        {{customerUpdate.iEmployerAddress.village}}&nbsp;
+                                        {{customerUpdate.iEmployerAddress.islandDescription}}&nbsp;
+                                        {{customerUpdate.iEmployerAddress.provinceDescription}}&nbsp;
+                                        -
+                                        {{customerUpdate.iEmployerAddress.poBoxNo?customerUpdate.iEmployerAddress.poBoxNo:''}}.&nbsp;
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 ">
+                            <div class=" h100">
+                                <div class="view-label-container-title mb26">Student Information</div>
+                                <row>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="School Name"
+                                            oldValue="{{updateOldValue?.SchoolName}}"
+                                            value="{{customerUpdate.schoolName}}"></view-label>
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="Student ID"
+                                            oldValue="{{updateOldValue?.StudentId}}"
+                                            value="{{customerUpdate.studentId}}"></view-label>
+                                    </div>
+                                    <div class=" col-md-12 mb26 hr"></div>
+                                    <div class="view-label-container-title mb26">Death Information</div>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="Date of Death"
+                                            oldValue="{{updateOldValue?.DateOfDeath | appDate}}"
+                                            value="{{customerUpdate.dateOfDeath | appDate}}"></view-label>
+                                    </div>
+                                </row>
+                            </div>
+                        </div> -->
+
+                    </row>
+                </div>
+
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title open-visible justify-content-between">
+                        <div class="d-flex gap-8">
+                            <ion-icon src="assets/icons/accordian/addinfo.svg"></ion-icon>
+                            <div class="">Additional Information</div>
+                        </div>
+
+                    </div>
+                    <div class="accordion-title open-hide">
+                        <ion-icon src="assets/icons/accordian/addinfo.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Additional Information</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="content-wrapper">
+                    <row>
+                        <div class="col-md-3 v-flex justify-content-between p10 ">
+                            <div>
+                                <div class=" mb26">
+                                    <div class="d-flex align-items-center address-header">
+                                        <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                        <view-label class="pl10" value="Residential Address"></view-label>
+                                    </div>
+                                    <div class="address-content">
+                                        {{customerUpdate.iResidentialaddress.line1}}&nbsp;
+                                        {{customerUpdate.iResidentialaddress.line2?customerUpdate.iResidentialaddress.line2:''}}&nbsp;
+                                        {{customerUpdate.iResidentialaddress.line3?customerUpdate.iResidentialaddress.line3:''}}&nbsp;
+                                        {{customerUpdate.iResidentialaddress.village}}&nbsp;
+                                        {{customerUpdate.iResidentialaddress.tikinaDescription}}&nbsp;
+                                        {{customerUpdate.iResidentialaddress.islandDescription}}&nbsp;
+                                        {{customerUpdate.iResidentialaddress.provinceDescription}}&nbsp;
+                                        -
+                                        {{customerUpdate.iResidentialaddress.poBoxNo?customerUpdate.iResidentialaddress.poBoxNo:''}}.&nbsp;
+                                    </div>
+                                </div>
+                                <div class="view-label-container">
+                                    <div class="d-flex align-items-center address-header">
+                                        <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                        <view-label value="Permanent Address"></view-label>
+                                    </div>
+                                    <div class="address-content">
+                                        {{customerUpdate.iPermanentaddress.line1}}&nbsp;
+                                        {{customerUpdate.iPermanentaddress.line2}}&nbsp;
+                                        {{customerUpdate.iPermanentaddress.line3}}&nbsp;
+                                        {{customerUpdate.iPermanentaddress.village}}&nbsp;
+                                        {{customerUpdate.iPermanentaddress.tikinaDescription}}&nbsp;
+                                        {{customerUpdate.iPermanentaddress.islandDescription}}&nbsp;
+                                        {{customerUpdate.iPermanentaddress.provinceDescription}}&nbsp;
+                                        - {{customerUpdate.iPermanentaddress.poBoxNo}}&nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                @if(this.customerUpdate.statusValue !=='CNCLD' &&
+                                this.customerUpdate.statusValue !=='APRVD' &&
+                                this.customerUpdate.statusValue !=='PNDAP' &&
+                                this.customerUpdate.assignedOfficerFlag === 'True'){
+
+                                <app-icon-button name="edit" toolTip="Edit" (click)="addInfoDialog()" appButtonAccess="CustUpAppEditBtn
+                                    "></app-icon-button>
+                                }
+                            </div>
+
+                        </div>
+                        <div class="col-md-3 border-left">
+                            <div class="view-label-container">
+                                <div class="d-flex align-items-center address-header">
+                                    <ion-icon src="assets/icons/kyc.svg"></ion-icon>
+                                    <view-label value="KYC Details"></view-label>
+                                </div>
+                            </div>
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="kyc-details">FNPF No</div>
+                                    <div class="kyc-details">Voter ID</div>
+                                    <div class="kyc-details">TIN</div>
+                                    <div class="kyc-details">Driv Lic No</div>
+                                    <!-- <div class="kyc-details">National ID</div> -->
+                                    <div class="kyc-details">Passport No</div>
+                                    <div class="kyc-details">Birth Reg No</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="kyc-data"><app-tooltip [value]="customerUpdate.pfNo"></app-tooltip>
+                                    </div>
+                                    <div class="kyc-data"> <app-tooltip [value]="customerUpdate.voterId"></app-tooltip>
+                                    </div>
+                                    <div class="kyc-data"> <app-tooltip [value]="customerUpdate.tin"></app-tooltip>
+                                    </div>
+                                    <div class="kyc-data"><app-tooltip
+                                            [value]="customerUpdate.driverLicenseNo"></app-tooltip></div>
+                                    <!-- <div class="kyc-data"> <app-tooltip
+                                            [value]="customerUpdate.nationalId"></app-tooltip></div> -->
+                                    <div class="kyc-data"> <app-tooltip
+                                            [value]="customerUpdate.passportNo"></app-tooltip></div>
+                                    <div class="kyc-data"> <app-tooltip
+                                            [value]="customerUpdate.birthRegNo"></app-tooltip></div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-left">
+                            <div class="view-label-container">
+                                <div class="d-flex align-items-center address-header">
+                                    <ion-icon src="assets/icons/social.svg"></ion-icon>
+                                    <view-label value="Social Platform Details"></view-label>
+                                </div>
+                            </div>
+                            <row>
+                                <div class="col-md-12 ">
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo"> <ion-icon src="assets/icons/facebook.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details social-ellipse">
+                                            <span><app-tooltip [value]="customerUpdate.facebookId"></app-tooltip></span>
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo"> <ion-icon src="assets/icons/linkedIn.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details social-ellipse">
+                                            <span> <app-tooltip
+                                                    [value]="customerUpdate.linkedinId"></app-tooltip></span>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo social-ellipse"> <ion-icon
+                                                src="assets/icons/whatsapp.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details"><span>
+
+                                                <app-tooltip [value]=" customerUpdate.whatsappNumber"></app-tooltip>
+                                            </span></div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 ">
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo"> <ion-icon src="assets/icons/viber.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details social-ellipse"><span>
+                                                <app-tooltip [value]="customerUpdate.viberNumber"></app-tooltip>
+                                            </span></div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo social-ellipse"> <ion-icon
+                                                src="assets/icons/skype.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details"><span> <app-tooltip
+                                                    [value]="customerUpdate.skypeId"></app-tooltip></span></div>
+                                    </div>
+
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-left">
+                            <div class="view-label-container">
+                                <div class="d-flex align-items-center address-header">
+                                    <ion-icon name="person-outline"></ion-icon>
+                                    <view-label value="Customer Type" class="pl10"></view-label>
+                                </div>
+                            </div>
+                            <row>
+                                @for (checkData of benifitTypeData.lstentCustomerUpdateType; track $index) {
+                                <div class="d-flex col-md-6 mb20 gap-5">
+                                    <app-checkbox [checked]="checkData.isChecked==='Y'"
+                                        [btnClicked]="true"></app-checkbox>
+                                    <div>{{checkData.customerTypeDescription}}</div>
+                                </div>
+
+                                }
+
+
+
+                            </row>
+                        </div>
+
+                    </row>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/bank.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Bank Information</div>
+                            <div class="accordian-title-count">{{tableBankData.length}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                        <app-table [columns]="bankColums" [columnsName]="bankColumnsName"
+                            columnID="customerUpdateBankId" (onSelect)="onSelect($event)" [dataSource]="tableBankData"
+                            (dataSelected)="detailsFetched($event)" [pagination]="pagination" [hasPagination]="true"
+                            [hideSelectAll]="true" (pageChanged)="bankPageChanged($event)">
+                            <ng-template cellDef="customerRefNo" let-element>
+                                <a href="">{{element.customerRefNo}}</a>
+                            </ng-template>
+                            <ng-template cellDef="bankName" let-element>
+                                {{element.ientBank.bankName}}
+                            </ng-template>
+                            <ng-template cellDef="bankCode" let-element>
+                                {{element.ientBank.bankCode}}
+                            </ng-template>
+                            <ng-template cellDef="effectiveDate" let-element>
+                                {{element.effectiveDate | appDate}}
+                            </ng-template>
+                            <ng-template cellDef="ifscCode" let-element>
+                                {{element.ientBank.ifscCode}}
+                            </ng-template>
+                            <ng-template cellDef="statusDescription" let-element>
+                                <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+                            </ng-template>
+                            <ng-template cellDef="action" let-element>
+                                <app-icon-button name="open" toolTip="Open"
+                                    (click)="viewBankDetail(element.customerUpdateBankId)"></app-icon-button>
+                            </ng-template>
+                            <ng-template #slotRight>
+                                @if(this.customerUpdate.statusValue !=='CNCLD' &&
+                                this.customerUpdate.statusValue !=='APRVD' &&
+                                this.customerUpdate.statusValue !=='PNDAP' &&
+                                this.customerUpdate.assignedOfficerFlag === 'True'){
+                                <app-icon-button name="add" toolTip="Add New"
+                                    (click)="createBankDetail()"></app-icon-button>
+                                }
+                            </ng-template>
+
+                        </app-table>
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Assigned Officer</div>
+                            <div class="accordian-title-count">{{tableAssignOffice.length}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                        <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                            [dataSource]="tableAssignOffice" [pagination]="pagination" [hasPagination]="true"
+                            (dataSelected)="detailsFetched($event)" [hideSelectAll]="true"
+                            (pageChanged)="updtePageChanged($event)">
+                            <ng-template cellDef="statusDescription" let-element>
+                                <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+                            </ng-template>
+                            <ng-template cellDef="assignedDate" let-element>
+                                {{element.assignedDate | appDate}}
+                            </ng-template>
+                            <!-- @if(customerUpdate.assignedOfficerFlag === 'True'){ -->
+                            <ng-template #slotRight>
+                                <div class="d-flex align-items-center">
+                                    @if(this.customerUpdate.reAssignFlag === 'True' && (this.customerUpdate.statusValue
+                                    !=='CNCLD' &&
+                                    this.customerUpdate.statusValue !=='APRVD')){
+                                    <form #p="ngForm" class="col-md-10 w250"><app-input-control type="select"
+                                            [(ngModel)]="customerUpdateAssignOfficer.assignedTo" name="assignedTo"
+                                            [items]="assignedOfficerDDL" key="constant" [errorTrue]="errorTrue"
+                                            [required]="true" keyName="description"></app-input-control></form>
+                                    <div class="col-md-2">
+                                        <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssigned()"
+                                                toolTip="Reassign"></app-icon-button></div>
+                                    </div>
+                                    }
+                                    @if(this.customerUpdate.selfAssignFlag === 'True' &&
+                                    (this.customerUpdate.statusValue !=='CNCLD' &&
+                                    this.customerUpdate.statusValue !=='APRVD')){
+                                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssigned()"
+                                            toolTip="Self Assign"></app-icon-button></div>
+                                    }
+                                </div>
+                            </ng-template>
+                            <!-- } -->
+                        </app-table>
+                    </div>
+                </div>
+
+            </accordion-body>
+        </accordion-item>
+
+        <accordion-item (click)="getDocumentList()">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/document.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Document</div>
+                            <div class="accordian-title-count">{{customerDocumentList.length}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="document-pad">
+                    <div class="doc-header">
+                        <row class="row-w100">
+                            <!-- <div class="col-md-2">Doc Ref No</div> -->
+                            <div class="col-md-3">Document Name</div>
+                            <div class="col-md-2">File Name</div>
+                            <div class="col-md-2">File Type</div>
+                            <div class="col-md-2">Uploaded Date</div>
+                            <div class="col-md-2"></div>
+                        </row>
+                    </div>
+
+
+                    <div style="padding: 10px 20px;">
+                        @for (document of customerDocumentList; track $index) {
+
+                        <app-documents [document]="document" (onUpload)="onUpload($event, document)"
+                            [docViewAccess]="'CustUpAppViewDocBtn'" [docDeleteAccess]="'CustUpAppDelDocBtn'"
+                            [docDownloadAccess]="'CustUpAppDownDocBtn'" [docUploadAccess]="'CustUpAppAddDocBtn'"
+                            [pageAccess]="'CUSUP'" [btnCondition]="btnConditions"
+                            (onDelete)="checkDocumentDelete(document)"></app-documents>
+
+                        }
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+
+
+
+
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Communication History</div>
+                            <div class="accordian-title-count">{{emailHistoryTableData.length}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                        <app-table [columns]="emailColumns" [columnsName]="emailColumnsName" [hasPagination]="true"
+                            [dataSource]="emailHistoryTableData" [pagination]="pagination"
+                            (dataSelected)="detailsFetched($event)" [hideSelectAll]="true">
+                            <ng-template cellDef="toEmailId" let-element>
+                                {{element.ientCommunicationTracking.toEmailId}}
+                            </ng-template>
+                            <ng-template cellDef="sentDate" let-element>
+                                {{element.ientCommunicationTracking.sentDate |
+                                appDate
+                                }} |
+                                {{element.ientCommunicationTracking.sentDate
+                                | appDate: 'hh:mm a'}}
+                            </ng-template>
+                            <ng-template cellDef="sentStatusDescription" let-element>
+                                <div class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                                    {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+                            </ng-template>
+
+                            <ng-template cellDef="action" let-element>
+                                <app-icon-button name="open" toolTip="Open"
+                                    (click)="viewEmailDetail(element)"></app-icon-button>
+                            </ng-template>
+                        </app-table>
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <div class="card-accordian w100">
+            <div class="card-header">
+                <div class="d-flex w100">
+                    <div class="col-md-4 pl8px">
+
+                        <div class="d-flex">
+                            <div class="accordion-title-card pr10 flex-none border-right pointer"
+                                [ngClass]="{'active-tab': showNotesDatas === true}" (click)="openStatusValue(1)">
+                                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Notes</div>
+                                    <div class="accordian-title-count">{{notesList.lstentCustomerUpdateNotes.length}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card pl10 pointer" (click)="openStatusValue(2)"
+                                [ngClass]="{'active-tab': showStatusHistory === true}">
+                                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Status History</div>
+                                    <div class="accordian-title-count">{{statusHistoryDataSource.length}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8" (click)="openAccordian(this.accordianOpen)">
+
+                        <div class="end btn-accordian">
+                            @if(this.accordianOpen === true){
+
+                            <div class="rotate">
+                                <ion-icon src="assets/icons/down.svg"></ion-icon>
+                            </div>
+                            }
+                            @else{
+                            <!-- <div class="rotate-180"> -->
+                            <ion-icon src="assets/icons/down.svg"></ion-icon>
+                            <!-- </div> -->
+                            }
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            @if(this.accordianOpen === true){
+            @if(this.showNotesDatas === true){
+            <!-- <div class="acc-card-content"> -->
+            <div class="p16px pb26">
+                <div class="content-wrapper pb26">
+                    <div class="justify-content-end d-flex">
+                        @if(this.customerUpdate.statusValue !=='CNCLD' &&
+                        this.customerUpdate.statusValue !=='APRVD' && this.customerUpdate.statusValue !== 'PNDAP' &&
+                        this.customerUpdate.assignedOfficerFlag === 'True'){
+                        <app-icon-button name="add" toolTip="Create" (click)="createNotes()" appButtonAccess="CustUpAppAddNoteBtn
+                            "></app-icon-button>
+                        }
+                        @if(this.customerUpdate.statusValue === 'PNDAP' && this.customerUpdate.assignedOfficerFlag ===
+                        'True'){
+                        <app-icon-button name="add" toolTip="Create" (click)="createNotes()" appButtonAccess="CustUpAppAddNoteBtn
+                            "></app-icon-button>
+                        }
+                        <!-- @if(this.customerUpdate.statusValue === 'PEVRI' && this.customerUpdate.assignedOfficerFlag ===
+                        'True'){
+                        <app-icon-button name="add" toolTip="Create" (click)="createNotes()" appButtonAccess="CustUpAppAddNoteBtn
+                            "></app-icon-button>
+                        } -->
+                    </div>
+                    @for (item of notesList.lstentCustomerUpdateNotes; track $index) {
+                    <div class="border-bottom  notes-list">
+                        <div class="mx10">{{item.notes}}</div>
+                        <div class="d-flex justify-content-end notes-context">
+                            <div style="padding-right:5px ;">
+                                {{item.enteredByFullname}}</div>
+                            <div class=" notes-border-left">
+                                {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm a'}}
+                            </div>
+                            <div style="padding-right:5px ;"></div>
+                            <div class=" notes-border-left status-{{item.statusValue}}">
+                                {{item.statusDescription}}
+                            </div>
+                            <div class="card-1-header-label px-2 ">
+
+                            </div>
+                            <!-- <div class="card-1-header-label px-2 ">Email </div> -->
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            <!-- </div> -->
+            }
+            @else if(this.showStatusHistory === true){
+            <div class="status-padding">
+                <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+
+            </div>
+            }
+            }
+
+        </div>
+        <div class="p10"></div>
+
+    </accordion>
+</div>
+
+<ng-template #bankDialog>
+
+    <div class="dialog-container">
+        @if(this.viewBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer Update <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                View
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(this.customerUpdate.statusValue !=='CNCLD' &&
+                    this.customerUpdate.statusValue !=='APRVD' &&
+                    this.customerUpdate.statusValue !=='PNDAP' &&
+                    this.customerUpdate.assignedOfficerFlag === 'True'){
+                    <app-icon-button name="edit" toolTip="Edit" (click)="editBankDetails()" appButtonAccess="CustUpAppSaveBtn
+                        "></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    <div class="p10">
+                        <row>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header">
+                                        Bank Information
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Bank Name" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.BankName}}"
+                                                    value="{{customerBank.ientBank.bankName}}"></view-label></div>
+                                            <div class="col-md-12"><view-label label="Bank Code" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.BankCode}}"
+                                                    value="{{customerBank.ientBank.bankCode}}"></view-label></div>
+                                            <div class="col-md-12"><view-label label="Branch " class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.BranchTypeDescription}}"
+                                                    value="{{customerBank.ientBank.branchTypeDescription}}"></view-label>
+                                            </div>
+
+                                            <div class="col-md-12"><view-label label="Swift Code" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.SwiftCode}}"
+                                                    value="{{customerBank.ientBank.swiftCode}}"></view-label></div>
+                                            <!-- <div class="col-md-12"><view-label label="IFSC Code" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IfscCode}}"
+                                                    value="{{customerBank.ientBank.ifscCode}}"></view-label></div> -->
+                                            @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                                            <div class="col-md-12"><view-label label="Head Office Bank"
+                                                    oldValue="{{bankOldValue?.IentBank?.HeadOfficeBank}}"
+                                                    value="{{customerBank.headOfficeBank}}" class="mb26"></view-label>
+                                            </div>
+                                            }
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Additional Information
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Account No" class="mb26"
+                                                    oldValue="{{bankOldValue?.AccountNo}}"
+                                                    value="{{customerBank.accountNo}}"></view-label></div>
+                                            <div class="col-md-12"><view-label label="Effective Date " class="mb26"
+                                                    oldValue="{{bankOldValue?.EffectiveDate | appDate}}"
+                                                    value="{{customerBank.effectiveDate  | appDate}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Account Status  "
+                                                    oldValue="{{bankOldValue?.StatusDescription}}"
+                                                    class="mb26 status-{{customerBank.statusValue}}"
+                                                    value="{{customerBank.statusDescription}}"></view-label></div>
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Bank Address
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Line 1" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IentAddress?.Line1}}"
+                                                    value="{{customerBank.ientBank.ientAddress.line1}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Line 2" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IentAddress?.Line2}}"
+                                                    value="{{customerBank.ientBank.ientAddress.line2}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Line 3 " class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IentAddress?.Line3}}"
+                                                    value="{{customerBank.ientBank.ientAddress.line3}}"></view-label>
+                                            </div>
+
+                                            <div class="col-md-12"><view-label label="Province" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IentAddress?.ProvinceDescription}}"
+                                                    value="{{customerBank.ientBank.ientAddress.provinceDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Island" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IentAddress?.IslandDescription}}"
+                                                    value="{{customerBank.ientBank.ientAddress.islandDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Tikina" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IentAddress?.TikinaDescription}}"
+                                                    value="{{customerBank.ientBank.ientAddress.tikinaDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Village" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IentAddress?.village}}"
+                                                    value="{{customerBank.ientBank.ientAddress.village}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="PO Box No" class="mb26"
+                                                    oldValue="{{bankOldValue?.IentBank?.IentAddress?.PoBoxNo}}"
+                                                    value="{{customerBank.ientBank.ientAddress.poBoxNo}}"></view-label>
+                                            </div>
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+
+
+
+                    </div>
+                </scroll>
+
+            </div>
+        </div>
+
+        }
+        @if(this.createBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer Update <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Create
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" appButtonAccess="CustUpAppSaveBankBtn
+                    " (click)="saveBankDetails()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" appButtonAccess="CustUpAppClearBankBtn
+                    " (click)="clearBankDetails()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="p10">
+                        <div class="view-label-container-title mb26">Enter Bank Code and to continue</div>
+                        <form #q="ngForm">
+                            <row>
+                                <div class="col-md-8">
+                                    <form #x="ngForm" class="d-flex align-items-center"
+                                        (ngSubmit)="viewBankDetailsBasedOnBankCode(x)">
+
+                                        <div class="col-md-6"> <app-input-control label="Bank Code"
+                                                [errorTrue]="errorTrue" [required]="true" [(ngModel)]="bankCodeValue"
+                                                [maxLength]="20" [minLength]="2"
+                                                name="bankCodeValue"></app-input-control></div>
+                                        <div class="col-md-6"> <button type="submit" class="info-btn">Get Info<ion-icon
+                                                    appButtonAccess="CustUpAppGetInfoBankBtn
+                                                  " class="pl10px" name="information-outline"></ion-icon></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </row>
+                            @if(createNewBankInfoValues){
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Bank Name" [(ngModel)]="customerBank.ientBank.bankName"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="50"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="bankName"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Bank Code" [(ngModel)]="customerBank.ientBank.bankCode"
+                                                        [btnClicked]="true" [maxLength]="20" [minLength]="2"
+                                                        name="bankCode"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="select"
+                                                        label="Branch" [items]="initialData.DDLValues.DDLBankBranch"
+                                                        key="constant" keyName="description" [errorTrue]="errorTrue"
+                                                        [required]="true"
+                                                        [(ngModel)]="customerBank.ientBank.branchTypeValue"
+                                                        name="branchTypeValue" (onChange)="clearHeadOffice()"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="branchValue"></app-input-control></div>
+
+                                                <!-- <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="IFSC Code" [(ngModel)]="customerBank.ientBank.ifscCode"
+                                                        [maxLength]="20" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="ifscCode"></app-input-control></div> -->
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Swift Code" [(ngModel)]="customerBank.ientBank.swiftCode"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="20"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="swiftCode"></app-input-control></div>
+                                                <div class="col-md-12 mb26">
+                                                    @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                                                    <app-input-control type="select" label="Head Office Bank"
+                                                        [items]="initialData.getHeadOfficeBankDDL.DDLBank" key="id"
+                                                        keyName="code" [errorTrue]="errorTrue" [required]="true"
+                                                        [oldValue]="bankOldValue?.IentBank?.HeadOfficeBankId"
+                                                        [oldValueDescription]="bankOldValue?.IentBank?.HeadOfficeBank"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        [(ngModel)]="customerBank.ientBank.headOfficeBankId"
+                                                        name="headOfficeBankId"></app-input-control>
+                                                    }
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Additional Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26"><app-input-control type="number"
+                                                        label="Account No" [(ngModel)]="customerBank.accountNo"
+                                                        name="accountNo" [errorTrue]="errorTrue" [required]="true"
+                                                        [maxLength]="20"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="date"
+                                                        label="Effective Date" [(ngModel)]="customerBank.effectiveDate"
+                                                        name="effectiveDate"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="select"
+                                                        label="Account Status" [(ngModel)]="customerBank.statusValue"
+                                                        name="statusValue" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="true"
+                                                        [items]="initialData.DDLValues.DDLActiveAndInActive"
+                                                        key="constant" keyName="description"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Address
+                                        </div>
+                                        <div class="box-pad">
+                                            <app-address-edit [ientAddress]="customerBank.ientBank.ientAddress"
+                                                [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                [errorTrue]="errorTrue" type="bank"></app-address-edit>
+                                        </div>
+                                    </div>
+                                </div>
+                            </row>
+                            }
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+        }
+
+        @if(this.editBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer Update <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Edit
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Update" appButtonAccess="CustUpAppSaveBankBtn
+                    " (click)="saveEditBankDetails()"></app-icon-button>
+                    <app-icon-button name="refresh" appButtonAccess="CustUpAppRefreshBankBtn
+                    " toolTip="Refresh" (click)="openBankDetails()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="p10">
+                        <form #q="ngForm">
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Bank Name" [(ngModel)]="customerBank.ientBank.bankName"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="50"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        [oldValue]="bankOldValue?.IentBank?.BankName"
+                                                        name="bankName"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Bank Code" [(ngModel)]="customerBank.ientBank.bankCode"
+                                                        [btnClicked]="true" [maxLength]="20" [minLength]="2"
+                                                        [oldValue]="bankOldValue?.IentBank?.BankCode"
+                                                        name="bankCode"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="select"
+                                                        label="Branch" [items]="initialData.DDLValues.DDLBankBranch"
+                                                        key="constant" keyName="description" [errorTrue]="errorTrue"
+                                                        [required]="true" (onChange)="clearHeadOffice()"
+                                                        [oldValue]="bankOldValue?.IentBank?.BranchTypeValue"
+                                                        [oldValueDescription]="bankOldValue?.IentBank?.BranchTypeDescription"
+                                                        [(ngModel)]="customerBank.ientBank.branchTypeValue"
+                                                        name="branchTypeValue"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="branchValue"></app-input-control>
+                                                </div>
+
+                                                <!-- <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="IFSC Code" [(ngModel)]="customerBank.ientBank.ifscCode"
+                                                        [maxLength]="20" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        [oldValue]="bankOldValue?.IentBank?.IfscCode"
+                                                        name="ifscCode"></app-input-control></div> -->
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Swift Code" [(ngModel)]="customerBank.ientBank.swiftCode"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="20"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        [oldValue]="bankOldValue?.IentBank?.SwiftCode"
+                                                        name="swiftCode"></app-input-control></div>
+
+                                                <div class="col-md-12 mb26">
+                                                    @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                                                    <app-input-control type="select" label="Head Office Bank"
+                                                        [items]="initialData.DDLValues.DDLBank" key="id" keyName="code"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        [oldValue]="bankOldValue?.IentBank?.HeadOfficeBankId"
+                                                        [oldValueDescription]="bankOldValue?.IentBank?.HeadOfficeBank"
+                                                        [(ngModel)]="customerBank.ientBank.headOfficeBankId"
+                                                        [errorTrue]="errorTrue" [required]="true"
+                                                        name="headOfficeBankId"></app-input-control>
+                                                    }
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box">
+                                        <div class="box-header ">
+                                            Additional Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26"><app-input-control type="number"
+                                                        label="Account No" [(ngModel)]="customerBank.accountNo"
+                                                        name="accountNo" [errorTrue]="errorTrue" [required]="true"
+                                                        [oldValue]="bankOldValue?.AccountNo"
+                                                        [maxLength]="20"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="date"
+                                                        label="Effective Date" [(ngModel)]="customerBank.effectiveDate"
+                                                        [oldValue]="bankOldValue?.EffectiveDate"
+                                                        name="effectiveDate"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="select"
+                                                        label="Account Status" [(ngModel)]="customerBank.statusValue"
+                                                        name="statusValue" [errorTrue]="errorTrue" [required]="true"
+                                                        [items]="initialData.DDLValues.DDLActiveAndInActive"
+                                                        [oldValue]="bankOldValue?.StatusValue"
+                                                        [oldValueDescription]="bankOldValue?.StatusDescription"
+                                                        key="constant" keyName="description"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box">
+                                        <div class="box-header ">
+                                            Bank Address
+                                        </div>
+                                        <div class="box-pad">
+                                            <app-address-edit [ientAddress]="customerBank.ientBank.ientAddress"
+                                                [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                [oldValue]="bankOldValue?.IentBank?.IentAddress"
+                                                [oldValueDesription]="bankOldValue?.IentBank?.IentAddress"
+                                                [errorTrue]="errorTrue" type="bank"></app-address-edit>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </row>
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+        }
+    </div>
+
+</ng-template>
+
+<ng-template #addnInfo>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/addinfo.svg"></ion-icon>
+                Customer Update <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Additional Information
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Update" (click)="saveCustomerUpdate()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openCustomerUpdateDetails()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="doAddInfoClose()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="mb26"></div>
+                    <form #b="ngForm" class="pb10">
+                        <row>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Residential Address
+                                    </div>
+                                    <div class="box-pad">
+                                        <app-address-edit [ientAddress]="customerUpdate.iResidentialaddress"
+                                            [errorTrue]="errorTrue" type="residential"
+                                            [oldValue]="updateOldValue?.IResidentialaddress"
+                                            [oldValueDesription]="updateOldValue?.IResidentialaddress"
+                                            (onUpdate)="checkAddressUpdate($event)"></app-address-edit>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        <div class="d-flex justify-content-between w100">
+                                            <div>Permanent Address</div>
+                                            <div class="d-flex toggle-title status-toggle">Same As <br> Residential
+                                                Address<mat-slide-toggle class="pl10"
+                                                    [checked]="customerUpdate.isResidential === 'Y'"
+                                                    (change)="doSameAsResidential($event.checked)"></mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-pad">
+
+                                        @if(customerUpdate.isResidential === 'Y'){
+                                        <app-address-edit [ientAddress]="customerUpdate.iResidentialaddress"
+                                            [errorTrue]="errorTrue" type="residential" [view]="true" [btnClicked]="true"
+                                            [oldValue]="updateOldValue?.IPermanentaddress"
+                                            [oldValueDesription]="updateOldValue?.IPermanentaddress"></app-address-edit>
+                                        } @else {
+
+                                        <app-address-edit [ientAddress]="customerUpdate.iPermanentaddress"
+                                            [errorTrue]="errorTrue" type="permanent"
+                                            [btnClicked]="customerUpdate.isResidential === 'Y'"
+                                            [oldValue]="updateOldValue?.IPermanentaddress"
+                                            [oldValueDesription]="updateOldValue?.IPermanentaddress"></app-address-edit>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        KYC Details <span>(Any one field is Mandatory)</span>
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12">
+                                                <app-input-control type="special"
+                                                    [(ngModel)]="customerUpdate.birthRegNo" name="birthRegNo"
+                                                    [maxLength]="15" [oldValue]="updateOldValue?.BirthRegNo"
+                                                    label="Birth Reg No"
+                                                    [errorTrue]="customerUpdate.tin===''&& customerUpdate.driverLicenseNo==='' && customerUpdate.voterId==='' && customerUpdate.pfNo===''  && customerUpdate.passportNo==='' && errorTrue "
+                                                    [required]="customerUpdate.tin===''&& customerUpdate.driverLicenseNo==='' && customerUpdate.voterId==='' && customerUpdate.passportNo==='' && customerUpdate.pfNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="TIN"
+                                                    [(ngModel)]="customerUpdate.tin" name="tin" [maxLength]="15"
+                                                    [oldValue]="updateOldValue?.Tin"
+                                                    [errorTrue]="customerUpdate.passportNo===''&& customerUpdate.driverLicenseNo==='' && customerUpdate.voterId==='' && customerUpdate.pfNo==='' && errorTrue "
+                                                    [required]="customerUpdate.passportNo===''&& customerUpdate.driverLicenseNo==='' && customerUpdate.voterId==='' && customerUpdate.pfNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                                                    [errorTrue]="customerUpdate.passportNo===''&& customerUpdate.tin===''&&  customerUpdate.voterId==='' && customerUpdate.driverLicenseNo==='' && errorTrue "
+                                                    [required]="customerUpdate.passportNo===''&& customerUpdate.tin===''&&  customerUpdate.voterId==='' && customerUpdate.driverLicenseNo==='' "
+                                                    [(ngModel)]="customerUpdate.pfNo" [minLength]="10" [maxLength]="10"
+                                                    [oldValue]="updateOldValue?.FnpfNo" name="pfNo"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="Voter ID"
+                                                    [(ngModel)]="customerUpdate.voterId" name="voterId" [maxLength]="15"
+                                                    [oldValue]="updateOldValue?.VoterId"
+                                                    [errorTrue]="customerUpdate.passportNo===''&& customerUpdate.tin===''&&  customerUpdate.pfNo==='' && customerUpdate.driverLicenseNo==='' && errorTrue "
+                                                    [required]="customerUpdate.passportNo===''&& customerUpdate.tin===''&&  customerUpdate.pfNo==='' && customerUpdate.driverLicenseNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text"
+                                                    label="Driving License No"
+                                                    [(ngModel)]="customerUpdate.driverLicenseNo" name="driverLicenseNo"
+                                                    [maxLength]="15" [oldValue]="updateOldValue?.DriverLicenseNo"
+                                                    [errorTrue]="customerUpdate.passportNo===''&& customerUpdate.tin===''&&  customerUpdate.voterId==='' && customerUpdate.pfNo==='' && errorTrue "
+                                                    [required]="customerUpdate.passportNo===''&& customerUpdate.tin===''&&  customerUpdate.voterId==='' && customerUpdate.pfNo==='' "></app-input-control>
+                                            </div>
+
+                                            <!-- <div class="col-md-12"><app-input-control type="number" label="National ID"
+                                                    [(ngModel)]="customerUpdate.nationalId" name="nationalId"
+                                                    [minLength]="8" [maxLength]="10"
+                                                    [oldValue]="updateOldValue?.NationalId"
+                                                    [errorTrue]="customerUpdate.passportNo===''&& customerUpdate.tin===''&& customerUpdate.driverLicenseNo==='' && customerUpdate.voterId==='' && customerUpdate.pfNo==='' && errorTrue "
+                                                    [required]="customerUpdate.passportNo===''&& customerUpdate.tin===''&& customerUpdate.driverLicenseNo==='' && customerUpdate.voterId==='' && customerUpdate.pfNo==='' "></app-input-control>
+                                            </div> -->
+
+                                            <div class="col-md-12"><app-input-control type="number" label="Passport No"
+                                                    [(ngModel)]="customerUpdate.passportNo" name="passportNo"
+                                                    [maxLength]="15" [oldValue]="updateOldValue?.PassportNo"
+                                                    [errorTrue]="customerUpdate.tin===''&& customerUpdate.driverLicenseNo==='' && customerUpdate.voterId==='' && customerUpdate.pfNo==='' &&customerUpdate.birthRegNo === '' && errorTrue "
+                                                    [required]="customerUpdate.tin===''&& customerUpdate.driverLicenseNo==='' && customerUpdate.voterId==='' && customerUpdate.pfNo==='' &&customerUpdate.birthRegNo === '' "></app-input-control>
+                                            </div>
+
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Social Platform Details
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><app-input-control type="special" label="Facebook ID"
+                                                    [maxLength]="500" [(ngModel)]="customerUpdate.facebookId"
+                                                    [oldValue]="updateOldValue?.FacebookId"
+                                                    name="facebookId"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="special" label="LinkedIn ID"
+                                                    [maxLength]="500" [(ngModel)]="customerUpdate.linkedinId"
+                                                    [oldValue]="updateOldValue?.LinkedinId"
+                                                    name="linkedinId"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="number" label="Whatsapp No"
+                                                    [maxLength]="20" [(ngModel)]="customerUpdate.whatsappNumber"
+                                                    [oldValue]="updateOldValue?.WhatsappNumber"
+                                                    name="whatsappNumber"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="number" label="Viber"
+                                                    [maxLength]="20" [(ngModel)]="customerUpdate.viberNumber"
+                                                    [oldValue]="updateOldValue?.ViberNumber"
+                                                    name="viberNumber"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="special" label="Skype ID"
+                                                    [maxLength]="500" [(ngModel)]="customerUpdate.skypeId"
+                                                    [oldValue]="updateOldValue?.SkypeId"
+                                                    name="skypeId"></app-input-control>
+                                            </div>
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+                    </form>
+                </scroll>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon name="person-outline"></ion-icon>
+                <div class="screen-text">Customer Update</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

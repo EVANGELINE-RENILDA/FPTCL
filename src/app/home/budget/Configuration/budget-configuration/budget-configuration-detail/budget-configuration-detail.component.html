@@ -1,0 +1,265 @@
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                <div class="screen-text">Budget</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Budget Configuration</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<div class="content-wrapper">
+    <app-multi-page-url
+        url="/home/budget/configuration/budget-configuration/budget-configuration-detail"></app-multi-page-url>
+    <div class="sticky-card">
+        <row>
+            <div class="col-md-3">
+                <view-label label="Budget Name" value=""></view-label>
+            </div>
+            <div class="col-md-3">
+                <view-label label="Added By" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Changed By" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Fiscal Year" value=""></view-label>
+            </div>
+
+            <div class="col-md-12 mb20"></div>
+
+            <div class="col-md-3">
+                <view-label label="Budget Type" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Added Date" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Changed Date" value=""></view-label>
+            </div>
+
+        </row>
+    </div>
+
+
+
+    <app-tab-group (tabChange)="onTabChange($event)">
+        <app-tab tabTitle="User Mapping">
+            <accordion>
+
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title open-visible">
+                                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                                <div class="">User Mapping</div>
+                            </div>
+                            <div class="accordion-title open-hide">
+                                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                                <div class="">User Mapping</div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <row>
+                                    <div class="col-md-4">
+                                        <div class="box" style="padding: 8px 16px;">
+                                            <div class="btn-group d-flex gap-10 slot-right">
+                                                <app-icon-button name="save" toolTip="Save/Update"></app-icon-button>
+                                                <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                                            </div>
+
+                                            <div class="col-md-12 pt10 mb20">
+                                                <app-input-control type="select" label="Department" key=""
+                                                    defaultOption="--Select--" name="" keyName=""
+                                                    [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12 mb20">
+                                                <app-input-control type="select" label="User Name" key="code"
+                                                    defaultOption="--Select--" name="" keyName=""
+                                                    [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12 mb20">
+                                                <view-label label="Added By" name=""></view-label>
+                                            </div>
+                                            <div class="col-md-12 mb20">
+                                                <view-label label="Added Date" name=""></view-label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="outer-content-wrapper">
+                                            <div class="content-wrapper">
+                                                <div>
+                                                    <app-table [columns]="columns" [columnsName]="columnsName"
+                                                        [hideSelectAll]="true" [dataSource]="tableData"
+                                                        [hasHeader]="false" [showPaginator]="false" columnID="columnID">
+
+                                                        <ng-template cellHeaderDef="department">
+                                                            Department
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="userName" let-element>
+                                                            User Name
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="addedTime" let-element>
+                                                            <div>Added By</div>
+                                                            <div>Added Date</div>
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="changedTime" let-element>
+                                                            <div>Changed By</div>
+                                                            <div>Changed Date</div>
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="edit" let-element>
+                                                            Edit
+                                                        </ng-template>
+
+                                                        <ng-template cellDef="edit" let-element>
+                                                            <app-icon-button name="edit"
+                                                                toolTip="Edit Selected"></app-icon-button>
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="delete">
+                                                            Delete
+                                                        </ng-template>
+
+                                                        <ng-template cellDef="delete" let-element>
+                                                            <app-icon-button name="doc-delete"
+                                                                toolTip="Delete Selected"></app-icon-button>
+                                                        </ng-template>
+
+                                                    </app-table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </row>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+
+        </app-tab>
+        <app-tab tabTitle="Ledger Mapping">
+            <accordion>
+
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title open-visible">
+                                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                                <div class="">Ledger Mapping</div>
+                            </div>
+                            <div class="accordion-title open-hide">
+                                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                                <div class="">Ledger Mapping</div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <row>
+                                    <div class="col-md-4">
+                                        <div class="box" style="padding: 8px 16px;">
+                                            <div class="btn-group d-flex gap-10 slot-right">
+                                                <app-icon-button name="save" toolTip="Save/Update"></app-icon-button>
+                                                <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                                            </div>
+
+                                            <div class="col-md-12 mb20">
+                                                <app-input-control type="select" label="Ledger Type" key="code"
+                                                    defaultOption="--Select--" name="" keyName=""
+                                                    [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12 mb20">
+                                                <app-input-control label="Ledger Name" [required]="true"
+                                                    [search]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12 mb20">
+                                                <view-label label="Added By" name=""></view-label>
+                                            </div>
+                                            <div class="col-md-12 mb20">
+                                                <view-label label="Added Date" name=""></view-label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="outer-content-wrapper">
+                                            <div class="content-wrapper">
+                                                <div>
+                                                    <app-table [columns]="columns1" [columnsName]="columnsName1"
+                                                        [hideSelectAll]="true" [dataSource]="tableData1"
+                                                        [hasHeader]="false" [showPaginator]="false" columnID="columnID">
+
+                                                        <ng-template cellHeaderDef="ledgerInfo">
+                                                            <div>Ledger Name</div>
+                                                            <div>Ledger Code</div>
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="ledgerType" let-element>
+                                                            Ledger Type
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="addedTime" let-element>
+                                                            <div>Added By</div>
+                                                            <div>Added Date</div>
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="changedTime" let-element>
+                                                            <div>Changed By</div>
+                                                            <div>Changed Date</div>
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="edit" let-element>
+                                                            Edit
+                                                        </ng-template>
+
+                                                        <ng-template cellDef="edit" let-element>
+                                                            <app-icon-button name="edit"
+                                                                toolTip="Edit Selected"></app-icon-button>
+                                                        </ng-template>
+
+                                                        <ng-template cellHeaderDef="delete">
+                                                            Delete
+                                                        </ng-template>
+
+                                                        <ng-template cellDef="delete" let-element>
+                                                            <app-icon-button name="doc-delete"
+                                                                toolTip="Delete Selected"></app-icon-button>
+                                                        </ng-template>
+
+                                                    </app-table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </row>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+        </app-tab>
+    </app-tab-group>
+
+</div>

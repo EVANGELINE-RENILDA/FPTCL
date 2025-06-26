@@ -1,0 +1,24 @@
+::ng-deep.top-spacer{
+	margin-top: -16px;
+}
+
+.analystic_btn{
+    padding: 8px 15px;
+    background: grey;
+	color:#fff;
+	display: flex;
+	align-items: center;
+	background-color: var( --app-primary);
+	border-radius: 4px;
+	margin: 8px 8px 8px 44px;
+
+	ion-icon{
+		font-size: 19px;
+		// display: flex;
+		color: #fff;
+		padding-right: 8px;
+	}
+	&:hover{
+		cursor: pointer;
+	}
+}

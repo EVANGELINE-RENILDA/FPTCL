@@ -1,0 +1,410 @@
+<div class="d-flex h100" appAccess="ITYSC" [parentId]="pageId">
+  @if(expand=== false){
+  <div class="col-md-8 h100">
+    <div class="content-wrapper">
+      <app-table
+        [pagination]="pagination"
+        [columns]="columns"
+        [columnsName]="columnsName"
+        [sortColumnsName]="sortColumnName"
+        [hideSelectAll]="true"
+        [dataSource]="searchResult.ilstentInvItemTypeSearchSet"
+        (pageChanged)="pageChanged($event)"
+        columnID="trustApplicationId"
+        (onSelect)="onSelect($event)"
+      >
+        <ng-template cellDef="typeName" let-element>
+          <div (click)="getItemSubTypeListByTypeId(element)" class="pointer">
+            {{ element.typeName }}
+          </div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="effectiveDatetime">
+          <div class="header-cell-title">Created Date</div>
+        </ng-template>
+        <ng-template cellDef="effectiveDatetime" let-element>
+          <div>{{ element.effectiveDatetime | appDate }}</div>
+        </ng-template>
+        <ng-template cellDef="status" let-element>
+          <accouts-status-table
+            [statusDescription]="element.status"
+          ></accouts-status-table>
+        </ng-template>
+        <ng-template cellHeaderDef="action">
+          <app-icon-button
+            name="table-add"
+            toolTip="Add New"
+            (click)="createItemtype()"
+          ></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+          <div class="d-flex">
+            <app-icon-button
+              name="doc-delete"
+              toolTip="Add New"
+              appButtonAccess="DELBT"
+              (click)="deleteItemType(element)"
+            ></app-icon-button>
+            <app-icon-button
+              name="edit"
+              toolTip="Add New"
+              (click)="openItemtype(element)"
+            ></app-icon-button>
+          </div>
+        </ng-template>
+      </app-table>
+    </div>
+  </div>
+  <div class="col-md-4 h100">
+    <app-table
+      [pagination]="pagination"
+      [columns]="subColumns"
+      [columnsName]="subColumnsName"
+      [hideSelectAll]="true"
+      [dataSource]="itemSubTypeList.plstitemSubtype"
+      (pageChanged)="pageChanged($event)"
+      [hasPagination]="true"
+      columnID="trustApplicationId"
+      (onSelect)="onSelect($event)"
+      [showPaginator]="false"
+    >
+      <ng-template cellHeaderDef="action">
+        <app-icon-button
+          name="table-add"
+          toolTip="Add New"
+          (click)="createSubtype()"
+          [hidden]="itemInvTypeId === 0"
+        ></app-icon-button>
+      </ng-template>
+      <ng-template cellDef="action" let-element>
+        <div class="d-flex">
+          <app-icon-button
+            name="doc-delete"
+            toolTip="Add New"
+            (click)="deleteItemSubType(element)"
+          ></app-icon-button>
+          <app-icon-button
+            name="edit"
+            toolTip="Add New"
+            (click)="openItemSubtype(element)"
+          ></app-icon-button>
+        </div>
+      </ng-template>
+      <ng-template cellHeaderDef="sidebtn">
+        <app-icon-button
+          name="swipe-in"
+          toolTip="Expand"
+          (click)="tableToggle()"
+        ></app-icon-button>
+      </ng-template>
+    </app-table>
+  </div>
+  } @else {
+  <div class="col-md-4 h100">
+    <div class="content-wrapper">
+      <app-table
+        [pagination]="pagination"
+        [columns]="columns1"
+        [columnsName]="columnsName1"
+        [hideSelectAll]="true"
+        [dataSource]="searchResult.ilstentInvItemTypeSearchSet"
+        (pageChanged)="pageChanged($event)"
+        columnID="trustApplicationId"
+        (onSelect)="onSelect($event)"
+      >
+        <ng-template cellHeaderDef="action">
+          <app-icon-button
+            name="table-add"
+            toolTip="Add New"
+            (click)="createTypeDialog()"
+          ></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="typeName" let-element>
+          <div (click)="getItemSubTypeListByTypeId(element)" class="pointer">
+            {{ element.typeName }}
+          </div>
+        </ng-template>
+        <ng-template cellDef="status" let-element>
+          <accouts-status-table
+            [statusDescription]="element.status"
+          ></accouts-status-table>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+          <div class="d-flex">
+            <app-icon-button
+              name="doc-delete"
+              toolTip="Add New"
+              (click)="deleteItemType(element)"
+            ></app-icon-button>
+            <app-icon-button
+              name="edit"
+              toolTip="Add New"
+              (click)="openItemtype(element)"
+            ></app-icon-button>
+          </div>
+        </ng-template>
+      </app-table>
+    </div>
+  </div>
+  <div class="col-md-8 h100">
+    <app-table
+      [pagination]="pagination"
+      [columns]="subColumns1"
+      [columnsName]="subColumnsName1"
+      [hasPagination]="true"
+      [hideSelectAll]="true"
+      [dataSource]="itemSubTypeList.plstitemSubtype"
+      (pageChanged)="pageChanged($event)"
+      columnID="trustApplicationId"
+      (onSelect)="onSelect($event)"
+      [showPaginator]="false"
+    >
+      <ng-template cellDef="action" let-element>
+        <div class="d-flex">
+          <app-icon-button
+            name="doc-delete"
+            toolTip="Delete"
+            appButtonAccess="ISDBT"
+            (click)="deleteItemSubType(element)"
+          ></app-icon-button>
+          <app-icon-button
+            name="edit"
+            toolTip="Add New"
+            (click)="openItemSubtype(element)"
+          ></app-icon-button>
+        </div>
+      </ng-template>
+      <ng-template cellHeaderDef="action"> </ng-template>
+      <ng-template cellHeaderDef="sidebtn">
+        <app-icon-button
+          name="swipe-out"
+          toolTip="Minimize"
+          (click)="tableToggle()"
+        ></app-icon-button>
+      </ng-template>
+    </app-table>
+  </div>
+  }
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/inventory.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToInventory()">Inventory</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Item Type & Sub Type</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #itemDialog>
+  <div class="dialog-container">
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-title">
+          {{ itemType === "new" ? "Create" : "Open" }} Type Detail
+        </div>
+
+        <div class="slot-right">
+          <div class="btn-group">
+            @if (itemInvType.invItemTypeId === 0) {
+            <app-icon-button
+              name="save"
+              toolTip="Save"
+              appButtonAccess="SAVBT"
+              (click)="saveInvItemType()"
+            ></app-icon-button>
+            <app-icon-button
+              name="clear"
+              toolTip="Clear"
+              appButtonAccess="CLEBT"
+              (click)="doClear()"
+            ></app-icon-button>
+            }@else {
+            <app-icon-button
+              name="save"
+              toolTip="Update"
+              appButtonAccess="UPDBT"
+              (click)="saveInvItemType()"
+            ></app-icon-button>
+            <app-icon-button
+              name="refresh"
+              toolTip="Refresh"
+              appButtonAccess="REFBT"
+              (click)="openInvItemType(itemInvType.invItemTypeId, true)"
+            ></app-icon-button>
+            }
+            <app-icon-button
+              name="close"
+              (click)="dialog.closeDialog()"
+            ></app-icon-button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-content">
+        <form #l="ngForm">
+          <scroll>
+            <div class="dialog-content-inner">
+              <row>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Category Name"
+                    type="select"
+                    [(ngModel)]="itemInvType.invcategoryid"
+                    name="invcategoryid"
+                    [items]="initialData.DDLValues.DDLCategory"
+                    key="id"
+                    keyName="name"
+                    valuetype="int"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Type Name"
+                    type=""
+                    [(ngModel)]="itemInvType.invItemTypeName"
+                    name="invItemTypeName"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Prefix"
+                    type=""
+                    [(ngModel)]="itemInvType.itemtypeCodePrefix"
+                    name="itemtypeCodePrefix"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Suffix"
+                    type=""
+                    [(ngModel)]="itemInvType.itemtypeCodeSuffix"
+                    name="itemtypeCodeSuffix"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Status"
+                    type="select"
+                    [(ngModel)]="itemInvType.statusValue"
+                    name="statusValue"
+                    [items]="initialData.DDLValues.configtypeStatus"
+                    key="constant"
+                    keyName="description"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                  ></app-input-control>
+                </div>
+              </row>
+            </div>
+          </scroll>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #subItemDialog>
+  <div class="dialog-container">
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-title">
+          {{ itemSubtype === "new" ? "Create" : "Open" }} Sub Type Detail
+        </div>
+        <div class="slot-right">
+          <div class="btn-group">
+            @if (itemInvSubtype.invItemSubtypeId === 0) {
+            <app-icon-button
+              name="save"
+              toolTip="Save"
+              appButtonAccess="ISSBT"
+              (click)="saveItemSubType()"
+            ></app-icon-button>
+            <app-icon-button
+              name="clear"
+              toolTip="Clear"
+              appButtonAccess="ISCBT"
+              (click)="doSubTypeClear()"
+            ></app-icon-button>
+            }@else {
+            <app-icon-button
+              name="save"
+              toolTip="Update"
+              appButtonAccess="ISUBT"
+              (click)="saveItemSubType()"
+            ></app-icon-button>
+            <app-icon-button
+              name="refresh"
+              toolTip="Refresh"
+              appButtonAccess="ISRBT"
+              (click)="getselectedItemSubType(itemInvSubtype.invItemSubtypeId)"
+            ></app-icon-button>
+            }
+            <app-icon-button
+              name="close"
+              (click)="dialog.closeDialog()"
+            ></app-icon-button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-content">
+        <form class="h100" #b="ngForm">
+          <scroll>
+            <div class="dialog-content-inner">
+              <row>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Type Name"
+                    type="text"
+                    placeholder="Enter Type Name"
+                    [(ngModel)]="itemSubtypeName"
+                    name="itemSubtypeName"
+                    [btnClicked]="true"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Sub Type Name"
+                    type="text"
+                    placeholder="Enter Sub Type Name"
+                    [(ngModel)]="itemInvSubtype.invItemSubtypeName"
+                    name="invItemSubtypeName"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Prefix"
+                    type="text"
+                    [(ngModel)]="itemInvSubtype.itemSubtypeCodePrefix"
+                    name="itemSubtypeCodePrefix"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6">
+                  <app-input-control
+                    label="Suffix"
+                    type="text"
+                    [(ngModel)]="itemInvSubtype.itemSubtypeCodeSuffix"
+                    name="itemSubtypeCodeSuffix"
+                  ></app-input-control>
+                </div>
+              </row>
+            </div>
+          </scroll>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

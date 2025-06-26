@@ -1,0 +1,30 @@
+<auto-complete [label]="__label" [items]="__items" key="actCustomerId" keyName="customerName"
+  (onSelect)="valueSelected($event)" (onClear)="autoClear()" [required]="__required" [btnClicked]="__btnClicked"
+  [errorTrue]="control && control.control?.invalid && __errorTrue" (onSearch)="openSearch()"
+  (onChange)="getSearchData($event)" #autoComplete></auto-complete>
+
+
+<ng-template #customerSearchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        Select Customer
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="doClose()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if (isCRMCustomer) {
+        <app-customer-list [isSelectOnly]="true" (onSelect)="crmCustomerSelected($event)"></app-customer-list>
+        } @else {
+
+        }
+      </div>
+    </div>
+  </div>
+
+</ng-template>

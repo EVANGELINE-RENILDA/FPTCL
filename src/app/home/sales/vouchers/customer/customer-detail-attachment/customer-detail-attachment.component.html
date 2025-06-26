@@ -1,0 +1,85 @@
+<div class="v-flex h100">
+    <div class="p10">
+        <div class="col-md-3">
+            <app-input-control
+		placeholder="Search By Any File Name"
+		type="text"
+		[(ngModel)]="filterFileName"
+		name="filterFileName"
+		[search]="true"
+	  ></app-input-control>
+        </div>
+    </div>
+    <app-table [hasHeader]="false" class="h100" [hideSelectAll]="true" [columns]="attachment"
+        [columnsName]="attachmentsName" [dataSource]="parentData.lstentActAttachments | filterAndSort
+              : filterFileName : 'attachmentFileName' : false  " [hasIndex]="true">
+        <ng-template cellHeaderDef="fileName">
+            <div class="header-cell-title">File Name</div>
+            <div class="header-cell-subtitle">Created By | Date | Time</div>
+        </ng-template>
+        <ng-template cellDef="fileName" let-element>
+            <div class="header-cell-title">{{element.attachmentFileName}}</div>
+            <div class="header-cell-subtitle">{{element.createdBy}} | {{element.createdDate | appDate}} |
+                {{element.createdDate | appDate: 'hh:mm a'}}</div>
+        </ng-template>
+        <ng-template cellDef="fileFormat" let-element>
+            <div class="header-cell-title">{{element.attachmentType}}</div>
+        </ng-template>
+        <ng-template cellDef="size" let-element>
+            <div class="header-cell-title">{{element.attachmentSize}}</div>
+        </ng-template>
+
+
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="download" let-element>
+            <div class="between">
+                <app-icon-button
+                name="download"
+                toolTip="Download"
+                (click)="downloadAttachment(element, 'down')"
+              ></app-icon-button>
+              <app-icon-button
+              name="doc-view"
+              toolTip="View"
+              (click)="downloadAttachment(element, 'view')"
+            ></app-icon-button>
+            <app-icon-button
+            name="doc-delete"
+            toolTip="Delete"
+            (click)="deleteActAttachmentFile(element)"
+          ></app-icon-button>
+              </div>
+        </ng-template>
+        
+    </app-table>
+</div>
+
+<ng-template #attachmentDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase
+                Vendor > Detail >
+                Add Documents
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                <app-drop-zone fileType="pdf" [accept]="accept" [multiple]="true"
+                    (onUpload)="uploadVendorAttachmentFile($event)"></app-drop-zone>
+            </div>
+
+        </div>
+    </div>
+</ng-template>

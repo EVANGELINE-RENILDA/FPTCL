@@ -1,0 +1,538 @@
+<div class="v-flex h100 content-wrapper" appAccess="FUDTN" [parentId]="pageId">
+    <!-- <form #l="ngForm" (ngSubmit)="navigateToDetail(l)" class="flex-end pt8 pr20 header-bg">
+        <div class="col-md-3">
+            <app-input-control type="select" label="Document Name" [(ngModel)]="voucherId" name="voucherId"
+                [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+                [required]="true" (onSelect)="getVoucherDetail(voucherId)" type="select"
+                defaultOption="--Select--"></app-input-control>
+        </div>
+        <app-icon-button name="add" toolTip="Add New" appButtonAccess="FunTraNotNewBtn"></app-icon-button>
+    </form> -->
+    <div class="h100 p-3 border border-rad bg-white">
+        <div class="d-flex p-2 align-items-center">
+            <!-- @if (tabIndex===0) { -->
+            <div class="fw-600">
+                Mapping details
+            </div>
+            <div class="ml-auto">
+                <app-icon-button name="save" toolTip="Save" (click)="trustAndEstateGlIsValid()"></app-icon-button>
+            </div>
+            <!-- } -->
+        </div>
+
+        @if (tabIndex===0){
+        <div class="border-rad p-3">
+            <div class="d-flex gap-10">
+
+                <div class="col-md-4 border border-rad p-2">
+                    <!-- <div class="d-flex"> -->
+                    <div class="col-md-12">
+                        <app-input-control type="select" defaultOption="--Select--" label="Select Event Type DD"
+                            [(ngModel)]="regionValue" name="regionValue"></app-input-control>
+
+                    </div>
+                    <div class="col-md-12">
+                        <app-input-control type="select" defaultOption="--Select--" label="Select Sub Event Type DD"
+                            [(ngModel)]="regionValue" name="regionValue"></app-input-control>
+
+                    </div>
+                    <div class="col-md-12">
+                        <app-input-control type="text" label="Transaction Code-Text"></app-input-control>
+
+                    </div>
+
+                    <div class="col-md-12 d-flex justify-content-center align-items-center ">
+                        <div class="check-box col-md-4 p-0">
+                            <mat-checkbox color="primary" [checked]="true" (change)="isChecked($event)">Bank
+                                Fee</mat-checkbox>
+                        </div>
+                        <div class="col-md-1">
+
+                        </div>
+                        <div class="col-md-7 p-0">
+
+                            <app-input-control type="text" label="Bank Fee Value" [required]="true"
+                                [errorTrue]="errorTrue"></app-input-control>
+
+
+                        </div>
+                    </div>
+
+
+
+                    <!-- </div> -->
+                </div>
+                <div class="col-md-4 border border-rad p-2">
+
+                    <div class="col-md-12">
+                        <app-input-control type="select" defaultOption="--Select--" label="Voucher Type DD"
+                            [(ngModel)]="regionValue" name="regionValue"></app-input-control>
+
+                    </div>
+                    <div class="col-md-12">
+                        <app-input-control type="select" defaultOption="--Select--" label="File Type DD"
+                            [(ngModel)]="regionValue" name="regionValue"></app-input-control>
+
+                    </div>
+                    <div class="col-md-12">
+                        <app-input-control type="select" defaultOption="--Select--" label="A/C Type DD"
+                            [(ngModel)]="regionValue" name="regionValue"></app-input-control>
+
+                    </div>
+                    <div class="col-md-12">
+                        <app-input-control type="select" defaultOption="--Select--" label="Posting Matrix DD"
+                            [(ngModel)]="regionValue" name="regionValue"></app-input-control>
+
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <!-- <div class="col-md-5">
+                <table class="app-table account-table">
+                    <thead class="app-table-head">
+                        <tr class="app-table-header-row">
+                            <th rowspan="2" class="app-table-header-cell text-center">#</th>
+
+                            <th rowspan="2" class="app-table-header-cell ">Bank Fee</th>
+                            <th rowspan="2" class="app-table-header-cell">
+                                <div class="header-cell-title">Bank Fee Value</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="app-table-body">
+                        @for (doc of tableData;
+
+                        track doc; let i = $index) {
+                        <tr class="app-table-row">
+                            <td class="app-table-cell text-center">
+                                {{i+1}}
+                            </td>
+                            <td class="app-table-cell">
+                                Yes
+                            </td>
+                            <td class="app-table-cell ">
+                                {{2+i}}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div> -->
+                <!-- <div class="col-md-2"></div>
+                <div class="col-md-5">
+                    <div class="col-md-12 cus-table">
+                        <table class="app-table account-table  w100">
+                            <thead class="app-table-head">
+                                <tr class="app-table-header-row">
+
+                                    <th class="app-table-header-cell px-2">Voucher Type-DD</th>
+                                    <td class="app-table-cell">
+                                        Voucher
+                                    </td>
+
+
+                                </tr>
+                                <tr class="app-table-header-row">
+                                    <th class="app-table-header-cell px-2">
+                                        <div class="header-cell-title">File Type-DD</div>
+
+                                    </th>
+                                    <td class="app-table-cell">
+                                        Trust
+                                    </td>
+                                </tr>
+                                <tr class="app-table-header-row">
+                                    <th class="app-table-header-cell px-2">
+                                        <div class="header-cell-title">A/C Type-DD</div>
+                                    </th>
+                                    <td class="app-table-cell">
+                                        C-Cash
+                                    </td>
+
+                                </tr>
+                                <tr class="app-table-header-row">
+                                    <th class="app-table-header-cell px-2">
+                                        <div class="header-cell-title">Posting Matrix-DD</div>
+                                    </th>
+                                    <td class="app-table-cell">
+                                        Posting Matrix
+                                    </td>
+                                </tr>
+                            </thead>
+                            
+
+                        </table>
+                    </div>
+                </div> -->
+            </div>
+
+            <div class="d-flex ">
+                <div class="ml-auto d-flex gap-10">
+                    <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        }
+        @else if (tabIndex===1) {
+        <!-- <div class="v-flex h100"> -->
+        <div class="text-center  fw-600">
+            Trust & Estate GL
+        </div>
+
+
+
+        <div class="flex-1 relative mh45  pt-2">
+            <div class="ab">
+                <div class="rel pb-5">
+                    <form #e="ngForm" (submit)="trustAndEstateGlIsValid()">
+                        <table class="app-table account-table">
+                            <thead class="app-table-head">
+                                <tr class="app-table-header-row">
+                                    <th rowspan="2" class="app-table-header-cell text-center">Sl.No</th>
+                                    <th rowspan="2" class="app-table-header-cell">
+                                        <div class="header-cell-title">Group Name</div>
+                                    </th>
+                                    <th class="app-table-header-cell">Ledger Name</th>
+                                    <th class="app-table-header-cell">Posting Nature</th>
+                                    <!-- <th class="app-table-header-cell">Posting Nature</th> -->
+                                    <th class="app-table-header-cell ">
+                                        Cust GL
+                                    </th>
+                                    <th class="app-table-header-cell">
+                                        Action
+                                    </th>
+                                </tr>
+
+                            </thead>
+                            <tbody class="app-table-body">
+                                @for (doc of tableData;
+
+                                track doc; let i = $index) {
+                                <!-- filterAndSort : filterFileName : 'attachmentFileName' : false; -->
+                                <tr class="app-table-row">
+                                    <td class="app-table-cell text-center">
+                                        {{ i + 1 }}
+                                    </td>
+                                    <td class="app-table-cell col-md-4">
+
+                                        <div class="col-md-12">
+                                            <app-search-group [(ngModel)]="ledgerName" name="ledgerName{{ i }}"
+                                                [displayText]="ledgerName" (onSelect)="getLedgerBasedOnGroupId($event)"
+                                                (onClear)="ledgers=[];" [required]="true" [errorTrue]="errorTrue"
+                                                [btnClicked]="legderDisabled"></app-search-group>
+                                        </div>
+                                    </td>
+                                    <td class="app-table-cell col-md-3">
+                                        <div class="">
+                                            <!-- {{ledger.description}} -->
+                                            <app-leadger-auto-search [items]="ledgers" *ngIf="loading"
+                                                [(ngModel)]="ledger.description" name="description{{ i }}"
+                                                (onSelect)="getLedgerData($event)" (onClear)="clearLedger()"
+                                                [displayText]="ledger.description"
+                                                [btnClicked]="legderDisabled"></app-leadger-auto-search>
+                                            <app-leadger-auto-search [items]="ledgers" *ngIf="!loading"
+                                                [(ngModel)]="ledger.description" name="description{{ i }}"
+                                                (onSelect)="getLedgerData($event)" (onClear)="clearLedger()"
+                                                [displayText]="ledger.description"
+                                                [btnClicked]="legderDisabled"></app-leadger-auto-search>
+                                        </div>
+
+                                    </td>
+
+                                    <!-- <td class="app-table-cell">
+                                                        DR-RO
+                                                    </td> -->
+                                    <td class="app-table-cell col-md-3">
+                                        <div class="">
+                                            <app-input-control type="text" label=""></app-input-control>
+                                        </div>
+                                    </td>
+                                    <td class="app-table-cell col-md-3">
+                                        <div class="">
+                                            <mat-checkbox color="primary" [checked]="true"
+                                                (change)="isCheckedLedger($event,doc)"></mat-checkbox>
+                                        </div>
+                                    </td>
+                                    <td class="app-table-cell col-md-3">
+                                        <div class="">
+                                            <app-icon-button name="edit" toolTip="Edit"
+                                                (click)="onEdit()"></app-icon-button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <!-- </div> -->
+        <div class="text-center fw-600">
+            Corporate GL
+        </div>
+        <div class="flex-1 relative mh45 pt-2">
+            <div class="ab">
+                <div class="rel pb-5">
+                    <table class="app-table account-table">
+                        <thead class="app-table-head">
+                            <tr class="app-table-header-row">
+                                <th rowspan="2" class="app-table-header-cell text-center">Sl.No</th>
+                                <th rowspan="2" class="app-table-header-cell">
+                                    <div class="header-cell-title">Group Name</div>
+
+                                </th>
+                                <th class="app-table-header-cell">Ledger Name</th>
+                                <th class="app-table-header-cell">Posting Nature</th>
+                                <!-- <th class="app-table-header-cell">Posting Nature</th> -->
+                                <!-- <th class="app-table-header-cell ">
+                                        Cust GL
+                                    </th> -->
+
+                            </tr>
+
+                        </thead>
+                        <tbody class="app-table-body">
+                            @for (doc of tableData;
+
+                            track doc; let i = $index) {
+                            <!-- filterAndSort : filterFileName : 'attachmentFileName' : false; -->
+                            <tr class="app-table-row">
+                                <td class="app-table-cell text-center">
+                                    {{ i + 1 }}
+                                </td>
+                                <td class="app-table-cell">
+
+                                    <div>
+                                        XXX-DD
+                                    </div>
+                                </td>
+                                <td class="app-table-cell">
+                                    XXX-DD
+                                </td>
+                                <td class="app-table-cell">
+                                    CR-RO
+                                </td>
+                                <!-- <td class="app-table-cell">
+                                        DR-RO
+                                    </td> -->
+                                <!-- <td class="app-table-cell">
+                                        X
+                                    </td> -->
+
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        }
+        @else if (tabIndex===2) {
+        <div class="d-flex p-2">
+            <div class="col-md-12">
+                <div class="text-center  fw-600">
+                    Trust & Estate GL
+                </div>
+                <table class="app-table account-table">
+                    <thead class="app-table-head">
+                        <tr class="app-table-header-row">
+                            <th rowspan="2" class="app-table-header-cell text-center">Sl.No</th>
+                            <th rowspan="2" class="app-table-header-cell">
+                                <div class="header-cell-title">Group Name</div>
+
+                            </th>
+                            <th class="app-table-header-cell">Ledger Name</th>
+                            <th class="app-table-header-cell">Posting Nature</th>
+                            <th class="app-table-header-cell">Posting Nature</th>
+                            <th class="app-table-header-cell ">
+                                Cust GL
+                            </th>
+
+                        </tr>
+
+                    </thead>
+                    <tbody class="app-table-body">
+                        @for (doc of tableData;
+
+                        track doc; let i = $index) {
+                        <!-- filterAndSort : filterFileName : 'attachmentFileName' : false; -->
+                        <tr class="app-table-row">
+                            <td class="app-table-cell text-center">
+                                {{ i + 1 }}
+                            </td>
+                            <td class="app-table-cell">
+
+                                <div>
+                                    XXX-DD
+                                </div>
+                            </td>
+                            <td class="app-table-cell">
+                                XXX-DD
+                            </td>
+                            <td class="app-table-cell">
+                                CR-RO
+                            </td>
+                            <td class="app-table-cell">
+                                DR-RO
+                            </td>
+                            <td class="app-table-cell">
+                                X
+                            </td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        }
+    </div>
+    <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+        <div class="footer-tab">
+            <div class="d-flex">
+                <div class="tabs" (click)="tabClick(0)" [ngClass]="{ tabClass: tabIndex === 0 }">
+                    <ion-icon name="analytics-outline"></ion-icon>
+                    <div>Event Mapping</div>
+                </div>
+                <!-- @if (this.fundTransferId !== 0){ -->
+                <div class="tabs" (click)="tabClick(1)" [ngClass]="{ tabClass: tabIndex === 1 }">
+                    <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+                    <div>Auto Posting</div>
+                </div>
+                <div class="tabs" (click)="tabClick(2)" [ngClass]="{ tabClass: tabIndex === 2 }">
+                    <div>Primary Posting</div>
+                </div>
+
+            </div>
+            <!-- <div class="open-arrow" id="trigger{{ pageId }}">
+                <ion-icon name="chevron-down-outline"></ion-icon>
+            </div> -->
+        </div>
+        <!-- <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+            <row>
+                <div class="col-md-4 footer-textarea">
+                    <app-input-control type="textarea" [(ngModel)]="fundTransferNote.comment" name="comment"
+                        [maxLength]="250" className="notes" label="Notes"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <view-label label="Document Currency" value="INR"></view-label>
+                </div>
+                <div class="col-md-4">
+                    <div class="justify-end">
+                        <div class="f-content-txt">
+                            <div>Total Debit Amount</div>
+                            <div>Total Credit Amount</div>
+                        </div>
+                        <div class="text-end">
+                            <div>{{ fundTransferNote.debitAmount }}</div>
+                            <div>{{ fundTransferNote.creditAmount }}</div>
+                        </div>
+                    </div>
+                </div>
+            </row>
+        </div> -->
+    </div>
+</div>
+
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Cash Counter Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (submit)="onSearch()">
+                        <row>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Branch"
+                                            [(ngModel)]="searchParams.branchValue" defaultOption="--Select--"
+                                            name="branchValue" [items]="appService.branchDDL" key="branchValue"
+                                            keyName="branchDescription"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Effective Date From"
+                                            [(ngModel)]="searchParams.effectiveDateFrom"
+                                            name="effectiveDateFrom"></app-input-control>
+                                    </div>
+
+                                </row>
+                            </div>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Counter Name"
+                                            [(ngModel)]="searchParams.cashcounterName"
+                                            name="cashcounterName"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Effective Date To"
+                                            [(ngModel)]="searchParams.effectiveDateTo" name="effectiveDateTo"
+                                            (onClear)="onSearch()"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Select Assigned Cashier Name"
+                                            [(ngModel)]="searchParams.assignedcashierName" name="statusValue"
+                                            defaultOption="--Select--"
+                                            [items]="initialData.DDLValues.AllDDLBranchCashier" key="code"
+                                            keyName="code"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Status"
+                                            [(ngModel)]="searchParams.statusValue" defaultOption="--Select--"
+                                            [items]="initialData.DDLValues.DDLStatus" key="constant"
+                                            keyName="description" name="statusValue"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26 ">
+                                        <app-input-control type="text" label="Counter No"
+                                            [(ngModel)]="searchParams.cashCounterNo"
+                                            name="cashCounterNo"></app-input-control>
+                                    </div>
+
+                                </row>
+                            </div>
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/customer.svg"></ion-icon>
+                <div class="screen-text">Event Mapping On Vouchers</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

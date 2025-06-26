@@ -1,0 +1,27 @@
+.itg-pin-group {
+  gap: 8px;
+  padding-top: 16px;
+
+  &.input-error {
+    .itg-pin-control {
+      border-color: var(--app-danger);
+    }
+  }
+}
+
+.itg-pin-control {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  // margin-top: 16px;
+  text-align: center;
+  justify-content: center;
+  font-family: var(--font-family);
+
+  &:focus,
+  &:active,
+  &:hover {
+    outline: 0;
+    border-color: var(--app-primary);
+  }
+}

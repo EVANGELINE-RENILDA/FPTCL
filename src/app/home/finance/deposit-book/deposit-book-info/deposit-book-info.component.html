@@ -1,0 +1,226 @@
+<div class="v-flex h100" [parentId]="pageId" appAccess="DBSCN">
+  <form #l="ngForm" class="content-header">
+    <div class="card-box border-right w100">
+      <div class="card-content">
+        <label>Deposit Book No</label>
+        <div class="content">
+          {{
+            cashCounterDepositBook.depositBookNo
+              ? cashCounterDepositBook.depositBookNo
+              : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Effective Date</label>
+        <div class="content">
+          {{
+            cashCounterDepositBook.effectiveDate
+              ? (cashCounterDepositBook.effectiveDate | appDate)
+              : "-"
+          }}
+        </div>
+      </div>
+    </div>
+
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content">
+          <label>Book Status</label>
+          <div class="content status-{{ cashCounterDepositBook.statusValue }}">
+            {{ cashCounterDepositBook.statusDescription }}
+          </div>
+        </div>
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+
+  <div class="content-body flex-1">
+    <form #b="ngForm">
+      <div class="d-flex">
+        <div class="bank-detail col-md-6">
+          <div class="heading">
+            <div>Deposit Book Details</div>
+          </div>
+          <div class="d-flex flex-1">
+            <div class="card-detail-panel w100">
+              <ng-container>
+                <div class="card-detail-panel-border pt-2">
+                  <div class="text-right-input">
+                    <view-label
+                      label="Branch"
+                      value="{{ branchName }}"
+                    ></view-label>
+                  </div>
+                  <div class="text-right-input">
+                    <app-input-control
+                      type="select"
+                      label="Select cash Counter"
+                      defaultOption="--Select--"
+                      [(ngModel)]="cashCounterDepositBook.cashCounterId"
+                      name="cashCounterId"
+                      [items]="cashCounterDDL"
+                      valueType="int"
+                      key="id"
+                      keyName="constant"
+                      [errorTrue]="errorTrue"
+                      [required]="true"
+                    ></app-input-control>
+                  </div>
+                  <div class="text-right-input">
+                    <app-input-control
+                      type="date"
+                      label="Open Time"
+                      [(ngModel)]="cashCounterDepositBook.openTime"
+                      name="openTime"
+                      [btnClicked]="true"
+                    ></app-input-control>
+                  </div>
+                  <div class="text-right-input">
+                    <app-input-control
+                      type="date"
+                      label="Close Time"
+                      [(ngModel)]="cashCounterDepositBook.closeTime"
+                      name="closeTime"
+                      [btnClicked]="true"
+                    ></app-input-control>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="bank-detail col-md-6">
+          <div class="heading">
+            <div>Additional Details</div>
+          </div>
+          <div class="col-md-12 px-0 pt-2 card-detail-panel-border">
+            <div class="col-md-12 p-0">
+              <app-input-control
+                type="text"
+                label="Reconciled By"
+                [(ngModel)]="cashCounterDepositBook.reconciledBy"
+                name="reconciledBy"
+                [btnClicked]="true"
+              ></app-input-control>
+            </div>
+            <div class="col-md-12 p-0">
+              <app-input-control
+                type="date"
+                label="Reconciled Date"
+                [(ngModel)]="cashCounterDepositBook.reconciledDate"
+                name="reconciledDate"
+                [btnClicked]="true"
+              ></app-input-control>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    @if(editbtn){ @if(cashCounterDepositBook.cashCounterDepositBookId === 0){
+    <div class="col-md-12 btn-group">
+      <div class="ml-auto d-flex gap pt-2">
+        <app-icon-button
+          name="save"
+          toolTip="Save"
+          (click)="depositeBookSave()"
+          [hidden]="hideBtnBasedonStatus()"
+          [parentId]="pageId"
+          appAccess="DepositBookSaveBtn"
+        ></app-icon-button>
+        <app-icon-button
+          name="clear"
+          toolTip="Clear"
+          (click)="clearDepositeBook()"
+          [hidden]="hideBtnBasedonStatus()"
+          [parentId]="pageId"
+          appAccess="DepositBookCancelBtn"
+        ></app-icon-button>
+      </div>
+    </div>
+    } @if(cashCounterDepositBook.cashCounterDepositBookId !== 0){
+    <div class="col-md-12 btn-group">
+      <div class="ml-auto d-flex gap pt-2">
+        <app-icon-button
+          name="save"
+          toolTip="Update"
+          (click)="depositeBookSave()"
+          [hidden]="hideBtnBasedonStatus()"
+          [parentId]="pageId"
+          appAccess="DepositBookSaveBtn"
+        ></app-icon-button>
+        <app-icon-button
+          name="refresh"
+          toolTip="Refresh"
+          (click)="depositeBookSaveRefresh()"
+          [hidden]="hideBtnBasedonStatus()"
+          [parentId]="pageId"
+          appAccess="DepositBookCancelBtn"
+        ></app-icon-button>
+      </div>
+    </div>
+    } } @else if(!editbtn){
+    <app-icon-button
+      name="edit"
+      toolTip="Edit"
+      (click)="depositeBookEdit()"
+      [hidden]="hideBtnBasedonStatus()"
+      [parentId]="pageId"
+      appAccess="DepositBookCancelBtn"
+    ></app-icon-button>
+    }
+  </div>
+</div>
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateDetail()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text">Deposit Book Info</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of
+      cashCounterDepositBook.lstCashCounterDepositBookStatusHistory; track
+      $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByUserName ? status.changedByUserName : "-" }}
+          </div>
+          <div class="sub-status_by">{{ status.effectiveDate | appDate }}</div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>

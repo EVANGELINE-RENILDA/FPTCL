@@ -1,0 +1,990 @@
+<div class="v-flex h100" appAccess="PUISC" [parentId]="pageId">
+  @if (selectedTab === 0 || selectedTab === 1 ) {
+    @if(purchaseInvoice.statusValue === 'APROV' || purchaseInvoice.statusValue === 'CANCL') {
+    <form #z="ngForm" class="flex-end pr20 header-bg h55">
+        <div class="col-md-3 header-input">
+            <app-input-control type="select" label="Document Name" [(ngModel)]="voucherConfigId" name="voucherConfigId"
+                valuetype="int" [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name"
+                [errorTrue]="errorTrue" [required]="true" label="Document Name"
+                (onSelect)="getVoucherDetail(voucherConfigId)" defaultOption="--Select--"></app-input-control>
+        </div>
+        <div class="col-md-1 end d-flex align-items-center">
+            <app-icon-button name="add" toolTip="Add New" (click)="navigateDetail(z)"></app-icon-button>
+        </div>
+        @if(purchaseInvoice.statusValue === 'APROV' && purchaseInvoice.pActVoucherConfig.postingVoucherConfigId !==0){
+          <button class="ml-2 complete-btn"  (click)="navigatePayment()" appAccess="PNBTN"
+          [parentId]="pageId">
+          <!-- <ion-icon name="save-outline"></ion-icon> -->
+
+          <!-- <img src="assets/save.svg" class="mr-1"> -->
+          Payment Note
+        </button>
+        }
+        <!-- <ng-container
+        *ngIf="type === 'edit' && purchaseInvoice.statusValue === 'APROV' && purchaseInvoice.pActVoucherConfig.postingVoucherConfigId !==0">
+        <button mat-raised-button color="primary" class="ml-2" (click)="navigatePayment()" appAccess="PNBTN"
+          [parentId]="pageId">
+          <img src="assets/save.svg" class="mr-1" alt="save">
+          Payment Note
+        </button>
+      </ng-container> -->
+    </form>
+    }
+    }
+  <form #l="ngForm">
+    <div class="content-header">
+      @if(purchaseInvoice.pActVoucherConfig.needCash === 'N'){
+      <div class="card-box border-right">
+        @if(purchaseInvoice.statusValue === 'INPRO'){
+
+          <div class="card-content">
+
+            <!-- <label>Vendor Name</label> -->
+            <div class="content">
+
+              <app-search-vendor label="Vendor Name" [(ngModel)]="purchaseInvoice.actVendorId" name="actVendorId"
+              [displayText]="purchaseInvoice.pentActVendor.vendorName"
+              (onSelect)="onVendorSelect($event)" screenType="Purchase Invoice" screenType1="Details" module="Purchase" navigateUrl="/home/purchase/purchase-invoice/search" [required]="true" valueType="int" [errorTrue]="errorTrue"></app-search-vendor>
+              <!-- {{purchaseInvoice.actVendorId}}
+              {{purchaseInvoice.pentActVendor.vendorName}} -->
+            </div>
+          </div>
+        }
+        @else{
+          <div class="card-content">
+            <label>Vendor Name</label>
+            <div class="content">
+              {{
+                purchaseInvoice.pentActVendor.vendorName
+          ? purchaseInvoice.pentActVendor.vendorName
+          : "-"
+              }}
+            </div>
+          </div>
+        }
+        <div class="card-content">
+          <label>Vendor ID</label>
+          <div class="content">
+            {{ purchaseInvoice.pentActVendor.vendorCode }}
+          </div>
+        </div>
+      </div>
+      }
+      <div class="card-box border-right">
+        <div class="card-content"  [ngClass]="{'border-none':purchaseInvoice.pActVoucherConfig.needCash !== 'N'}">
+          <app-input-control
+            label="Company Shipping Address"
+            type="select"
+            [(ngModel)]="purchaseInvoice.companyShippingAddressId"
+            [items]="initialData.DDLValues.DDLBranch"
+            key="id"
+            keyName="name"
+            name="companyShippingAddressId"
+            (onSelect)="addressChange(purchaseInvoice.companyShippingAddressId)"
+            [required]="true"
+            [errorTrue]="errorTrue"
+            valueType="int"
+          ></app-input-control>
+        </div>
+        @if(purchaseInvoice.pActVoucherConfig.needCash === 'N'){
+        <div class="card-content">
+          <app-input-control
+            label="Payment Term Option"
+            type="text"
+            [(ngModel)]="purchaseInvoice.paymentTerm"
+            name="paymentTerm"
+          ></app-input-control>
+        </div>
+        }
+      </div>
+
+      <div class="card-box border-right">
+        <div class="card-content">
+          <app-input-control
+            label="Vendor Invoice No"
+            type="text"
+            [(ngModel)]="purchaseInvoice.vendorInvoiceNumber"
+            name="vendorInvoiceNumber"
+          ></app-input-control>
+        </div>
+        <div class="card-content">
+          <app-input-control
+            type="date"
+            label="Document Date"
+            [(ngModel)]="purchaseInvoice.documentDate"
+            name="documentDate"
+            (onSelect)="documentDateConversioDate()"
+            [required]="true"
+            [errorTrue]="errorTrue"
+          ></app-input-control>
+        </div>
+      </div>
+      @if(purchaseInvoice.pActVoucherConfig.needCash === 'N'){
+      <div class="card-box border-right">
+        <div class="card-content">
+          <app-input-control
+            label="Transportation Mode"
+            type="text"
+            [(ngModel)]="purchaseInvoice.transportationMode"
+            name="transportationMode"
+          ></app-input-control>
+        </div>
+        <div class="card-content">
+          <app-input-control
+            type="date"
+            label="Payment Due Date"
+            [(ngModel)]="purchaseInvoice.paymentDueDate"
+            name="paymentDueDate" [minDate]="purchaseInvoice.documentDate"
+          ></app-input-control>
+        </div>
+      </div>
+      }
+      <div class="status-header-box">
+        <div class="card-box-1">
+          <div class="card-content">
+            <view-label
+            label="Status"
+            status="{{ purchaseInvoice.statusValue }}"
+            statusValue="{{ purchaseInvoice.statusDescription }}"
+          ></view-label>
+          </div>
+          <div class="card-content btn-group">
+            @if(purchaseInvoice.statusValue !=='CANCL' && purchaseInvoice.statusValue!=='APROV'){
+           @if (purchaseInvoice.purPurchaseInvoiceId=== 0) {
+            <app-icon-button
+              name="save"
+              toolTip="Save"
+              (click)="savePurchaseInvoiceDetails()" appAccess="SAVBT" [parentId]="pageId"
+            ></app-icon-button>
+            <app-icon-button
+              name="clear"
+              toolTip="Clear"
+              (click)="doClear()" appAccess="CLEBT" [parentId]="pageId"
+            ></app-icon-button>
+            }@else {
+            <app-icon-button
+              name="save"
+              toolTip="Update"
+              (click)="savePurchaseInvoiceDetails()" appAccess="UPDBT" [parentId]="pageId"
+            ></app-icon-button>
+            <app-icon-button
+              name="refresh"
+              toolTip="Refresh"
+              (click)="
+                openPurchaseInvoice(purchaseInvoice.purPurchaseInvoiceId)
+              " appAccess="REFSH" [parentId]="pageId"
+            ></app-icon-button>
+            @if(!__hideBtn()) {
+            <app-icon-button
+              name="accept"
+              toolTip="Complete"
+              (click)="directApproved()"
+            ></app-icon-button>
+            } }
+          }
+          </div>
+        </div>
+        <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <div class="v-flex h100">
+      @if(!infoMore){
+        <div class="space-between p10">
+          <div class="space-between">
+            <div class="doc-down" (click)="getMoreInfo()">
+              <ion-icon name="chevron-down-circle-outline"></ion-icon>
+              Doucment Info
+            </div>
+              <view-label label="Doc No" value="{{purchaseInvoice.invoiceReferenceNo}}" type="sub" class="px-1"></view-label>
+              <view-label label="Doc Name" value="{{purchaseInvoice.pActVoucherConfig.voucherName}}" type="sub" class="px-1"></view-label>
+          </div>
+          <div class="end">
+            @if(purchaseInvoice.pActVoucherConfig.needCash === 'N'){
+              <div class="end gap-5 ">
+                @if(purchaseInvoice.documentDate !=='' && !__hideBtn()){
+                <div class="w100 only-input d-flex gap-10">
+                  <div class="label-data">Purchase Order Name :</div>
+                  <app-auto-get-item
+                        [partyId]="purchaseInvoice.actVendorId"
+                        [displayText]="autoSearchItems.autoSearchText"
+                        [regionValue]="purchaseInvoice.regionValue"
+                        [voucherType]="purchaseInvoice.pActVoucherConfig.voucherTypeValue"
+                        [voucherConfigId]="purchaseInvoice.voucherConfigId"
+                        [documentDate]="purchaseInvoice.documentDate"
+                        (onSelect)="doGetItemSelect($event)"
+                        [(ngModel)]="autoSearchItems.autoSearchItemId" name="autoSearchItemId"
+                        [parentData]="purchaseInvoice"
+                  ></app-auto-get-item>
+                </div>
+                <app-icon-button
+                  name="add"
+                  toolTip="Get Item"
+                  (click)="
+                    getPurchaseOrderItemDetailByPurchaseOrderIdForPurchaseInvoice()"
+                  appAccess="GETIM"
+                  [parentId]="pageId"
+                >
+                </app-icon-button>
+                }
+              </div>
+              }
+          </div>
+        </div>
+        }@else{
+        <div class=" card-1">
+            <row>
+                <div class="col-md-3">
+                    <view-label label="Document No" value="{{purchaseInvoice.invoiceReferenceNo}}"></view-label>
+                </div>
+                <div class="col-md-3">
+                    <view-label label="Document Name" value="{{purchaseInvoice.pActVoucherConfig.voucherName}}"></view-label>
+                </div>
+                <div class="col-md-3">
+                    <view-label label="Branch Name" value="{{purchaseInvoice.pActBranch.branchName}}"></view-label>
+                </div>
+                <div class="col-md-3">
+                    <view-label label="Vendor Ledger Name" value="{{purchaseInvoice.pentActVendor.ientActLedger.ledgerName}}"></view-label>
+                </div>
+
+                <div class="col-md-3 pt8">
+                    <view-label label="Posting Date" value="{{purchaseInvoice.approvedDate | appDate}}"></view-label>
+                </div>
+                <div class="col-md-3 pt8">
+                    <view-label label="Created Date" value="{{purchaseInvoice.enteredDate | appDate}}"></view-label>
+                </div>
+                <div class="col-md-3 pt8">
+                    <view-label label="Created By" value="{{purchaseInvoice.piEnteredby}}"></view-label>
+                </div>
+            </row>
+            <div class="space-between">
+                <div class="doc-down" (click)="getMoreInfo()">
+                  <ion-icon name="chevron-up-circle-outline"></ion-icon>
+                  Doucment Info
+                </div>
+              <div class="end">
+                @if(purchaseInvoice.pActVoucherConfig.needCash === 'N'){
+                  <div class="end gap-5 ">
+                    @if(purchaseInvoice.documentDate !=='' && !__hideBtn()){
+                    <div class="w100 only-input">
+                      <app-auto-search-quotation
+                        (onSelect)="getPurchaseInvoice($event)"
+                        [parentData]="purchaseInvoice"
+                      ></app-auto-search-quotation>
+                    </div>
+                    <app-icon-button
+                      name="add"
+                      toolTip="Get Item"
+                      (click)="getPurchaseOrderItemDetailByPurchaseOrderIdForPurchaseInvoice()"
+                      appAccess="GETIM"
+                      [parentId]="pageId"
+                    >
+                    </app-icon-button>
+                    }
+                  </div>
+                  }
+              </div>
+            </div>
+        </div>
+        }
+
+      <form #a="ngForm" class="flex-1 relative">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell tw50 ">#</th>
+                <th class="app-table-header-cell ">PQ No</th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title ">Item | Service Code</div>
+                  <div class="header-cell-subtitle">Name | Description</div>
+                </th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">Item | Ledger Code</div>
+                  <div class="header-cell-subtitle">Item Ledger Name</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Qty</div>
+                  <div class="header-cell-subtitle">Unit</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Unit Price</div>
+                  <div class="header-cell-subtitle">
+                    ({{ purchaseInvoice.pentActVendor.currencyValue }})
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Dis %</div>
+                  <div class="header-cell-subtitle">Value</div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">After Discount %</div>
+                  <div class="header-cell-subtitle">
+                    Rep CCY ({{ purchaseInvoice.currencyValue }})
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Tax%</div>
+                  <div class="header-cell-subtitle">Value</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Total</div>
+                  <div class="header-cell-subtitle">
+                    Rep CCY({{ purchaseInvoice.currencyValue }})
+                  </div>
+                </th>
+                @if(__isDisabledInput()){
+
+                <th class="app-table-header-cell tw100">
+                  <div class="flex-center gap-5">
+                    <app-icon-button
+                      name="add"
+                      toolTip="Add New"
+                      (click)="
+                        addRow(
+                          purchaseInvoice.plistentPurPurchaseInvoiceItem.length
+                        )
+                      " appAccess="ADIBT" [parentId]="pageId"
+                    >
+                    </app-icon-button>
+                    @if (toggleArrow) {
+                      <app-icon-button
+                        name="down"
+                        toolTip="Narration Down"
+                        (click)="toggle()"
+                        toolTip="Open Narration"
+                      >
+                      </app-icon-button>
+                    }@else{
+                      <app-icon-button
+                        name="up"
+                        toolTip="Narration Up"
+                        (click)="toggle()"
+                        toolTip="Close Narration"
+                      >
+                      </app-icon-button>
+                    }
+                  </div>
+                </th>
+                }
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (element of purchaseInvoice.plistentPurPurchaseInvoiceItem;
+              track $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ $index + 1 }}
+                </td>
+                <td>
+                  {{
+                    element.ientPurPurchaseOrder.purchaseOrderNumber
+                      ? element.ientPurPurchaseOrder.purchaseOrderNumber
+                      : "-"
+                  }}
+                </td>
+                <td class="app-table-cell">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabledInput() && (purchaseInvoice.actVendorId !==
+                    0 && purchaseInvoice.documentDate !== '')){
+                    <app-search-item
+                      [(ngModel)]="element.ientInvItem.invItemId"
+                      [displayText]="element.ientInvItem.itemName"
+                      [required]="true"
+                      [errorTrue]="errorTrue"
+                      (onSelect)="doItemSelect($event, element, $index)"
+                      name="invItemId{{ $index }}"
+                      valueType="int"
+                      [isInventory]="
+                        purchaseInvoice.pActVoucherConfig.needInventory
+                      "
+                    ></app-search-item>
+                    } @else{
+                    {{
+                      element.ientInvItem.itemName
+                        ? element.ientInvItem.itemName
+                        : "-"
+                    }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                      element.ientInvItem.itemCode
+                        ? element.ientInvItem.itemCode
+                        : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabledInput() && (purchaseInvoice.actVendorId !==
+                    0 && purchaseInvoice.documentDate !== '')){
+                    <app-search-debit
+                      [(ngModel)]="element.itemLedgerId"
+                      name="itemLedgerId{{ $index }}"
+                      (onSelect)="doSelectLedgerName($event, element)"
+                      valueType="int"
+                      [required]="true"
+                      [errorTrue]="errorTrue"
+                      [btnClicked]="
+                        purchaseInvoice.pActVoucherConfig
+                          .isItemLedgerEditable === 'N'
+                      "
+                      [search]="true"
+                      [displayText]="element.strItemLedgerName"
+                    ></app-search-debit>
+                    } @else{
+                    {{
+                      element.strItemLedgerName
+                        ? element.strItemLedgerName
+                        : "-"
+                    }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                      element.strItemLedgerCode
+                        ? element.strItemLedgerCode
+                        : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right"
+                matTooltip="{{element.purPurchaseOrderId !== 0 ? 'Maximum Quantity: '+ element.maximumQuantity:'Minimum Qty : '+ element.ientInvItem.minQuantity +  ' Maximun Qty: '+ element.ientInvItem.maxQuantity}}">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabledInput() && (this.purchaseInvoice.actVendorId
+                    !== 0 && this.purchaseInvoice.documentDate !== '')){
+                    <app-input-control
+                      type="number"
+                      [(ngModel)]="element.quantity"
+                      name="quantity{{ $index }}"
+                      [decimal]="2"
+                      [required]="true"
+                      [errorTrue]="errorTrue"
+                      valuetype="int"
+                    ></app-input-control>
+                    }@else{
+                    {{ element.quantity ? element.quantity : "0" }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                      element.ientInvItem.stockUnitValue
+                        ? element.ientInvItem.stockUnitValue
+                        : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  @if(__isDisabledInput() && (this.purchaseInvoice.actVendorId
+                  !== 0 && this.purchaseInvoice.documentDate !== '')){
+                  <app-input-control
+                    type="number"
+                    [(ngModel)]="element.unitPrice"
+                    name="unitPrice{{ $index }}"
+                    [decimal]="2"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                    valuetype="int"
+                  >
+                  </app-input-control>
+                  } @else{
+                  {{ element.unitPrice ? element.unitPrice : "0" }}
+                  }
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabledInput() && (this.purchaseInvoice.actVendorId
+                    !== 0 && this.purchaseInvoice.documentDate !== '')){
+                    <app-input-control
+                      type="number"
+                      [(ngModel)]="element.discountPercentage"
+                      [decimal]="2"
+                      type="discountPercentage"
+                      name="discountPercentage{{ $index }}"
+                    ></app-input-control>
+                    }@else{
+                    {{
+                      element.discountPercentage
+                        ? element.discountPercentage
+                        : "0"
+                    }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ element.discountPrice ? element.discountPrice : "-" }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    {{ element.totalAfterDiscount }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                      element.totalAfterDiscountReportingCurrency
+                        ? element.totalAfterDiscountReportingCurrency
+                        : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabledInput() && (this.purchaseInvoice.actVendorId
+                    !== 0 && this.purchaseInvoice.documentDate !== '')){
+                    <app-input-control
+                      type="number"
+                      [(ngModel)]="element.taxPercentage"
+                      name="taxPercentage{{ $index }}"
+                      [decimal]="2"
+                      [btnClicked]="
+                        __isDisabledInput() ||
+                        (this.purchaseInvoice.actVendorId !== 0 &&
+                          this.purchaseInvoice.documentDate !== '') ||
+                        purchaseInvoice.pActVoucherConfig.isTaxEditable ===
+                          'N' ||
+                        element.ientInvItem.actTaxCodeValue === 'VAT-C'
+                      "
+                    ></app-input-control>
+                    }@else{
+                    {{ element.taxPercentage }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">{{ element.vatAmount }}</div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    @if(__isDisabledInput()){
+                    <item-value
+                      [(item)]="
+                        purchaseInvoice.plistentPurPurchaseInvoiceItem[$index]
+                      "
+                      discountValue="discountPrice"
+                      totalAfterDiscount="totalAfterDiscount"
+                      totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency"
+                      total="totalPrice"
+                      totalReportingCurrency="totalPriceReportingCurrency"
+                      taxAmount="vatAmount"
+                      [unitPrice]="element.unitPrice"
+                      [quantity]="element.quantity"
+                      [taxPercentage]="element.taxPercentage"
+                      [discountPercentage]="element.discountPercentage"
+                      [(updateSequence)]="updateSequence"
+                      [currencyRate]="purchaseInvoice.currencyRate"
+                    >
+                      {{ element.totalPrice }}
+                    </item-value>
+                    } @else{
+                    {{ element.totalPrice }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                      element.totalPriceReportingCurrency
+                        ? element.totalPriceReportingCurrency
+                        : "-"
+                    }}
+                  </div>
+                </td>
+                @if(__isDisabledInput()){
+                <td class="app-table-cell" [rowSpan]="2">
+                  <div class="space-evenly align-items-center">
+                    <!-- <app-icon-button
+                      name="add"
+                      class="table-icon"
+                      toolTip="Add"
+                      (click)="
+                        addRow(
+                          purchaseInvoice.plistentPurPurchaseInvoiceItem.length
+                        )
+                      "
+                    ></app-icon-button> -->
+                    <app-icon-button
+                      name="doc-delete"
+                      toolTip="Delete"
+                      (click)="itemsDelete(element, $index)" appAccess="DELIM"
+                      [parentId]="pageId"
+                    ></app-icon-button>
+                  </div>
+                </td>
+                }
+              </tr>
+              @if (toggleArrow) {
+                <tr class="app-table-row narration-border-none">
+                  <td class="app-table-cell " [colSpan]="2"></td>
+                  <td class="app-table-cell" [colSpan]="8"> <app-input-control
+                    type="text" placeholder="Narration"
+                    [(ngModel)]="element.narration"
+                    name="narration{{ $index }}" [maxLength]="250"
+                    [btnClicked]="
+                      this.purchaseInvoice.actVendorId === 0 ||
+                        this.purchaseInvoice.documentDate === '' && __isDisabledInput()
+                    "
+                  ></app-input-control></td>
+                </tr>
+              }
+              }
+            </tbody>
+          </table>
+          @if(__isDisabledInput()){
+          <total-value
+            discountValue="discountPrice"
+            totalAfterDiscount="totalAfterDiscount"
+            totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency"
+            total="totalPrice"
+            totalReportingCurrency="totalPriceReportingCurrency"
+            taxAmount="vatAmount"
+            [updateSequence]="updateSequence"
+            [items]="purchaseInvoice.plistentPurPurchaseInvoiceItem"
+            (onCalculated)="onTotalValue($event)"
+            (onExchangeRateCal)="getExchangeRateLst($event)"
+            [(exchangeRateArray)]="purchaseInvoice.ilstActCurrencyExchangerate"
+            [currencyRate]="purchaseInvoice.currencyRate"
+          ></total-value>
+          }
+        </scroll>
+      </form>
+    </div>
+    } @else if(selectedTab === 1 && purchaseInvoice.purPurchaseInvoiceId > 0){
+    <app-purchase-invoice-notes
+      [parentData]="purchaseInvoice"
+      (notesValue)="getNotesValue($event)"
+    ></app-purchase-invoice-notes>
+    } @else if(selectedTab === 2 && purchaseInvoice.purPurchaseInvoiceId > 0){
+    <app-purchase-invoice-attachment
+      [parentData]="purchaseInvoice"
+    ></app-purchase-invoice-attachment>
+    }
+    @else if(selectedTab === 3 && purchaseInvoice.purPurchaseInvoiceId > 0){
+    <!-- <app-purchase-invoice-preview
+      [parentData]="purchaseInvoice"
+    ></app-purchase-invoice-preview> -->
+
+    <div class="print-wrap">
+      <row>
+        <div class="col-md-4">
+          <div class="ptb14"></div>
+          <app-input-control type="textarea" [maxLength]="250" className="notes-2"
+            label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="purchaseInvoice.pActVoucherConfig.pdfOtherComments"
+            name="pdfOtherComments"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" (click)="viewPurchaseInvoiceReceipt()"></app-icon-button>
+          </div>
+        </div>
+        <div class="col-md-8">
+            <div class="d-flex gap-5 end">
+              <button type="submit" class="approve-btn" (click)="openEmailHistory()">Send Email</button>
+              <!-- <app-send-email [name]="purchaseOrder.sentActVendor
+              .vendorName" [documentDate]="purchaseOrder.documentDate" [netAmount]="purchaseOrder.netAmount"
+                [refNumber]="purchaseOrder.purchaseQuotationRefNo"
+                [voucherName]="purchaseOrder.sentActVoucherConfig.voucherTypeDescription" [emailId]="purchaseOrder.sentActVendor
+              .emailId" [blob]="blob"></app-send-email> -->
+              <!-- <app-icon-button name="clear" toolTip="Close"></app-icon-button>-->
+               <button type="submit" class="cancel-btn" (click)="closePdf()"> Close </button>
+            </div>
+            <div class="pt8"></div>
+          <div class="pdf-viewer">
+            <div class="ab">
+              <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+    }
+    <!-- @else if(selectedTab === 4 && purchaseInvoice.purPurchaseInvoiceId > 0){
+    <app-purchase-invoice-status
+      [parentData]="purchaseInvoice"
+    ></app-purchase-invoice-status>
+    } -->
+  </div>
+  <div
+    class="card-footer"
+    footerpanel="footerpanel{{ pageId }}"
+    trigger="trigger{{ pageId }}"
+  >
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div
+          class="tabs"
+          (click)="onSelectTab(0)"
+          [ngClass]="{ tabClass: selectedTab === 0 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        @if(purchaseInvoice.purPurchaseInvoiceId > 0){
+        <div
+          class="tabs"
+          (click)="onSelectTab(1)"
+          [ngClass]="{ tabClass: selectedTab === 1 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="onSelectTab(2)"
+          [ngClass]="{ tabClass: selectedTab === 2 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if(purchaseInvoice.statusValue === 'APROV' ){
+        <div
+          class="tabs"
+          (click)="onSelectTab(3)"
+          [ngClass]="{ tabClass: selectedTab === 3 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        <!-- <div
+            class="tabs"
+            (click)="onSelectTab(4)"
+            [ngClass]="{ tabClass: selectedTab === 4 }"
+          >
+            <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+            <div>Status On PO</div>
+          </div> -->
+        } }
+      </div>
+      <div class="slot-end d-flex align-items-center">
+        <div class="tabs">
+          <div>
+            Currency ({{purchaseInvoice.pentActVendor.currencyValue}})
+          </div>
+        </div>
+        <div class="tabs">
+          <div>
+            Gross Amount : {{ purchaseInvoice.totalAfterDiscount }}
+          </div>
+        </div>
+        <div class="tabs">
+          <div>Tax Amount : {{ purchaseInvoice.totalTaxAmount }}
+
+        </div>
+        </div>
+        <div class="tabs">
+          <div>Net Amount : {{ purchaseInvoice.totalNetAmount }}
+          </div>
+        </div>
+
+        <div class="open-arrow" id="trigger{{ pageId }}">
+          <ion-icon name="chevron-down-outline"></ion-icon>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control
+            type="textarea"
+            [maxLength]="250"
+            className="notes"
+            [applybtn]="false"
+            label="Common Narration Text"
+            [(ngModel)]="purchaseInvoice.comment"
+            name="comment"
+          ></app-input-control>
+        </div>
+        <div class="col-md-8 pad-0 d-flex">
+          <div class="d-flex w100 p8">
+            <div class="d-flex justify-content-between w100">
+              <div class="w200">
+                <view-label label="Document Currency"
+                value="{{ purchaseInvoice.docCurrencyValue }}"
+                class="mb20"
+                ></view-label>
+                <form #b="ngForm">
+                <app-input-control
+                  label="Conversion Rate"
+                  type="number"
+                  [required]="true"
+                  [(ngModel)]="purchaseInvoice.currencyRate"
+                  name="currencyRate"
+                  [decimal]="8"
+                  (onBlur)="purchaseInvoiceItemCalculation()"
+                ></app-input-control>
+                </form>
+              </div>
+              <table class="app-footer-table">
+                @for(currency of purchaseInvoice.ilstActCurrencyExchangerate; track $index){
+                  <tr class="app-footer-table-row ">
+                    <td class="app-footer-table-cell footer-header-txt text-end">
+                      {{currency.description}}
+                    </td>
+                    <td class="app-footer-table-cell footer-cnt-txt text-end">
+                      {{currency.documentCurrencyAmount}}
+                    </td>
+                  </tr>
+                }
+              </table>
+            </div>
+          </div>
+          <div class="d-flex w100 p8 bg-sub-footer p8">
+            <div class="flex-1">
+              <view-label
+              label="Reporting Currency"
+              [value]="purchaseInvoice.currencyValue"
+              class="mb20"
+            ></view-label>
+            </div>
+            <table class="app-footer-table">
+              @for(currency of purchaseInvoice.ilstActCurrencyExchangerate; track $index){
+                <tr class="app-footer-table-row ">
+                  <td class="app-footer-table-cell footer-header-txt text-end">
+                    {{currency.description}}
+                  </td>
+                  <td class="app-footer-table-cell footer-cnt-txt text-end">
+                    {{currency.reportingCurrencyAmount}}
+                  </td>
+                </tr>
+              }
+            </table>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn" >
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToPurchase()">Purchase</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Purchase Invoice</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of purchaseInvoice.plistentPurPurchaseInvoiceStatusHistory; track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.piChangedBy ? status.piChangedBy : "-" }}
+          </div>
+          <div class="sub-status_by">{{ status.effectiveDate ? (status.effectiveDate | appDate : "datetime") : '-'}}</div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by status-PRSTV">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>
+
+<ng-template #mailTemplate>
+  <div class="dialog-box p-3">
+      <div class="label-value-head" >
+        Send Email
+      </div>
+      <div class="ml-auto">
+        <button mat-icon-button (click)="onNoClick()">
+          <app-icon-button name="close" (click)="dialogService.closeAll()"></app-icon-button>
+        </button>
+      <!-- </div>/ -->
+    </div>
+    <div class="mat-dialog-content" >
+            <scroll>
+            <form class="h100" #l="ngForm">
+           <div class="container-fluid h100">
+             <row>
+               <div class="col-md-12">
+                 <app-input-control type="email" label="To" [(ngModel)]="mailInfo.toMailList" name="toMailList" [required]="true" [errorTrue]="errorTrue" ></app-input-control>
+               </div>
+               <div class="col-md-12">
+                <app-input-control  type="email" label="CC" [(ngModel)]="mailInfo.ccMailList" name="ccMailList" [multiEmail]="true"></app-input-control>
+               </div>
+               <div class="col-md-12 d-flex align-items-center">
+                 <div class="form-group">
+                   <label class="label-value">From :  </label>
+                   <div class="form-value">
+                     {{appservice.userData.firstName}} {{appservice.userData.middleName}} {{appservice.userData.lastName}}
+                   </div>
+                 </div>
+               </div>
+               <div class="col-md-12 mt10">
+                 <app-input-control label="Subject" [(ngModel)]="fullSubject" name="fullSubject" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+               </div>
+               <div class="col-md-12">
+                 <div class="mail-content mail-box">
+                  <div class="form-value">
+                    <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                    [required]="true" [(ngModel)]="fullContent" name="fullContent"
+                    label="Content"></app-input-control>
+                  </div>
+                 </div>
+               </div>
+               <div class="col-md-12">
+                 <div class="down-content">
+                   <!-- {{downContent}}
+                     -->
+                     This is an auto-generated email. Please do not reply to this email.
+                     Please find the PDF below :-
+                 </div>
+               </div>
+              <!-- <div class="d-flex"> -->
+                <div class="col-md-6 d-flex gap-10  mt20">
+                  <app-checkbox [checked]="mailInfo.isIncludePdf === 'Y'" (change)="doPdfChange($event)" color="primary"></app-checkbox>Include Invoice
+                </div>
+                <div>
+
+                </div>
+              <!-- </div> -->
+               <div class="col-md-6 d-flex gap-10 mt20">
+                 <app-checkbox [checked]="mailInfo.isIncludeAttachment === 'Y'" (change)="doAttachment($event)" color="primary"></app-checkbox>Additional Attachment
+               </div>
+               <ng-container >
+                @if(mailInfo.isIncludeAttachment === 'Y'){
+
+                  <div class="p-3">
+                    <app-drop-zone type="set" [multiple]="true" (onUpload)="loadAttachment($event)"></app-drop-zone>
+                  </div>
+                }
+               </ng-container>
+              </row>
+              <div mat-dialog-actions class="d-flex align-items-baseline justify-content-end my-1 gap-10 mt30">
+                <button class="approve-btn"  (click)="sendEmailforVoucher(l)" >
+                    Send Mail
+                </button>
+                <button class="complete-btn"  >
+                  Refresh
+              </button>
+            </div>
+           </div>
+         </form>
+         </scroll>
+
+     </div>
+
+  </div>
+</ng-template>

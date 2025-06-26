@@ -1,0 +1,72 @@
+<div class="content-wrapper">
+    <!-- <app-multi-page-url [id]="id" url="/home/estate/estate-detail"></app-multi-page-url> -->
+    <div class="sticky-card p15">
+        <row>
+            <div class="col-md-3 mb15">
+                <view-label label="Est Ref No" [value]="estateApplicationDetail.estateApplicationRefNo"></view-label>
+            </div>
+            <div class="col-md-3 mb15">
+                <view-label label="Lead Ref No" [value]="estateApplicationDetail.leadRefNo"></view-label>
+            </div>
+
+            <div class="col-md-3 mb15">
+                <view-label label="Type" value="Estate"></view-label>
+            </div>
+            <div class="col-md-3 mb15">
+                <view-label label="Applied Date" [value]="estateApplicationDetail.appliedDate | appDate"></view-label>
+            </div>
+            <div class="col-md-3 mb15"><view-label label="Application Stage"
+                    [value]="estateApplicationDetail.applicationStageDescription"></view-label></div>
+            <div class="col-md-3 mb15"> <view-label label="Application Status"
+                    [value]="estateApplicationDetail.statusDescription"></view-label>
+            </div>
+            <div class="col-md-3 mb15"> <view-label label="Action Status" class="status-NEGOM"
+                    [value]="estateApplicationDetail.actionStatusDescription"></view-label></div>
+
+        </row>
+    </div>
+    <app-tab-group (tabChange)="onTabChange($event)">
+        <app-tab tabTitle="Application">
+            <accordion>
+                @if(showApplication === true){
+                    <div class="bg h100">
+                        <app-application [(application)]="estateApplicationDetail"></app-application>
+                    </div>
+                }
+            </accordion>
+        </app-tab> 
+        <app-tab tabTitle="Process">
+            @if(showProcess === true){
+            <accordion>
+                    <div class="bg h100">
+                        <app-notify-deceased-estate-step1 [(application)]="estateApplicationDetail"></app-notify-deceased-estate-step1>
+                        <app-conduct-interview-step2/>
+                        <app-obtain-detail-ins-step3/>
+                        <app-open-file-step5/>
+                        <app-create-account-step5 />
+                     <app-approval-by-met/>
+                       <app-identify-validate-debt-step9/>
+                       <app-confirm-assets-step10 />
+                       <app-obtain-grant-step11 />
+                    </div>
+                </accordion>
+            }
+                </app-tab>
+    </app-tab-group>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/trust.svg"></ion-icon>
+                <div class="screen-text">Estate Application</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

@@ -1,0 +1,213 @@
+<div class="content-wrapper" appAccess="CUSTR">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)"  [hideSelectAll]="true">
+        <ng-template cellDef="action" let-element>
+        </ng-template>
+        <ng-template cellHeaderDef="name" let-element>
+            <div class="header-cell-title">#</div>
+         </ng-template>
+        <ng-template cellDef="name" let-element>
+            <div class="header-cell-title">1</div>
+         </ng-template>
+        <ng-template cellHeaderDef="docNo" let-element>
+            <div class="header-cell-title">Vendor Name</div>
+            <div class="header-cell-subtitle">Currency Value</div>
+        </ng-template>
+        <ng-template cellDef="docNo" let-element>
+            <div class="header-cell-title mb20">joe1</div>  
+            <div class="header-cell-subtitle">NZD</div>
+        </ng-template>
+        <ng-template cellHeaderDef="vendName" let-element>
+            <div class="header-cell-title">	P-Order Date</div>
+            <div class="header-cell-subtitle">Number</div>
+        </ng-template>
+        <ng-template cellDef="vendName" let-element>
+            <div class="header-cell-title  mb20">	02/12/2023</div>
+            <div class="header-cell-subtitle">20240002</div>
+        </ng-template>
+        <ng-template cellHeaderDef="date" let-element>
+            <div class="header-cell-title">	Item Name</div>
+            <div class="header-cell-subtitle">	
+                Unit</div>
+        </ng-template>
+        <ng-template cellDef="date" let-element>
+            <div class="header-cell-title  mb20">High Wheels</div>
+            <div class="header-cell-subtitle">	
+                EACH</div>
+        </ng-template>
+        <ng-template cellHeaderDef="createdDate" let-element>
+            <div class="header-cell-title">Ordered Qty</div>
+            <div class="header-cell-subtitle">	
+                Received Qty</div>
+        </ng-template>
+        <ng-template cellDef="createdDate" let-element>
+            <div class="header-cell-title  mb20">10.00</div>
+            <div class="header-cell-subtitle">	
+                0.00</div>
+        </ng-template>
+        <ng-template cellHeaderDef="appDate" let-element>
+            <div class="header-cell-title">Stock Group</div>
+            <div class="header-cell-subtitle">	
+                Code</div>
+        </ng-template>
+        <ng-template cellDef="appDate" let-element>
+            <div class="header-cell-title  mb20">	
+                Wheels</div>
+            <div class="header-cell-subtitle">WH-HW-MG-0001</div>
+        </ng-template>
+        <ng-template cellHeaderDef="postDate" let-element>
+            <div class="header-cell-title">Stock Type</div>
+            <div class="header-cell-subtitle">Sub Type</div>
+        </ng-template>
+        <ng-template cellDef="postDate" let-element>
+            <div class="header-cell-title  mb20">	
+                High Wheels</div>
+            <div class="header-cell-subtitle">	
+                Magnetic</div>
+        </ng-template>
+        <ng-template cellHeaderDef="debit" let-element>
+            <div class="header-cell-title">Group</div>
+            <div class="header-cell-subtitle">Ledger</div>
+        </ng-template>
+        <ng-template cellDef="debit" let-element>
+            <div class="header-cell-title  mb20">Current Liabilities</div>
+            <div class="header-cell-subtitle">Vendor Payable Account</div>
+        </ng-template>
+        <ng-template cellHeaderDef="credit" let-element>
+            <div class="header-cell-title"></div>
+            <div class="header-cell-subtitle">Bal Qty
+            </div>
+        </ng-template>
+        <ng-template cellDef="credit" let-element>
+            <div class="header-cell-title">10.00
+            </div> 
+        </ng-template>
+        <ng-template cellHeaderDef="status" let-element>
+            <div class="header-cell-title"></div>
+            <div class="header-cell-subtitle">Rate Per Val
+            </div>
+        </ng-template>
+        <ng-template cellDef="status" let-element>
+          
+            <div class="header-cell-title">110.00 </div>
+           
+        </ng-template>
+       
+        <ng-template cellHeaderDef="narration" let-element>
+            <div class="header-cell-title">Pending </div>
+            <div class="header-cell-subtitle"> Val
+            </div>
+        </ng-template>
+        <ng-template cellDef="narration" let-element>
+            <div class="header-cell-title">110.00 </div>
+              </ng-template>
+        <ng-template cellHeaderDef="details" let-element>
+            <div class="header-cell-title">Qty details </div>
+            <div class="header-cell-subtitle"> Due On
+            </div>
+        </ng-template>
+        <ng-template cellDef="details" let-element>
+            <div class="header-cell-title">02/12/2023</div>
+                 </ng-template>
+        <ng-template cellHeaderDef="due" let-element>
+            <div class="header-cell-title"> </div>
+            <div class="header-cell-subtitle">Over Due in Days
+            </div>
+        </ng-template>
+        <ng-template cellDef="due" let-element>
+            <div class="header-cell-title"> 187</div>
+            </ng-template>
+
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" ></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="navigateToDetail()"></app-icon-button>
+        </ng-template>
+        <!-- <ng-template cellDef="docNo" let-element>
+            <div class="status status-{{element.docNo}}" (click)="navigateToDetail()">{{element.docNo}}</div> -->
+        <!-- </ng-template> -->
+      
+        <!-- <ng-template cellDef="status" let-element>
+            <div class="text">{{element.status}}</div>
+        </ng-template> -->
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+            <div class="d-flex align-items-center w100">
+                <!-- <div class="col-md-10 mt10">
+                    <app-input-control type="select" placeholder="Document Name"></app-input-control>
+                </div> -->
+                <div class="col-md-1">
+                    <app-icon-button name="download" toolTip="Export To Excel"
+                    appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+                </div>
+            </div>
+        </ng-template>
+        <!-- <ng-template #slotMiddle>
+            <table-status-sort [approvedCount]="1" [processingCount]="0"></table-status-sort>
+        </ng-template> -->
+    </app-table>
+</div>
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Purchase Order Outstanding Report</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-4 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control label="Fiscal Year" type="select"></app-input-control>
+                                </div>                                                              
+                            </row>
+                        </div>
+                        <div class="col-md-4 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="From Date"
+                                      ></app-input-control>
+                                </div>
+                                </row>
+                        </div>
+                        <div class="col-md-4 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="To Date" ></app-input-control>
+                                </div>
+                              </row>
+                        </div>
+                       
+                    </row>
+
+                </div>
+            </scroll>  
+        </div> 
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text">Purchase</div>
+
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Purchase Order Outstanding Report</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

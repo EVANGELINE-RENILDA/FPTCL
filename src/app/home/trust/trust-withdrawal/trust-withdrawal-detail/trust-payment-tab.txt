@@ -1,0 +1,644 @@
+ <app-tab tabTitle="Payment">
+            <app-tab-sub-group>
+                <app-sub-tab tabTitle="Payment Detail">
+                    <div class="bg-white-padd">
+
+                        <row>
+                            <div class="col-md-4 border-right p10">
+                                @if(paymentDetailEdit === true){
+                                <app-input-control label="Payment Mode" type="select" [errorTrue]="errorTrue"
+                                    [required]="true"></app-input-control>
+                                <app-input-control label="Withdrawal By Organization" type="dd"></app-input-control>
+                                <app-input-control label="Organization Name" type="select" [errorTrue]="errorTrue"
+                                    [btnClicked]="true" [(ngModel)]="trustWithdrawal.organizationName"
+
+                                    name="organizationName" [required]="true"></app-input-control>
+                                <app-input-control label="Bank Name" type="select" [errorTrue]="errorTrue"
+                                    [(ngModel)]="trustWithdrawal.ientWithdrawalPayment.bankName" name="bankName"
+                                    [required]="true"></app-input-control>
+                                <app-input-control [btnClicked]="true" label="Available Amount (FJD)"
+                                    type=""></app-input-control>
+                                <app-input-control [btnClicked]="true" label="Eligible Amount (FJD)"
+                                    type=""></app-input-control>
+                                <app-input-control label="Requested Amount (FJD)" type="" [errorTrue]="errorTrue"
+                                    [required]="true"></app-input-control>
+                                <app-input-control [btnClicked]="true" label="Approved Amount (FJD)"
+                                    type=""></app-input-control>
+
+                                }
+                                @else {
+                                <view-label label="Payment Mode" value="Cheque" class="pb20"></view-label>
+                                <view-label label="Withdrawal By Organization" value="Yes" class="pb20"></view-label>
+                                <view-label label="Organization Name" value="BRB" class="pb20"></view-label>
+                                <view-label label="Bank Name" value="BNB" class="pb20"></view-label>
+                                <view-label label="Available Amount (FJD)" value="40000.00" class="pb20"></view-label>
+                                <view-label label="Eligible Amount (FJD)" value="20000.00" class="pb20"></view-label>
+                                <view-label label="Requested Amount (FJD)" value="15000.00" class="pb20"></view-label>
+                                <view-label label="Approved Amount (FJD)" value="" class="pb20"></view-label>
+                                }
+                            </div>
+                            <div class="col-md-4 border-right p10">
+                                <view-label label="Payemnt Status" value="Pending Approval" class="pb20"></view-label>
+                                <view-label label="Given By" value="Viona" class="pb20"></view-label>
+                                <view-label label="Collected Status" value="Pending" class="pb20"></view-label>
+                                <view-label label="Collected By Branch" value="" class="pb20"></view-label>
+                                <view-label label="Processed Date" value="23 Jul 2024" class="pb20"></view-label>
+                                <view-label label="Paid Date" value="24 Jul 2024" class="pb20"></view-label>
+                            </div>
+                            <div class="col-md-4 p10">
+                                @if(paymentDetailEdit === true){
+                                <div class="d-flex gap-10">
+                                    <app-checkbox [checked]="true"></app-checkbox>
+                                    <div>Is Autoincrement Cheque</div>
+                                </div>
+                                <app-input-control label="Cheque No"></app-input-control>
+                                <app-input-control label="Cheque Date"></app-input-control>
+                                <app-input-control label="Batch No" value="3249/12"></app-input-control>
+                                }
+                                @else{
+                                <view-label label="Is Autoincrement Cheque" value="Yes" class="pb20"></view-label>
+                                <view-label label="Cheque No" value="1001/4278" class="pb20"></view-label>
+                                <view-label label="Cheque Date" value="22 Jul 2024" class="pb20"></view-label>
+                                <view-label label="Batch No" value="3249/12" class="pb20"></view-label>
+                                }
+
+                            </div>
+                            <div class="col-md-12 end">
+                                @if(paymentDetailEdit === false){
+                                <app-icon-button name="edit" toolTip="Edit"
+                                    (click)="editPayemntDetailsData()"></app-icon-button>
+                                }
+                                @else{
+                                <app-icon-button name="save" toolTip="Save"
+                                    (click)="savePaymentDetails()"></app-icon-button>
+                                <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                                }
+                            </div>
+                        </row>
+                    </div>
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Payment Process">
+                    <accordion>
+                        <accordion-item [isOpen]="true">
+                            <accordion-header>
+                                <div class="accordion-header-content">
+                                    <div class="accordion-title">
+                                        <ion-icon src="assets/icons/accordian/conduct-i.svg"></ion-icon>
+                                        <div class="accordion-title-content">
+                                            <div>Payment Document</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-header>
+                            <accordion-body>
+                                <app-tab-sub-group>
+                                    <app-sub-tab tabTitle="Detail">
+                                        <div class="outer-content-wrapper">
+                                            <div class="content-wrapper">
+                                                <row>
+                                                    <div class="col-md-9">
+                                                        <row>
+                                                            <div class="col-md-4"> <view-label label="Assigned Officer"
+                                                                    value="Trust Withdrawal Officer"></view-label>
+                                                            </div>
+                                                            <div class="col-md-4"> <view-label label="Assigned Date"
+                                                                    value="24 Jul 2024"></view-label>
+                                                            </div>
+                                                            <div class="col-md-4"> <view-label label="TAT"
+                                                                    value=" 5 Days"></view-label>
+                                                            </div>
+                                                        </row>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="d-flex">
+                                                            <!-- @if(this.trustWithdrawal.assignedOfficerFlag === 'True'){
+                                                            @if(this.trustWithdrawal.reAssignFlag === 'True'){
+                                                            <form #p="ngForm" class="col-md-10 w250">
+                                                                <app-input-control type="select" key="constant"
+                                                                    keyName="description" placeholder="Officer"
+                                                                    [items]="assignedOfficerDDL"
+                                                                    defaultOption="--Select--"
+                                                                    [(ngModel)]="trustWithdrawalAssignedOfficer.assignedTo"
+                                                                    name="assignedTo"></app-input-control>
+                                                            </form>
+                                                            <div class="col-md-2"><app-icon-button name="reassign"
+                                                                    (click)="reAssignTrust()"
+                                                                    toolTip="Reassign"></app-icon-button></div>
+                                                            }
+                                                            @if(this.trustWithdrawal.selfAssignFlag ===' True'){
+                                                            <div class="col-md-2"><app-icon-button name="add"
+                                                                    (click)="selfAssignTrust()"
+                                                                    toolTip="Self Assign"></app-icon-button></div>
+                                                            }
+                                                            } -->
+                                                        </div>
+                                                    </div>
+                                                </row>
+                                                <div class="mb20"></div>
+                                                <row>
+                                                    <div class="col-md-4 ">
+                                                        <div class="box" style="padding: 8px 16px;">
+                                                            <div class="mb20"></div>
+                                                            <div class="col-md-12">
+                                                                <app-input-control type="select" label="Document Type"
+                                                                    [(ngModel)]="trustWithdrawalDocument.documentTypeValue"
+                                                                    [items]="documentArray" key="code"
+                                                                    defaultOption="--Select--"
+                                                                    (onSelect)="documentTypeDatas(trustWithdrawalDocument.documentTypeValue)"
+                                                                    name="documentTypeValue"
+                                                                    [btnClicked]="this.type.isEditable === 'N'"
+                                                                    keyName="fullName"></app-input-control>
+                                                            </div>
+                                                            <app-drop-zone type="1" [fileType]="fileExtension"
+                                                                [accept]="accept" [multiple]="false"
+                                                                [btnClicked]="this.type.isEditable === 'N'"
+                                                                (onUpload)="uploadClientDocumentAttachment($event)"></app-drop-zone>
+                                                        </div>
+                                                        <div class="mb26"></div>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="outer-content-wrapper">
+                                                            <div class="content-wrapper">
+                                                                <div>
+                                                                    <!-- @if (loading) { -->
+                                                                    <app-table [columns]="clientDocumentColumns"
+                                                                        [columnsName]="clientDocumentColumnsName"
+                                                                        [hideSelectAll]="true"
+                                                                        [dataSource]="application.lstentTrustApplicationDocument"
+                                                                        [showPaginator]="false"
+                                                                        columnID="trustApplicationDocumentId">
+                                                                        <ng-template cellHeaderDef="fileName">
+                                                                            <div class="w200px">
+                                                                                File Name
+                                                                            </div>
+                                                                        </ng-template>
+                                                                        <ng-template cellDef="fileName" let-element>
+                                                                            <div class="overflow-wrap">
+                                                                                {{element.ientFile.fileName}}
+                                                                            </div>
+                                                                        </ng-template>
+                                                                        <ng-template
+                                                                            cellHeaderDef="documentTypeDescription">
+                                                                            <div class="w200px">Document Name</div>
+                                                                        </ng-template>
+                                                                        <ng-template cellDef="fileExtension"
+                                                                            let-element>
+                                                                            {{element.ientFile.fileExtension}}
+                                                                        </ng-template>
+                                                                        <ng-template cellDef="fileSize" let-element>
+                                                                            {{element.ientFile.fileSize}}mb
+                                                                        </ng-template>
+                                                                        <ng-template cellHeaderDef="action">
+                                                                            <div class="text-center">
+                                                                                Action
+                                                                            </div>
+                                                                        </ng-template>
+                                                                        <ng-template cellDef="action" let-element>
+                                                                            @if(element.ientFile.fileName!==''){
+
+                                                                            <div class="d-flex align-items-center">
+                                                                                <app-icon-button name="doc-download"
+                                                                                    (click)="downloadFile(element)">
+
+                                                                                </app-icon-button>
+                                                                                @if(this.type.isEditable === 'Y'){
+
+                                                                                <app-icon-button name="doc-delete"
+                                                                                    (click)="checkDocumentDelete(element)" />
+                                                                                }
+
+
+                                                                                <app-icon-button name="doc-view"
+                                                                                    (click)="viewFile(element)">
+
+                                                                                </app-icon-button>
+                                                                            </div>
+                                                                            }
+                                                                        </ng-template>
+                                                                    </app-table>
+                                                                    <!-- } -->
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mt20">
+                                                        <app-input-control label="Notes" type="textarea"
+                                                            className="notes" [maxLength]="250"></app-input-control>
+                                                    </div>
+                                                    <div class="col-md-12 end">
+                                                        <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                                                    </div>
+                                                </row>
+                                                <div class="d-flex">
+
+                                                    <div class="col-md-8 ">
+                                                        <!-- <div class="end gap-10">
+                                                            <button type="submit" class="submit-btn">Submit</button>
+                                                            <button type="submit" class="approve-btn">Complete</button>
+                                                            <button type="submit" class="reject-btn">Reject</button>
+                                                            <button type="submit" class="cancel-btn">Cancel</button>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="box h100">
+                                                    <div class="d-flex bottom-border">
+                                                        <div (click)="selectedTabChange(1)" [ngClass]="{'hori-active': activeValue1 === true}"
+                                                            class="horizontal-tab">
+                                                            Linked Document</div>
+                                                        <div (click)="selectedTabChange(2)" [ngClass]="{'hori-active': activeValue2 === true}"
+                                                            class="horizontal-tab">
+                                                            Notes</div>
+                                                        <div (click)="selectedTabChange(3)" [ngClass]="{'hori-active': activeValue3 === true}"
+                                                            class="horizontal-tab">
+                                                            Assigned Officer
+                                                        </div>
+                                                    </div>
+                                                    @if(selectedTabValue === '1'){
+                                                    <div class="outer-content-wrapper">
+                                                        <div class="content-wrapper">
+                                                            @if(loading){
+                                                            <app-table [pagination]="pagination" [columns]="clientSubDocumentColumns"
+                                                                [columnsName]="clientSubDocumentColumnsName" [hideSelectAll]="true"
+                                                                [dataSource]="clientSubDocumentTableData" [showPaginator]="false"
+                                                                columnID="trustApplicationDocumentId"></app-table>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                    @if(selectedTabValue === '2'){
+                                                    <div class="p10">
+
+                                                        <div class="justify-content-end d-flex">
+                                                            <app-icon-button name="add" toolTip="Create"
+                                                                (click)="createNotesDialog()"></app-icon-button>
+                                                        </div>
+                                                        @for (item of notesList; track $index) {
+                                                        <div class="border-bottom  notes-list">
+                                                            <div class="mx10 notes-desc">{{item.notes}}</div>
+                                                            <div class="d-flex justify-content-end notes-context">
+                                                                <div style="padding-right:5px ;">
+                                                                    {{item.enteredByFullname}}</div>
+                                                                <div class=" notes-border-left">
+                                                                    {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm a'}}
+                                                                </div>
+                                                                <div style="padding-right:5px ;"></div>
+                                                                <div class=" notes-border-left status-{{item.statusValue}}">
+                                                                    {{item.statusDescription}}
+                                                                </div>
+                                                                <div class="card-1-header-label px-2 ">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        }
+                                                    </div>
+
+                                                    }
+                                                    @if(selectedTabValue === '3'){
+                                                    <div class="status-padding">
+                                                        <app-table [pagination]="pagination" [columns]="assignedOfficerColumn"
+                                                            [columnsName]="assignedOfficerColumnName" [hideSelectAll]="true"
+                                                            [dataSource]="assignedOfficerTableData" [showPaginator]="false"
+                                                            columnID="trustApplicationDocumentId">
+                                                            <ng-template cellDef="assignedDate" let-element>
+                                                                {{element.assignedDate | appDate}}
+                                                            </ng-template>
+                                                        </app-table>
+
+                                                    </div>
+                                                    }
+                                                </div> -->
+                                                <div class="col-md-12 end">
+                                                    @if(this.type.isEditable === 'Y'){
+                                                    <button type="submit" class="complete-btn"
+                                                        (click)="completeApplicationStage()">Interview
+                                                        Conducted</button>
+                                                    }
+                                                </div>
+                                                <div class="pb10"></div>
+
+
+                                            </div>
+                                        </div>
+                                    </app-sub-tab>
+                                    <app-sub-tab tabTitle="Linked Document">
+                                        <div class="outer-content-wrapper">
+                                            <div class="content-wrapper">
+                                                <app-table [columns]="linkedColumns" [columnsName]="linkedColumnsName"
+                                                    [hideSelectAll]="true" [pagination]="pagination"
+                                                    [hasPagination]="true" [dataSource]="tableLinkedData">
+                                                    <ng-template cellDef="action" let-element>
+                                                        <app-icon-button name="doc-download-button"
+                                                            (click)="downloadLinkedFile(element)"></app-icon-button>
+                                                    </ng-template>
+                                                </app-table>
+                                            </div>
+                                        </div>
+                                    </app-sub-tab>
+                                    <div class="col-md-12 end">
+                                        <button class="complete-btn">Interview Conducted</button>
+                                    </div>
+                                </app-tab-sub-group>
+                            </accordion-body>
+                        </accordion-item>
+
+                        <!-- <accordion-item [isOpen]="true">
+                            <accordion-header>
+                                <div class="accordion-header-content">
+                                    <div class="accordion-title">
+                                        <ion-icon src="assets/icons/accordian/receipt-fund.svg"></ion-icon>
+                                        <div class="accordion-title-content">
+                                            <div>Payment Fund Receipt</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-header>
+                            <accordion-body>
+                                <row>
+                                    <div class="col-md-9">
+                                        <row>
+                                            <div class="col-md-4"> <view-label label="Assigned Officer"
+                                                    value="Trust Officer"></view-label>
+                                            </div>
+                                            <div class="col-md-4"> <view-label label="Assigned Date"
+                                                    value="24 May 2024"></view-label>
+                                            </div>
+                                            <div class="col-md-4"> <view-label label="TAT" value=" 5 Days"></view-label>
+                                            </div>
+                                        </row>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="d-flex">
+
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-9 border-right">
+                                        <div class="outer-content-wrapper">
+
+                                            <div class="content-wrapper">
+                                                <app-table [columns]="receiptFundColumns"
+                                                    [columnsName]="receiptFundColumnsName"
+                                                    [dataSource]="receiptFundTableData" [hasPagination]="true"
+                                                    columnID="trustApplicationId"></app-table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="view-label-container-title mb26">Add New</div>
+                                        <app-input-control label="Organization Name" type="text"
+                                            class="mb20"></app-input-control>
+                                        <div class="d-flex gap-10 mb20">
+                                            <div class="d-flex gap-5">
+                                                <app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>Cheque
+                                            </div>
+                                            <div class="d-flex gap-5">
+                                                <app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>DD
+                                            </div>
+                                        </div>
+                                        <app-input-control label="Cheque / Trans No" type="text"
+                                            class="mb20"></app-input-control>
+                                        <app-input-control label="Date" type="date" class="mb20"></app-input-control>
+                                        <app-input-control label="Amount (FJD)" type="number"
+                                            class="mb20"></app-input-control>
+                                        <app-input-control label="Receipt No" type="number"
+                                            class="mb20"></app-input-control>
+                                        <div class="mb20"></div>
+                                        <div class="end mb26">
+                                            <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                                        </div>
+                                        <div class="col-md-12 end">
+                                            <app-icon-button name="accept" toolTip="Complete"></app-icon-button>
+                                        </div>
+                                    </div>
+                                </row>
+                            </accordion-body>
+                        </accordion-item> -->
+
+                        <accordion-item>
+                            <accordion-header>
+                                <div class="accordion-header-content">
+                                    <div class="accordion-title">
+                                        <ion-icon src="assets/icons/accordian/conduct-i.svg"></ion-icon>
+                                        <div class="accordion-title-content">
+                                            <div>Payment Verification</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-header>
+
+                            <accordion-body>
+                                <row>
+                                    <div class="col-md-6">
+                                        <row>
+                                            <div class="col-md-4"> <view-label label="Assigned Officer"
+                                                    value="Trust Withdrawal Officer"></view-label>
+                                            </div>
+                                            <div class="col-md-4"> <view-label label="Assigned Date"
+                                                    value="24 Jul 2024"></view-label>
+                                            </div>
+                                            <div class="col-md-4"> <view-label label="TAT" value=" 5 Days"></view-label>
+                                            </div>
+                                        </row>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- <div class="d-flex">
+                                                    @if(this.trustApplication.assignedOfficerFlag === 'True'){
+                                                    @if(this.trustApplication.reAssignFlag === 'True'){
+                                                    <form #p="ngForm" class="col-md-10 w250">
+                                                        <app-input-control type="select" key="constant" keyName="description"
+                                                            placeholder="Officer" [items]="assignedOfficerDDL" defaultOption="--Select--"
+                                                            [(ngModel)]="trustWithdrawalAssignedOfficer.assignedTo"
+                                                            name="assignedTo"></app-input-control>
+                                                    </form>
+                                                    <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                                                            toolTip="Reassign"></app-icon-button></div>
+                                                    }
+                                                    @if(this.trustApplication.selfAssignFlag ===' True'){
+                                                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                                                            toolTip="Self Assign"></app-icon-button></div>
+                                                    }
+                                                    }
+                                                </div> -->
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-6 border-right">
+                                        <div class="outer-content-wrapper">
+
+                                            <div class="content-wrapper">
+                                                <app-table [columns]="completeTrustCreationColumns"
+                                                    [columnsName]="completeTrustCreationColumnsName"
+                                                    [dataSource]="completeTrustCreationTableData" [hasPagination]="true"
+                                                    columnID="trustApplicationId"></app-table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue"
+                                            [maxLength]="250" [required]="true" label="Notes"></app-input-control>
+                                        <div class="col-md-12 gap-10 end mb26">
+                                            <app-icon-button name="save" toolTip="Update"></app-icon-button>
+                                            <app-icon-button name="refresh" toolTip="Refresh"></app-icon-button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 end">
+                                        <app-icon-button name="accept" toolTip="Complete"></app-icon-button>
+                                    </div>
+                                </row>
+                            </accordion-body>
+                        </accordion-item>
+                    </accordion>
+
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Payment History">
+                    <accordion>
+                        <accordion-item [isOpen]="true">
+                            <accordion-header>
+                                <div class="accordion-header-content">
+                                    <div class="accordion-title">
+                                        <ion-icon name="notifications-outline"></ion-icon>
+                                        <div class="accordion-title-content">
+                                            <div>Notes</div>
+                                            <div class="accordian-title-count">3</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-header>
+                            <accordion-body>
+                                <div class="outer-content-wrapper">
+                                    <div class="content-wrapper">
+                                        <div class="p16px pb26 wrap-content">
+                                            <div class="justify-content-end d-flex">
+                                                <app-icon-button name="add" toolTip="Create"></app-icon-button>
+                                            </div>
+                                            <div class="border-bottom  notes-list">
+                                                <div class="mx10">Lorem ipsum, dolor sit amet consectetur adipisicing
+                                                    elit.
+                                                    Delectus
+                                                    amet ducimus sint deserunt similique, exercitationem quas voluptatem
+                                                    labore
+                                                    praesentium, vel debitis. Iure nulla animi suscipit.</div>
+                                                <div class="d-flex justify-content-end notes-context">
+                                                    <div style="padding-right:5px ;">
+                                                        Raj</div>
+                                                    <div class=" notes-border-left">
+                                                        18/09/2000
+                                                    </div>
+                                                    <div style="padding-right:5px ;"></div>
+                                                    <div class=" notes-border-left status-PNDSU">
+                                                        Pending Submission
+                                                    </div>
+                                                    <div class="card-1-header-label px-2 ">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-body>
+                        </accordion-item>
+                        <accordion-item [isOpen]="true">
+                            <accordion-header>
+                                <div class="accordion-header-content">
+                                    <div class="accordion-title">
+                                        <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                        <div class="accordion-title-content">
+                                            <div>Assigned Officer</div>
+                                            <div class="accordian-title-count">0
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-header>
+                            <accordion-body>
+
+                                <div class="outer-content-wrapper">
+                                    <div class="content-wrapper">
+                                        <app-table [columns]="assignOfficerColumns"
+                                            [columnsName]="assignOfficerColumnsName">
+                                            <ng-template cellDef="statusDescription" let-element>
+                                                <div class="status status-{{element.statusValue}}">
+                                                    {{element.statusDescription}}
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellDef="assignedDate" let-element>
+                                                {{element.assignedDate}}
+                                            </ng-template>
+                                            <!-- @if(customerUpdate.assignedOfficerFlag === 'True'){ -->
+                                            <ng-template #slotRight>
+                                                <div class="d-flex align-items-center">
+
+                                                    <form #p="ngForm" class="col-md-10 w250"><app-input-control
+                                                            type="select"></app-input-control></form>
+                                                    <div class="col-md-2">
+                                                        <div class="col-md-2"><app-icon-button name="reassign"
+                                                                toolTip="Reassign"></app-icon-button></div>
+                                                    </div>
+
+                                                </div>
+                                            </ng-template>
+                                            <!-- } -->
+                                        </app-table>
+                                    </div>
+                                </div>
+
+                            </accordion-body>
+                        </accordion-item>
+                    </accordion>
+                    <div class="bg-white-padd">
+
+                        <app-tab-sub-group>
+                            <app-sub-tab tabTitle="Status History">
+                                <div class="status-padding">
+                                    <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+                                </div>
+                            </app-sub-tab>
+                            <app-sub-tab tabTitle="Communication History">
+                                <div class="outer-content-wrapper">
+                                    <div class="content-wrapper">
+
+                                        <app-table [columns]="emailColumns" [columnsName]="emailColumnsName"
+                                            [hasPagination]="true" [dataSource]="emailHistoryTableData"
+                                            [hideSelectAll]="true">
+                                            <ng-template cellDef="toEmailId" let-element>
+                                                {{element.ientCommunicationTracking.toEmailId}}
+                                            </ng-template>
+                                            <ng-template cellDef="sentDate" let-element>
+                                                {{element.ientCommunicationTracking.sentDate |
+                                                appDate
+                                                }} |
+                                                {{element.ientCommunicationTracking.sentDate
+                                                | appDate: 'hh:mm a'}}
+                                            </ng-template>
+                                            <ng-template cellDef="sentStatusDescription" let-element>
+                                                <div
+                                                    class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                                                    {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+                                            </ng-template>
+
+                                            <ng-template cellDef="action" let-element>
+                                                <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                            </ng-template>
+                                        </app-table>
+                                    </div>
+                                </div>
+                            </app-sub-tab>
+                        </app-tab-sub-group>
+                    </div>
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Payment Update History">
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+                            <app-table [columns]="paymentUpdateColumns" [columnsName]="paymentUpdateColumnsName"
+                                [hideSelectAll]="true" [dataSource]="tablePaymentUpdateData">
+
+                            </app-table>
+                        </div>
+                    </div>
+                </app-sub-tab>
+            </app-tab-sub-group>
+        </app-tab>

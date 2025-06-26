@@ -1,0 +1,84 @@
+::ng-deep.top-spacer {
+    margin-top: -16px;
+}
+
+.status-success {
+    color: #009B46
+}
+
+
+.text-disclaimer {
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+
+    span {
+        font-weight: 400;
+    }
+}
+
+.upload-btn {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    background-color: #2867B2;
+    color: white;
+    cursor: pointer;
+
+    margin-top: 10px;
+
+    // border-radius: 50%;
+    .uploadInput {
+        display: none;
+    }
+}
+
+.logo {
+    img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+.text-underline {
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.fiscal {
+    &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+}
+
+.close-btn {
+    padding: 8px 16px;
+    background-color: #2867B2;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.text-blue {
+    color: #2867B2;
+    text-decoration: underline;
+}
+
+.active-table {
+    color: #2867B2;
+    font-weight: 600;
+    // background-color: #A8A8A8;
+}
+
+.text-blue {
+    max-width: 300px !important;
+}
+
+.class-click {
+    text-decoration: underline;
+    color: #2867B2;
+
+}

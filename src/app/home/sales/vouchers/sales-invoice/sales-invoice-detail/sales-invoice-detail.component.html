@@ -1,0 +1,562 @@
+<div class="v-flex h100">
+  @if (selectedTab === 0 || selectedTab === 1 ) {
+  @if(isEditAllowed()) {
+  <form #z="ngForm" class="flex-end pr20 header-bg h55">
+    <div class="col-md-3 header-input">
+      <app-input-control type="select" label="Document Name" [(ngModel)]="voucherId" name="voucherConfigId"
+        valuetype="int" [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+        [required]="true" label="Document Name" (onSelect)="getVoucherDetail(voucherConfigId)"
+        defaultOption="--Select--"></app-input-control>
+    </div>
+    <div class="col-md-1 end d-flex align-items-center">
+      <app-icon-button name="add" toolTip="Add New" (click)="navigateDetail(z)"></app-icon-button>
+    </div>
+  </form>
+  }
+  }
+  <form #headerTab="ngForm">
+    <div class="content-header ">
+      @if(salesInvoice.statusValue ==='INPRO' ){
+      <div class="card-box border-right">
+        <div class="card-content">
+          <auto-search-customer [isCRMCustomer]="true" [disabled]="isEditAllowed()"
+            (onSelect)="doCustomerSelect($event)" [hideNewBtn]="true" [hideStatus]="true" statusValue="ACTIV"
+            [(ngModel)]="salesInvoice.crmCustomerId" [displayText]="salesInvoice.pActCustomerDetails.customerName"
+            name="crmCustomerId" valueType="int" [required]="true" [errorTrue]="errorTrue" label="Customer Name" />
+        </div>
+        <div class="card-content">
+          <label>Customer ID</label>
+          <div class="content">
+            {{ salesInvoice.pActCustomerDetails.customerRefno || "-"}}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <app-input-control label="Customer Shipping Address" type="select"
+            [(ngModel)]="salesInvoice.customerShippingAddressId" name="customerShippingAddressId"
+            [items]="initialData.DDLValues.DDLAddress" key="actAddressId" keyName="fulladdress"
+            (onSelect)="addressChange(salesInvoice.customerShippingAddressId)"></app-input-control>
+        </div>
+        <div class="card-content">
+          <app-input-control label="Payment Term Option" type="text" [(ngModel)]="salesInvoice.paymentTermOption"
+            name="paymentTermOption" [btnClicked]="isEditAllowed()"></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <app-input-control label="Application Type" type="select"
+            [(ngModel)]="salesInvoice.applicationTypeValue" name="applicationTypeValue"
+            [items]="initialData.DDLValues.DDLApplicationType" key="constant" keyName="description" (onSelect)="getCustomerDDLCustomerId(salesInvoice.applicationTypeValue)"
+            ></app-input-control>
+        </div>
+        <div class="card-content">
+          <app-input-control label="Application Reference No" type="select" [(ngModel)]="salesInvoice.applicationReferenceNo"
+            name="applicationReferenceNo" [items]="applicationrefNo" key="" keyName=""></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <app-input-control label="Payment Mode" type="select" [(ngModel)]="salesInvoice.paymentModeValue"
+            name="paymentModeValue" [items]="initialData.DDLValues.DDLPaymentMode" key="constant"
+            keyName="description"></app-input-control>
+        </div>
+        <div class="card-content">
+          <app-input-control type="date" label="Document | Effective Date" [required]="true"
+            [(ngModel)]="salesInvoice.documentDate" name="documentDate" (onChange)="documentDateConversionDate()"
+            [required]="true" [errorTrue]="errorTrue"></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <app-input-control label="Transportation Mode" type="select" [(ngModel)]="salesInvoice.transportationMode"
+            name="transportationMode" [items]="initialData.DDLValues.DDLTransaportationMode" key="constant"
+            keyName="description"></app-input-control>
+        </div>
+        <div class="card-content">
+          <app-input-control type="date" label="Payment Due Date" [required]="true" [(ngModel)]="salesInvoice.dueDate"
+            name="dueDate" [minDate]="salesInvoice.documentDate" [errorTrue]="errorTrue"
+            [btnClicked]="salesInvoice.documentDate===''"></app-input-control>
+        </div>
+      </div>
+      }
+      @else {
+      <div class="card-box border-right">
+        <div class="card-content">
+          <!-- <div class="col-md-6"> -->
+          <app-input-control type="date" label="Document | Effective Date " [(ngModel)]="salesInvoice.documentDate"
+            name="documentDate" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+          <!-- </div> -->
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <!-- <div class="col-md-6"> -->
+          <app-input-control type="select" label="Transportation Mode " [(ngModel)]="salesInvoice.transportationMode"
+            name="transportationMode" [items]="initialData.DDLValues.DDLTransaportationMode" key="constant"
+            keyName="description" [btnClicked]="isEditAllowed()" [required]="true"
+            [errorTrue]="errorTrue"></app-input-control>
+          <!-- </div> -->
+        </div>
+      </div>
+
+      }
+      @if(salesInvoice.statusValue==='INPRO' || salesInvoice.statusValue==='APROV' ||
+      salesInvoice.statusValue==='CANCL'){
+      <div class="status-header-box ">
+        <div class="card-box-1">
+          <div class="card-content">
+            <label>Region</label>
+            <div class="content">
+              {{salesInvoice.regionDescription}}
+
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="content">
+              <view-label label="Status" status="{{ salesInvoice.statusValue }}"
+                statusValue="{{ salesInvoice.statusDescription }}"></view-label>
+            </div>
+          </div>
+
+          <div class="card-content btn-group">
+            <!-- <app-icon-button name="save" toolTip="Save"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear"></app-icon-button> -->
+          </div>
+        </div>
+        <div class="card-box-1">
+          <div class="card-content">
+            <!-- <label>Status</label>
+            <div class="content">Pending Submission</div> -->
+          </div>
+          @if(salesInvoice.salSalesInvoiceId===0){
+          <div class="card-content btn-group">
+            <app-icon-button name="save" toolTip="Save" (click)="saveSalesInvoiceDetail('save')"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="createNewSalesInvoice(appActVoucherConfigId, regionDetailValue)"></app-icon-button>
+          </div>
+          }@else{
+          @if(salesInvoice.statusValue==='INPRO'){
+          <div class="card-content btn-group">
+            <app-icon-button name="save" toolTip="Update" (click)="saveSalesInvoiceDetail('update')"></app-icon-button>
+            <app-icon-button name="refresh" toolTip="Refresh"
+              (click)="openSalesInvoice(salesInvoice.salSalesInvoiceId)"></app-icon-button>
+            <app-icon-button name="accept" toolTip="Complete" (click)="completeStage()"></app-icon-button>
+
+          </div>
+
+          }
+          }
+        </div>
+        <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div>
+      </div>
+      }
+    </div>
+  </form>
+  <div class="content-body">
+    @if(selectedTab === 0){
+    @if(!infoMore){
+    <row>
+      <div class="col-md-4 ">
+        <row>
+          <app-icon-button name="down" toolTip="Document Info" (click)="getMoreInfo()"></app-icon-button>
+          <view-label label="Doc No" value="{{salesInvoice.saleInvoiceReferenceNo}}" type="sub"
+            class="px-1"></view-label>
+          <view-label label="Doc Name" value="{{salesInvoice.pActVoucherConfig.voucherName}}" type="sub"
+            class="px-1"></view-label>
+        </row>
+      </div>
+      <div class="col-md-8">
+        <div class="end">
+          <!-- <row> -->
+          <!-- <app-checkbox [checked]="salesInvoice.isExport==='Y'" [btnClicked]="isEditAllowed()"></app-checkbox>
+          <div class="px-1">Export Sales test</div> -->
+          <!-- <div class="col-md-5">
+            <app-auto-get-item [partyId]="salesInvoice.crmCustomerId" [regionValue]="regionDetailValue"
+              [displayText]="autoSearchItems.autoSearchText"
+              [voucherType]="salesInvoice.pActVoucherConfig.voucherTypeValue"
+              [voucherConfigId]="salesInvoice.pActVoucherConfig.actVoucherConfigId"
+              [documentDate]="salesInvoice.documentDate" (clear)="clearDisplayText()"
+              [(ngModel)]="autoSearchItems.autoSearchItemId" name="autoSearchItemId"
+              (onSelect)="doGetItemSelect($event)"
+              [btnClicked]="salesInvoice.documentDate ==='' || isEditAllowed()"></app-auto-get-item>
+          </div>
+          <app-icon-button name="add" toolTip="Add New" (click)="getSalesOrderItemsByOrderIdAndSetAsInvoiceItem()"
+            [__disabled]="__isDisabled() || salesInvoice.documentDate===''"></app-icon-button> -->
+          <!-- </row> -->
+        </div>
+      </div>
+    </row>
+    }@else{
+    <div class=" card-1">
+      <row>
+        <div class="col-md-3">
+          <view-label label="Document No" value="{{salesInvoice.saleInvoiceReferenceNo}}"></view-label>
+        </div>
+        <div class="col-md-3">
+          <view-label label="Document Name" value="{{salesInvoice.pActVoucherConfig.voucherName}}"></view-label>
+        </div>
+        <div class="col-md-3">
+          <view-label label="Branch Name" value="{{salesInvoice.pActBranch.branchName}}"></view-label>
+        </div>
+        <div class="col-md-3">
+          <view-label label="Customer Ledger Name"
+            value="{{salesInvoice.pActCustomerDetails.ientActLedger.ledgerName}}"></view-label>
+        </div>
+
+        <div class="col-md-3">
+          <view-label label="Posting Date" value="{{salesInvoice.approvedDate | appDate}}"></view-label>
+        </div>
+        <div class="col-md-3">
+          <view-label label="Created Date" value="{{salesInvoice.enteredDate | appDate}}"></view-label>
+        </div>
+        <div class="col-md-3">
+          <view-label label="Created By" value="{{salesInvoice.enteredByUsername}}"></view-label>
+        </div>
+      </row>
+      <row>
+        <div class="col-md-4 ">
+          <div class="mb20"></div>
+          <app-icon-button name="up" toolTip="Document Info" (click)="getlessInfo()"></app-icon-button>
+
+        </div>
+        <div class="col-md-8">
+          <div class="end">
+            <div class="mb20"></div>
+            <!-- <app-checkbox [checked]="salesInvoice.isExport==='Y'" [btnClicked]="isEditAllowed()"></app-checkbox>
+          
+            <div class="px-1">Export Sales</div> -->
+            <!-- <div class="col-md-5">
+              <app-auto-get-item [partyId]="salesInvoice.crmCustomerId"
+                [regionValue]="!!regionDetailValue?regionDetailValue:salesInvoice.regionValue"
+                [displayText]="autoSearchItems.autoSearchText"
+                [voucherType]="salesInvoice.pActVoucherConfig.voucherTypeValue"
+                [voucherConfigId]="salesInvoice.appActVoucherConfigId" [documentDate]="salesInvoice.documentDate"
+                [(ngModel)]="autoSearchItems.autoSearchItemId" name="autoSearchItemId"
+                (onSelect)="doGetItemSelect($event)" (clear)="clearDisplayText()"
+                [btnClicked]="salesInvoice.documentDate ==='' || isEditAllowed()"></app-auto-get-item>
+            </div>
+            <app-icon-button name="add" toolTip="Add New"></app-icon-button> -->
+
+          </div>
+        </div>
+      </row>
+    </div>
+    }
+    <div class="flex-1 h100">
+      <app-sales-item [isEditAllowed]="isEditAllowed()" [(salesInvoice)]="salesInvoice"></app-sales-item>
+    </div>
+    } @else if(selectedTab === 1){
+    <div class="flex-1 h100">
+      <app-sales-invoice-notes [(salesInvoice)]="salesInvoice" />
+    </div>
+    } @else if(selectedTab === 2){
+    <div class="flex-1 h100">
+      <app-sales-invoice-attachment [(salesInvoice)]="salesInvoice" />
+    </div>
+    <!-- </app-table> -->
+    }
+    @else if(selectedTab === 3 && salesInvoice.statusValue === 'APROV'){
+    <div class="print-wrap">
+      <row>
+        <div class="col-md-4">
+          <div class="ptb14"></div>
+          <app-input-control type="textarea" [maxLength]="250" className="notes-2"
+            label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="salesInvoice.pActVoucherConfig.pdfOtherComments"
+            name="pdfOtherComments"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" (click)="viewSalesInvoiceReceipt()"></app-icon-button>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="d-flex gap-5 end">
+            <button type="submit" class="approve-btn" (click)="openEmailHistory()">Send Email</button>
+            <button type="submit" class="cancel-btn" (click)="closePdf()"> Close </button>
+            <!-- <app-send-email [name]="purchaseOrder.sentActVendor
+                .vendorName" [documentDate]="purchaseOrder.documentDate" [netAmount]="purchaseOrder.netAmount"
+                  [refNumber]="purchaseOrder.purchaseQuotationRefNo"
+                  [voucherName]="purchaseOrder.sentActVoucherConfig.voucherTypeDescription" [emailId]="purchaseOrder.sentActVendor
+                .emailId" [blob]="blob"></app-send-email> -->
+            <!-- <app-icon-button name="clear" toolTip="Close"></app-icon-button>-->
+            <!-- <button type="submit" class="cancel-btn" (click)="closePdf()"> Close </button> -->
+          </div>
+          <div class="pt8"></div>
+          <div class="pdf-viewer">
+            <div class="ab">
+              <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if(salesInvoice.statusValue === 'APROV'){
+
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        }
+      </div>
+      <row>
+        <div class="px10">
+          <view-label type="sub" label="Currency" value="({{salesInvoice.docCurrencyValue}})"></view-label>
+        </div>
+        <div class="px10">
+          <view-label type="sub" label="Gross Amount" value="{{salesInvoice.totalAfterDiscount}}"></view-label>
+        </div>
+        <div class="px10">
+          <view-label type="sub" label="Tax Amount" value="{{salesInvoice.totalTaxAmount}}"></view-label>
+        </div>
+        <div class="px10">
+          <view-label type="sub" label="Net Amount1" value="{{salesInvoice.totalNetAmount}}"></view-label>
+        </div>
+      </row>
+      <div class="open-arrow" id="trigger{{pageId}}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{pageId}}">
+      <row>
+        <div class="col-md-8">
+          <row>
+            <div class="col-md-5 footer-textarea">
+              <app-input-control type="textarea" [maxLength]="250" className="notes" label="Common Narration Text"
+                [(ngModel)]="salesInvoice.comments" name="comments" [btnClicked]="isEditAllowed()"></app-input-control>
+            </div>
+            <div class="col-md-3">
+              <view-label label="Document Currency" value="{{salesInvoice.docCurrencyValue}}" class="mb20"></view-label>
+              <div class="col-md-10">
+                <app-input-control type="number" label="Conversion Rate" [(ngModel)]="salesInvoice.currencyRate"
+                  name="currencyRate" [decimal]="8"
+                  [btnClicked]="isEditAllowed() || (salesInvoice.docCurrencyValue === salesInvoice.currencyValue)"
+                  valueType="int" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+              </div>
+
+            </div>
+
+            <table class="app-footer-table">
+              @for(currency of salesInvoice.pilstActCurrencyExchangerate; track $index){
+              <tr class="app-footer-table-row ">
+                <td class="app-footer-table-cell footer-header-txt text-end">
+                  {{currency.description}}
+                </td>
+                <td class="app-footer-table-cell footer-cnt-txt text-end">
+                  {{currency.documentCurrencyAmount}}
+                </td>
+              </tr>
+              }
+            </table>
+
+          </row>
+        </div>
+        <div class="col-md-4">
+          <row>
+            <div class="col-md-5">
+              <view-label label="Reporting Currency" value=" {{salesInvoice.currencyValue}}"></view-label>
+            </div>
+
+            <table class="app-footer-table">
+              @for(currency of salesInvoice.pilstActCurrencyExchangerate; track $index){
+              <tr class="app-footer-table-row ">
+                <td class="app-footer-table-cell footer-header-txt text-end">
+                  {{currency.description}}
+                </td>
+                <td class="app-footer-table-cell footer-cnt-txt text-end">
+                  {{currency.reportingCurrencyAmount}}
+                </td>
+              </tr>
+              }
+            </table>
+          </row>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn" (click)="navigateToList()"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToSales()">Sales</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Sales Invoice </div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail </div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+  <div class="status-table-header">
+    <div class="changed-by_label">
+      Changed By | Effective Date
+    </div>
+    <div class="pl14">
+      Status
+    </div>
+  </div>
+  @for (item of salesInvoice.plistentSalSalesInvoiceStatusHistory; track $index) {
+  <div class="status-table-content">
+    <div class="changed-by">
+      {{
+      item.changedByUsername
+      }}
+      <div class="changed-by_sub">
+        {{
+        item.effectiveDate | appDate
+        }}
+        {{
+        item.effectiveDate | appDate:'hh:mm a'
+        }}
+      </div>
+    </div>
+    <div class="status_align pl14">
+      <div class="status-PRSTV">
+        {{ item.statusDescription ? item.statusDescription : "-" }}
+      </div>
+    </div>
+  </div>
+  }
+  <!-- <div class="mat-menu-drop"> -->
+  <!-- <app-table
+    [hideSelectAll]="true"
+    [showPaginator]="false"
+    [columns]="statusMenu"
+    [columnsName]="statusMenuName"
+    [dataSource]="tableStatusMenuData"
+  >
+    <ng-template cellHeaderDef="fileName">
+      <div class="header-cell-title">Changed By | Effective Date</div>
+    </ng-template>
+    <ng-template cellDef="fileName" let-element>
+      <div class="header-cell-title">{{element.changedBy}}</div>
+      <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+    </ng-template>
+  </app-table> -->
+  <!-- </div> -->
+
+</mat-menu>
+
+<ng-template #mailTemplate>
+  <div class="dialog-box p-3">
+    <!-- <div class=""> -->
+    <div class="label-value-head">
+      Send Email
+    </div>
+    <div class="ml-auto">
+      <button mat-icon-button (click)="onNoClick()">
+        <!-- <ion-icon name="close-outline" (click)="this.dialog.closeDialog()"></ion-icon> -->
+        <app-icon-button name="close" (click)="dialogService.closeAll()"></app-icon-button>
+      </button>
+      <!-- </div>/ -->
+    </div>
+    <div class="mat-dialog-content">
+      <scroll>
+        <form class="h100" #l="ngForm">
+          <div class="container-fluid h100">
+            <row>
+              <div class="col-md-12">
+                <app-input-control type="email" label="To" [(ngModel)]="mailInfo.toMailList" name="toMailList"
+                  [required]="true" [errorTrue]="errorTrue"></app-input-control>
+              </div>
+              <div class="col-md-12">
+                <app-input-control type="email" label="CC" [(ngModel)]="mailInfo.ccMailList" name="ccMailList"
+                  [multiEmail]="true"></app-input-control>
+              </div>
+              <div class="col-md-12 d-flex align-items-center">
+                <div class="form-group">
+                  <label class="label-value">From : </label>
+                  <div class="form-value">
+                    {{appService.userData.firstName}} {{appService.userData.middleName}}
+                    {{appService.userData.lastName}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt10">
+                <app-input-control label="Subject" [(ngModel)]="fullSubject" name="fullSubject" [required]="true"
+                  [errorTrue]="errorTrue"></app-input-control>
+              </div>
+              <div class="col-md-12">
+                <div class="mail-content mail-box">
+                  <!-- <app-input-control type="textarea" label="Content" [(ngModel)]="fullContent" name="fullContent" [closeBlind]="true" [required]="true" [errorTrue]="errorTrue" [maxlength]="500"></app-input-control> -->
+                  <!-- <label class="label-value"> Content</label> -->
+                  <div class="form-value">
+                    <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                      [required]="true" [(ngModel)]="fullContent" name="fullContent"
+                      label="Content"></app-input-control>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="down-content">
+                  <!-- {{downContent}}
+                     -->
+                  This is an auto-generated email. Please do not reply to this email.
+                  Please find the PDF below :-
+                </div>
+              </div>
+              <!-- <div class="d-flex"> -->
+              <div class="col-md-6 d-flex gap-10  mt20">
+                <app-checkbox [checked]="mailInfo.isIncludePdf === 'Y'" (change)="doPdfChange($event)"
+                  color="primary"></app-checkbox>Include Invoice
+              </div>
+              <div>
+
+              </div>
+              <!-- </div> -->
+              <div class="col-md-6 d-flex gap-10 mt20">
+                <app-checkbox [checked]="mailInfo.isIncludeAttachment === 'Y'" (change)="doAttachment($event)"
+                  color="primary"></app-checkbox>Additional Attachment
+              </div>
+              <ng-container>
+                @if(mailInfo.isIncludeAttachment === 'Y'){
+
+                <div class="p-3">
+                  <app-drop-zone type="set" [multiple]="true" (onUpload)="loadAttachment($event)"></app-drop-zone>
+                </div>
+                }
+              </ng-container>
+            </row>
+            <div mat-dialog-actions class="d-flex align-items-baseline justify-content-end my-1 gap-10 mt30">
+              <button class="approve-btn" (click)="sendEmailforVoucher(l)">
+                Send Mail
+              </button>
+              <button class="complete-btn">
+                Refresh
+              </button>
+            </div>
+          </div>
+        </form>
+      </scroll>
+
+    </div>
+
+  </div>
+</ng-template>

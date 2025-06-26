@@ -1,0 +1,42 @@
+<div class="content-wrapper">
+    <div class="d-flex gap-10 h100">
+      
+        <div class="col-md-12 box">
+                    
+                        <div class="d-flex space-between align-items-center pt8">
+                            <div class="dash-header pl20  pb16">
+                                Will Stage By Year
+                            </div>
+                            <div class="col-md-4">
+                                <app-input-control label="" type="select" [(ngModel)]="yearData" name="yearData" [items]="initialData.DDLValues.DDLYEAR" key="id" keyName="description" (onSelect)="yearChanged($event)"></app-input-control>
+                            </div>
+                        </div>
+
+                                    @if(showChart){
+                                       
+                                        .  <div class="chart-size pl32">     <app-line-chart [dataset]="this.dataSet1"></app-line-chart></div>
+                                   
+                                        <div class="pb16"></div>
+                                        <!-- <div class="dash-header pb16 ">
+                                            Will Stage By Year
+                                        </div>
+                                        <app-line-chart2 [dataset]="this.dataSet2"></app-line-chart2>   -->
+                                  }
+                                    
+                          
+              
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/line-chart.svg"></ion-icon>
+                <div class="screen-text">Will Dashboard</div>
+            </li>
+
+        </ul>
+    </div>
+</ng-template>

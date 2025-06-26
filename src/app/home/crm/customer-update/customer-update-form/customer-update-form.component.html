@@ -1,0 +1,257 @@
+<div class="dialog-container" [parentId]="pageId" appAccess="CUSUP">
+    <div class="dialog-header">
+        <div class="dialog-title"><ion-icon class="dialog-header-icon"
+                src="assets/icons/accordian/customer-update.svg"></ion-icon>
+            Customer Update <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon> Detail<ion-icon
+                class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+            @if(this.customerDetails.customerUpdateId !==0){
+            Edit
+            }
+            @else {
+            New
+            }
+        </div>
+        <div class="slot-right">
+            <div class="btn-group">
+                @if(this.customerDetails.customerUpdateId !==0){
+                <app-icon-button name="save" toolTip="Update" (click)="saveCustomerForm()"></app-icon-button>
+                <app-icon-button name="refresh" toolTip="Refresh" (click)="openCustomerForm()"></app-icon-button>
+                }
+                @else{
+                <app-icon-button name="save" toolTip="Save" (click)="saveCustomerForm()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                }
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <div class="dialog-content-inner h100">
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+            <row class="row-h100">
+                <div class="col-md-3 center">
+                    <div class="customer-profile center relative">
+                        <div class="p-3 image-upload">
+                            <div class="single-image">
+                                <img
+                                    [src]="customerDetails.ientCustomerUpdatePhoto.fileContent?customerDetails.ientCustomerUpdatePhoto.fileContent:'assets/img/human-face.svg'">
+                            </div>
+                            <div class="selectButton" (click)="triggerClick()">
+                                <input type="file" class="uploadInput" #fileInput (change)="loadImageFromDevice($event)"
+                                    id="file-input" accept="image/jpg, image/jpeg">
+
+                                <ion-icon src="assets/icons/upload.svg"></ion-icon>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <scroll>
+                        <form #l="ngForm">
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Common Information
+                                        </div>
+                                        <div class=" box-pad">
+
+                                            <row>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="First Name"
+                                                        [oldValue]="updateOldValue?.FirstName" [maxLength]="250"
+                                                        [(ngModel)]="customerDetails.firstName" [errorTrue]="errorTrue"
+                                                        [required]="true" name="firstName"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Middle Name" [maxLength]="250"
+                                                        [oldValue]="updateOldValue?.MiddleName"
+                                                        [(ngModel)]="customerDetails.middleName"
+                                                        name="middleName"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Last Name" [maxLength]="250"
+                                                        [oldValue]="updateOldValue?.LastName"
+                                                        [(ngModel)]="customerDetails.lastName" name="lastName"
+                                                        [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                        <div class="hr"></div>
+                                        <div class=" box-pad">
+
+                                            <row>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="email" label="Email ID" [maxLength]="250"
+                                                        [oldValue]="updateOldValue?.EmailId" [email]="true"
+                                                        [(ngModel)]="customerDetails.emailId" [errorTrue]="errorTrue"
+                                                        name="emailId"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="number" label="Contact Number"
+                                                        [oldValue]="updateOldValue?.ContactNo"
+                                                        [(ngModel)]="customerDetails.contactNo" name="contactNo"
+                                                        [minLength]="5" [maxLength]="10" [errorTrue]="errorTrue"
+                                                        [required]="true"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="number" label=" Alternate Contact Number"
+                                                        [oldValue]="updateOldValue?.AlternateContactNo" [minLength]="5"
+                                                        [maxLength]="15"
+                                                        [(ngModel)]="customerDetails.alternateContactNo"
+                                                        name="alternateContactNo"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                        <div class="hr"></div>
+                                        <div class=" box-pad">
+                                            <div class="col-md-12">
+                                                <app-input-control type="date" label="Date of Birth " [oldDate]="true"
+                                                    [maxDate]="currentDate" [(ngModel)]="customerDetails.dateOfBirth"
+                                                    name="dateOfBirth" [oldValue]="updateOldValue?.DateOfBirth"
+                                                    [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="select" defaultOption="--Select--"
+                                                    label="Gender" [(ngModel)]="customerDetails.genderValue"
+                                                    name="genderValue" [items]="initialData.DDLValues.DDLGender"
+                                                    key="constant" [oldValue]="updateOldValue?.GenderValue"
+                                                    [oldValueDescription]="updateOldValue?.GenderDescription"
+                                                    keyName="description" placeholder="Select Gender"
+                                                    [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="select" defaultOption="--Select--"
+                                                    label="Nationality" [(ngModel)]="customerDetails.nationalityId"
+                                                    name="nationalityId" [items]="initialData.DDLValues.DDLNationality"
+                                                    key="id" [oldValue]="updateOldValue?.NationalityId"
+                                                    [oldValueDescription]="updateOldValue?.NationalityDescription"
+                                                    keyName="description"
+                                                    placeholder="Select Nationality"></app-input-control>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Contact Person Information
+                                        </div>
+                                        <div class=" box-pad">
+                                            <div class="col-md-12">
+                                                <app-input-control type="text" label="Father Name" [maxLength]="250"
+                                                    [(ngModel)]="customerDetails.fatherName"
+                                                    [oldValue]="updateOldValue?.FatherName"
+                                                    [errorTrue]="customerDetails.motherName===''&& customerDetails.gaurdianName==='' && errorTrue "
+                                                    [required]="customerDetails.motherName===''&& customerDetails.gaurdianName==='' "
+                                                    name="fatherName"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="text" label="Mother Name" [maxLength]="250"
+                                                    [(ngModel)]="customerDetails.motherName"
+                                                    [oldValue]="updateOldValue?.MotherName"
+                                                    [errorTrue]="customerDetails.fatherName===''&& customerDetails.gaurdianName==='' && errorTrue "
+                                                    [required]="customerDetails.fatherName===''&& customerDetails.gaurdianName==='' "
+                                                    name="motherName"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="text" label="Guardian Name" [maxLength]="250"
+                                                    [(ngModel)]="customerDetails.gaurdianName"
+                                                    [oldValue]="updateOldValue?.GaurdianName"
+                                                    [errorTrue]="customerDetails.motherName===''&& customerDetails.fatherName==='' && errorTrue "
+                                                    [required]="customerDetails.motherName===''&& customerDetails.fatherName==='' "
+                                                    name="guardianName"></app-input-control>
+                                            </div>
+                                        </div>
+                                        <div class="hr"></div>
+                                        <div class=" box-pad">
+                                            <div class="col-md-12">
+                                                <app-input-control type="text" label="School Name" [maxLength]="250"
+                                                    [(ngModel)]="customerDetails.schoolName"
+                                                    [oldValue]="updateOldValue?.SchoolName"
+                                                    [errorTrue]="customerDetails.studentId !=='' && errorTrue"
+                                                    [required]="customerDetails.studentId !==''"
+                                                    name="schoolName"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="text" label="Student Id"
+                                                    [(ngModel)]="customerDetails.studentId"
+                                                    [oldValue]="updateOldValue?.StudentId"
+                                                    [errorTrue]="customerDetails.schoolName !=='' && errorTrue"
+                                                    [required]="customerDetails.schoolName !==''"
+                                                    name="studentId"></app-input-control>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Employer Information
+                                        </div>
+                                        <div class=" box-pad">
+                                            <div class="col-md-12">
+                                                <app-input-control type="text" label="Employer Name" [maxLength]="250"
+                                                    [(ngModel)]="customerDetails.employerName"
+                                                    [oldValue]="updateOldValue?.EmployerName"
+                                                    name="employerName"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="number" label="Net Salary(FJD)"
+                                                    [maxLength]="20" [(ngModel)]="customerDetails.netSalary"
+                                                    [decimal]="2" [oldValue]="updateOldValue?.NetSalary"
+                                                    name="netSalary"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="text" label="Occupation" [maxLength]="250"
+                                                    [(ngModel)]="customerDetails.occupation"
+                                                    [oldValue]="updateOldValue?.Occupation"
+                                                    name="occupation"></app-input-control>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 hr"></div>
+                                        <div class=" box-pad">
+                                            <app-address-edit [ientAddress]="customerDetails.iEmployerAddress"
+                                                [oldValue]="updateOldValue?.IEmployerAddress"
+                                                [oldValueDesription]="updateOldValue?.IEmployerAddress"
+                                                [errorTrue]="errorTrue" type="employer"></app-address-edit>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="margin-top: 10px;">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Death Information
+                                        </div>
+                                        <div class=" box-pad">
+                                            <row>
+
+                                                <div class="col-md-12">
+                                                    <app-input-control type="date" label="Date Of Death"
+                                                        [(ngModel)]="customerDetails.dateOfDeath"
+                                                        [oldValue]="updateOldValue?.DateOfDeath" [maxDate]="currentDate"
+                                                        name="dateOfDeath"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </row>
+                        </form>
+                    </scroll>
+
+                </div>
+            </row>
+        </div>
+    </div>
+</div>

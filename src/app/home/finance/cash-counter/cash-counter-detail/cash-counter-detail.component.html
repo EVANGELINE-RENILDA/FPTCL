@@ -1,0 +1,1082 @@
+<div class="v-flex h100" appAccess="FUDTN" [parentId]="pageId">
+  <form #l="ngForm" class="content-header">
+    <div class="card-box border-right w100">
+      <div class="card-content">
+        <label>Branch Name</label>
+        <div class="content">
+          <label-dash [value]="branchName" />
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Cash Counter Name</label>
+        <div class="content">
+          <label-dash [value]="cashCounter.cashCounterName" />
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Cash Counter No</label>
+        <div class="content">
+          <label-dash [value]="cashCounter.cashCounterNo" />
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Cash Counter Code</label>
+        <div class="content">
+          <label-dash [value]="cashCounter.cashCounterCode" />
+        </div>
+      </div>
+    </div>
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content">
+          <label>Status</label>
+          <div class="content status-{{ cashCounter.statusValue }}">
+            <label-dash [value]="cashCounter.statusDescription" />
+          </div>
+        </div>
+        @if(cashCounter.cashCounterId === 0){
+        <div class="card-content btn-group">
+          <app-icon-button
+            name="save"
+            toolTip="Save"
+            (click)="editCashCounter()"
+          ></app-icon-button>
+          <app-icon-button
+            name="refresh"
+            toolTip="Refresh"
+            (click)="showCashCounter()"
+            appButtonAccess="FunTraNotRefreshBtn"
+          ></app-icon-button>
+        </div>
+        } @else { @if (tabIndex === 0) { @if (this.cashCounter.statusValue
+        !=='APROV' && this.cashCounter.statusValue !== 'CANCL' && tabIndex ===
+        0){
+        <div class="card-content btn-group">
+          <app-icon-button
+            name="edit"
+            toolTip="edit"
+            [hidden]="hideBtnBasedonPNDAPandAPRVD()"
+            (click)="showCashCounter()"
+            appButtonAccess="FunTraNotRefreshBtn"
+          ></app-icon-button>
+        </div>
+        } } }
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+
+  <div class="content-body flex-1">
+    @if(tabIndex === 0){
+
+    <form #a="ngForm">
+      <row>
+        <div class="col-md-2 weekdays border-right">
+          @for (day of cashCounter.plstCashCounterTiming; track day; let i =
+          $index) {
+          <div
+            class="days"
+            (click)="timePicker(day)"
+            [ngStyle]="{
+              'background-color':
+                day.dayDescription === dayDescription ? '#00A8DC' : ''
+            }"
+          >
+            {{ day.dayDescription }}
+          </div>
+          }
+        </div>
+        <div class="col-md-10" *ngIf="time">
+          <div class="time-control-center">
+            <row>
+              <div class="col-md-3">
+                <app-input-control
+                  type="time"
+                  label="Work Start Time"
+                  #input
+                  *ngIf="time"
+                  [(ngModel)]="cashCounterTiming.startTime"
+                  name="startTime"
+                  [errorTrue]="errorTrue1"
+                  [required]="true"
+                  [btnClicked]="
+                    cashCounterTiming.isHoliday === 'Y' ||
+                    cashCounter.statusValue === 'APRVD' ||
+                    cashCounter.statusValue === 'PNDAP' ||
+                    cashCounter.statusValue === 'CNCLD'
+                  "
+                  (onClear)="clearTimer(cashCounterTiming.startTime)"
+                >
+                </app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control
+                  type="time"
+                  label="Work End Time"
+                  #input
+                  [(ngModel)]="cashCounterTiming.endTime"
+                  name="endTime"
+                  [errorTrue]="errorTrue1"
+                  [required]="true"
+                  [btnClicked]="
+                    cashCounterTiming.isHoliday === 'Y' ||
+                    cashCounter.statusValue === 'APRVD' ||
+                    cashCounter.statusValue === 'PNDAP' ||
+                    cashCounter.statusValue === 'CNCLD'
+                  "
+                ></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control
+                  type="time"
+                  label="Break Start Time"
+                  #input
+                  [(ngModel)]="cashCounterTiming.breakStarttime"
+                  name="breakStarttime"
+                  [errorTrue]="errorTrue1"
+                  [required]="true"
+                  [btnClicked]="
+                    cashCounterTiming.isHoliday === 'Y' ||
+                    cashCounter.statusValue === 'APRVD' ||
+                    cashCounter.statusValue === 'PNDAP' ||
+                    cashCounter.statusValue === 'CNCLD'
+                  "
+                >
+                </app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control
+                  type="time"
+                  label="Break End Time"
+                  #input
+                  [minDate]="cashCounterTiming.breakStarttime"
+                  [maxDate]="cashCounterTiming.endTime"
+                  [(ngModel)]="cashCounterTiming.breakEndtime"
+                  name="breakEndtime"
+                  [errorTrue]="errorTrue1"
+                  [required]="true"
+                  [btnClicked]="
+                    cashCounterTiming.isHoliday === 'Y' ||
+                    cashCounter.statusValue === 'APRVD' ||
+                    cashCounter.statusValue === 'PNDAP' ||
+                    cashCounter.statusValue === 'CNCLD'
+                  "
+                >
+                </app-input-control>
+              </div>
+            </row>
+            <div class="d-flex">
+              <div class="check-box">
+                @if(cashCounter.statusValue === 'APRVD' ||
+                cashCounter.statusValue === 'PNDAP' ) {
+                <div class="holiday-text">
+                  {{
+                    cashCounterTiming.isHoliday === "Y"
+                      ? "Holiday"
+                      : "Working Day"
+                  }}
+                </div>
+                } @else {
+                <mat-checkbox
+                  color="primary"
+                  [checked]="cashCounterTiming.isHoliday === 'Y'"
+                  (change)="isChecked($event)"
+                  [disabled]="
+                    cashCounter.statusValue === 'APRVD' ||
+                    cashCounter.statusValue === 'PNDAP' ||
+                    cashCounter.statusValue === 'CNCLD'
+                  "
+                  >Is Holiday</mat-checkbox
+                >
+
+                }
+              </div>
+              <div
+                class="card-content btn-group ml-auto"
+                *ngIf="cashCounterTiming.cashCounterTimingId === 0"
+              >
+                <app-icon-button
+                  name="save"
+                  toolTip="Save"
+                  (click)="saveCashCounterTiming()"
+                  [parentId]="pageId"
+                  appAccess="CCDOperationHourListSaveBtn"
+                ></app-icon-button>
+
+                <app-icon-button
+                  name="clear"
+                  toolTip="Clear"
+                  (click)="clearCashCounterTiming()"
+                  [parentId]="pageId"
+                  appAccess="CCDOperationHourListCanCelBtn"
+                  [hidden]="hideBtnBasedonStatusTime()"
+                ></app-icon-button>
+              </div>
+              <div
+                class="card-content btn-group ml-auto"
+                *ngIf="cashCounterTiming.cashCounterTimingId !== 0"
+              >
+                <app-icon-button
+                  name="save"
+                  toolTip="Update"
+                  (click)="saveCashCounterTiming()"
+                  [parentId]="pageId"
+                  appAccess="CCDOperationHourListSaveBtn"
+                  [hidden]="hideBtnBasedonPNDAPandAPRVD()"
+                ></app-icon-button>
+
+                <app-icon-button
+                  name="refresh"
+                  toolTip="Refresh"
+                  (click)="openCashCounterTiming()"
+                  [parentId]="pageId"
+                  appAccess="CCDOperationHourListCanCelBtn"
+                  [hidden]="hideBtnBasedonStatusTime()"
+                ></app-icon-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </row>
+    </form>
+    } @if(tabIndex === 1){
+    <div class="flex-1 relative mh100">
+      <div class="d-flex h100">
+        <div class="col-md-8 border-right">
+          <scroll>
+            <table class="app-table account-table">
+              <thead class="app-table-head">
+                <tr class="app-table-header-row">
+                  <th class="app-table-header-cell text-center">
+                    <div>#</div>
+                  </th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">Notes</div>
+                  </th>
+                  <th class="app-table-header-cell">Created By</th>
+                  <th class="app-table-header-cell">Date | Time</th>
+                </tr>
+              </thead>
+              <tbody class="app-table-body">
+                @for (notes of cashCounter.plstCashCounterNotes; track notes;
+                let i = $index) {
+                <tr class="app-table-row">
+                  <td class="app-table-cell text-center">
+                    {{ i + 1 }}
+                  </td>
+                  <td class="app-table-cell">
+                    <div>
+                      {{ notes.notes }}
+                    </div>
+                  </td>
+                  <td class="app-table-cell">
+                    <div class="table-cell-subtitle fw-600">
+                      {{ notes.enteredByFullName }}
+                    </div>
+                  </td>
+                  <td class="app-table-cell">
+                    {{ notes.enteredDate | appDate }} |
+                    {{ notes.enteredDate | appDate : "hh:mm a" }}
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </scroll>
+        </div>
+        <div class="col-md-4">
+          <div class="dialog-container">
+            <div class="dialog-header">
+              <div class="dialog-title">
+                <ion-icon
+                  class="fos-20"
+                  src="assets/icons/finance.svg"
+                ></ion-icon>
+                Add Notes
+              </div>
+              <div class="slot-right">
+                <div class="btn-group">
+                  <app-icon-button
+                    name="save"
+                    toolTip="Save"
+                    [hidden]="hideBtnBasedonAPRVD()"
+                    (click)="saveCashCounterNotes(b)"
+                  ></app-icon-button>
+                  <app-icon-button
+                    name="clear"
+                    toolTip="Clear"
+                    (click)="createCashCounterNotes()"
+                    [hidden]="hideBtnBasedonAPRVD()"
+                  ></app-icon-button>
+                </div>
+              </div>
+            </div>
+            <div class="dialog-content">
+              <div class="dialog-content-inner h100">
+                <form #b="ngForm">
+                  <row>
+                    <div class="col-md-12">
+                      <app-input-control
+                        type="select"
+                        label="Status"
+                        [(ngModel)]="cashCounterNotes.statusValue"
+                        defaultOption="--Select--"
+                        [items]="DDLValues"
+                        key="constant"
+                        keyName="description"
+                        name="statusValue"
+                        [required]="true"
+                        [errorTrue]="errorTrue"
+                        [btnClicked]="cashCounter.statusValue === 'APRVD'"
+                      ></app-input-control>
+                    </div>
+
+                    <div class="col-md-12 mb26">
+                      <app-input-control
+                        type="textarea"
+                        className="notes-1"
+                        [(ngModel)]="cashCounterNotes.notes"
+                        name="notesDetail"
+                        [maxLength]="250"
+                        label="Notes"
+                        [required]="true"
+                        [errorTrue]="errorTrue"
+                        [btnClicked]="cashCounter.statusValue === 'APRVD'"
+                      ></app-input-control>
+                    </div>
+                  </row>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else if(tabIndex === 2){
+
+    <div class="v-flex h100">
+      <div class="flex-1 relative">
+        <scroll>
+          <ng-container *ngIf="cashCounter.statusValue !== 'CNCLD'">
+            <div class="col-md-12 justify-content-end p-2">
+              <div class="d-flex align-items-center gap-10">
+                @if(cashCounter.statusValue !== 'APRVD'){
+                <ng-container *ngIf="selfAssigned()">
+                  <button
+                    class="button self-assign"
+                    (click)="selfAssignApplicationAssignedHistory()"
+                  >
+                    Self Assign<ion-icon name="person-outline"></ion-icon>
+                  </button>
+                </ng-container>
+                <ng-container *ngIf="reAssigned()">
+                  <div class="ml-2 pt-3 w250">
+                    <app-input-control
+                      type="select"
+                      label="Select Reassign"
+                      defaultOption="--Select--"
+                      [(ngModel)]="selfAssign.assignedOfficer"
+                      name="assignedOfficer"
+                      [items]="assignDDL"
+                      key="constant"
+                      keyName="description"
+                      (onSelect)="
+                        showReassignButton(selfAssign.assignedOfficer)
+                      "
+                    >
+                    </app-input-control>
+                  </div>
+                  <ng-container
+                    *ngIf="showReassign && selfAssign.assignedOfficer !== ''"
+                  >
+                    <button
+                      class="button self-assign"
+                      (click)="reAssignApplicationAssignedHistory()"
+                    >
+                      Re Assign<ion-icon name="people-outline"></ion-icon>
+                    </button>
+                  </ng-container>
+                </ng-container>
+                }
+              </div>
+            </div>
+          </ng-container>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center">#</th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">Assigned Officer</div>
+                </th>
+                <th class="app-table-header-cell">Assigned Date</th>
+                <th class="app-table-header-cell">Assigned By</th>
+                <th class="app-table-header-cell">Status</th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (doc of cashCounter.ilstCashCounterAssignedOfficerHistory;
+              track doc; let i = $index) {
+
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div>
+                    {{ doc.assignedOfficerFullName }}
+                  </div>
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.assignedDate | appDate }}
+                  {{ doc.assignedDate | appDate : "hh:mm a" }}
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.assignedByFullName }}
+                </td>
+                <td class="app-table-cell">
+                  <div class="  status-{{ doc.statusValue }}">
+                    {{ doc.statusDescription }}
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </div>
+      <!-- </div> -->
+    </div>
+
+    } @else if(tabIndex === 3 ){
+    <div class="v-flex h100">
+      <div class="flex-1 relative mh100">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center">#</th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">Name</div>
+                </th>
+                <th class="app-table-header-cell">Start Date</th>
+                <th class="app-table-header-cell">End Date</th>
+                <th class="app-table-header-cell">Status</th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (doc of cashCounter.ilstCashCounterAssignedCashier; track
+              doc; let i = $index) {
+
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div
+                    class="linktable"
+                    (click)="navigateToAssignedCashier(doc.cashCounterId)"
+                  >
+                    {{ doc.cashierName }}
+                  </div>
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.startDate | appDate }}
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.endDate | appDate }}
+                </td>
+                <td class="app-table-cell">
+                  <div class="  status-{{ doc.statusValue }}">
+                    {{ doc.statusDescription }}
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </div>
+    </div>
+    } @else if (tabIndex===4) {
+    <div class="v-flex h100">
+      <div class="flex-1 relative mh100">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center">#</th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">Book No</div>
+                </th>
+                <th class="app-table-header-cell">Effective Date</th>
+                <th class="app-table-header-cell">Total Transaction Amount</th>
+                <th class="app-table-header-cell">Status</th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (doc of cashCounter.plstCashCounterDepositBook; track doc;
+              let i = $index) {
+
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div
+                    class="linktable"
+                    (click)="
+                      navigateToDepositBook(doc.cashCounterDepositBookId)
+                    "
+                  >
+                    {{ doc.depositBookNo }}
+                  </div>
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.effectiveDate }}
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.totalTransaction }}
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.statusDescription }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </div>
+    </div>
+    } @else if (tabIndex===5) {
+    <div class="flex-1 relative mh100">
+      <scroll>
+        <table class="app-table account-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <th class="app-table-header-cell text-center">
+                <div>#</div>
+              </th>
+              <th class="app-table-header-cell">
+                <div class="header-cell-title">Status</div>
+              </th>
+              <th class="app-table-header-cell">
+                <div class="header-cell-title">Changed Date</div>
+              </th>
+              <th class="app-table-header-cell">
+                <div class="header-cell-title">Changed By</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="app-table-body">
+            @for (status of cashCounter.plstCashCounterStatusHistory; track
+            status; let i = $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ i + 1 }}
+              </td>
+              <td class="app-table-cell">
+                <div>
+                  {{ status.cashCounterStatusDescription }}
+                </div>
+              </td>
+              <td>
+                {{ status.changedDate | appDate }}
+                {{ status.changedDate | appDate : "hh:mm a" }}
+              </td>
+              <td>{{ status.changedByFullName }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </scroll>
+    </div>
+    } @else if (tabIndex===6) {
+    <div class="col-md-12 h100 d-flex">
+      <div class="col-md-7 email-table">
+        <div class="flex-1 relative mh100">
+          <scroll>
+            <table class="app-table account-table">
+              <thead class="app-table-head">
+                <tr class="app-table-header-row">
+                  <th class="app-table-header-cell text-center">
+                    <div>#</div>
+                  </th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">To</div>
+                  </th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">Date</div>
+                  </th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">Status</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="app-table-body">
+                @for (email of cashCounter.plstCashCounterEmailHistory; track
+                email; let i = $index) {
+                <tr class="app-table-row" (click)="viewMail(email)">
+                  <td class="app-table-cell text-center cursor-pointer">
+                    {{ i + 1 }}
+                  </td>
+                  <td class="app-table-cell cursor-pointer">
+                    <div>
+                      {{ email.ientCommunicationTracking.toEmailId }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="table-cell-subtitle">
+                      {{ email.ientCommunicationTracking.sentDate | appDate }}
+                      {{
+                        email.ientCommunicationTracking.sentDate
+                          | appDate : "hh:mm a"
+                      }}
+                    </div>
+                  </td>
+                  <td>
+                    {{ email.ientCommunicationTracking.sentStatusDescription }}
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </scroll>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="v-flex h100 email-card">
+          <div class="flex-1 relative">
+            <div class="ab email-card-banner">
+              <div class="rel">
+                <div class="email-card-header">
+                  <div class="email-card-header-table">
+                    <label class="email-label">From : </label>
+                    <div class="email-value">{{ email.fromEmailId }}</div>
+                  </div>
+                  <div class="email-card-header-table">
+                    <label class="email-label">To : </label>
+                    <div class="email-value">{{ email.toEmailId }}</div>
+                  </div>
+                  <div class="content">
+                    {{ email.mailContent }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    }
+  </div>
+
+  <div
+    class="card-footer"
+    footerpanel="footerpanel{{ pageId }}"
+    trigger="trigger{{ pageId }}"
+  >
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div
+          class="tabs"
+          (click)="tabClick(0)"
+          [ngClass]="{ tabClass: tabIndex === 0 }"
+        >
+          <ion-icon name="analytics-outline"></ion-icon>
+          <div>Operation Hour</div>
+        </div>
+
+        <div
+          class="tabs"
+          (click)="tabClick(1)"
+          [ngClass]="{ tabClass: tabIndex === 1 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="tabClick(2)"
+          [ngClass]="{ tabClass: tabIndex === 2 }"
+        >
+          <div>Assigned Officer</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="tabClick(3)"
+          [ngClass]="{ tabClass: tabIndex === 3 }"
+        >
+          <div>Assigned Cashiers</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="tabClick(4)"
+          [ngClass]="{ tabClass: tabIndex === 4 }"
+        >
+          <div>Deposit Book</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="tabClick(5)"
+          [ngClass]="{ tabClass: tabIndex === 5 }"
+        >
+          <div>Status History</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="tabClick(6)"
+          [ngClass]="{ tabClass: tabIndex === 6 }"
+        >
+          <div>Email History</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Cash Counter</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Cash Counter > Detail > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <!-- (click)="
+                cashCounter.statusValue !== 'CANCL'
+                  ? saveFundTransferNoteNotes()
+                  : changeReversal()
+              " -->
+          <app-icon-button
+            name="save"
+            toolTip="Save"
+            appButtonAccess="FunTraNotNotsSaveBtn"
+            (click)="saveCashCounterNotes(b)"
+          ></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            appButtonAccess="FunTraNotNotsClearBtn"
+            (click)="createCashCounterNotes()"
+          ></app-icon-button>
+          <app-icon-button
+            name="close"
+            toolTip="Close"
+            (click)="dialog.closeDialog()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #b="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control
+                type="select"
+                label="Status"
+                [(ngModel)]="cashCounterNotes.statusValue"
+                defaultOption="--Select--"
+                [items]="DDLValues"
+                key="constant"
+                keyName="description"
+                name="statusValue"
+                [required]="true"
+                [errorTrue]="errorTrue"
+              ></app-input-control>
+              <!-- <app-input-control type="select" label="Status" [(ngModel)]="cashCounterNotes.statusValue"
+                                name="statusValue" [items]="initialData.DDLValues.DDLFlowStatus" key="constant"
+                                keyName="description" [required]="true" [errorTrue]="errorTrue"
+                                defaultOption="--Select--">
+                            </app-input-control> -->
+            </div>
+
+            <div class="col-md-12 mb26">
+              <app-input-control
+                type="textarea"
+                className="notes-1"
+                [(ngModel)]="cashCounterNotes.notes"
+                name="notesDetail"
+                [maxLength]="250"
+                label="Notes"
+              ></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Fund Transfer Note > Detail > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button
+            name="close"
+            toolTip="Close"
+            (click)="dialog.closeDialog()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <!-- <app-drop-zone [multiple]="true" [accept]="accept" [fileType]="fileType"></app-drop-zone> -->
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of cashCounter.plstCashCounterStatusHistory; track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByFullName ? status.changedByFullName : "-" }}
+          </div>
+          <div class="sub-status_by">
+            {{ status.changedDate | appDate }}
+            {{ status.changedDate | appDate : "hh:mm a" }}
+          </div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.cashCounterStatusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>
+
+<ng-template #Template>
+  <div class="ab bgc">
+    <div class="rel">
+      <div class="p-fix d-flex justify-content-end p10">
+        <div class="download-button">
+          <button color="primary">Download</button>
+        </div>
+        <div class="close-button">
+          <button color="danger" (click)="dialog.closeAll()">Close</button>
+        </div>
+      </div>
+      <div class="d-flex align-items-center h100 justify-content-center w100">
+        <div
+          class="d-flex align-items-center h100 justify-content-center w100 relative"
+        >
+          <div class="ab">
+            <div class="rel">
+              <div class="dis-none wcheck active">
+                <img
+                  [src]="filePath | appSafe : 'resourceUrl'"
+                  alt="PreviewImages"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<app-documents #DocumentsComponent class="none"></app-documents>
+
+<ng-template #cashCounterEditDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        @if(cashCounter.cashCounterId === 0){ Cash Counter > Details > New }
+        @if(cashCounter.cashCounterId !== 0){ Cash Counter > Details > Edit }
+        <!-- @if(lockLedger.actLedgerLockHistoryId === 0){ Ledger > Detail > Add Lock
+        Detail } @else{ Ledger > Detail > Edit Lock Detail } -->
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(cashCounter.cashCounterId === 0) {
+          <div class="col-md-12 btn-group">
+            <div class="ml-auto d-flex gap pt-2">
+              <app-icon-button
+                name="save"
+                toolTip="Save"
+                class="mr6"
+                (click)="saveCashCounter()"
+                [parentId]="pageId"
+              ></app-icon-button>
+              <app-icon-button
+                name="clear"
+                toolTip="Clear"
+                (click)="doClear()"
+              ></app-icon-button>
+              <app-icon-button
+                name="close"
+                toolTip="Close"
+                (click)="dialog.closeDialog()"
+              ></app-icon-button>
+            </div>
+          </div>
+  
+          } 
+          @else {
+          <div class="col-md-12 btn-group">
+            <div class="ml-auto d-flex gap-10 pt-2">
+              <app-icon-button
+                name="save"
+                toolTip="Update"
+                (click)="saveCashCounter()"
+                [hidden]="hideBtnBasedonStatus()"
+                [parentId]="pageId"
+              ></app-icon-button>
+              <app-icon-button
+                name="refresh"
+                toolTip="Refresh"
+                (click)="refreshCashCounter()"
+                [hidden]="hideBtnBasedonStatus()"
+              ></app-icon-button>
+              <app-icon-button
+                name="close"
+                toolTip="Close"
+                (click)="dialog.closeDialog()"
+              ></app-icon-button>
+            </div>
+          </div>
+          }
+          <ng-container *ngIf="!editBtn">
+            <div class="col-md-12 btn-group">
+              <div class="ml-auto d-flex gap pt-2">
+                <app-icon-button
+                  name="edit"
+                  toolTip="Edit"
+                  (click)="cashCounterEdit()"
+                  [hidden]="hideBtnBasedonStatus()"
+                  [parentId]="pageId"
+                ></app-icon-button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <div class="v-flex h100 relative bg-white">
+          <form #e="ngForm" autocomplete="off" class="h100">
+            <div class="ab">
+              <div class="rel">
+                <div class="row w100">
+                  <div class="col-md-12">
+                    <ng-container>
+                      <div class="bank-detail p-2">
+                        <div class="d-flex">
+                          <div class="w100">
+                            <div class="card-detail-panel-border">
+                              <div class="col-md-12">
+                                <app-input-control
+                                  type="number"
+                                  class="unEditableField"
+                                  label="Cash Counter Number"
+                                  [(ngModel)]="cashCounter.cashCounterNo"
+                                  name="cashCounterNo"
+                                  [btnClicked]="true"
+                                ></app-input-control>
+                              </div>
+  
+                              <div class="col-md-12">
+                                <app-input-control
+                                  type="text"
+                                  label="Cash Counter Name"
+                                  [maxLength]="50"
+                                  [(ngModel)]="cashCounter.cashCounterName"
+                                  name="cashCounterName"
+                                  [required]="true"
+                                  [errorTrue]="errorTrue"
+                                  [btnClicked]="!editBtn"
+                                ></app-input-control>
+                              </div>
+                              <div class="col-md-12">
+                                <app-input-control
+                                  type="text"
+                                  label="Cash Counter Code"
+                                  [maxLength]="6"
+                                  [(ngModel)]="cashCounter.cashCounterCode"
+                                  name="cashCounterCode"
+                                  [required]="true"
+                                  [errorTrue]="errorTrue"
+                                  [btnClicked]="!editBtn"
+                                ></app-input-control>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="d-flex status">
+                                  <div>Status : &nbsp;</div>
+                                  <div class="mx-1">
+                                    <accouts-status-table
+                                      [statusDescription]="
+                                        cashCounter.statusDescription
+                                      "
+                                    ></accouts-status-table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</ng-template>

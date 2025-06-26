@@ -1,0 +1,138 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="dialog-title">
+      <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+      @if(id !== 0){ Assigned Cashier > Details > Edit }
+    </div>
+    <div class="slot-right">
+      <div class="btn-group">
+        <ng-container *ngIf="cashCounter.cashCounterId === 0">
+          <div class="col-md-12 btn-group">
+            <div class="ml-auto d-flex gap pt-2">
+              <app-icon-button
+                name="close"
+                toolTip="Close"
+                (click)="dialog.closeDialog()"
+              ></app-icon-button>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="cashCounter.cashCounterId !== 0">
+          <div class="ml-auto d-flex gap pt-2">
+            <app-icon-button
+              name="close"
+              toolTip="Close"
+              (click)="dialog.closeDialog()"
+            ></app-icon-button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="dialog-content-inner h100">
+      <div class="v-flex h100 relative bg-white">
+        <form #a="ngForm" autocomplete="off" class="h100">
+          <div class="ab">
+            <div class="rel">
+              <div class="row w100">
+                <div class="col-md-12">
+                  <ng-container>
+                    <div class="bank-detail p-2">
+                      <div class="d-flex">
+                        <div class="card-detail-panel w100">
+                          <div class="card-detail-panel-border">
+                            <div class="col-md-12">
+                              <app-input-control
+                                type="text"
+                                label="Counter Name"
+                                [(ngModel)]="cashCounter.cashCounterName"
+                                name="cashCounterName"
+                                [btnClicked]="true"
+                              ></app-input-control>
+                            </div>
+                            <div class="col-md-12">
+                              <app-input-control
+                                type="text"
+                                label="Counter Code"
+                                [maxLength]="6"
+                                [(ngModel)]="cashCounter.cashCounterCode"
+                                name="cashCounterCode"
+                                [btnClicked]="true"
+                              ></app-input-control>
+                            </div>
+                            <div class="col-md-12">
+                              <app-input-control
+                                type="date"
+                                label="Effective Date"
+                                [maxLength]="6"
+                                [(ngModel)]="cashCounter.effectiveDate"
+                                name="effectiveDate"
+                                [btnClicked]="true"
+                              ></app-input-control>
+                            </div>
+                            <div class="col-md-12">
+                              <div class="d-flex status">
+                                <div>Status :&nbsp;</div>
+                                <div class="mx-1">
+                                  <!-- cashCounterDetails.statusValue -->
+                                  <accouts-status-table
+                                    [statusDescription]="
+                                      cashCounter.statusDescription
+                                    "
+                                  ></accouts-status-table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <div class="d-flex justify-content-end p-3">
+                    <!-- <ng-container>
+                                <ng-container *ngIf="cashCounter.cashCounterId === 0">
+                                    <div class="  col-md-12 btn-group">
+                                        <div class="ml-auto d-flex gap pt-2">
+                                            <app-icon-button name="save" toolTip="Save" (click)="saveCashCounter()"
+                                                [hidden]="hideBtnBasedonStatus()" [parentId]="pageId"></app-icon-button>
+                                            <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"
+                                                [hidden]="hideBtnBasedonStatus()"></app-icon-button>
+                                        </div>
+
+                                    </div>
+                                    
+                                </ng-container>
+                                <ng-container *ngIf="cashCounter.cashCounterId !== 0">
+                                    <div class="  col-md-12 btn-group">
+                                        <div class="ml-auto d-flex gap pt-2">
+                                            <app-icon-button name="save" toolTip="Save" (click)="saveCashCounter()"
+                                                [hidden]="hideBtnBasedonStatus()" [parentId]="pageId"></app-icon-button>
+                                            <app-icon-button name="refresh" toolTip="Clear"
+                                                (click)="refreshCashCounter()"
+                                                [hidden]="hideBtnBasedonStatus()"></app-icon-button>
+                                        </div>
+                                    </div>
+                                    <ng-container *ngIf="!editBtn">
+                                        <div class="  col-md-12 btn-group">
+                                            <div class="ml-auto d-flex gap pt-2">
+                                                <app-icon-button name="edit" toolTip="Edit" (click)="cashCounterEdit()"
+                                                    [hidden]="hideBtnBasedonStatus()"
+                                                    [parentId]="pageId"></app-icon-button>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+
+                            </ng-container> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

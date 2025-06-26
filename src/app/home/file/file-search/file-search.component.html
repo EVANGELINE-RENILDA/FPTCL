@@ -1,0 +1,68 @@
+<div class="content-wrapper" appAccess="FILFE ">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="deathNoticeId" [hideSelectAll]="true">
+        <ng-template cellDef="date" let-element>{{element.date | appDate}}</ng-template>
+        <ng-template cellDef="statusDescription" let-element>
+            <accouts-status-table [statusDescription]="element.statusDescription"></accouts-status-table>
+        </ng-template>
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]="searchTemplate"  maxHeight="350px"></app-search>
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">File Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="createFileSearch('clear')"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+                <row>
+                    <div class="col-md-4"><app-input-control label="File No" [(ngModel)]="searchParams.fileNo"
+                            defaultOption="All" name="fileId" type="select" [items]="initialData.DDLValues.DDLFile_No"
+                            key="code" keyName="code"></app-input-control></div>
+                    <div class="col-md-4"><app-input-control label="File Name" [(ngModel)]="searchParams.fileName"
+                            name="fileName"></app-input-control></div>
+                    <div class="col-md-4"><app-input-control label="File Type" [(ngModel)]="searchParams.fileTypeValue"
+                            name="fileTypeValue" type="select" defaultOption="All"
+                            [items]="initialData.DDLValues.DDLFileType" key="constant"
+                            keyName="description"></app-input-control></div>
+                    <div class="col-md-4"><app-input-control label="Customer" [(ngModel)]="searchParams.customerId"
+                            name="customerId" type="select" defaultOption="All" valueType="int"
+                            [items]="initialData.DDLValues.DDLCustomer" key="id" keyName="fullName"></app-input-control>
+                    </div>
+
+                    <div class="col-md-4"><app-input-control label="Ref No" [(ngModel)]="searchParams.refNo"
+                            name="refNo"></app-input-control></div>
+                    <div class="col-md-4"><app-input-control label="Date (From) " [(ngModel)]="searchParams.dateFrom"
+                            name="dateFrom" [maxDate]="searchParams.dateTo" type="date"></app-input-control></div>
+                    <div class="col-md-4"><app-input-control label="Date (To)" [(ngModel)]="searchParams.dateTo"
+                            name="dateTo" [minDate]="searchParams.dateFrom" type="date"></app-input-control></div>
+                    <div class="col-md-4"><app-input-control label="Status" [(ngModel)]="searchParams.statusValue"
+                            name="statusValue" type="select" defaultOption="All"
+                            [items]="initialData.DDLValues.DDLStatus" key="constant"
+                            keyName="description"></app-input-control></div>
+                </row>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/folder-icon.svg"></ion-icon>
+                <div class="screen-text">Files</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

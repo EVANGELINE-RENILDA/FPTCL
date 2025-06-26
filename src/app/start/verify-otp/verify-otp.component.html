@@ -1,0 +1,38 @@
+<div class="login">
+    <div class="login-slot-left">
+        <img src="assets/img/login-side.png" alt="">
+    </div>
+    <div class="login-slot-right">
+        <div class="login-box">
+            <div class="login-brand">
+                <img src="assets/logo.png" alt="">
+            </div>
+            @if(this.otpPage === false){
+            <div class="login-title">
+                Email Sent
+            </div>
+            <div class="email-logo center">
+                <ion-icon src="assets/icons/email_sent.svg"></ion-icon>
+            </div>
+            OTP and Password Reset link has been sent to your registered email ID
+            }
+
+            @if(this.otpPage === true){
+
+            <div class="login-title">Verify OTP</div>
+            <div class="login-message">
+                Enter the 4-digit sent via your registered email ID {{mailMask()}}
+            </div>
+            <form #l="ngForm" (ngSubmit)="onSubmit(l)" autocomplete="off">
+                <div class="spacer-1"></div>
+                <app-pin-control boxes="4" label="OTP" [(ngModel)]="login.mPin" name="mPin"></app-pin-control>
+                <button class="btn-login">Verify</button>
+                <div class="spacer-1"></div>
+                <div class="text-center">
+                    <a href="/login" class="btn-link">Back to Login</a>
+                </div>
+            </form>
+            }
+        </div>
+    </div>
+</div>

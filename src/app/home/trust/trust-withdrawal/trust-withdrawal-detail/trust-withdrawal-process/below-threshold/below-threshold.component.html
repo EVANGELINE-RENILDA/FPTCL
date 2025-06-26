@@ -1,0 +1,128 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Approve of Withdraw (Below Threshold)</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="content-wrapper">
+            <row>
+                <div class="col-md-4 mb26"><view-label label="Requested Amount"
+                        value="{{application.requestedAmount}}"></view-label></div>
+                <div class="col-md-4 mb26"><view-label label="Eligible Amount"
+                        value="{{application.eligibleAmount}}"></view-label></div>
+            </row>
+    
+                <app-tab-sub-group (tabChange)="onChange($event)">
+                    <app-sub-tab tabTitle="Detail">
+                        <div class="col-md-12">
+                            <div class="outer-content-wrapper">
+                                <div class="content-wrapper">
+                                    <app-table [columns]="courtOrderColumns" [columnsName]="courtOrderColumnsName"
+                                        [dataSource]="application.lstentTrustWithdrawalApplicationAssignedOfficerHistory  | trustWithdrawalPipe: this.type.trustWithdrawalApplicationStageValue: this.type.identificationNo"
+                                        [hideSelectAll]="true" [showPaginator]="false"
+                                        columnID="trustApplicationDocumentId">
+                                        <ng-template cellDef="verificationDate" let-element>
+                                            {{element.verfiedDate | appDate}}
+                                        </ng-template>
+                                        <ng-template cellDef="action" let-element let-index="index">
+                                  
+                                            @if((application.lstentTrustWithdrawalApplicationAssignedOfficerHistory  | trustWithdrawalPipe: this.type.trustWithdrawalApplicationStageValue: this.type.identificationNo).length === (index + 1)){
+                                                @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True' &&
+                                application.applicationStatusValue!=='APPRJ'){
+                                                    <app-icon-button name="open" toolTip="Open"
+                                                        (click)="createTrustWithdrawalNotes()"></app-icon-button>
+                                                    }
+                                            } @else {
+                                                <span></span>
+                                            }
+                                            
+                                        </ng-template>
+
+
+                                    </app-table>
+                                </div>
+                            </div> 
+                        </div>
+
+                    </app-sub-tab>
+                    <app-sub-tab tabTitle="Linked Document">
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [columns]="linkedColumns" [columnsName]="linkedColumnsName"
+                                    [hideSelectAll]="true" [hasPagination]="true" [dataSource]="tableLinkedData">
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="doc-download-button"
+                                            (click)="downloadLinkedFile(element)"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                    </app-sub-tab>
+                </app-tab-sub-group>
+
+      
+        </div>
+        @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+        <div class="col-md-12 end">
+            <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Required Amount
+                Approved</button>
+        </div>
+        }
+    </accordion-body>
+</accordion-item>
+
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon src="assets/icons/human-icon.svg"></ion-icon>Trust Withdrawal >
+                Detail >
+                Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveTrustWithdrawalNotes()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createTrustWithdrawalNotes('clear')"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+            <div class="dialog-content-inner h100">
+                <form #notesForm="ngForm">
+                    <row>
+
+                        <div class="col-md-4 mb26"> <app-input-control type="select" label="Action Status"
+                                [items]="actionStatusDDL" key="constant" keyName="description"
+                                [(ngModel)]="trustWithdrawalNotes.actionStatusValue" defaultOption="--Select--"
+                                name="actionStatusValue" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-4 mb26"> <app-input-control type="select" label="Application Stage"
+                                [items]="initialData.DDLValues.DDLTrustWithDrawalApplicationStage" key="constant"
+                                keyName="description" [btnClicked]="true"
+                                [(ngModel)]="trustWithdrawalNotes.applicationStageValue" defaultOption="--Select--"
+                                name="applicationStageValue" [errorTrue]="errorTrue"
+                                [required]="true"></app-input-control></div>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="trustWithdrawalNotes.notes" name="notes" [maxLength]="250" name="notes"
+                                [required]="true" label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

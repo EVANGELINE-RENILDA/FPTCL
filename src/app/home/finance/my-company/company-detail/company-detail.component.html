@@ -1,0 +1,611 @@
+<!-- [parentId]="pageId" -->
+<div class="v-flex h100" appAccess="CMPSC" [parentId]="pageId">
+  <form #l="ngForm" class="content-header">
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="text" label="Company Name" [required]="true" [errorTrue]="errorTrue" [maxLength]="100"
+          [(ngModel)]="company.companyName" name="companyName"></app-input-control>
+      </div>
+      <div class="card-content pt14">
+        <app-input-control type="number" label="Fax No" [maxLength]="15" [(ngModel)]="company.faxNo"
+          name="faxNo"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="number" label="Phone No" [maxLength]="15" [isContactNo]="true" [minLength]="5"
+          [required]="true" [errorTrue]="errorTrue" [(ngModel)]="company.phoneNo" name="phoneNo"></app-input-control>
+      </div>
+      <div class="card-content pt14">
+        <app-input-control type="number" label="Tin No" [required]="true" [errorTrue]="errorTrue" [maxLength]="25"
+          [(ngModel)]="company.tinNo" name="tinNo"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="email" label="Email ID" [required]="true" [errorTrue]="errorTrue"
+          [errorText]="'Invalid'" [maxLength]="100" [(ngModel)]="company.emailId" name="emailId"></app-input-control>
+      </div>
+      <div class="card-content pt14">
+        <app-input-control label="Website" [required]="true" [errorTrue]="errorTrue" [(ngModel)]="company.website"
+          name="website" type="special" [maxLength]="100"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box ">
+      <div class="card-content">
+        <app-input-control type="date" label="Effective Date" [required]="true" [errorTrue]="errorTrue"
+          [(ngModel)]="company.effectiveDate" name="effectiveDate"></app-input-control>
+      </div>
+      <div class="card-content pt14">
+        <app-input-control type="select" label="Status" [required]="true" [errorTrue]="errorTrue"
+          [(ngModel)]="company.statusValue" name="statusValue" [items]="initialData.DDLValues.configCmpyStatus"
+          defaultOption="--Select--" key="constant" keyName="description"></app-input-control>
+      </div>
+    </div>
+    @if(selectedTab === 0){
+    <div class="status-header-box flex-none border-left">
+      <div class="card-content btn-group">
+        <app-icon-button name="save" toolTip="Update" (click)="saveActCompany()"
+          appButtonAccess="ComSaveBtn"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh" (click)="opeDetails()"
+          appButtonAccess="ComRefBtn"></app-icon-button>
+      </div>
+    </div>
+    }
+  </form>
+  <div class="content-body ptb14">
+    @if(selectedTab === 0){
+
+    <!-- <div class="content-space">
+        <div class="info-container">
+          <div>
+            Other Details
+            <row>
+              .col-md-
+            </row>
+          </div>
+        </div>
+        <div class="logo-container">
+
+        </div> -->
+    <row>
+      <div class="col-md-10">
+        <row>
+          <div class="col-md-12">
+            <label class="label-bold">Other Details</label>
+          </div>
+        </row>
+        <form #p="ngForm">
+          <row>
+            <div class="col-md-4 pt14">
+              <app-input-control type="select" label="Currency" [errorTrue]="errorTrue" [required]="true"
+                defaultOption="--Select--" [(ngModel)]="company.iActCompanyOtherDetails.currencyValue"
+                name="currencyValue" [items]="initialData.DDLValues.configCmpyCurrency" key="constant"
+                keyName="description"
+                (onSelect)="getCurrencyDetailsByCurrency(company.iActCompanyOtherDetails.currencyValue)"></app-input-control>
+            </div>
+            <div class="col-md-4 pt14 pl14">
+              <view-label label="Symbol" value="{{company.iActCompanyOtherDetails.symbolValue}}"></view-label>
+              <!-- <view-label label="Symbol" status="{{company.iActCompanyOtherDetails.symbolValue}}"
+              statusValue="{{company.iActCompanyOtherDetails.symbolValue}}"></view-label> -->
+            </div>
+            <div class="col-md-4 pt14 pl14">
+              <view-label label="Currency Value Name"
+                value="{{company.iActCompanyOtherDetails.currencyValueName}}"></view-label>
+            </div>
+          </row>
+          <row>
+            <div class="col-md-4 pt14">
+              <view-label label="Decimal Value Name"
+                value="{{company.iActCompanyOtherDetails.decimalValueName}}"></view-label>
+            </div>
+            <div class="col-md-4 pt14 pl14">
+              <app-input-control type="number" label="Number of Decimal Place" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="company.iActCompanyOtherDetails.noOfDecimalPlace" [maxLength]="1"
+                name="noOfDecimalPlace"></app-input-control>
+            </div>
+            <div class="col-md-4 pt14 pl14">
+              <div class="label-text">Suffix Symbol</div>
+              <div class="radio-value">
+                <mat-radio-group [(ngModel)]="company.iActCompanyOtherDetails.suffixSymbol" name="suffixSymbol">
+                  <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+                  <mat-radio-button value="N" color="primary">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </row>
+          <row>
+            <div class="col-md-4 pt14">
+              <app-input-control type="number" label="Fiscal Year Term" [errorTrue]="errorTrue" [required]="true"
+                name="fiscalYearTerm" [max]="12" (onChange)="changeFiscalYear()"
+                [(ngModel)]="company.iActCompanyOtherDetails.fiscalYearTerm"></app-input-control>
+            </div>
+            <div class="col-md-4 pt14 pl14">
+              <app-input-control type="select" label="Fiscal Year Start Month" [errorTrue]="errorTrue" [required]="true"
+                defaultOption="--Select--" [(ngModel)]="company.iActCompanyOtherDetails.fiscalYearStartMonth"
+                name="fiscalYearStartMonth" [items]="initialData.DDLValues.DDLMonth" key="constant"
+                keyName="description"
+                (onSelect)="getEndMonth(company.iActCompanyOtherDetails.fiscalYearTerm,company.iActCompanyOtherDetails.fiscalYearStartMonth)"></app-input-control>
+            </div>
+            <div class="col-md-4 pt14 pl14">
+              <app-input-control type="select" label="Fiscal Year End Month" [btnClicked]="true"
+                [(ngModel)]="company.iActCompanyOtherDetails.fiscalYearEndMonth" name="fiscalYearEndMonth"
+                [items]="initialData.DDLValues.DDLMonth" key="constant" keyName="description" [btnClicked]="true"
+                defaultOption="--Select--"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+      <div class="col-md-2">
+        <row>
+          <div class="col-md-12">
+            <label class="label-bold">Company Logo</label>
+            <div class="img-frame " (change)="loadImageFromDevice($event)">
+
+              <div class="flex-center logo">
+                <img [src]="company.logo?company.logo:'assets/img/it-galax.png '">
+
+              </div>
+              <div class="pb20"></div>
+              <div class="upload-btn">
+                <input type="file" class="uploadInput" #fileInput id="file-input"
+                  accept="image/jpg, image/jpeg , image/png">
+                <div class="p10" (click)="triggerClick()" appButtonAccess="ComLogoSelBtn">Select</div>
+              </div>
+            </div>
+          </div>
+        </row>
+      </div>
+    </row>
+    <form #addresstab="ngForm">
+      <row>
+        <div class="col-md-8">
+          <row>
+            <div class="col-md-12">
+              <label class="label-bold"> Address Details </label>
+            </div>
+          </row>
+          <!-- <form #addresstab="ngForm"> -->
+          <row>
+            <div class="col-md-4 pt14">
+              <app-input-control type="text" label="Address Line 1" [errorTrue]="errorTrue" [required]="true"
+                [maxLength]="100" [(ngModel)]="company.addressLine1" name="addressLine1"></app-input-control>
+            </div>
+            <div class="col-md-4 pt14 pl14">
+              <app-input-control type="text" label="Address Line 2" [maxLength]="100" [(ngModel)]="company.addressLine2"
+                name="addressLine2"></app-input-control>
+            </div>
+            <!-- <div class="col-md-4 pt14 pl14"> -->
+            <div class="col-md-4 pt14 pl14">
+              <app-input-control type="text" label="Address Line 3" [maxLength]="100" [(ngModel)]="company.addressLine3"
+                name="addressLine3"></app-input-control>
+            </div>
+            <!-- </div> -->
+          </row>
+          <!-- </form> -->
+
+        </div>
+      </row>
+    </form>
+
+
+    } @else if(selectedTab === 1){
+
+    <div class="v-flex h100">
+      <div class="add-box">
+        <app-icon-button name="add" toolTip="Add New" (click)="createBranchDetail()"
+          appButtonAccess="ComBrnhNewBtn"></app-icon-button>
+      </div>
+      <app-table [columns]="branches" [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false"
+        [columnsName]="branchName" [dataSource]="branchTableData" class="h100">
+        <ng-template cellDef="branchName" let-element>
+          <div class="pointer  text-blue" (click)="openBranchDetail(element.actCompanyBranchId)">
+            {{element.branchName}}</div>
+        </ng-template>
+        <ng-template cellDef="stateValue" let-element>
+          <div class="status-{{element.statusValue}}">{{element.statusDescription}}</div>
+        </ng-template>
+        <ng-template cellDef="createdDate" let-element>
+          <div class="status-{{element.createdDate}}">{{element.createdDate | appDate}}</div>
+        </ng-template>
+        <ng-template cellDef="endDate" let-element>
+          <div class="status-{{element.endDate}}">{{element.endDate | appDate}}</div>
+        </ng-template>
+
+      </app-table>
+    </div>
+
+    } @else if(selectedTab === 2){
+
+    @if(closeBook === true && this.companyFiscalYear.statusValue !=='CLOSE'){
+
+    <div class="col-md-7 end">
+      <button (click)="closeActCompanyFiscalYear(this.companyFiscalYear.actCompanyFiscalYearId)" appButtonAccess="FYCLB"
+        class="close-btn">Close
+        Book</button>
+    </div>
+    }
+    <div class="d-flex h100">
+
+      <div class="col-md-7">
+
+        <app-table [columns]="fiscalYr" [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false"
+          [columnsName]="fiscalYrName" [dataSource]="fiscalYrTableData" class="h100">
+          <ng-template cellHeaderDef="action"> Edit </ng-template>
+          <ng-template cellDef="action" let-element>
+            <app-icon-button name="edit" toolTip="Edit" appButtonAccess="CFYEB"
+              (click)="editFiscalYr(element.actCompanyFiscalYearId)"></app-icon-button>
+          </ng-template>
+          <ng-template cellDef="fiscalYear" let-element>
+            <div class="fiscal class-click" (click)="openActCompanyFiscalYear(element.actCompanyFiscalYearId)"
+              [ngClass]="{'active-table': element.actCompanyFiscalYearId === highlightTable}">
+              {{element.fiscalYear}}</div>
+          </ng-template>
+          <ng-template cellDef="startDate" let-element>
+            <div [ngClass]="{'active-table': element.actCompanyFiscalYearId === highlightTable}">
+              {{element.startDate |appDate}}
+            </div>
+          </ng-template>
+          <ng-template cellDef="endDate" let-element>
+            <div [ngClass]="{'active-table': element.actCompanyFiscalYearId === highlightTable}">
+              {{element.endDate |appDate}}
+            </div>
+          </ng-template>
+          <ng-template cellDef="calendarMonth" let-element>
+            <div [ngClass]="{'active-table': element.actCompanyFiscalYearId === highlightTable}">
+              {{element.calendarMonth}}
+            </div>
+          </ng-template>
+          <ng-template cellDef="statusDescription" let-element>
+            <div [ngClass]="{'active-table': element.actCompanyFiscalYearId === highlightTable}">
+              {{element.statusDescription }}
+            </div>
+          </ng-template>
+
+        </app-table>
+      </div>
+      <div class="col-md-5">
+        <app-table [columns]="term" [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="false"
+          [columnsName]="termName" [dataSource]="termTableData" class="h100">
+          <ng-template cellHeaderDef="action"> Edit </ng-template>
+          <ng-template cellDef="action" let-element>
+            <app-icon-button name="edit" toolTip="Edit" (click)="editTerm(element.actCompanyFiscalTermId)"
+              appButtonAccess="CFTEB"></app-icon-button>
+          </ng-template>
+          <ng-template cellDef="startDate" let-element>
+            {{element.startDate | appDate}}
+          </ng-template>
+          <ng-template cellDef="endDate" let-element>
+            {{element.endDate | appDate}}
+          </ng-template>
+        </app-table>
+      </div>
+    </div>
+
+    }
+  </div>
+  <div class="card-footer footer-ht">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon name="analytics-outline"></ion-icon>
+          <div>Other Details</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon name="storefront-outline"></ion-icon>
+          <div>Branches</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <div>Fiscal Year</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn">
+          <!-- <ion-icon src="assets/icons/back.svg"></ion-icon> -->
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">My Company</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #branchDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon>
+        Company > Detail > Branch Detail
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(this.companyBranch.actCompanyBranchId === 0){
+
+          <app-icon-button name="save" toolTip="Save" (click)="saveActCompanyBranch()"
+            appButtonAccess="ComBrnhSaveBtn"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearBranchDetail()"
+            appButtonAccess="ComBrnhClearBtn"></app-icon-button>
+          }
+          @else {
+          <app-icon-button name="save" toolTip="Update" (click)="saveActCompanyBranch()"
+            appButtonAccess="ComBrnhUpdtBtn"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh"
+            (click)="refreshBrachDetail(this.companyBranch.actCompanyBranchId)"
+            appButtonAccess="ComBrnhRefrBtn"></app-icon-button>
+          }
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <form #b="ngForm">
+          <row>
+            <div class="col-md-4">
+              <app-input-control type="text" label="Branch Alias Name" [errorTrue]="errorTrue" [required]="true"
+                [maxLength]="250" [(ngModel)]="companyBranch.branchName" name="branchName"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="date" label="Start Date" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="companyBranch.startDate" name="startDate" [minDate]="company.effectiveDate"
+                [maxDate]="companyBranch.endDate"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="date" label="End Date" [(ngModel)]="companyBranch.endDate" name="endDate"
+                [minDate]="companyBranch.startDate"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="text" label="Line 1" [errorTrue]="errorTrue" [maxLength]="250"
+                [(ngModel)]="companyBranch.iAddress.addressLine1" name="addressLine1" [required]="true"
+                type="special"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="text" label="Line 2" [(ngModel)]="companyBranch.iAddress.addressLine2"
+                [maxLength]="250" name="addressLine2" type="special"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="text" label="Line 3" [(ngModel)]="companyBranch.iAddress.addressLine3"
+                [maxLength]="250" name="addressLine3" type="special"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="select" label="Country" [errorTrue]="errorTrue" [required]="true"
+                defaultOption="--Select--" [(ngModel)]="companyBranch.iAddress.countryValue" name="countryValue"
+                [items]="initialData.DDLValues.ddlCBBCountry" key="constant" keyName="description"
+                (onSelect)="countryBasedOnProvince(companyBranch.iAddress.countryValue);countryBasedClear()"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="select" label="State/Provinces" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="companyBranch.iAddress.stateValue" name="stateValue" [items]="country" key="constant"
+                keyName="description" defaultOption="--Select--"
+                (onSelect)="provinceBasedOnIsland(companyBranch.iAddress.stateValue);provinceBasedClear()"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="select" label="Island" [errorTrue]="errorTrue" valueType="string"
+                [required]="true" [(ngModel)]="companyBranch.iAddress.city" name="city" [items]="province"
+                key="constant" keyName="description" defaultOption="--Select--"
+                (onSelect)="locationBasedOnIsland(companyBranch.iAddress.city);locationBasedClear()"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="select" label="Location" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="companyBranch.iAddress.districtValue" name="districtValue" [items]="location"
+                (onSelect)="locationBasedonBranch(companyBranch.iAddress.districtValue);branchBasedClear()"
+                key="constant" keyName="description" defaultOption="--Select--"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="select" label="Branch" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="companyBranch.branchCode" name="branchCode" [items]="branch" key="constant"
+                defaultOption="--Select--" keyName="description"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <view-label label="Branch Code" value="{{companyBranch.branchCode}}"></view-label>
+            </div>
+
+            <div class="col-md-4">
+              <app-input-control type="number" label="Phone No" [maxLength]="15" [isContactNo]="true" [minLength]="5"
+                [errorTrue]="errorTrue" [required]="true" [(ngModel)]="companyBranch.phoneNo"
+                name="phoneNo"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="email" label="Email ID" [(ngModel)]="companyBranch.emailId" [maxLength]="250"
+                [email]="true" [errorText]="'Invalid'" [errorTrue]="errorTrue" name="emailId"
+                [required]="true"></app-input-control>
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+              <!-- <mat-checkbox color="primary" [(ngModel)]="companyBranch.isHeadOffice" (change)="isHeadOffice($event)"
+                [checked]="companyBranch.isHeadOffice==='Y'" name="isHeadOffice">Head
+                Office</mat-checkbox> -->
+              <div class="d-flex gap-10">
+                <app-checkbox (change)="isHeadOffice($event)"
+                  [checked]="companyBranch.isHeadOffice==='Y'"></app-checkbox>
+                Head Office
+              </div>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="number" label="Fax No" [(ngModel)]="companyBranch.faxNo" [maxLength]="15"
+                name="faxNo"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="number" label="Term Closure Period" [(ngModel)]="companyBranch.termClosurePeriod"
+                [maxLength]="2" name="termClosurePeriod"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="select" label="Status" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="companyBranch.statusValue" name="statusValue"
+                [items]="initialData.DDLValues.configActCompanyBranchStatus" key="constant" keyName="description"
+                defaultOption="--Select--"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #fiscalDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon>
+        Company > Detail > Fiscal Year Detail
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <form #x="ngForm">
+          <row>
+            <div class="col-md-12">
+              <app-input-control type="date" label="Start Date" [(ngModel)]="companyFiscalYear.startDate"
+                [maxDate]="companyFiscalYear.endDate" name="startDate"></app-input-control>
+            </div>
+            <div class="col-md-12 no-input-border">
+              <app-input-control type="date" label="End Date" [(ngModel)]="companyFiscalYear.endDate"
+                [minDate]="companyFiscalYear.startDate" name="endDate"></app-input-control>
+            </div>
+          </row>
+          <div class="space-between">
+            <mat-checkbox color="primary" [(ngModel)]="companyFiscalYear.calendarMonth"
+              (change)="calenderMonthChange($event)" name="calendarMonth">Calendar
+              Month</mat-checkbox>
+            <div class="comm-des-icon">
+              @if(companyFiscalYear.statusValue==='CLOSE'){
+              <ion-icon name="open-outline" matTooltip="Re-Open Term" (click)="reopenActCompanyFiscalYear()"
+                appButtonAccess="FYROB"></ion-icon>
+              <app-icon-button name="refresh" toolTip="Refresh" class="pl14"
+                (click)="openActCompanyFiscalYear(companyFiscalYear.actCompanyFiscalYearId)"></app-icon-button>
+              }
+              @else{
+              <!-- <ion-icon name="open-outline" matTooltip="Close" (click)="closeActCompanyFiscalYear()"></ion-icon> -->
+              <app-icon-button name="refresh" toolTip="Refresh" appButtonAccess="CFYRB" class="pl14"
+                (click)="openActCompanyFiscalYear(companyFiscalYear.actCompanyFiscalYearId)"
+                appButtonAccess="ComFisyReopnBtn"></app-icon-button>
+              }
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #termDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon>
+        Company > Detail > Term Detail
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" appButtonAccess="FTCLB"
+            (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <form #x="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="text" label="Term No" [(ngModel)]="companyTerm.termNo" [btnClicked]="true"
+                name="termNo"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="text" label="Term Name" [(ngModel)]="companyTerm.termName" [btnClicked]="true"
+                name="termName"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="date" label="Start Date" [(ngModel)]="companyTerm.startDate" [btnClicked]="true"
+                [maxDate]="companyTerm.endDate" name="startDate"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="date" label="End Date" [(ngModel)]="companyTerm.endDate" [btnClicked]="true"
+                [minDate]="companyTerm.startDate" name="endDate"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Status Value" [(ngModel)]="companyTerm.statusValue"
+                [btnClicked]="true" name="statusValue" [items]="initialData.DDLValues.configFiscalTermStatus"
+                [btnClicked]="true" key="constant" keyName="description" defaultOption="--Select--"></app-input-control>
+            </div>
+          </row>
+          <div class="space-between">
+            <label class="text-disclaimer">Note:
+              <span>Fiscal Term Can be closed only on after Fiscal term end
+                date</span></label>
+
+            <div class="comm-des-icon">
+              <!-- @if(companyFiscalYear.statusValue !== 'CLOSE'){ -->
+
+              @if(companyTerm.statusValue==='CLOSE'){
+              <ion-icon name="open-outline" matTooltip="Re-Open Term" appButtonAccess="FTROB"
+                (click)="reopenCompanyFiscalTerm(companyTerm)" appButtonAccess="ComFisyTermRepnBtn"></ion-icon>
+              <app-icon-button name="refresh" toolTip="Refresh" class="pl14"
+                (click)="openActCompanyFiscalTerm(companyTerm.actCompanyFiscalTermId)"
+                appButtonAccess="CFTRB"></app-icon-button>
+              }
+              @else{
+              <ion-icon name="open-outline" matTooltip="Close" (click)="closeActCompanyFiscalTerm()"></ion-icon>
+              <app-icon-button name="refresh" toolTip="Refresh" class="pl14"
+                (click)="openActCompanyFiscalTerm(companyTerm.actCompanyFiscalTermId)"
+                appButtonAccess="ComFisyTermEditBtn"></app-icon-button>
+              }
+              <!-- } -->
+            </div>
+            <!-- <div class="comm-des-icon">
+              <ion-icon name="open-outline" matTooltip="Re-Open Term" (click)="reopenCompanyFiscalTerm()"></ion-icon>
+              <app-icon-button name="refresh" toolTip="Refresh" class="pl14" (click)="openActCompanyFiscalTerm(companyTerm.actCompanyFiscalTermId)"></app-icon-button>
+            </div> -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <div class="status-table-header">
+    <div class="changed-by_label">Changed By | Effective Date</div>
+    <div class="pl14">Status</div>
+  </div>
+  <div class="status-table-content">
+    <div class="changed-by">
+      Chief Finance Officer
+      <div class="changed-by_sub">29/09/2023 10:57 AM</div>
+    </div>
+    <div class="status_align pl14">Pending Submission</div>
+  </div>
+</mat-menu>

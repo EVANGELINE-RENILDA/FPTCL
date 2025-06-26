@@ -1,0 +1,62 @@
+<div class="w100 relative ">
+  <div class="d-flex align-items-center report-body" [ngClass]="{'opened': openedTrue}">
+    <div class="report-data-flex d-flex align-items-center " (click)="openFn()">
+      <div class="report-data-flex">
+        <div class="report-data-flex-child d-flex align-items-center">
+          @if(listAllData.length !== 0) {
+          <!-- <ng-container *ngIf="listAllData.length !== 0"> -->
+          <div class="plus">+</div>
+          <div class="minus">-</div>
+          <!-- </ng-container> -->
+          }
+          @if(listAllData.length === 0){
+          <!-- <ng-container *ngIf="listAllData.length === 0"> -->
+          <div class="space"></div>
+          <!-- </ng-container> -->
+          }
+          <span class="fontweight group-color">{{listAllData.groupName}}</span>
+          <div class="ml-auto d-flex align-items-center">
+            {{listAllData.decLedgerClosingBalance
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="child-container">
+    @for (child of listAllData.ilistOfGroup; track $index) {
+    <!-- <ng-container *ngFor="let child of listAllData.ilistOfGroup; let i = index;"> -->
+    <div class="child">
+      <app-balance-sheet-loop [listAllData]="child" class="w100 child-group-list" [expandAll]="openedTrue">
+      </app-balance-sheet-loop>
+    </div>
+    <!-- </ng-container> -->
+    }
+  </div>
+  @if(listAllData.ilistentLedger.length !== 0){
+  <!-- <ng-container *ngIf="listAllData.ilistentLedger.length !== 0"> -->
+  @for (ledger of listAllData.ilistentLedger; track $index) {
+  <!-- <ng-container *ngFor="let ledger of listAllData.ilistentLedger; let j = index;"> -->
+  <div class="child-container report-body" [ngClass]="{'opened': openedTrue}">
+    <div class="child">
+      <div class="w100 relative">
+        <div class="d-flex align-items-center report-body">
+          <div class="report-data-flex">
+            <div class="report-data-flex-child">
+              {{ledger.ledgerName}}
+            </div>
+          </div>
+          <div class="report-data-const text-right">
+            <div class="report-data-const-child d-flex">
+              <div class="w100 text-center">{{ledger.decClosingBalance }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- </ng-container> -->
+  }
+  <!-- </ng-container> -->
+  }
+</div>

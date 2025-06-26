@@ -1,0 +1,146 @@
+<!-- Receipt Fund -->
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/receipt-fund.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Receipt Fund</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+       
+        <row>
+            <div class="col-md-9">
+                <row>
+                    <div class="col-md-4"> <view-label label="Assigned Officer"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedToFullname}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="Assigned Date"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedDate | appDate}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="TAT"
+                            value=" {{application.ientTrustApplicationAssignedOfficer.tatDays}} Days"></view-label>
+                    </div>
+                </row>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex">
+                    @if(this.type.isEditable === 'Y'){
+
+                    @if(this.application.reAssignFlag === 'True'){
+                    <form #p="ngForm" class="col-md-10 w250">
+                        <app-input-control type="select" key="constant" keyName="description" placeholder="Officer"
+                            [items]="assignedOfficerDDL" defaultOption="--Select--"
+                            [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                            name="assignedTo"></app-input-control>
+                    </form>
+                    <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                            toolTip="Reassign"></app-icon-button></div>
+                    }
+                    }
+                    @if(this.application.selfAssignFlag ===' True'){
+                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                            toolTip="Self Assign"></app-icon-button></div>
+                    }
+
+                </div>
+            </div>
+        </row>
+        <div class="mt10"></div>
+       
+                <div class="outer-content-wrapper">
+
+                    <div class="content-wrapper">
+                        <app-table [columns]="receiptFundColumns" [columnsName]="receiptFundColumnsName"
+                            [dataSource]="receiptFundTableData" [hasPagination]="true" [hideSelectAll]="true"
+                            columnID="trustApplicationId">
+                            <ng-template cellDef="documemtDate" let-element>{{element.documemtDate | appDate}}</ng-template>
+                            <ng-template cellDef="moneyIn" let-element>
+                                <div class="table-text-right">
+                                    {{element.moneyIn}}
+                                </div>
+                            </ng-template>
+                            <ng-template cellDef="moneyOut" let-element>  <div class="table-text-right">{{element.moneyOut}}</div></ng-template>
+                            <ng-template #slotLeft>
+                               <div class="col-md-3">
+                                <app-input-control type="select" placeholder="Select Account No" [items]="application.lstentFptclAccountNo" key="accountNo" keyName="accountNo" [(ngModel)]="accountNo" name="accountNo" (onSelect)="getAccNo($event)"></app-input-control>
+                               </div>
+                               
+                            </ng-template>
+                        </app-table>
+                    </div>
+                </div>
+                <div class="col-md-12 end gap-10">
+                    @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                    <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Receipt Fund Collected</button>
+                    <button type="submit" class="complete-btn" (click)="cancelProcess()"> Cancel</button>
+                    }
+                </div>
+           
+
+
+    </accordion-body>
+</accordion-item>
+
+<ng-template #cancelAlert>
+    <div class="dialog-container">
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+                <div class="notification-header">
+                    <div class="notification-icon">
+                        <ion-icon name="warning-outline"></ion-icon>
+                    </div>
+                    <div class="notification-title">Alert</div>
+                </div>
+                <div class="text-center p10">
+                    Are you sure you want to cancel this process
+                </div>
+                <div class="center">
+                    <div class="notification-button">
+                        <button class="btn-notification" (click)="cancelNotesDialog()">Yes</button>
+                        <button class="btn-notification cancel-btn" (click)="dialog.closeAll()">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #notesCancelDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/trust.svg"></ion-icon>
+                Reason For Cancellation
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="cancelApplicationStage()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearCancelNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #g="ngForm">
+                    <row>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="cancelNotesDescription" name="cancelNotesDescription" [maxLength]="250"
+                                [required]="true" label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

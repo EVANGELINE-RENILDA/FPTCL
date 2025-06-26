@@ -1,0 +1,62 @@
+<div class="paginator">
+
+
+    <!-- <div class="paginator-item-select-text">
+          Go to page
+      </div>
+      <div class="paginator-item-select">
+          <form #x="ngForm" (submit)="gotoPage(x)" class="form-flex">
+              <input type="text" class="input-number" appNumberOnly [(ngModel)]="inputPageNumber" [min]="0"
+                  [max]="pages.length" required name="input-number" (blur)="clearValue()">
+              <button class="btn-go" type="submit">
+                  Go
+                  <span><svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                              d="M3.85154 5.06505L0.351429 8.56509L1.35144 9.5651L5.85156 5.06505L1.35144 0.564941L0.351429 1.56496L3.85154 5.06505Z"
+                              fill="#0B4D7A" />
+                      </svg>
+                  </span>
+              </button>
+          </form>
+      </div> -->
+    <div class="paginator-item-select-container">
+        <div class="paginator-item-select-text text-dull">
+            Showing: {{ pages.length > 0 ? (__pageIndex * __pageSize) + 1 : 0 }} - {{ getEndingItemNumber() }} of
+            {{__length}} Entries
+        </div> |
+        <div class="paginator-item-select">
+            <mat-select class="paginator-select-input" [value]="__pageSize" hideSingleSelectionIndicator="true"
+                (selectionChange)="onSelectOption($event)">
+                @for (optionValue of __pageSizeOptions; track $index) {
+                <mat-option [value]="optionValue" class="paginator-select-option">{{optionValue}}</mat-option>
+                }
+            </mat-select>
+        </div> |
+        <div class="flex">
+            <div class="paginator-previous" (click)="navigatePage('previous')" (mousedown)="onMouseDown('previous')"
+                (mouseup)="onMouseUp()">
+                <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.99902 1L0.999023 5L4.99902 9" stroke="#333333" stroke-miterlimit="10" />
+                </svg>
+            </div> 
+            @if(pages.length > 0){
+            <div class="page-container">
+                <div class="paginator-slider" #paginatorSlider>
+                    @for (page of pages; track $index) {
+                    <div class="paginator-page page-{{page}}"
+                        [ngClass]="{'active': page - 1 === __pageIndex, 'show': (page <= __pageIndex + 2 && page > __pageIndex -1) || page > pages.length - 2 || (page < 3 && __pageIndex > pages.length - 4), 'dots': page === pages.length - 2}"
+                        (click)="setPage(page - 1, page === pages.length - 2)">
+                        {{page}}</div>
+                    }
+                </div>
+            </div>
+            }
+            <div class="paginator-next" (click)="navigatePage('next')" (mousedown)="onMouseDown('next')"
+                (mouseup)="onMouseUp()">
+                <svg width=" 6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.00586 9L5.00586 5L1.00586 1" stroke="#333333" stroke-miterlimit="10" />
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>

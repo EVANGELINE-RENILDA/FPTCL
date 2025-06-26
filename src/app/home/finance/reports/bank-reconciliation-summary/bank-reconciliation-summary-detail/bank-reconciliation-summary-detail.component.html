@@ -1,0 +1,347 @@
+<div class="v-flex h100">
+  <div class="d-flex justify-content-between pt8 pr20 header-bg h55">
+    <form #y="ngForm" class="d-flex">
+      <div class="px10 col-md-12">
+        <app-input-control label="Region" type="select" defaultOption="--Select--"
+          [items]="initialData.DDLValues?.DDLRegion" [(ngModel)]="searchParams.regionValue" name="regionValue"
+          key="constant" keyName="description"></app-input-control>
+      </div>
+      <div class="px10 col-md-12">
+        <app-input-control label="Bank Ledger" type="select" defaultOption="--Select--"
+          [items]="initialData.DDLValues?.bankLedgerId" [(ngModel)]="searchParams.bankLedgerId" name="bankLedgerId"
+          key="constant" keyName="description"></app-input-control>
+      </div>
+    </form>
+    <div class="d-flex align-items-center">
+      <div class="pr10">
+        <div>Bank A/c No</div>
+        <div>
+          <b>{{ searchParams.bankAccountNo }} </b>
+        </div>
+      </div>
+
+      <div>
+        <app-icon-button name="add" (click)="createNewBankReconciliationDetail()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt8 pr20 header-bg h55">
+    <div class="d-flex align-items-center justify-content-center">
+      Bank Reconciliation Statement as of :
+      {{ searchParams.lastReconciliationDate | appDate }}
+    </div>
+    <div class="d-flex align-items-center justify-content-end px-3">
+      Report Date & Time : {{ currentDate | appDate }} {{ currentDate | appDate : 'hh:mm a'}}
+    </div>
+  </div>
+
+  <form #y="ngForm" class="d-flex pt8 pr20 header-bg">
+    <div class="col-md-4">
+      <view-label class="pb26" label="Bank Ledger" value="{{ searchParams.ledgerName }}"></view-label>
+      <view-label class="pb26" label="Bank A/c No" value="{{ searchParams.bankAccountNo }}"></view-label>
+      <view-label class="pb26" label="Last Recon Date" value="{{ searchParams.lastReconciliationDate }}"></view-label>
+      <div>
+        <app-input-control label="Current Recon Date" type="date" [(ngModel)]="searchParams.currentReconciliationDate"
+          name="currentReconciliationDate" [required]="true" [errorTrue]="errorTrue"
+          (change)="generateBankReconciliationStatementReport()" key="constant"
+          keyName="description"></app-input-control>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div>
+        <app-input-control label="Bank Balance" valueType="number" defaultOption=""
+          [(ngModel)]="searchParams.bankBalance" name="bankBalance" key="constant" keyName="description"
+          [btnClicked]="true"></app-input-control>
+      </div>
+      <div>
+        <app-input-control label="Reconciled Book Balance" valueType="int"
+          [items]="initialData.DDLValues?.DDLBankLedger" [(ngModel)]="searchParams.bookBalance" name="differenceAmount"
+          key="constant" keyName="description" [btnClicked]="true"></app-input-control>
+      </div>
+      <div>
+        <app-input-control label="Difference" valueType="int" [items]="initialData.DDLValues?.differenceAmount"
+          [(ngModel)]="searchParams.differenceAmount" name="differenceAmount" key="constant" keyName="description"
+          [btnClicked]="true"></app-input-control>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div>
+        <app-input-control label="Opening Balance-Book" valueType="int" [items]="initialData.DDLValues?.DDLBankLedger"
+          [(ngModel)]="temproryBanckReconcil.openingBookBalance" name="openingBookBalance"
+          (change)="calculateAmount(openingBalanceType)" key="constant" keyName="description"
+          [btnClicked]="true"></app-input-control>
+      </div>
+      <div>
+        <app-input-control label="Bank Balance" valueType="int" [items]="initialData.DDLValues?.DDLBankLedger"
+          [(ngModel)]="temproryBanckReconcil.tempBookBalance" key="constant" keyName="description"
+          name="tempBookBalance" [btnClicked]="true"></app-input-control>
+      </div>
+      <div>
+        <app-input-control label="Add: Deposits" valueType="int" [items]="initialData.DDLValues?.DDLBankLedger"
+          [(ngModel)]="temproryBanckReconcil.tempAddDeposits" name="tempAddDeposits" key="constant"
+          keyName="description" [btnClicked]="true"></app-input-control>
+      </div>
+      <div>
+        <app-input-control label="Less: Payments" defaultOption="" valueType="int"
+          [items]="initialData.DDLValues?.DDLBankLedger" [(ngModel)]="temproryBanckReconcil.tempLessPayment"
+          name="tempLessPayment" key="constant" keyName="description" [btnClicked]="true"></app-input-control>
+      </div>
+    </div>
+  </form>
+  <br />
+
+  <div class="flex-1 relative">
+    <scroll>
+      <table class="app-table account-table">
+        <thead class="app-table-head">
+          <tr class="app-table-header-row">
+            <th class="app-table-header-cell text-center">#</th>
+            <th class="app-table-header-cell">Doc No</th>
+            <th class="app-table-header-cell">Doc Date</th>
+            <th class="app-table-header-cell">Cleared Date</th>
+            <th class="app-table-header-cell">Doc Type</th>
+            <th class="app-table-header-cell">Doc Name</th>
+            <th class="app-table-header-cell">Ref No</th>
+            <th class="app-table-header-cell">Payee Name</th>
+            <th class="app-table-header-cell">Payment</th>
+            <th class="app-table-header-cell">Ref No</th>
+            <th class="app-table-header-cell">Deposit</th>
+            <th class="app-table-header-cell">Notes</th>
+            <th class="app-table-header-cell">
+              <app-checkbox [checked]="true"></app-checkbox>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="app-table-body">
+          @for (item of searchParams.plstentActBankReconciliationStatement;
+          track item; let i = $index) {
+          <tr class="app-table-row">
+            <td class="app-table-cell text-center">{{ i + 1 }}</td>
+            <td class="app-table-cell" (click)="openDocument(item)">
+              {{ item.documentNumber }}
+            </td>
+            <td class="app-table-cell">{{ item.documentDate | appDate }}</td>
+            <td class="app-table-cell min-width-90">
+              <app-input-control [(ngModel)]="item.clearedDate" name="clearedDate">
+              </app-input-control>
+            </td>
+            <td class="app-table-cell">
+              {{ item.voucherTypeDescription }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.voucherName }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.referenceNumber }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.payeeName }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.paymentAmount | appCurrency }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.depositAmount | appCurrency }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.notes }}
+            </td>
+            <td class="app-table-cell">
+              <app-checkbox [checked]="item.reconciliationStatus === 'Y'" name="clearedDate"
+                (change)="updateAllComplete($event, item, listofReconcilation)"></app-checkbox>
+            </td>
+          </tr>
+          }
+        </tbody>
+        @if(searchParams.plstentActBankReconciliationStatement.length === 0 ) {
+        <ng-container>
+          <div class="ab">
+            <div class="rel">
+              <app-empty-state></app-empty-state>
+            </div>
+          </div>
+        </ng-container>
+        }
+        <tfoot>
+          @for(item of searchParams.plstentActBankReconciliationSummary; track
+          item) {
+          <tr class="h40">
+            <td class="app-table-footer" colspan="3">
+              <div class="text-center"><b>Total</b></div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalBookBalance | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalBankBalance | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalDifference | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ item.lastReconciliationDate | appDate }}</b>
+              </div>
+            </td>
+          </tr>
+          }
+        </tfoot>
+      </table>
+
+      @if(searchParams) {
+      <div class="ml-auto d-flex justify-content-end align-items-center px10">
+        <div class="w30 d-flex justify-content-between">
+          <button mat-raised-button class="ml-2 p10 bb" (click)="viewReconciliedDetail()">
+            <ion-icon name="eye-outline"></ion-icon>
+            View Reconciled Details
+          </button>
+          <button mat-button class="ml-2 p10 bb" (click)="saveReconciliedStatementReport()">
+            <ion-icon name="repeat-outline"></ion-icon>
+            Reconcile
+          </button>
+          <button mat-button class="ml-2 p10 bb" (click)="resetReconciliationDetail()">
+            <ion-icon name="refresh-outline"></ion-icon>
+            Reset
+          </button>
+        </div>
+      </div>
+      } @if(viewReconciledDetails) {
+      <table class="app-table account-table">
+        <h6 class="px-1">Bank Reconciled Details</h6>
+        <thead class="app-table-head">
+          <tr class="app-table-header-row">
+            <th class="app-table-header-cell text-center">#</th>
+            <th class="app-table-header-cell">Doc No</th>
+            <th class="app-table-header-cell">Doc Date</th>
+            <th class="app-table-header-cell">Voucher Type</th>
+            <th class="app-table-header-cell">Voucher Name</th>
+            <th class="app-table-header-cell">Doc Name</th>
+            <th class="app-table-header-cell">Ref No</th>
+            <th class="app-table-header-cell">Payee Name</th>
+            <th class="app-table-header-cell">Payment</th>
+            <th class="app-table-header-cell">Ref No</th>
+            <th class="app-table-header-cell">Deposit</th>
+            <th class="app-table-header-cell">Notes</th>
+            <th class="app-table-header-cell">
+              <mat-checkbox class="example-margin" [checked]="allCompleteRD" color="primary"
+                [indeterminate]="someComplete()" (change)="
+                  setAll(
+                    $event,
+                    searchParams.plstentActBankReconciliedStatement,
+                    listofReconciled
+                  )
+                ">
+              </mat-checkbox>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="app-table-body">
+          @for (item of searchParams.plstentActBankReconciliationStatement;
+          track item; let i = $index) {
+          <tr class="app-table-row">
+            <td class="app-table-cell text-center">{{ i + 1 }}</td>
+            <td class="app-table-cell" (click)="openDocument(item)">
+              {{ item.documentNumber }}
+            </td>
+            <td class="app-table-cell">{{ item.documentDate | appDate }}</td>
+            <td class="app-table-cell min-width-90">
+              <app-input-control [(ngModel)]="item.clearedDate" name="clearedDate">
+              </app-input-control>
+            </td>
+            <td class="app-table-cell">
+              {{ item.voucherTypeDescription }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.voucherName }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.referenceNumber }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.payeeName }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.paymentAmount | appCurrency }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.depositAmount | appCurrency }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.notes }}
+            </td>
+            <td class="app-table-cell">
+              <app-checkbox [checked]="item.reconciliationStatus === 'Y'" name="clearedDate"
+                (change)="updateAllComplete($event, item, listofReconcilation)"></app-checkbox>
+            </td>
+          </tr>
+          }
+        </tbody>
+        @if(searchParams.plstentActBankReconciliationStatement.length === 0 ) {
+        <ng-container>
+          <div class="ab">
+            <div class="rel">
+              <app-empty-state></app-empty-state>
+            </div>
+          </div>
+        </ng-container>
+        }
+        <tfoot>
+          @for(item of searchParams.plstentActBankReconciliationSummary; track
+          item) {
+          <tr class="h40">
+            <td class="app-table-footer" colspan="3">
+              <div class="text-center"><b>Total</b></div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalBookBalance | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalBankBalance | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalDifference | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ item.lastReconciliationDate | appDate }}</b>
+              </div>
+            </td>
+          </tr>
+          }
+        </tfoot>
+      </table>
+      }
+    </scroll>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Bank Reconciliation Summary</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

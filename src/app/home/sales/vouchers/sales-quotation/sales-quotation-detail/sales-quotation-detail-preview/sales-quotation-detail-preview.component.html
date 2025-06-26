@@ -1,0 +1,23 @@
+<div class="print-wrap flex-1 relative h100" appAccess="PUISC" [parentId]="pageId">
+  <div class="ab">
+    <div class="rel m-8px">
+      <row className="h100">
+        <div class="col-md-4">
+          <app-input-control type="textarea" [maxLength]="250" className="notes-2"
+            [(ngModel)]="parentData.iActVoucherConfig.pdfOtherComments" name="pdfOtherComments"
+            label="COMMENTS OR SPECIAL INSTRUCTIONS"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" class="" appAccess="PIGPB" [parentId]="pageId" (click)="viewSalesQuotationReceipt()"></app-icon-button>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="pdf-viewer">
+            <div class="ab">
+              <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>

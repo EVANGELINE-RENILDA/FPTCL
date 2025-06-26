@@ -1,0 +1,259 @@
+<!-- [parentId]="pageId" -->
+@if(showBreadCrumb === true){
+    <div class="content-wrapper" appAccess="CUSTR">
+        <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+            [hideSelectAll]="true" (pageChanged)="pageChanged($event)" columnID="actCustomerId" (onSelect)="onSelect($event)">
+            <ng-template cellDef="action" let-element>
+                <app-icon-button name="open" toolTip="Open" (click)=" openSalesCustomer(element.actCustomerId)"></app-icon-button>
+            </ng-template>
+    
+            <ng-template cellDef="customerID" let-element>
+                <div (click)="dataSelectedFn(element)">
+                    {{element.customerrefno}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="cusName" let-element>
+                <div>
+                    {{element.customerName}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="refNo" let-element>
+                <div>
+                    {{element.customerid}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="createdDate" let-element>
+                <div>
+                    {{element.createdDate | appDate}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="customerType" let-element>
+                <div>
+                    {{element.subtype}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="emailId" let-element>
+                <div>
+                    {{element.emailid}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="contNo" let-element>
+                <div>
+                    {{element.contactNo}}
+                </div>
+            </ng-template>
+                <ng-template cellDef="statusDescription" let-element>
+                    <accouts-status-table [statusDescription]="element.status"></accouts-status-table>
+                     </ng-template>
+            <!-- <ng-template cellHeaderDef="action">
+                @if(openStatus){
+                    <app-icon-button name="open" toolTip="Open Selected"></app-icon-button>
+                }
+            </ng-template> -->
+    
+            <ng-template #slotLeft>
+                <div class="col-md-4">
+                    <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+                </div>
+            </ng-template>
+            <ng-template #slotRight>
+                <div>
+                    @if(openStatus){
+                    <app-icon-button name="add" toolTip="Add New" appButtonAccess="CrmCustAppAddBtn" (click)="createNewSalesCustomer(0)"></app-icon-button>
+                    }
+                </div>
+            </ng-template>
+            <ng-template #slotMiddle>
+                <div class="d-flex">
+                  <div (click)="statusSortSearch('INACT')"><table-status-sort type="inactiveCount"
+                    [inActiveCount1]="totalInActiveCount"></table-status-sort>
+                  </div>
+                  <div (click)="statusSortSearch('ACTIV')">
+                    <table-status-sort type="activeCount"  [activeCount1]="totalActiveCount"></table-status-sort>
+                  </div>
+                </div>
+              </ng-template>
+        </app-table>
+    </div>
+}
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Customer Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+
+                    <row>
+                        <div class="col-md-12 ">
+                            <row>
+                                <div class="col-md-3 ">
+                                    <app-input-control type="text" label="Customer Name"
+                                        [(ngModel)]="searchParams.customerName" name="customerName"></app-input-control>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <app-input-control type="text" label="Customer ID"
+                                        [(ngModel)]="searchParams.customerid" name="customerid"></app-input-control>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <app-input-control type="text" label="Customer Ref No"
+                                        [(ngModel)]="searchParams.customerrefno"
+                                        name="customerrefno"></app-input-control>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <app-input-control type="select" label="Customer Type" defaultOption="--Select--"
+                                        [(ngModel)]="searchParams.subtype" name="subtype"
+                                        [items]="initialData.DDLValues.configCustSubtype" key="constant"
+                                        keyName="description"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-12 ">
+                            <row>
+                                <div class="col-md-3 ">
+                                    <app-input-control type="select" label="Status" [search]="true"
+                                        defaultOption="--Select--" [(ngModel)]="searchParams.status" name="status"
+                                        [items]="initialData.DDLValues.configCustStatus" key="constant"
+                                        keyName="description"></app-input-control>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <app-input-control type="select" label="Currency" defaultOption="--Select--"
+                                        [(ngModel)]="searchParams.customerCurrencyCodeValue"
+                                        name="customerCurrencyCodeValue"
+                                        [items]="initialData.DDLValues.configcustCurrencyCode" key="constant"
+                                        keyName="description"> </app-input-control>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <app-input-control type="date" label="Created Date(From)"
+                                        [(ngModel)]="searchParams.createdDateFrom" name="createdDateFrom"
+                                        [maxDate]="searchParams.createdDateTo"></app-input-control>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <app-input-control type="date" label="Created Date(To)"
+                                        [(ngModel)]="searchParams.createdDateTo" name="createdDateTo"
+                                        [minDate]="searchParams.createdDateFrom"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                    </row>
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon src="assets/icons/sales.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToSales()">Sales</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Customer</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+
+
+@if(showBreadCrumb === false){
+   <div class="v-flex h100">
+    <div class="dialog-header1">
+        <div class="dialog-title">Customer Search</div>
+        <div class="slot-right">
+            <div class="btn-group">
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <app-table [pagination]="pagination" class="h100" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        [hideSelectAll]="true" (pageChanged)="pageChanged($event)" columnID="actCustomerId"
+        (onSelect)="onSelect($event)">
+        <!-- <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)=" openSalesCustomer(element.actCustomerId)"></app-icon-button>
+        </ng-template> -->
+    
+        <ng-template cellDef="customerID" let-element>
+            <div (click)="dataSelectedFn(element)">
+                {{element.customerrefno}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="cusName" let-element>
+            <div>
+                {{element.customerName}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="refNo" let-element>
+            <div>
+                {{element.customerid}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="createdDate" let-element>
+            <div>
+                {{element.createdDate | appDate}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="customerType" let-element>
+            <div>
+                {{element.subtype}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="emailId" let-element>
+            <div>
+                {{element.emailid}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="contNo" let-element>
+            <div>
+                {{element.contactNo}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="statusDescription" let-element>
+            <accouts-status-table [statusDescription]="element.status"></accouts-status-table>
+        </ng-template>
+        <!-- <ng-template cellHeaderDef="action">
+        @if(openStatus){
+            <app-icon-button name="open" toolTip="Open Selected"></app-icon-button>
+        }
+    </ng-template> -->
+    
+        <ng-template #slotLeft>
+            <div class="col-md-4">
+                <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+            </div>
+        </ng-template>
+        <ng-template #slotRight>
+            <div>
+                @if(openStatus){
+                <app-icon-button name="add" toolTip="Add New" appButtonAccess="CrmCustAppAddBtn"
+                    (click)="createNewSalesCustomer(0)"></app-icon-button>
+                }
+            </div>
+        </ng-template>
+        <ng-template #slotMiddle>
+            <div class="d-flex">
+                <div (click)="statusSortSearch('INACT')"><table-status-sort type="inactiveCount"
+                        [inActiveCount1]="totalInActiveCount"></table-status-sort>
+                </div>
+                <div (click)="statusSortSearch('ACTIV')">
+                    <table-status-sort type="activeCount" [activeCount1]="totalActiveCount"></table-status-sort>
+                </div>
+            </div>
+        </ng-template>
+    </app-table>
+   </div>
+}

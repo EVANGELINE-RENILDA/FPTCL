@@ -1,0 +1,225 @@
+<!-- [parentId]="pageId" -->
+<div class="content-wrapper" appAccess="CUSTR">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)" [showPaginator]="false">
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open" (click)="navigateDetail()"></app-icon-button>
+        </ng-template>
+
+        <ng-template cellHeaderDef="cusName">
+            <div class="header-cell-title ">Customer Name</div>
+            <div class="header-cell-subtitle">Currency Name</div>
+        </ng-template>
+        <ng-template cellDef="cusName" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="date">
+            <div class="header-cell-title ">S-Order Date</div>
+            <div class="header-cell-subtitle">Number</div>
+        </ng-template>
+        <ng-template cellDef="date" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="item">
+            <div class="header-cell-title ">Item Name</div>
+            <div class="header-cell-subtitle">Unit</div>
+        </ng-template>
+        <ng-template cellDef="item" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="order">
+            <div class="header-cell-title ">Ordered Qty</div>
+            <div class="header-cell-subtitle">Dispatched Qty</div>
+        </ng-template>
+        <ng-template cellDef="order" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="stock">
+            <div class="header-cell-title ">Stock Group</div>
+            <div class="header-cell-subtitle">Code</div>
+        </ng-template>
+        <ng-template cellDef="stock" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="stockType">
+            <div class="header-cell-title ">Stock Type</div>
+            <div class="header-cell-subtitle">Sub Type</div>
+        </ng-template>
+        <ng-template cellDef="stockType" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="group">
+            <div class="header-cell-title ">Group</div>
+            <div class="header-cell-subtitle">Ledger</div>
+        </ng-template>
+        <ng-template cellDef="group" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="Bal">
+            <div class="header-cell-subtitle">Bal Qty</div>
+        </ng-template>
+        <ng-template cellDef="Bal" let-element>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="rate">
+            <div class="header-cell-subtitle">Rate Per Val</div>
+        </ng-template>
+        <ng-template cellDef="rate" let-element>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="pending">
+            <div class="header-cell-title">Pending Qty details</div>
+            <div class="header-cell-subtitle">Val Due On</div>
+        </ng-template>
+        <ng-template cellDef="pending" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        
+        <ng-template cellHeaderDef="overDue">
+            <div class="header-cell-subtitle">Over Due in Days</div>
+        </ng-template>
+        <ng-template cellDef="overDue" let-element>
+            <div class="table-cell-subtitle">{{element.createdDate | appDate}}</div>
+        </ng-template>
+
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"></app-icon-button>
+        </ng-template>
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected"></app-icon-button>
+        </ng-template>
+       
+        <ng-template #slotLeft>
+            <div class="col-md-4">
+                <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+            </div>
+        </ng-template>
+        <ng-template #slotRight>
+            <div>
+                <app-icon-button name="download" toolTip="Export To Excel" appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+            </div>
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Advance Receipt Note Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+
+                    <row>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="text" label="SQ No"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Created Date From"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Approved Date From"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Status"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="text" label="Customer Name"
+                                        [search]="true"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Created Date To"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Approved Date To"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Amount Range From"
+                                        defaultOption="--Select--"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="text" label="Document Name"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Document Date From"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Approved By"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="number" label="Amount Range To"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="text" label="Customer Currency"
+                                        name="pfNo"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Document Date To"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Voter ID"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                    </row>
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" >
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon src="assets/icons/sales.svg"></ion-icon>
+                <div class="screen-text">Sales Order Oustanding</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Search</div>
+            </li>
+        </ul>
+    </div>
+  </ng-template>

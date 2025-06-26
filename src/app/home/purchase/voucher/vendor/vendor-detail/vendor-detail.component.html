@@ -1,0 +1,871 @@
+<div class="v-flex h100">
+    <!-- @if(selectedTab === 0){ -->
+    <!-- <div class="end align-items-center gap-10 pr15">
+        Document Name
+        <div class="col-md-2"><app-input-control type="select" label=""></app-input-control>
+        </div>
+        <app-icon-button name="add" toolTip="Add New "></app-icon-button>
+    </div> -->
+    <!-- <div class="end p10 align-items-center gap-10">
+         <app-icon-button name="save" toolTip="Update"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh"></app-icon-button>
+        <app-icon-button name="accept" toolTip="Complete"></app-icon-button>
+    </div> -->
+    <!-- } -->
+    <div class="content-header">
+        <div class="card-box border-right">
+            <div class="card-content">
+                <view-label label="Vendor Name" value="{{vendor.vendorName}}"></view-label>
+            </div>
+            <div class="card-content">
+                <view-label label="Vendor ID" value="{{vendor.vendorCode}}"></view-label>
+            </div>
+        </div>
+        <div class="card-box border-right">
+            <div class="card-content">
+                <view-label label="Contact No" value="{{vendor.phoneNo}}"></view-label>
+            </div>
+            <div class="card-content">
+                <view-label label="Vendor Type" value="{{vendor.vendorSubTypeValue}}"></view-label>
+            </div>
+        </div>
+        <div class="card-box border-right">
+            <div class="card-content">
+                <view-label label="Vendor Tin No" value="{{vendor.vendorTin}}"></view-label>
+            </div>
+            <div class="card-content">
+                <view-label label="Email ID" value="{{vendor.emailId}}"></view-label>
+            </div>
+            <!-- <div class="card-content">
+                <app-input-control type="date" [required]="true"
+                    label="Document Date | Effective Date"></app-input-control>
+            </div> -->
+        </div>
+
+
+        <div class="status-header-box ">
+            <div class="card-box-1">
+                <div class="card-content">
+                    <!-- <label>Email ID</label>
+                    <div class="content">joe&#64;gmail.com</div> -->
+                </div>
+
+                <div class="d-flex gap-25">
+                    <div class="card-content text">
+
+                        <view-label label="Status" status="{{vendor.statusDescription}}"
+                            statusValue="{{vendor.statusDescription}}"></view-label>
+                    </div>
+                    <div class="end p10 align-items-center gap-10">
+                        @if(vendor.actVendorId>0 ){
+
+                        <div class="card-content btn-group">
+                            <app-icon-button name="save" toolTip="Update" (click)="saveVendor()"></app-icon-button>
+                            <app-icon-button name="refresh" toolTip="Refresh"
+                                (click)="openVendor(vendor.actVendorId>0,'refresh')"></app-icon-button>
+                        </div>
+                        }@else {
+                        <div class="card-content btn-group">
+                            <app-icon-button name="save" toolTip="Save" (click)="saveVendor()"></app-icon-button>
+                            <app-icon-button name="clear" toolTip="Clear" (click)="createNewVendor()"></app-icon-button>
+                        </div>
+                        }
+
+                        <!-- <app-icon-button name="save" toolTip="Update"></app-icon-button>
+                        <app-icon-button name="refresh" toolTip="Refresh"></app-icon-button> -->
+                        <!-- <app-icon-button name="accept" toolTip="Complete"></app-icon-button> -->
+                    </div>
+                </div>
+
+                <!-- <div class="card-content btn-group">
+                    <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                </div> -->
+            </div>
+            <!-- <div>
+                <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+                    <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+                </a>
+            </div> -->
+        </div>
+    </div>
+    <div class="content-body">
+        @if(selectedTab === 0){
+        <div class="vendor-header">
+            Vendor Details
+        </div>
+        <form #d="ngForm" class="p10">
+            <row>
+                <div class="col-md-4">
+                    <app-input-control label="Vendor Name" [required]="true" [errorTrue]="errorTrue" type="text"
+                        [(ngModel)]="vendor.vendorName" name="vendorName"
+                        placeholder="Enter Vendor Name"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Vendor Ref No" type="text" [(ngModel)]="vendor.vendorLegacyCode"
+                        name="vendorLegacyCode" placeholder="Enter Vendor Ref No"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Email ID " [required]="true" [errorTrue]="errorTrue" type="email"
+                        [email]="true" [(ngModel)]="vendor.emailId" name="emailId" [email]="true"
+                        [errorTrue]="errorTrue" placeholder="Enter Email ID"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Contact No " type="number" [required]="true" [errorTrue]="errorTrue"
+                        [(ngModel)]="vendor.phoneNo" name="phoneNo" [minLength]="5" [maxLength]="15"
+                        placeholder="Enter Contact No"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Cheque Pay Name" [required]="true" [errorTrue]="errorTrue" type="text"
+                        [(ngModel)]="vendor.chequePaymentName" name="chequePaymentName"
+                        placeholder="Enter Cheque Pay Name"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Vendor Type " type="select" [(ngModel)]="vendor.vendorSubTypeValue"
+                        name="vendorSubTypeValue" [items]="initialData.DDLValues.configVendorSubType" key="constant"
+                        keyName="description" (onSelect)="ddlSetup(true)" defaultOption="Select Vendor Type"
+                        [required]="true" [errorTrue]="errorTrue" placeholder="Select Vendor Type"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Fax No" type="number" [(ngModel)]="vendor.faxNumber" name="faxNumber"
+                        [maxLength]="15" placeholder="Enter Fax No"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Tin" type="text" [(ngModel)]="vendor.vendorTin" name="vendorTin"
+                        placeholder="Enter Tin" [maxLength]="25"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Website Address" type="special" [(ngModel)]="vendor.website"
+                        name="website" placeholder="Enter Website Address"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Currency Value" type="select" [required]="true" [errorTrue]="errorTrue"
+                        [(ngModel)]="vendor.currencyValue" name="currencyValue" [items]="DDLCurrencyValue"
+                        key="constant" keyName="description"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Status" type="select" [required]="true" [errorTrue]="errorTrue"
+                        [(ngModel)]="vendor.statusValue" name="statusValue" [items]="initialData.DDLValues.ConfigStatus"
+                        key="constant" keyName="description" placeholder="Select Status"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                    <app-input-control label="Credit Period In Days" type="number" [(ngModel)]="vendor.creditPeriod"
+                        name="creditPeriod" [min]="0" [max]="180"></app-input-control>
+                </div>
+
+            </row>
+        </form>
+        }
+        @else if(selectedTab === 1){
+        <div class="v-flex h100">
+            <div>
+                <div class="end p10">
+                    <app-icon-button name="add" toolTip="Add" (click)="createNewAddress(0)"></app-icon-button>
+                </div>
+            </div>
+            <div class="h100">
+                <app-table class="h100" [hasHeader]="false" [columns]="addressColumn" [hideSelectAll]="true"
+                    [columnsName]="addressColumnName" [dataSource]="tableAddressData" [hasIndex]="true">
+                    <ng-template cellDef="add" let-element>
+                        <app-icon-button name="open" (click)="createNewAddress(element.actAddressId)"></app-icon-button>
+                    </ng-template>
+                    <ng-template cellDef="sno" let-element>
+                        <div>
+                            {{ element.actCompanyId}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="address" let-element>
+                        <div>
+                            {{ element.fulladdress}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="type" let-element>
+                        <div>
+                            {{ element.typedescription}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="dateTime" let-element>
+                        <div>
+                            {{ element.effectiveDate | appDate}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="status" let-element>
+
+                        <div class="status status-{{element.statusdescription}}">{{element.statusdescription}}</div>
+
+                    </ng-template>
+
+                </app-table>
+            </div>
+        </div>
+        }
+        @else if(selectedTab === 2){
+        <div class="v-flex h100">
+            <div>
+                <div class="end p10">
+                    <app-icon-button name="add" toolTip="Add" (click)="createNewContact(0)"></app-icon-button>
+                </div>
+            </div>
+            <div class="h100">
+                <app-table class="h100" [hasHeader]="false" [columns]="contactColumn" [hideSelectAll]="true"
+                    [columnsName]="contactColumnName" [dataSource]="tableContactData" [hasIndex]="true">
+                    <ng-template cellDef="add" let-element>
+                        <app-icon-button name="open"
+                            (click)="createNewContact(element.actVendorContactId)"></app-icon-button>
+                    </ng-template>
+                    <ng-template cellDef="sno" let-element>
+                        <div>
+                            {{ element.actVendorContactId}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="bankName" let-element>
+                        <div>
+                            {{ element.firstName}} {{element.middleName}} {{element.lastName}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="contactNo" let-element>
+                        <div>
+                            {{ element.contactNo}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="email" let-element>
+                        <div>
+                            {{ element.emailId}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="beginDate" let-element>
+                        <div>
+                            {{ element.effectiveDatetime | appDate}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="status" let-element>
+                        <div class="status status-{{element.statusdescription}}">{{element.statusdescription}}</div>
+                    </ng-template>
+
+                </app-table>
+            </div>
+        </div>
+        }
+        @else if(selectedTab === 3){
+        <div class="v-flex h100">
+            <div>
+                <div class="end p10">
+                    <app-icon-button name="add" toolTip="Add" (click)="createNewBankDetails(0)"></app-icon-button>
+                </div>
+            </div>
+            <div class="h100">
+                <app-table class="h100" [hasHeader]="false" [columns]="bankColumn" [hideSelectAll]="true"
+                    [columnsName]="bankColumnName" [dataSource]="tableBankData" [hasIndex]="true">
+                    <ng-template cellDef="add" let-element>
+                        <app-icon-button name="open"
+                            (click)="createNewBankDetails(element.actVendorBankDetailId)"></app-icon-button>
+                    </ng-template>
+
+                    <ng-template cellDef="bankName" let-element>
+                        <div>
+                            {{ element.bankName}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="bankCode" let-element>
+                        <div>
+                            {{ element.bankCode}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="beginDate" let-element>
+                        <div>
+                            {{ element.beginDate | appDate}}
+                        </div>
+                    </ng-template>
+                    <ng-template cellDef="status" let-element>
+                        <div class="status status-{{element.statusdescription}}">{{element.statusdescription}}</div>
+                    </ng-template>
+                </app-table>
+            </div>
+        </div>
+        }
+        @else if(selectedTab === 4){
+        <app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+            [dataSource]="tableNoteData" [hasIndex]="true">
+            <ng-template cellHeaderDef="add">
+                <app-icon-button name="add" toolTip="Add New" (click)="createNewNotes(0)"></app-icon-button>
+            </ng-template>
+            <ng-template cellHeaderDef="notes" let-element>
+                <div class="header-cell-title"> Notes</div>
+                <div class="header-cell-subtitle">Created By | Date | Time</div>
+            </ng-template>
+            <ng-template cellDef="notes" let-element>
+                <div class="header-cell-title"> {{element.notesDetail}}</div>
+                <div class="header-cell-subtitle">
+                    {{ element.createdFullName }} | {{ element.createdDate | appDate }}
+                </div>
+            </ng-template>
+
+        </app-table>
+        } @else if(selectedTab === 5){
+        <div class="v-flex h100">
+            <div class="p10">
+                <div class="col-md-3">
+                    <app-input-control label="" placeholder="Search All By File Name"
+                        [search]="true"></app-input-control>
+                </div>
+            </div>
+            <app-table [hasHeader]="false" class="h100" [hideSelectAll]="true" [columns]="attachment"
+                [columnsName]="attachmentsName" [dataSource]="tableAttachmentData" [hasIndex]="true">
+                <ng-template cellHeaderDef="fileName">
+                    <div class="header-cell-title">File Name</div>
+                    <div class="header-cell-subtitle">Created By | Date | Time</div>
+                </ng-template>
+                <ng-template cellDef="fileName" let-element>
+                    <div class="header-cell-title">{{element.attachmentFileName}}</div>
+                    <div class="header-cell-subtitle">{{element.modifiedByFullName}} | {{element.createdDate | appDate}}
+                        |
+                        {{element.createdDate | appDate: 'hh:mm a'}}</div>
+                </ng-template>
+                <ng-template cellDef="fileFormat" let-element>
+                    <div class="header-cell-title">{{element.attachmentType}}</div>
+                </ng-template>
+                <ng-template cellDef="size" let-element>
+                    <div class="header-cell-title">{{element.attachmentSize}}</div>
+                </ng-template>
+
+
+                <ng-template cellHeaderDef="action">
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"></app-icon-button>
+                </ng-template>
+                <ng-template cellDef="download" let-element>
+                    <div class="between">
+                        <app-icon-button name="download" toolTip="Download"
+                            (click)="downloadAttachment(element, 'down')"></app-icon-button>
+                        <app-icon-button name="doc-view" toolTip="View"
+                            (click)="downloadAttachment(element, 'view')"></app-icon-button>
+                        <app-icon-button name="doc-delete" toolTip="Delete"
+                            (click)="deleteActAttachmentFile(element)"></app-icon-button>
+                    </div>
+                </ng-template>
+
+            </app-table>
+        </div>
+        }
+        @else if (selectedTab === 6) {
+        <div class="v-flex h100">
+            <div class="p10">
+
+            </div>
+            <app-table [hasHeader]="false" class="h100" [hideSelectAll]="true" [columns]="region"
+                [columnsName]="regionName" [dataSource]="regionData" [hasIndex]="true">
+
+
+
+                <ng-template cellDef="createdDate" let-element>
+                    <div>
+                        {{element.createdDate | appDate}}
+                    </div>
+                </ng-template>
+                <ng-template cellDef="modifiedDate" let-element>
+                    <div>
+                        {{element.modifiedDate | appDate}}
+                    </div>
+                </ng-template>
+                <ng-template cellHeaderDef="action">
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewRegion(0)"></app-icon-button>
+                </ng-template>
+                <ng-template cellDef="action" let-element>
+                    <app-icon-button name="open"
+                        (click)="createNewRegion(element.actVendorRegionAccessId)"></app-icon-button>
+                </ng-template>
+                <ng-template cellDef="add" class="mat-cell text-center" let-element><a mat-icon-button class="more-btn"
+                        [matMenuTriggerFor]="triggerMenu">
+                        <ion-icon name="ellipsis-vertical" class="icon-black"
+                            (click)="openVendorRegionAccess(element.actVendorRegionAccessId)"></ion-icon>
+                    </a></ng-template>
+
+            </app-table>
+        </div>
+        }
+    </div>
+    <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+        <div class="footer-tab">
+            <div class="d-flex">
+
+                <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+                    <ion-icon name="pricetag-outline"></ion-icon>
+                    <div>Detail </div>
+                </div>
+                @if(vendor.actVendorId > 0 ){
+                <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+                    <ion-icon name="location-outline"></ion-icon>
+                    <div>Address</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+                    <ion-icon name="call-outline"></ion-icon>
+                    <div>Contact</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+                    <ion-icon name="phone-portrait-outline"></ion-icon>
+                    <div>Bank Details</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(4)" [ngClass]="{ tabClass: selectedTab === 4 }">
+                    <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+                    <div>Notes</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(5)" [ngClass]="{ tabClass: selectedTab === 5 }">
+                    <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+                    <div>Attachments</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(6)" [ngClass]="{ tabClass: selectedTab === 6 }">
+                    <ion-icon src="assets/svg/region_access.svg" class="mr-1"></ion-icon>
+                    <div> Region Access </div>
+                </div>
+                }
+            </div>
+            <!-- <div class="open-arrow" id="trigger{{pageId}}">
+                <ion-icon name="chevron-down-outline"></ion-icon>
+            </div> -->
+        </div>
+
+    </div>
+</div>
+<!-- </div> -->
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn">
+                    <ion-icon src="assets/icons/back.svg"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToPurchase()">Purchase</div>
+            </li>
+            <li class="screen-name link">
+                <div class="screen-text" (click)="navigateToList()">Vendor</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase
+                Vendor > Detail >
+                Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveVendorNotes()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearVendorNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #n="ngForm">
+                    <row>
+
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue"
+                                [maxLength]="250" [required]="true" label="Notes" [(ngModel)]="vendorNotes.notesDetail"
+                                name="statusvalue"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #regionDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase
+                Vendor > Detail >
+                @if(newRegionEdit === true){
+
+                Add Region Access
+                }
+                @else {
+                Edit Region Access
+                }
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(newRegionEdit === true){
+                    <app-icon-button name="save" toolTip="Save" (click)="saveVendorRegionAccess()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearRegion()"></app-icon-button>
+                    }
+                    @else {
+                    <app-icon-button name="save" toolTip="Update" (click)="saveVendorContact()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openVendorRegionAccess(vendorRegion.actVendorRegionAccessId, 'refresh')"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #r="ngForm">
+                    <row>
+
+                        <div class="col-md-6">
+                            <app-input-control type="select" label="Region" [required]="true" [errorTrue]="errorTrue"
+                                [(ngModel)]="vendorRegion.regionValue" name="regionValue"
+                                [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"
+                                defaultOption="--Select--"></app-input-control>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <app-input-control type="text" label="Entered By" [required]="true" [errorTrue]="errorTrue"
+                                [(ngModel)]="vendorRegion.enteredByFullName"
+                                name="enteredByFullName"></app-input-control>
+                        </div>
+                    </row>
+                    <row>
+                        <div class="col-md-6">
+                            <app-search-debit label="Ledger" [(ngModel)]="vendorRegion.ledgerId" name="ledgerId"
+                                [required]="true" [errorTrue]="errorTrue" [displayText]="
+                                  vendorRegion.ledgerName
+                                " valuetype="int" [btnClicked]="vendorRegion.regionValue === ''"
+                                (onSelect)="onLedgerSelect($event)">
+                            </app-search-debit>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+
+
+<ng-template #attachmentDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase
+                Vendor > Detail >
+                Add Documents
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <app-drop-zone fileType="pdf" [accept]="accept" [multiple]="true"
+                    (onUpload)="uploadVendorAttachmentFile($event)"></app-drop-zone>
+            </div>
+
+        </div>
+    </div>
+</ng-template>
+
+<!-- <mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu> -->
+<!-- <div class="status-table-header">
+        <div class="changed-by_label">
+            Changed By | Changed Date
+        </div>
+        <div class="pl14">
+            Status
+        </div>
+    </div>
+    <div class="status-table-content">
+        <div class="changed-by">
+            Chief Finance Officer
+            <div class="changed-by_sub">
+                29/09/2023 10:57 AM
+            </div>
+        </div>
+        <div class="status_align pl14">
+            <div class="status-PRSTV">
+                Pending Verification
+            </div>
+        </div>
+    </div> -->
+<!-- <div class="mat-menu-drop"> -->
+<!-- <app-table
+      [hideSelectAll]="true"
+      [showPaginator]="false"
+      [columns]="statusMenu"
+      [columnsName]="statusMenuName"
+      [dataSource]="tableStatusMenuData"
+    >
+      <ng-template cellHeaderDef="fileName">
+        <div class="header-cell-title">Changed By | Effective Date</div>
+      </ng-template>
+      <ng-template cellDef="fileName" let-element>
+        <div class="header-cell-title">{{element.changedBy}}</div>
+        <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+      </ng-template>
+    </app-table> -->
+<!-- </div> -->
+
+<!-- </mat-menu> -->
+
+<ng-template #addressDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase >
+                Vendor > Detail >
+                @if(newAddressEdit === true){
+
+                Add Address
+                }
+                @else {
+                Edit Address
+                }
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(newAddressEdit === true){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveVendorAddress()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearVendorAddress()"></app-icon-button>
+                    }
+                    @else {
+                    <app-icon-button name="save" toolTip="Update" (click)="saveVendorAddress()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openAddress(vendorAddress.actAddressId,'refresh')"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #a="ngForm">
+                    <row>
+                        <div class="col-md-6"><app-input-control label="Line 1" [required]="true"
+                                [(ngModel)]="vendorAddress.addressLine1" name="addressLine1" type="special"
+                                [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Line 2" [(ngModel)]="vendorAddress.addressLine2"
+                                type="special" name="addressLine2"></app-input-control> </div>
+                        <div class="col-md-6" [(ngModel)]="vendorAddress.addressLine3" name="addressLine3">
+                            <app-input-control label="Line 3" [(ngModel)]="vendorAddress.addressLine3"
+                                name="addressLine3" type="special"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Email ID" type="email"
+                                [(ngModel)]="vendorAddress.emailId" name="emailId" [required]="true"
+                                [errorTrue]="errorTrue" valueType="string" [email]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="City" [(ngModel)]="vendorAddress.city"
+                                name="city" [required]="true" [errorTrue]="errorTrue"></app-input-control> </div>
+                        <div class="col-md-6"><app-input-control label="Country" type="select"
+                                [(ngModel)]="vendorAddress.countryValue" name="countryValue"
+                                [items]="initialData.DDLValues.configCountry" key="constant" keyName="description"
+                                defaultOption="Select Country" [required]="true"
+                                [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Type" type="select" defaultOption="Select Type"
+                                [(ngModel)]="vendorAddress.typeValue" name="typeValue"
+                                [items]="initialData.DDLValues.configAddressTypeList" key="constant"
+                                keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Status" type="select"
+                                [(ngModel)]="vendorAddress.statusValue" name="statusvalue"
+                                [items]="initialData.DDLValues.ConfigStatus" key="constant" keyName="description"
+                                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #bankDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase >
+                Vendor > Detail >
+                @if(newBankEdit === true){
+
+                Add Bank
+                }
+                @else {
+                Edit Bank
+                }
+
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(newBankEdit === true){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveVendorBankDetails()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearVendorBankDetail()"></app-icon-button>
+                    }
+                    @else {
+                    <app-icon-button name="save" toolTip="Update" (click)="saveVendorBankDetails()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openVendorBankDetails(vendorBankDetails.actVendorBankDetailId, 'refresh')"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #b="ngForm">
+                    <row>
+                        <div class="col-md-6"><app-input-control label="Bank Name" type="text" [required]="true"
+                                [(ngModel)]="vendorBankDetails.bankName" name="bankName"
+                                [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Bank Account No" type="text"
+                                [(ngModel)]="vendorBankDetails.bankAccountNo" name="bankAccountNo" [required]="true"
+                                [errorTrue]="errorTrue"></app-input-control> </div>
+                        <div class="col-md-6"><app-input-control label="Bank Code" type="text"
+                                [(ngModel)]="vendorBankDetails.bankCode" name="bankCode" [required]="true"
+                                [errorTrue]="errorTrue"></app-input-control> </div>
+                        <div class="col-md-6"><app-input-control label="Swift Code" [required]="true"
+                                [errorTrue]="errorTrue" type="text" [(ngModel)]="vendorBankDetails.swiftCode"
+                                name="swiftCode"></app-input-control>
+                        </div>
+
+                        <div class="col-md-6"><app-input-control label="Status" type="select" [required]="true"
+                                [errorTrue]="errorTrue" [(ngModel)]="vendorBankDetails.statusValue" name="statusValue"
+                                [items]="initialData.DDLValues.ConfigStatus" key="constant"
+                                keyName="description"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #contactDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase >
+                Vendor > Detail >
+                @if(newContactEdit === true){
+
+                Add Contact
+                }
+                @else {
+                Edit Contact
+                }
+
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(newContactEdit === true){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveVendorContact()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearVendorContact()"></app-icon-button>
+                    }
+                    @else {
+                    <app-icon-button name="save" toolTip="Update" (click)="saveVendorContact()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openVendorContact(vendorContact.actVendorContactId,'refresh')"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #c="ngForm">
+                    <row>
+                        <div class="col-md-6"><app-input-control label="First Name" type="text" [required]="true"
+                                [errorTrue]="errorTrue" [(ngModel)]="vendorContact.firstName" name="firstName"
+                                placeholder="Enter First Name"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="
+        Middle Name" type="text" [(ngModel)]="vendorContact.middleName" name="middleName"
+                                placeholder="Enter Middle Name"></app-input-control></div>
+                        <div class="col-md-6"><app-input-control label="Last Name" type="text" [required]="true"
+                                [(ngModel)]="vendorContact.lastName" name="lastName" placeholder="Enter Last Name"
+                                [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Designation" type="select"
+                                [errorTrue]="errorTrue" [required]="true" [(ngModel)]="vendorContact.designationValue"
+                                name="designationValue" [items]="initialData.DDLValues.configVendorDesignation"
+                                key="constant" keyName="description"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Contact No" type="number"
+                                [errorTrue]="errorTrue" [required]="true" [(ngModel)]="vendorContact.contactNo"
+                                name="contactNo" placeholder="Enter Contact No" [minLength]="5"
+                                [maxLength]="15"></app-input-control></div>
+                        <div class="col-md-6"><app-input-control label="Email ID" type="email" [required]="true"
+                                [(ngModel)]="vendorContact.emailId" name="emailId" [errorTrue]="errorTrue"
+                                [email]="true" placeholder="Enter Email Id"></app-input-control></div>
+                        <div class="col-md-6"><app-input-control label="Status" type="select" [errorTrue]="errorTrue"
+                                [required]="true" [(ngModel)]="vendorContact.statusValue" name="statusValue"
+                                [items]="initialData.DDLValues.ConfigStatus" key="constant"
+                                keyName="description"></app-input-control></div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+    <table class="status-table w100">
+        <thead class="status-header">
+            <tr>
+                <th class="status-header-cell">Changed By | Changed Date</th>
+                <th class="status-header-cell">Status</th>
+            </tr>
+        </thead>
+        <tbody class="hover_none">
+            @for (status of statusLst; track $index) {
+            <tr class="status-body-row">
+                <td class="status-body-cell">
+                    <div class="status_by">
+                        {{ status.changedByFullName ? status.changedByFullName : "-" }}
+                    </div>
+                    <div class="sub-status_by">{{ status.effectiveDate | appDate }}</div>
+                </td>
+                <td class="status-body-cell">
+                    <div class="status_by">
+                        {{ status.statusDescription }}
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</mat-menu>
+<app-documents #DocumentsComponent class="none"></app-documents>

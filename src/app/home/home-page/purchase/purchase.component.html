@@ -1,0 +1,66 @@
+<div class="padd-menus">
+    <div class="submenu-container col-md-10">
+        <div class="d-flex">
+            <div class="col-md-3 border-right">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_voucher.svg"></ion-icon> Vouchers
+                </div>
+
+                <a class="submenu-item" cdkMenuItem routerLink="/home/purchase/purchase-order/search">Purchase Order</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/purchase/purchase-invoice/search">Purchase
+                    Invoice</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/purchase/advance-payment-note/search">Advance
+                    Payment Note</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/purchase/payment-note/search">Payment Note</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/purchase/debit-note/search">Debit Note</a>
+
+
+
+
+
+
+            </div>
+
+            <!-- <div class="col-md-3"> -->
+            <div class="col-md-3 border-right">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_other.svg"></ion-icon> Others
+                </div>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/purchase/vendor/search">Vendor</a>
+
+                <!-- </div> -->
+            </div>
+            <div class="col-md-3 ">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_report.svg"></ion-icon> Report
+                </div>
+
+                <a class="submenu-item" cdkMenuItem
+                    routerLink="/home/purchase/report/creditors-detail-report/search">Creditors Summary Report</a>
+                <a class="submenu-item" cdkMenuItem
+                     (click)="navigatecreditorsdetail()">Creditors Detail Report</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/purchase/report/summary-of-account/search">Statement of
+                    Account</a>
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToCorporate()">Corporate</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Purchase</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

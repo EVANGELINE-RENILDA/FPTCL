@@ -1,0 +1,1314 @@
+<div class="content-wrapper" appAccess="ORGCD">
+    <app-multi-page-url [id]="id" url="/home/organization/organization-change/detail/"></app-multi-page-url>
+    <div class="sticky-card">
+        <row>
+            <div class="col-md-3"><view-label label="Org App Ref No"
+                    value="{{organizationApplication.applicationRefNo}}"></view-label></div>
+            <div class="col-md-3"><view-label label="Organization Name"
+                    value="{{organizationApplication.organizationName}}"></view-label></div>
+            <div class="col-md-3"><view-label label="Organization Ref No"
+                    value="
+            {{organizationApplication.ientOrganization.orgRefNo?organizationApplication.ientOrganization.orgRefNo:'-'}}"></view-label></div>
+            <div class="col-md-3"><view-label label="Organization Status"
+                    status="{{organizationApplication.orgStatusValue}}"
+                    statusValue="{{organizationApplication.orgStatusDescription}}"></view-label></div>
+            <div class="col-md-12 mb20"></div>
+            <div class="col-md-3"><view-label label="Organization Type"
+                    value="{{organizationApplication.organizationTypeDescription}}"></view-label></div>
+            <div class="col-md-3"><view-label label="Effective Date" value="
+           {{organizationApplication.effectiveDate | appDate}}"></view-label></div>
+            <div class="col-md-3"><view-label label="Status" status="{{organizationApplication.statusValue}}"
+                    statusValue="
+           {{organizationApplication.statusDescription}}"></view-label></div>
+        </row>
+    </div>
+    <app-tab-group (tabChange)="onTabChange($event)">
+        <app-tab tabTitle="Application">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div> Organization Application Information</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <row>
+                            <div class="col-md-8 border-right">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        General Information
+                                    </div>
+                                </div>
+                                <row>
+                                    <div class="col-md-6 pb20"> <view-label label="Organization Name"
+                                            value="{{organizationApplication.organizationName}}"></view-label> </div>
+                                    <div class="col-md-6 pb20"> <view-label label="Organization Type"
+                                            value="{{organizationApplication.organizationTypeDescription}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6 pb20"> <view-label label="Email ID
+                                    " value="{{organizationApplication.emailId}}"></view-label> </div>
+                                    <div class="col-md-6 pb20"> <view-label label="Contact No
+                                    " value="{{organizationApplication.contactNo}}"></view-label> </div>
+                                    <div class="col-md-6 pb20"> <view-label label="Website"
+                                            value="{{organizationApplication.website}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6 pb20"> <view-label label="Effective Date"
+                                            value="{{organizationApplication.effectiveDate | appDate}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6 pb20"> <view-label label="Application Status"
+                                            value="{{organizationApplication.statusDescription}}"></view-label> </div>
+
+                                </row>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon src="assets/icons/location.svg" class="pr5"></ion-icon>
+                                        Organization Address
+                                    </div>
+                                </div>
+                                <div class="pl10">
+                                    <view-label
+                                        value="{{organizationApplication.ipermanentAddress.line1}} &nbsp;{{organizationApplication.ipermanentAddress.line2}} &nbsp; {{organizationApplication.ipermanentAddress.line3}} "></view-label>
+                                </div>
+                                <div class="pl10">
+                                    <view-label
+                                        value="{{organizationApplication.ipermanentAddress.provinceDescription}} &nbsp;{{organizationApplication.ipermanentAddress.islandDescription}} &nbsp;"></view-label>
+                                </div>
+                                <div class="mb20 pl10">
+                                    <view-label
+                                        value="{{organizationApplication.ipermanentAddress.tikinaDescription}} &nbsp; {{organizationApplication.ipermanentAddress.village}} &nbsp;  {{organizationApplication.ipermanentAddress.poBoxNo}}"></view-label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 end">
+                                <app-icon-button name="edit" toolTip="Edit" (click)="orgAppInfo()"></app-icon-button>
+                            </div>
+                        </row>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Contact Person</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [pagination]="pagination" [columns]="contactColumns"
+                                    [columnsName]="contactColumnsName" [dataSource]="tableContactData"
+                                    [hideSelectAll]="true" [hasPagination]="true"
+                                    columnID="organizationApplicationContactPersonId">
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="open"
+                                            (click)="openOrgContact(element.organizationApplicationContactPersonId)"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template cellDef="bname" let-element>
+                                        {{element.contactPersonName}}
+                                    </ng-template>
+                                    <ng-template cellDef="bCode" let-element>
+                                        {{element.designation}}
+                                    </ng-template>
+                                    <ng-template cellDef="brName" let-element>
+                                        {{element.emailId}}
+                                    </ng-template>
+                                    <ng-template cellDef="status" let-element>
+                                        {{element.statusDescription}}
+                                    </ng-template>
+
+
+                                    <ng-template #slotRight>
+                                        @if(this.organizationApplication.statusValue !=='APRVD'){
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createOrganizationContact()">
+                                        </app-icon-button>
+                                        }
+                                    </ng-template>
+                                </app-table>
+
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Bank</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [pagination]="pagination" [columns]="bankColumns" [hideSelectAll]="true"
+                                    [columnsName]="bankColumnsName" [dataSource]="tableBankData" [hasPagination]="true"
+                                    columnID="organizationApplicationId">
+
+                                    <ng-template cellDef="bname" let-element>{{element.ientBank.bankName}}</ng-template>
+                                    <ng-template cellDef="bCode" let-element>{{element.ientBank.bankCode}}</ng-template>
+                                    <ng-template cellDef="brName"
+                                        let-element>{{element.ientBank.ifscCode}}</ng-template>
+                                    <ng-template cellDef="status" let-element>
+                                        <div class="status-{{element.statusValue}}">{{element.statusDescription}}</div>
+                                    </ng-template>
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="open"
+                                            (click)="openOrganizationBank(element.organizationApplicationBankDetailId)"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        @if(this.organizationApplication.statusValue !=='APRVD'){
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createOrganizationBank()">
+                                        </app-icon-button>
+                                        }
+                                    </ng-template>
+                                </app-table>
+
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+        </app-tab>
+        <app-tab tabTitle="Upload Document">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Upload Document</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <row>
+                                    <!-- @if(loading){ -->
+                                    @if(this.organizationApplication.statusValue !=='APRVD'){
+                                    <div class="col-md-8 mt10 mb20">
+                                        <div class="outer-content-wrapper">
+                                            <div class="content-wrapper">
+                                                <div>
+                                                    <!-- @if (loading) { -->
+                                                    <app-table [columns]="documentColumns"
+                                                        [columnsName]="documentColumnsName"
+                                                        [dataSource]="organizationApplication.lstentOrganizationApplicationDocument"
+                                                        [hideSelectAll]="true" [showPaginator]="false"
+                                                        columnID="trustApplicationDocumentId">
+                                                        <ng-template cellHeaderDef="fileName">
+                                                            <div class="w200px">
+                                                                File Name
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template cellDef="fileName" let-element>
+                                                            <div class="overflow-wrap">
+                                                                {{element.ientFile.fileName}}
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template cellHeaderDef="documentTypeDescription">
+                                                            <div class="w200px">Document Name</div>
+                                                        </ng-template>
+                                                        <ng-template cellDef="fileExtension" let-element>
+                                                            {{element.ientFile.fileExtension}}
+                                                        </ng-template>
+                                                        <ng-template cellDef="fileSize" let-element>
+                                                            {{element.ientFile.fileSize | fileSize}} MB
+                                                        </ng-template>
+                                                        <ng-template cellHeaderDef="action">
+                                                            <div class="text-center">
+                                                                Action
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template cellDef="action" let-element>
+                                                            @if(element.ientFile.fileName!==''){
+
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-center">
+                                                                <!--  (click)="downloadFile(element)" -->
+                                                                <app-icon-button name="doc-download"
+                                                                    (click)="downloadFile(element)">
+
+                                                                </app-icon-button>
+                                                                <!-- @if(this.type.isEditable === 'Y'){ -->
+
+                                                                <app-icon-button name="doc-delete"
+                                                                    (click)="checkDocumentDelete(element)" />
+                                                                <!-- } -->
+
+                                                                <!--  (click)="viewFile(element)" -->
+                                                                <app-icon-button name="doc-view"
+                                                                    (click)="viewFile(element)">
+
+                                                                </app-icon-button>
+                                                            </div>
+                                                            }
+                                                        </ng-template>
+                                                    </app-table>
+                                                    <!-- } -->
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                    @else{
+                                    <div class="col-md-12 mt10 mb20">
+                                        <div class="outer-content-wrapper">
+                                            <div class="content-wrapper">
+                                                <div>
+                                                    <!-- @if (loading) { -->
+                                                    <app-table [columns]="documentColumns"
+                                                        [columnsName]="documentColumnsName"
+                                                        [dataSource]="organizationApplication.lstentOrganizationApplicationDocument"
+                                                        [hideSelectAll]="true" [showPaginator]="false"
+                                                        columnID="trustApplicationDocumentId">
+                                                        <ng-template cellHeaderDef="fileName">
+                                                            <div class="w200px">
+                                                                File Name
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template cellDef="fileName" let-element>
+                                                            <div class="overflow-wrap">
+                                                                {{element.ientFile.fileName}}
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template cellHeaderDef="documentTypeDescription">
+                                                            <div class="w200px">Document Name</div>
+                                                        </ng-template>
+                                                        <ng-template cellDef="fileExtension" let-element>
+                                                            {{element.ientFile.fileExtension}}
+                                                        </ng-template>
+                                                        <ng-template cellDef="fileSize" let-element>
+                                                            {{element.ientFile.fileSize | fileSize}} MB
+                                                        </ng-template>
+                                                        <ng-template cellHeaderDef="action">
+                                                            <div class="text-center">
+                                                                Action
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template cellDef="action" let-element>
+                                                            @if(element.ientFile.fileName!==''){
+
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-center">
+                                                                <!--  (click)="downloadFile(element)" -->
+                                                                <app-icon-button name="doc-download"
+                                                                    (click)="downloadFile(element)">
+
+                                                                </app-icon-button>
+                                                                <!-- @if(this.type.isEditable === 'Y'){ -->
+
+                                                                <app-icon-button name="doc-delete"
+                                                                    (click)="checkDocumentDelete(element)" />
+                                                                <!-- } -->
+
+                                                                <!--  (click)="viewFile(element)" -->
+                                                                <app-icon-button name="doc-view"
+                                                                    (click)="viewFile(element)">
+
+                                                                </app-icon-button>
+                                                            </div>
+                                                            }
+                                                        </ng-template>
+                                                    </app-table>
+                                                    <!-- } -->
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                    <!-- } -->
+                                    @if(this.organizationApplication.statusValue !=='APRVD'){
+                                    <div class="col-md-4 mt10">
+                                        <div class="box" style="padding: 8px 16px;">
+                                            <div class="mb20"></div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="select"
+                                                    [items]="initialData.DDLValues.Document" key="constant"
+                                                    keyName="description" defaultOption="--Select--"
+                                                    label="Document Type" [(ngModel)]="documentValue"
+                                                    name="documentValue"></app-input-control>
+                                            </div>
+                                            <app-drop-zone type="1" [fileType]="fileExtension" [accept]="accept"
+                                                [multiple]="false"
+                                                (onUpload)="uploadClientDocumentAttachment($event)"></app-drop-zone>
+                                        </div>
+                                        <div class="mb26"></div>
+                                    </div>
+                                    }
+                                    <div class="pb10"></div>
+
+                                    <!-- <div class="horizontal-tab hori-active w100px">Notes</div>
+                                              <div class="border p10">
+
+                                                  <div class="justify-content-end d-flex">
+                                                      <app-icon-button name="add" toolTip="Create"
+                                                          (click)="createNotesDialog()"></app-icon-button>
+                                                  </div>
+                                                  <div class="p16px"></div>
+                                                  <div class="notes-list">
+                                                      @for (item of notesList; track $index) {
+                                                      <div class="border-bottom notes-list">
+                                                          <div class="mx10 notes-desc">{{item.notes}}</div>
+                                                          <div class="d-flex justify-content-end notes-context">
+                                                              <div style="padding-right:5px ;">
+                                                                  {{item.enteredByFullname}}</div>
+                                                              <div class=" notes-border-left">
+                                                                  {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm
+                                                                  a'}}
+                                                              </div>
+                                                              <div style="padding-right:5px ;"></div>
+                                                              <div class=" notes-border-left status-{{item.statusValue}}">
+                                                                  {{item.statusDescription}}
+                                                              </div>
+                                                              <div class="card-1-header-label px-2 ">
+
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                      }
+                                                  </div>
+                                              </div> -->
+
+
+
+                                </row>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+        </app-tab>
+        <app-tab tabTitle="History">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Notes</div>
+                                    <div class="accordian-title-count">
+                                        {{organizationApplication.lstentOrganizationApplicationNotes.length}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <div class="p16px pb26 wrap-content">
+                                    <div class="justify-content-end d-flex">
+                                        @if(organizationApplication.statusValue === 'PNDSU' ||
+                                        organizationApplication.statusValue === 'PEVRI' ||
+                                        organizationApplication.statusValue === 'PNDAP'){
+                                        <app-icon-button name="add" toolTip="Create"
+                                            (click)="createOrganizationNotes()"></app-icon-button>
+                                        }
+                                    </div>
+                                    @for (item of organizationApplication.lstentOrganizationApplicationNotes; track
+                                    $index) {
+                                    <div class="border-bottom  notes-list">
+                                        <div class="mx10">{{item.content}}</div>
+                                        <div class="d-flex justify-content-end notes-context">
+                                            <div style="padding-right:5px ;">
+                                                {{item.enteredByFullName}}</div>
+                                            <div class=" notes-border-left">
+                                                {{item.enteredDate | appDate}}
+                                            </div>
+                                            <div style="padding-right:5px ;"></div>
+                                            <div class=" notes-border-left ">
+                                                <div class="status-{{item.statusValue}}">
+                                                    {{item.statusDescription}}
+                                                </div>
+                                            </div>
+                                            <div class="card-1-header-label px-2 ">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Assigned Officer</div>
+                                    <div class="accordian-title-count">{{assignOfficerData.length}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                                    [hasPagination]="true" [dataSource]=" assignOfficerData" [hideSelectAll]="true">
+                                    <ng-template cellDef="statusDescription" let-element>
+                                        <div class="status status-{{element.statusValue}}">{{element.statusDescription}}
+                                        </div>
+                                    </ng-template>
+
+                                    <ng-template cellDef="assignedDate" let-element>
+                                        {{element.assignedDate | appDate}}
+                                    </ng-template>
+                                    <ng-template cellDef="assignedToFullname" let-element>
+                                        {{element.assingnedToFullName}}
+                                    </ng-template>
+                                    <ng-template cellDef="assignedByFullname" let-element>
+                                        {{element.assignedBy}}
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <div class="d-flex align-items-center end">
+                                            @if(organizationApplication.reAssignFlag === 'True'){
+                                            <form #p="ngForm" class="col-md-8 w250"><app-input-control
+                                                    defaultOption="--Select--" [items]="assignOfficerDDL" key="constant"
+                                                    keyName="description" [(ngModel)]="orgAssignOfficer.assignedTo"
+                                                    name="assignedTo" type="select"></app-input-control>
+                                            </form>
+                                            <div class="col-md-2">
+                                                <div class="col-md-2"><app-icon-button name="reassign"
+                                                        (click)="reassignOrg()" toolTip="Reassign"></app-icon-button>
+                                                </div>
+                                            </div>
+                                            }
+
+                                            @if(organizationApplication.selfAssignFlag === 'True'){
+                                            <div class="col-md-2">
+                                                <div class="col-md-2"><app-icon-button name="self-assign"
+                                                        (click)="selfAssignOrg()"
+                                                        toolTip="SelfAssign"></app-icon-button>
+                                                </div>
+                                            </div>
+                                            }
+                                        </div>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+            <div class="card-accordian w100">
+                <div class="card-header">
+                    <div class=" card-header">
+                        <div class="col-md-5 pl8px">
+
+                            <div class="d-flex">
+                                <div class="accordion-title-card pr10 flex-none border-right pointer"
+                                    [ngClass]="{'active-tab': showStatusHistory === true}"
+                                    (click)="openStatusValueProcess(1)">
+                                    <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                    <div class="accordion-title-content">
+                                        <div>Status History</div>
+                                        <div class="accordian-title-count">{{statusHistoryDataSource.length}}</div>
+                                    </div>
+                                </div>
+                                <div class="accordion-title-card pl10 pointer" (click)="openStatusValueProcess(2)"
+                                    [ngClass]="{'active-tab': showEmailHistory === true}">
+                                    <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                                    <div class="accordion-title-content">
+                                        <div>Communication History</div>
+                                        <div class="accordian-title-count">{{emailHistoryTableData.length}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7" (click)="openAccordianProcess(this.accordianOpen)">
+
+                            <div class="end btn-accordian">
+                                @if(this.accordianOpen === true){
+
+                                <div class="rotate">
+                                    <ion-icon src="assets/icons/down.svg"></ion-icon>
+                                </div>
+                                }
+                                @else{
+                                <!-- <div class="rotate-180"> -->
+                                <ion-icon src="assets/icons/down.svg"></ion-icon>
+                                <!-- </div> -->
+                                }
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                @if(this.accordianOpen === true){
+                @if(this.showStatusHistory === true){
+                <!-- <div class="acc-card-content"> -->
+                <div class="status-padding">
+                    <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+                </div>
+                <!-- </div> -->
+                }
+                @else if(this.showEmailHistory === true){
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+
+                        <app-table [columns]="emailColumns" [columnsName]="emailColumnsName" [hasPagination]="true"
+                            [dataSource]="emailHistoryTableData" [hideSelectAll]="true">
+                            <ng-template cellDef="toEmailId" let-element>
+                                {{element.ientCommunicationTracking.toEmailId}}
+                            </ng-template>
+                            <ng-template cellDef="sentDate" let-element>
+                                {{element.ientCommunicationTracking.sentDate |
+                                appDate
+                                }} |
+                                {{element.ientCommunicationTracking.sentDate
+                                | appDate: 'hh:mm a'}}
+                            </ng-template>
+                            <ng-template cellDef="sentStatusDescription" let-element>
+                                <div class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                                    {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+                            </ng-template>
+
+                            <ng-template cellDef="action" let-element>
+                                <app-icon-button name="open" toolTip="Open"
+                                    (click)="viewEmailDetail(element)"></app-icon-button>
+                            </ng-template>
+                        </app-table>
+                    </div>
+                </div>
+                }
+                }
+
+            </div>
+            <div class="p5px"></div>
+        </app-tab>
+    </app-tab-group>
+
+
+
+</div>
+
+<ng-template #bankDialogs>
+
+    <div class="dialog-container">
+        @if(this.viewBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                View
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="edit" toolTip="Edit" (click)="editBankDetails()"
+                        appButtonAccess="CrmCustAppEditBtn"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+                        appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    <div class="p10">
+                        <row>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header">
+                                        Bank Information
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Bank Name" class="mb26"
+                                                    value="{{organizationBank.ientBank.bankName}}"></view-label></div>
+                                            <div class="col-md-12"><view-label label="Bank Code" class="mb26"
+                                                    value="{{organizationBank.ientBank.bankCode}}"></view-label></div>
+                                            <div class="col-md-12"><view-label label="Branch " class="mb26"
+                                                    value="{{organizationBank.ientBank.branchTypeDescription}}"></view-label>
+                                            </div>
+
+                                            <div class="col-md-12"><view-label label="Swift Code" class="mb26"
+                                                    value="{{organizationBank.ientBank.swiftCode}}"></view-label></div>
+                                            <!-- <div class="col-md-12"><view-label label="IFSC Code" class="mb26"
+                                                    value="{{organizationBank.ientBank.ifscCode}}"></view-label></div> -->
+
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Additional Information
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Account No" class="mb26"
+                                                    value="{{organizationBank.accountNo}}"></view-label></div>
+                                            <!-- <div class="col-md-12"><view-label label="Effective Date " class="mb26"
+                                                    value="{{organizationBank.ientBank.date  | appDate}}"></view-label>
+                                            </div> -->
+                                            <div class="col-md-12"><view-label label="Account Status  "
+                                                    class="mb26 status-{{organizationBank.statusValue}}"
+                                                    value="{{organizationBank.statusDescription}}"></view-label></div>
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Bank Address
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Line 1" class="mb26"
+                                                    value="{{organizationBank.ientBank.ientAddress.line1}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Line 2" class="mb26"
+                                                    value="{{organizationBank.ientBank.ientAddress.line2}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Line 3 " class="mb26"
+                                                    value="{{organizationBank.ientBank.ientAddress.line3}}"></view-label>
+                                            </div>
+
+                                            <div class="col-md-12"><view-label label="Province" class="mb26"
+                                                    value="{{organizationBank.ientBank.ientAddress.provinceDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Island" class="mb26"
+                                                    value="{{organizationBank.ientBank.ientAddress.islandDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Tikina" class="mb26"
+                                                    value="{{organizationBank.ientBank.ientAddress.tikinaDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Village" class="mb26"
+                                                    value="{{organizationBank.ientBank.ientAddress.village}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="PO Box No" class="mb26"
+                                                    value="{{organizationBank.ientBank.ientAddress.poBoxNo}}"></view-label>
+                                            </div>
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+
+
+
+                    </div>
+                </scroll>
+
+            </div>
+        </div>
+
+        }
+        @if(this.createBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Create
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveOrganizationBank()"
+                        appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearBankDetails()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+                        appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="p10">
+                        <div class="view-label-container-title mb26">Enter Bank Code and to continue</div>
+                        <form #q="ngForm">
+                            <row>
+                                <div class="col-md-8">
+                                    <form #x="ngForm" class="d-flex align-items-center"
+                                        (ngSubmit)="viewBankDetailsBasedOnBankCode(x)">
+
+                                        <div class="col-md-6"> <app-input-control label="Bank Code"
+                                                [errorTrue]="errorTrue" [required]="true" [(ngModel)]="bankCodeValue"
+                                                [maxLength]="20" name="bankCodeValue"></app-input-control></div>
+                                        <div class="col-md-6"> <button type="submit" class="info-btn">Get Info<ion-icon
+                                                    class="pl10px" name="information-outline"></ion-icon></button></div>
+
+
+
+                                    </form>
+                                </div>
+                            </row>
+                            @if(createNewBankInfoValues){
+
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 "><app-input-control type="text" label="Bank Name"
+                                                        [(ngModel)]="organizationBank.ientBank.bankName"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="50"
+                                                        [btnClicked]="this.organizationBank.editableFlag ==='N'"
+                                                        name="bankName"></app-input-control></div>
+                                                <div class="col-md-12 "><app-input-control type="text"
+                                                        [errorTrue]="errorTrue" [required]="true" label="Bank Code"
+                                                        [(ngModel)]="organizationBank.ientBank.bankCode"
+                                                        [btnClicked]="true" [maxLength]="20"
+                                                        name="bankCode"></app-input-control></div>
+
+
+                                                <!-- <div class="col-md-12 "><app-input-control type="text" label="IFSC Code"
+                                                        [(ngModel)]="organizationBank.ientBank.ifscCode"
+                                                        [maxLength]="20" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.organizationBank.editableFlag ==='N'"
+                                                        name="ifscCode"></app-input-control></div> -->
+                                                <div class="col-md-12 "><app-input-control type="text"
+                                                        label="Swift Code"
+                                                        [(ngModel)]="organizationBank.ientBank.swiftCode"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="20"
+                                                        [btnClicked]="this.organizationBank.editableFlag ==='N'"
+                                                        name="swiftCode"></app-input-control></div>
+
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Additional Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 "><app-input-control type="number"
+                                                        label="Account No" [(ngModel)]="organizationBank.accountNo"
+                                                        name="accountNo" [errorTrue]="errorTrue" [required]="true"
+                                                        [maxLength]="20"></app-input-control></div>
+
+                                                <div class="col-md-12 "><app-input-control type="select"
+                                                        label="Account Status"
+                                                        [(ngModel)]="organizationBank.statusValue" name="statusValue"
+                                                        [errorTrue]="errorTrue" [required]="true" [btnClicked]="true"
+                                                        [items]="initialData.DDLValues.Status" key="constant"
+                                                        keyName="description"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Address
+                                        </div>
+                                        <div class="box-pad">
+                                            <app-address-edit [ientAddress]="organizationBank.ientBank.ientAddress"
+                                                [btnClicked]="this.organizationBank.editableFlag ==='N'"
+                                                [errorTrue]="errorTrue" type="bank"></app-address-edit>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </row>
+                            }
+                        </form>
+
+                    </div>
+                </scroll>
+            </div>
+        </div>
+        }
+
+        @if(this.editBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Edit
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Update" (click)="saveOrganizationBank()"
+                        appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="refreshBankData(this.organizationBank.organizationApplicationBankDetailId)"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+                        appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="p10">
+                        <form #x="ngForm">
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 "><app-input-control type="text" label="Bank Name"
+                                                        [(ngModel)]="organizationBank.ientBank.bankName"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="50"
+                                                        [btnClicked]="this.organizationBank.editableFlag ==='N'"
+                                                        name="bankName"></app-input-control></div>
+                                                <div class="col-md-12 "><app-input-control type="text" label="Bank Code"
+                                                        [(ngModel)]="organizationBank.ientBank.bankCode"
+                                                        [btnClicked]="true" [maxLength]="20"
+                                                        name="bankCode"></app-input-control></div>
+
+                                                <!-- <div class="col-md-12 "><app-input-control type="text" label="IFSC Code"
+                                                        [(ngModel)]="organizationBank.ientBank.ifscCode"
+                                                        [maxLength]="20" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.organizationBank.editableFlag ==='N'"
+                                                        name="ifscCode"></app-input-control></div> -->
+                                                <div class="col-md-12 "><app-input-control type="text"
+                                                        label="Swift Code"
+                                                        [(ngModel)]="organizationBank.ientBank.swiftCode"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="20"
+                                                        [btnClicked]="this.organizationBank.editableFlag ==='N'"
+                                                        name="swiftCode"></app-input-control></div>
+
+                                                <div class="col-md-12 ">
+                                                    @if(this.organizationBank.ientBank.branchTypeValue === 'BRNOF'){
+                                                    <app-input-control type="select" label="Head Office Bank"
+                                                        [items]="initialData.getHeadOfficeBankDDL.DDLBank" key="id"
+                                                        keyName="code" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.organizationBank.editableFlag ==='N'"
+                                                        [(ngModel)]="organizationBank.ientBank.headOfficeBankId"
+                                                        name="headOfficeBankId"></app-input-control>
+                                                    }
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box">
+                                        <div class="box-header ">
+                                            Additional Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 "><app-input-control type="number"
+                                                        label="Account No" [(ngModel)]="organizationBank.accountNo"
+                                                        name="accountNo" [errorTrue]="errorTrue" [required]="true"
+                                                        [maxLength]="20"></app-input-control></div>
+
+                                                <div class="col-md-12 "><app-input-control type="select"
+                                                        label="Account Status"
+                                                        [(ngModel)]="organizationBank.statusValue" name="statusValue"
+                                                        [errorTrue]="errorTrue" [required]="true"
+                                                        [items]="initialData.DDLValues.Status" key="constant"
+                                                        keyName="description"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box">
+                                        <div class="box-header ">
+                                            Bank Address
+                                        </div>
+                                        <div class="box-pad">
+                                            <app-address-edit [ientAddress]="organizationBank.ientBank.ientAddress"
+                                                [btnClicked]="this.organizationBank.editableFlag ==='N' "
+                                                [errorTrue]="errorTrue" type="bank"></app-address-edit>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </row>
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+        }
+    </div>
+
+</ng-template>
+
+<ng-template #contact>
+    <div class class="dialog-container">
+        @if(contactView === true){
+        <div class="dialog-header">
+            <div class="dialog-title">View Organization Contact</div>
+            <div class="slot-right d-flex gap-10">
+                <app-icon-button name="edit" toolTip="Edit" (click)="editContact()"></app-icon-button>
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <row>
+                <div class="col-md-6">
+                    <div class="box h100">
+                        <div class="box-header ">Contact Person Details</div>
+                        <div class=" box-pad">
+                            <view-label label="Contact Person Name" [value]="organizationContact.contactPersonName"
+                                class="pb15"></view-label>
+                            <view-label label="Contact No" [value]="organizationContact.contactNo"
+                                class="pb15"></view-label>
+                            <view-label label="Email ID" [value]="organizationContact.emailId"
+                                class="pb15"></view-label>
+                            <view-label label="Designation" [value]="organizationContact.designation"
+                                class="pb15"></view-label>
+                            <view-label label="Date Of Birth" value="{{organizationContact.dateOfBirth | appDate}}"
+                                class="pb15"></view-label>
+                            <view-label label="Gender" class="pb15"
+                                [value]="organizationContact.genderDescription"></view-label>
+                            <view-label label="Status" class="pb15"
+                                [value]="organizationContact.statusDescription"></view-label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="box h100">
+                        <div class="box-header ">Contact Person Identification Details</div>
+                        <div class=" box-pad">
+                            <!-- <view-label label="National ID" [value]="organizationContact.nationalId"
+                                class="pb15"></view-label> -->
+                            <view-label label="Voter ID" [value]="organizationContact.voterId"
+                                class="pb15"></view-label>
+                            <view-label label="Driving License" [value]="organizationContact.drivingLicense"
+                                class="pb15"></view-label>
+                            <view-label label="PF No" [value]="organizationContact.pfNo" class="pb15"></view-label>
+                        </div>
+                    </div>
+                </div>
+            </row>
+        </div>
+        }
+        @if(contactView === false){
+
+        <div class="dialog-header">
+            <div class="dialog-title">
+                @if(organizationContact.organizationApplicationContactPersonId ===0){ Create}
+                @else{Edit}
+                Organization Contact</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(organizationContact.organizationApplicationContactPersonId ===0){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveOrganizationContact()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createOrganizationContact('clear')"></app-icon-button>
+                    }
+                    @else{
+                    <app-icon-button name="save" toolTip="Update" (click)="saveOrganizationContact()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openOrgContact(organizationContact.organizationApplicationContactPersonId,'refresh')"></app-icon-button>
+                    }
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #contactF="ngForm">
+                        <row>
+                            <div class="col-md-6">
+                                <div class="box h100">
+                                    <div class="box-header ">Contact Person Details</div>
+                                    <div class=" box-pad">
+                                        <app-input-control label="Contact Person Name"
+                                            [(ngModel)]="organizationContact.contactPersonName" name="contactPersonName"
+                                            [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                        <app-input-control label="Contact No" type="number"
+                                            [(ngModel)]="organizationContact.contactNo" name="contactNo" [minLength]="5"
+                                            [maxLength]="15" [required]="true"
+                                            [errorTrue]="errorTrue"></app-input-control>
+                                        <app-input-control label="Email ID" type="email"
+                                            [(ngModel)]="organizationContact.emailId" name="emailId" [email]="true"
+                                            [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                        <app-input-control label="Designation"
+                                            [(ngModel)]="organizationContact.designation" name="designation"
+                                            [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                        <app-input-control label="Date Of Birth" type="date" [isAdult]="true"
+                                            [(ngModel)]="organizationContact.dateOfBirth" name="dateOfBirth"
+                                            [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                        <app-input-control label="Gender" type="select"
+                                            [(ngModel)]="organizationContact.genderValue" name="genderValue"
+                                            [items]="initialData.DDLValues.DDLGender" key="constant"
+                                            keyName="description" [required]="true" [errorTrue]="errorTrue"
+                                            defaultOption="--Select--"></app-input-control>
+                                        <app-input-control label="Status" type="select"
+                                            [items]="initialData.DDLValues.Status"
+                                            [(ngModel)]="organizationContact.statusValue" name="statusValue"
+                                            key="constant" keyName="description" [required]="true"
+                                            [errorTrue]="errorTrue" defaultOption="--Select--"></app-input-control>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box h100">
+                                    <div class="box-header ">Contact Person Identification Details</div>
+                                    <div class=" box-pad">
+                                        <!-- <app-input-control label="National ID"
+                                            [(ngModel)]="organizationContact.nationalId" name="nationalId"
+                                            [errorTrue]="organizationContact.voterId === '' && organizationContact.drivingLicense ==='' && organizationContact.pfNo==='' && errorTrue"
+                                            [required]="organizationContact.voterId === '' && organizationContact.drivingLicense ==='' && organizationContact.pfNo===''"></app-input-control> -->
+                                        <app-input-control label="Voter ID" [(ngModel)]="organizationContact.voterId"
+                                            name="voterId"
+                                            [errorTrue]="organizationContact.drivingLicense ==='' && organizationContact.pfNo==='' && errorTrue"
+                                            [required]="organizationContact.drivingLicense ==='' && organizationContact.pfNo===''"></app-input-control>
+                                        <app-input-control label="Driving License"
+                                            [(ngModel)]="organizationContact.drivingLicense" name="drivingLicense"
+                                            [errorTrue]="organizationContact.voterId ==='' && organizationContact.pfNo==='' && errorTrue"
+                                            [required]="organizationContact.voterId ==='' && organizationContact.pfNo===''"></app-input-control>
+                                        <app-input-control label="PF No" [(ngModel)]="organizationContact.pfNo"
+                                            name="pfNo"
+                                            [errorTrue]="organizationContact.voterId ==='' && organizationContact.drivingLicense==='' && errorTrue"
+                                            [required]="organizationContact.voterId ==='' && organizationContact.drivingLicense===''"></app-input-control>
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+        }
+
+
+
+
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/will.svg"></ion-icon>
+                <div class="screen-text">Organization Change </div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+
+<ng-template #organizationApplicationInfo>
+    <div class class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Edit Organization Change in Detail</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(this.organizationApplication.statusValue !=='APRVD'){
+                    <app-icon-button name="save" toolTip="Update" (click)="saveOrganization()"></app-icon-button>
+                    }
+                    <app-icon-button name="refresh" toolTip="Refresh" (click)="openOrganization()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-4"><view-label label="Application Ref No"
+                                value="{{organizationApplication.applicationRefNo}}"></view-label></div>
+                        <div class="col-md-4"><view-label label="Application Type"
+                                value="{{organizationApplication.applicationTypeDescription}}"></view-label></div>
+                        <div class="col-md-4"><view-label label="Application Status"
+                                value="{{organizationApplication.statusDescription}}"></view-label></div>
+                    </row>
+                    <div class="mb20"></div>
+                    <form #organization="ngForm">
+                        <row>
+                            <div class="col-md-6">
+                                <div class="box h100">
+                                    <div class="box-header ">Organization Details</div>
+                                    <div class=" box-pad">
+                                        <app-input-control label="Organization Name
+                                        " [errorTrue]="errorTrue" [required]="true"
+                                            [(ngModel)]="organizationApplication.organizationName"
+                                            name="organizationName"></app-input-control>
+                                        <app-input-control label="Organization Type" type="select"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            [(ngModel)]="organizationApplication.organizationTypeValue"
+                                            name="organizationTypeValue"
+                                            [items]="initialData.DDLValues.OrganizationType" key="constant"
+                                            keyName="description"></app-input-control>
+                                        <app-input-control label="Email ID" type="email" [errorTrue]="errorTrue"
+                                            [required]="true" [email]="true"
+                                            [(ngModel)]="organizationApplication.emailId"
+                                            name="emailId"></app-input-control>
+                                        <app-input-control label="Contact No" type="number" [errorTrue]="errorTrue"
+                                            [required]="true" [minLength]="5" [maxLength]="10"
+                                            [(ngModel)]="organizationApplication.contactNo"
+                                            name="contactNo"></app-input-control>
+                                        <app-input-control label="Website" type="special" [(ngModel)]="organizationApplication.website"
+                                            name="website"></app-input-control>
+                                        <app-input-control label="Effective Date" type="date" [errorTrue]="errorTrue"
+                                            [required]="true" [(ngModel)]="organizationApplication.effectiveDate"
+                                            name="effectiveDate"></app-input-control>
+                                        <app-input-control label="Organization Status" [errorTrue]="errorTrue"
+                                            [required]="true" [(ngModel)]="organizationApplication.orgStatusValue"
+                                            name="orgStatusValue" [items]="initialData.DDLValues.DDLStatus"
+                                            key="constant" keyName="description" type="select"></app-input-control>
+
+                                        <!-- <app-input-control label="Branch" type="select" [errorTrue]="errorTrue"
+                                            [required]="true" [(ngModel)]="organizationApplication.branchId" name="branchId" [items]="appService.branchDDL"  valueType="int" key="id" keyName="description" ></app-input-control> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box h100">
+                                    <div class="box-header ">Address Details</div>
+                                    <div class=" box-pad">
+                                        <row>
+                                            <app-address-edit type="bank"
+                                                [ientAddress]="organizationApplication.ipermanentAddress"
+                                                [errorTrue]="errorTrue" type="residential"></app-address-edit>
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+                    </form>
+
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #Template>
+    <div class="ab bgc">
+        <div class="rel">
+            <div class="p-fix d-flex">
+                <div class="download-button">
+                    <button color="primary" (click)="downloadImageFile()">
+                        Download
+                    </button>
+                </div>
+                <div class="close-button">
+                    <button color="danger" (click)="dialog.closeDialog()">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+            <div class="d-flex align-items-center h100 justify-content-center w100">
+                <div class="d-flex align-items-center h100 justify-content-center w100 relative">
+                    <div class="ab">
+                        <div class="rel">
+                            <div class="dis-none wcheck active">
+                                <img [src]="filePath" alt="PreviewImages">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon src="assets/icons/human-icon.svg"></ion-icon>Organization Application >
+                Detail >
+                Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveNotes()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createOrganizationNotes('clear')"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <form #notesForm="ngForm">
+                    <row>
+                        <div class="col-md-6 mb26"> <app-input-control type="select" label="Status" [items]="notesDDl"
+                                key="constant" keyName="description" [(ngModel)]="notes.statusValue" name="statusValue"
+                                defaultOption="--Select--" [errorTrue]="errorTrue"
+                                [required]="true"></app-input-control></div>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="notes.content" [maxLength]="250" name="notes" [required]="true"
+                                label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

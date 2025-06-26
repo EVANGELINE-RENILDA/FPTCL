@@ -1,0 +1,109 @@
+<div class="dialog-container" appAccess="ITCSC" [parentId]="pageId">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        @if(!!this.dialogData.val){ Edit Category }@else { Add Category }
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if (ItemCategory.invCategoryId === 0) {
+          <app-icon-button
+            name="save"
+            toolTip="Save"
+            appButtonAccess="SAVBT"
+            (click)="saveInvCategoryDetails()"
+          ></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            appButtonAccess="CLEBT"
+            (click)="onClear()"
+          ></app-icon-button>
+          }@else{
+          <app-icon-button
+            name="save"
+            toolTip="Update"
+            appButtonAccess="UPDBT"
+            (click)="saveInvCategoryDetails()"
+          ></app-icon-button>
+          <app-icon-button
+            name="refresh"
+            toolTip="Refresh"
+            appButtonAccess="REFBT"
+            (click)="refreshCategoryDetails(ItemCategory.invCategoryId)"
+          ></app-icon-button>
+          }
+          <app-icon-button
+            name="close"
+            (click)="dialog.closeDialog()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row>
+              <div class="col-md-6">
+                <view-label
+                  label="Category Code"
+                  value="{{ ItemCategory.categoryCode }}"
+                ></view-label>
+              </div>
+              <div class="col-md-6">
+                <app-input-control
+                  type="text"
+                  label="Category Name"
+                  placeholder="Enter Category Name"
+                  [(ngModel)]="ItemCategory.categoryName"
+                  name="categoryName"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                ></app-input-control>
+              </div>
+              <div class="col-md-6">
+                <app-input-control
+                  type="text"
+                  label="Category Prefix "
+                  placeholder="Enter Category Prefix"
+                  [(ngModel)]="ItemCategory.categoryPrefix"
+                  name="categoryPrefix"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                  [maxLength]="5"
+                ></app-input-control>
+              </div>
+              <div class="col-md-6">
+                <app-input-control
+                  type="select"
+                  label="Status "
+                  placeholder="Select Status"
+                  [(ngModel)]="ItemCategory.statusValue"
+                  name="statusValue"
+                  [items]="initialData.DDLValues.configGroupStatus"
+                  key="constant"
+                  keyName="description"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                ></app-input-control>
+              </div>
+
+              <div class="col-md-12">
+                <app-input-control
+                  type="textarea"
+                  className="notes"
+                  label="Short Description"
+                  placeholder="Enter Lead Description"
+                  [(ngModel)]="ItemCategory.shortDescription"
+                  name="shortDescription"
+                  [maxLength]="250"
+                ></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</div>

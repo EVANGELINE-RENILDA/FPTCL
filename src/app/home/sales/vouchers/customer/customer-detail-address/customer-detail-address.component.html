@@ -1,0 +1,117 @@
+<div class="v-flex h100">
+    <div>
+        <div class="end p10">
+            <app-icon-button name="add" toolTip="Add" (click)="createNewAddress(0)"></app-icon-button>
+        </div>
+    </div>
+    <div class="h100">
+        <app-table class="h100" [hasHeader]="false" [columns]="addressColumn" [columnsName]="addressColumnName"
+            [dataSource]="parentData.lstAddress" [hideSelectAll]="true" [hasIndex]="true">
+            <ng-template cellDef="add" let-element>
+                <app-icon-button name="open" (click)="createNewAddress(element.actAddressId)"></app-icon-button>
+            </ng-template>
+
+            <ng-template cellDef="address" let-element>
+                <div>
+                    {{element.addressLine1}},{{element.addressLine2}},{{element.addressLine3}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="type" let-element>
+                <div>
+                    {{ element.typedescription}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="dateTime" let-element>
+                <div>
+                    {{ element.effectiveDate | appDate}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="status" let-element>
+
+                <div class="status status-{{element.statusdescription}}">{{element.statusdescription}}</div>
+
+            </ng-template>
+
+        </app-table>
+    </div>
+</div>
+
+<ng-template #addressDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Sales >
+                Customer > Detail >
+                @if(newAddressEdit === true){
+
+                Add Address
+                }
+                @else {
+                Edit Address
+                }
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(newAddressEdit === true){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveSalesCustomerAddress()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="clearSalesCustomerAddress()"></app-icon-button>
+                    }
+                    @else {
+                    <app-icon-button name="save" toolTip="Update"
+                        (click)="saveSalesCustomerAddress()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openAddress(customerAddress.actAddressId,'refresh')"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #a="ngForm">
+                    <row>
+                        <div class="col-md-6"><app-input-control label="Line 1" [required]="true"
+                            type="special"  [(ngModel)]="customerAddress.addressLine1" name="addressLine1"
+                                [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Line 2"
+                            type="special"  [(ngModel)]="customerAddress.addressLine2" name="addressLine2"></app-input-control>
+                        </div>
+                        <div class="col-md-6">
+                            <app-input-control label="Line 3" [(ngModel)]="customerAddress.addressLine3"
+                            type="special"   name="addressLine3"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Email ID" type="email"
+                                [(ngModel)]="customerAddress.emailId" name="emailId" [required]="true"
+                                [errorTrue]="errorTrue" valueType="string" [email]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="City" [(ngModel)]="customerAddress.city"
+                                name="city" [required]="true" [errorTrue]="errorTrue"></app-input-control> </div>
+                        <div class="col-md-6"><app-input-control label="Country" type="select"
+                                [(ngModel)]="customerAddress.countryValue" name="countryValue"
+                                [items]="initialData.DDLValues.configcustCountry" key="constant" keyName="description"
+                                defaultOption="Select Country" [required]="true"
+                                [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Type" type="select" defaultOption="Select Type"
+                                [(ngModel)]="customerAddress.typeValue" name="typeValue"
+                                [items]="initialData.DDLValues.configcustAddressType" key="constant"
+                                keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-6"><app-input-control label="Status" type="select"
+                                [(ngModel)]="customerAddress.statusValue" name="statusvalue"
+                                [items]="initialData.DDLValues.configcustAddressStatus" key="constant"
+                                keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,123 @@
+<div class="v-flex h100">
+	<div class="search_text pl12px">
+	  <app-input-control
+		placeholder="Search By Any File Name"
+		type="text"
+		[(ngModel)]="filterFileName"
+		name="filterFileName"
+		[search]="true"
+	  ></app-input-control>
+	</div>
+	<div class="flex-1 relative mh100">
+	  <scroll>
+		<table class="app-table account-table">
+		  <thead class="app-table-head">
+			<tr class="app-table-header-row">
+			  <th class="app-table-header-cell text-center">#</th>
+			  <th class="app-table-header-cell">
+				<div class="header-cell-title">File Name</div>
+				<div class="header-cell-subtitle">
+				  Created By | Date | Time
+				</div>
+			  </th>
+			  <th class="app-table-header-cell">File Format</th>
+			  <th class="app-table-header-cell">Size</th>
+			  <th class="app-table-header-cell">
+				<div class="flex-center">
+				  <app-icon-button
+					name="add"
+					toolTip="Add New" (click)="createNewAttachment()"
+					
+				  >
+				  </app-icon-button>
+				</div>
+			  </th>
+			</tr>
+		  </thead>
+		  <tbody class="app-table-body">
+			@for (doc of parentData.plstentAttachments | filterAndSort :  filterFileName :  'attachmentFileName' : false; track doc;
+			let i = $index) {
+			<tr class="app-table-row">
+			  <td class="app-table-cell text-center">
+				{{ i + 1 }}
+			  </td>
+			  <td class="app-table-cell">
+				<div>
+				  {{ doc.attachmentFileName }}
+				</div>
+				<div class="table-cell-subtitle">
+				  {{ doc.modifiedByFullName }} |
+				  {{
+					doc.createdDate
+					  | appDate
+						
+				  }}
+				</div>
+			  </td>
+			  <td class="app-table-cell">
+				{{ doc.attachementType }}
+			  </td>
+			  <td class="app-table-cell">
+				{{ doc.attachmentSize }}
+			  </td>
+			  <td class="app-table-cell">
+				<div class="flex-center">
+				  <app-icon-button
+				  name="download"
+				  toolTip="Download"
+                  (click)="downloadAttachment(doc, 'down')"
+				></app-icon-button>
+              
+				<app-icon-button
+				name="doc-view"
+				toolTip="View"
+                (click)="downloadAttachment(doc, 'view')"
+				
+			  ></app-icon-button>
+			  <app-icon-button
+			  name="doc-delete"
+			  toolTip="Delete"  (click)="deleteAttachment(doc)"
+			></app-icon-button>
+
+				</div>
+			  </td>
+			</tr>
+			}
+		  </tbody>
+		</table>
+	  </scroll>
+	</div>
+  </div>
+
+  <ng-template #attachmentDialog>
+	<div class="dialog-container">
+	  <div class="dialog-header">
+		<div class="dialog-title">
+		  <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+		Receipt Note> Detail > Add Documents
+		</div>
+		<div class="slot-right">
+		  <div class="btn-group">
+			<app-icon-button
+			  name="close"
+			  toolTip="Close"
+			  (click)="dialog.closeDialog()"
+			></app-icon-button>
+		  </div>
+		</div>
+	  </div>
+	  <div class="dialog-content">
+		<div class="dialog-content-inner h100">
+		  <app-drop-zone
+			[multiple]="true"
+			[accept]="accept"
+			[fileType]="fileType"
+            (onUpload)="uploadAttachemnt($event)"
+			
+		  ></app-drop-zone>
+		</div>
+	  </div>
+	</div>
+  </ng-template>
+
+<app-documents #DocumentsComponent class="none"></app-documents>

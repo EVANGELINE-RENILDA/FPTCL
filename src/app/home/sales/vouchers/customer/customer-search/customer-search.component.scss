@@ -1,0 +1,29 @@
+ .dialog-header1 {
+    display: flex;
+    align-items: center;
+    padding: 19px 20px 9px;
+    position: relative;
+
+    &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: calc(100% - 40px);
+        left: 20px;
+        bottom: 1px;
+        height: 1px;
+        background-color: #DBE0E1;
+    }
+
+    .dialog-title {
+        font-weight: 700;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+
+        .dialog-header-icon {
+            padding-right: 5px;
+        }
+
+    }
+}

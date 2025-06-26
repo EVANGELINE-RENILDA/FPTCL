@@ -1,0 +1,205 @@
+<div class="v-flex h100 content-wrapper">
+  <div class="h100">
+    <app-table
+      [pagination]="pagination"
+      [columns]="columns"
+      [columnsName]="columnsName"
+      [dataSource]="tableData"
+      [hideSelectAll]="true"
+      [showPaginator]="true"
+      [hasHeader]="true"
+      (pageChanged)="pageChanged($event)"
+      [sortColumnsName]="sortColumnName"
+      (onSelect)="onSelect($event)"
+      columnID="customerId"
+    >
+      <ng-template cellHeaderDef="totalReceiptAmount">
+        <div class="header-cell-title amount-align">
+          Total Receipt Amount ({{ currency }})
+        </div>
+      </ng-template>
+      <ng-template cellDef="totalReceiptAmount" let-element>
+        <div class="amount-align">{{ element.totalReceiptAmount }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="openingAmount">
+        <div class="header-cell-title amount-align">
+          Opening Amount ({{ currency }})
+        </div>
+      </ng-template>
+      <ng-template cellDef="openingAmount" let-element>
+        <div class="amount-align">{{ element.openingAmount }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="closingAmount">
+        <div class="header-cell-title amount-align">
+          Closing Amount ({{ currency }})
+        </div>
+      </ng-template>
+      <ng-template cellDef="closingAmount" let-element>
+        <div class="amount-align">{{ element.closingAmount }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="computedAmount">
+        <div class="header-cell-title amount-align">
+          Computed Amount ({{ currency }})
+        </div>
+      </ng-template>
+      <ng-template cellDef="computedAmount" let-element>
+        <div class="amount-align">{{ element.computedAmount }}</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="mismatchAmount">
+        <div class="header-cell-title amount-align">
+          Mismatch Amount ({{ currency }})
+        </div>
+      </ng-template>
+      <ng-template cellDef="mismatchAmount" let-element>
+        <div class="amount-align">{{ element.mismatchAmount }}</div>
+      </ng-template>
+
+      <ng-template cellDef="status" let-element>
+        <accouts-status-table
+          [statusDescription]="element.depositBookstatus"
+        ></accouts-status-table>
+      </ng-template>
+
+      <ng-template cellDef="action" let-element>
+        <app-icon-button
+          name="open"
+          toolTip="Open"
+          (click)="reconciliationDetail(element.cashCounterDepositBookId)"
+        ></app-icon-button>
+      </ng-template>
+
+      <ng-template #slotLeft>
+        <app-search
+          maxHeight="270px"
+          #appSearch
+          [searchTemplate]="searchTemplate"
+        ></app-search>
+      </ng-template>
+    </app-table>
+  </div>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Reconciliation Book Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button
+            name="search"
+            toolTip="Search"
+            (click)="onSearch()"
+          ></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            (click)="clearDepositSearch()"
+          ></app-icon-button>
+          <app-icon-button
+            name="close"
+            (click)="dialog.closeAll()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm" (submit)="onSearch()">
+            <row>
+              <div class="col-md-4 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="text"
+                      label="Deposit Book No"
+                      [(ngModel)]="searchParams.depositBookNo"
+                      tabIndex="100"
+                      (keyup.enter)="onSearch()"
+                      name="depositBookNo"
+                    ></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="number"
+                      label=" Cash Counter No"
+                      [(ngModel)]="searchParams.cashCounterNo"
+                      tabIndex="100"
+                      (keyup.enter)="onSearch()"
+                      name="cashCounterNo"
+                    ></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-4 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="date"
+                      label="Effective Date From"
+                      [(ngModel)]="searchParams.idtmEffectiveDateFrom"
+                      tabIndex="100"
+                      (keyup.enter)="onSearch()"
+                      [maxDate]="searchParams.idtmEffectiveDateTo"
+                      name="dtmDocumentDateFrom"
+                    ></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="date"
+                      label="Effective Date To"
+                      [(ngModel)]="searchParams.idtmEffectiveDateTo"
+                      tabIndex="100"
+                      (keyup.enter)="onSearch()"
+                      name="idtmEffectiveDateTo"
+                      [minDate]="searchParams.idtmEffectiveDateFrom"
+                    ></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-4 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control
+                      type="select"
+                      label=" Status"
+                      tabIndex="100"
+                      (keyup.enter)="onSearch()"
+                      [(ngModel)]="searchParams.statusValue"
+                      name="statusValue"
+                      defaultOption="--Select--"
+                      [items]="initialData.DDLValues.DDLDepositbookStatus"
+                      key="constant"
+                      keyName="description"
+                    ></app-input-control>
+                  </div>
+                </row>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li
+        class="screen-name link"
+        [routerLink]="['/home/trustee/finance-menus']"
+      >
+        <ion-icon name="person-outline"></ion-icon>
+        <div class="screen-text">Trust</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Reconciliation Book</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

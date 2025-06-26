@@ -1,0 +1,149 @@
+
+
+<div class="content-wrapper" [appAccess]="appAccessForLead" [parentId]="pageId">
+  
+
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"columnID="leadId"
+        [dataSource]="tableData" (pageChanged)="pageChanged($event)" (onSelect)="onSelect($event)"
+        [hideSelectAll]="true" >
+        <ng-template #slotRight>
+            <app-icon-button name="add" toolTip="Add New" (click)="navigateToDetail()"  
+                [appButtonAccess]="btnAccessForAdd"></app-icon-button>
+        </ng-template>
+
+      
+     
+        <ng-template cellHeaderDef="balance" >
+            Opening Balance
+         <div class="d-flex">
+            <div>
+                qty
+              </div>
+              <div>
+                value
+              </div>
+         </div>
+        </ng-template>
+        <ng-template cellHeaderDef="Inwards" >
+            Inwards	
+         <div class="d-flex">
+            <div>
+                qty
+              </div>
+              <div>
+                value
+              </div>
+         </div>
+        </ng-template>
+        <ng-template cellHeaderDef="Outwards" >
+            Outwards
+         <div class="d-flex">
+            <div>
+                qty
+              </div>
+              <div>
+                value
+              </div>
+         </div>
+        </ng-template>
+        <ng-template cellHeaderDef="Closing Balance" >
+            Closing Balance
+         <div class="d-flex">
+            <div>
+                qty
+              </div>
+              <div>
+                value
+              </div>
+         </div>
+        </ng-template>
+       
+
+
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"></app-icon-button>
+        </ng-template>
+      
+       
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+        </ng-template>
+        
+
+       
+        
+       
+    </app-table>
+   
+   
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Item Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" 
+                        appButtonAccess="CrmCustLeaAppSearchBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" 
+                        appButtonAccess="CrmCustLeadAppClearBtn"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" >
+                        <row>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="
+                                Category" ></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Type Name" ></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Sub-Type Name"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Item Name"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Fiscal Year"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Branch"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="date" label="From Date"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="date" label="To Date
+                                "></app-input-control>
+                            </div>
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+
+
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/accordian/lead.svg"></ion-icon>
+                <div class="screen-text">Stock Summary</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+

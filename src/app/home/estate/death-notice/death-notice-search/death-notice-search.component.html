@@ -1,0 +1,790 @@
+<div class="content-wrapper">
+  <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+    (pageChanged)="pageChanged($event)" columnID="deathNoticeId" (onSelect)="onSelect($event)">
+    <ng-template cellDef="noticeDate" let-element>
+      {{ element.noticeDate | appDate }}
+    </ng-template>
+    <ng-template cellDef="dateOfDeath" let-element>
+      {{ element.dateOfDeath | appDate }}
+    </ng-template>
+    <ng-template cellDef="action" let-element>
+      <app-icon-button name="open" (click)="navigateToDetail(element.deathNoticeId)" toolTip="Open"></app-icon-button>
+    </ng-template>
+    <ng-template cellHeaderDef="action">
+      <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+    </ng-template>
+    <ng-template #slotLeft>
+      <app-search #appSearch maxHeight="300px"  [searchTemplate]="searchTemplate"></app-search>
+    </ng-template>
+    <ng-template #slotRight>
+      <app-icon-button name="add" toolTip="Add New" (click)="editApplication()">
+      </app-icon-button>
+    </ng-template>
+  </app-table>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Death Notice Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="searchDeathNotice()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="createDeathNoticeSearch('clear')"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <row>
+            <div class="col-md-4">
+              <app-input-control label="Notice Ref No" [maxLength]="20" (onEnter)="onSearch()"
+                [(ngModel)]="searchParams.deathNoticeRefNo" name="deathNoticeRefNo"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control label="Person Name" type="select" (onEnter)="onSearch()"
+                [items]="initialData.DDLValues.DDLCustomer" key="id" valueType="int" (onEnter)="onSearch()"
+                keyName="fullName" defaultOption="All" [(ngModel)]="searchParams.personId"
+                name="personId"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control label="Date Of Death (From)" type="date" (onEnter)="onSearch()" [maxDate]="currentDate"
+                [(ngModel)]="searchParams.dateOfDeathFrom" [maxDate]="searchParams.dateOfDeathTo"
+                name="dateOfDeathFrom"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control label="Date Of Death (To)" type="date" [maxDate]="currentDate" (onEnter)="onSearch()"
+                [(ngModel)]="searchParams.dateOfDeathTo" [minDate]="searchParams.dateOfDeathFrom"
+                name="dateOfDeathTo"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="select" [items]="initialData.DDLValues.DDLPaper" key="constant"
+                keyName="description" defaultOption="All" label="Paper" (onEnter)="onSearch()"
+                [(ngModel)]="searchParams.paperValue" name="paperValue"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control label="Notice Date(From)" type="date" (onEnter)="onSearch()"
+                [maxDate]="searchParams.noticeDateTo" [(ngModel)]="searchParams.noticeDateFrom"
+                name="noticeDateFrom"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control label="Notice Date(To)" type="date" (onEnter)="onSearch()"
+                [minDate]="searchParams.noticeDateFrom" [(ngModel)]="searchParams.noticeDateTo"
+                name="noticeDateTo"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control label="Assigned Officer" type="select" (onEnter)="onSearch()" defaultOption="All"
+                [(ngModel)]="searchParams.assignedOfficer" name="assignedOfficer"
+                [items]="initialData.DDLValues.Assigned_Officer_DDl" key="constant" (onEnter)="onSearch()"
+                keyName="description"></app-input-control>
+            </div>
+            <div class="col-md-4">
+              <app-input-control type="select" [items]="initialData.DDLValues.DDLDeathNoticeStatus" key="constant"
+                (onEnter)="onSearch()" keyName="description" defaultOption="All" label="Status" type="select"
+                [(ngModel)]="searchParams.statusValue" name="statusValue"></app-input-control>
+            </div>
+          </row>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+<ng-template #deathDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        @if(deathNoticeData.deathNoticeId=== 0){Create New} @else{ Edit } Death
+        Notice
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(editData === false){
+          <app-icon-button name="edit" toolTip="Edit" (click)="editValues()"></app-icon-button>
+          } @if(editData === true){ @if(deathNoticeData.deathNoticeId=== 0){
+          <app-icon-button name="save" toolTip="Save" (click)="saveApplication()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearDeathNotice()"></app-icon-button>
+          } }
+          <app-icon-button name="close" toolTip="Close" (click)="closeAllDialogs()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content py10">
+      <div class="dialog-content-inner">
+        <scroll>
+          @if(data.showErrorMessage){
+          <div class="error-panel">
+            <app-error-message></app-error-message>
+          </div>
+          }
+
+          <form #b="ngForm" class="dialog-content-inner">
+            <row>
+              <div class="pb10"></div>
+              @if(editData === true && deathNoticeData.deathNoticeId === 0){
+              <div class="d-flex w100 align-items-center">
+                <div class="col-md-3 pl10">
+                  <app-input-control label="Customer" [items]="initialData.DDLValues.DDLCustomer" key="id" type="select"
+                    [(ngModel)]="deathNoticeData.personId" name="customerId" valueType="int" defaultOption="--Select--"
+                    (onSelect)="openCustomer($event)" keyName="fullName"></app-input-control>
+                </div>
+                <div class="col-md-1">
+                  <app-icon-button name="search" toolTip="Search" (click)="customerSearch()"></app-icon-button>
+                </div>
+              </div>
+              } @if(editData === false){
+              <row>
+                <div class="col-md-3">
+                  <div class="box h100">
+                    <div class="box-header">Death Notice Information</div>
+                    <div class="box-pad">
+                      <!-- <view-label class="pb10" label=" CRM No"
+                                      [value]="deathNoticeData.ientCustomer.customerId"></view-label> -->
+
+                      <!-- <view-label class="pb10" label="Client Name"
+                                  value="{{trustApplicationDeathNotice}}"></view-label> -->
+                      <!-- <div class="bottom-border"></div> -->
+                      <div class="pb10"></div>
+                      <view-label class="pb10" label="First Name"
+                        [value]="deathNoticeData.ientCustomer.firstName"></view-label>
+                      <view-label class="pb10" label="Middle Name"
+                        [value]="deathNoticeData.ientCustomer.middleName"></view-label>
+                      <view-label class="pb10" label="Last Name"
+                        [value]="deathNoticeData.ientCustomer.lastName"></view-label>
+                      <div class="bottom-border"></div>
+                      <div class="pb10"></div>
+                      <view-label class="pb10" label="Death Notice Ref No"
+                        [value]="deathNoticeData.deathNoticeRefNo"></view-label>
+                      <div class="bottom-border"></div>
+                      <div class="pb10"></div>
+                      <view-label class="pb10" label="Date Of Birth" [value]="
+                          deathNoticeData.ientCustomer.dateOfBirth | appDate
+                        "></view-label>
+                      <view-label class="pb10" label="Date Of Death" [value]="
+                          deathNoticeData.ientCustomer.dateOfDeath | appDate
+                        "></view-label>
+                      <view-label class="pb10" label="Gender"
+                        [value]="deathNoticeData.ientCustomer.genderDescription"></view-label>
+                      <view-label class="pb10" label="Nationality" [value]="
+                          deathNoticeData.ientCustomer.nationalityDescription
+                        "></view-label>
+                      <div class="bottom-border"></div>
+                      <div class="pb10"></div>
+                      <view-label class="pb10" label="Email ID"
+                        [value]="deathNoticeData.ientCustomer.emailId"></view-label>
+                      <view-label class="pb10" label="Contact No"
+                        [value]="deathNoticeData.ientCustomer.contactNo"></view-label>
+                      <view-label class="pb10" label="Alternate Contact No" [value]="
+                          deathNoticeData.ientCustomer.alternateContactNo
+                        "></view-label>
+
+                      <div class="bottom-border"></div>
+                      <div class="pb10"></div>
+                      <view-label class="pb10" label="Father Name"
+                        [value]="deathNoticeData.ientCustomer.fatherName"></view-label>
+                      <view-label class="pb10" label="Mother Name"
+                        [value]="deathNoticeData.ientCustomer.motherName"></view-label>
+                      <view-label class="pb10" label="Guardian Name"
+                        [value]="deathNoticeData.ientCustomer.gaurdianName"></view-label>
+                      <!-- <view-label class="pb10" label="Home Contact" [value]="deathNoticeData.ientCustomer.contactNo"></view-label>
+                                    <view-label class="pb10" label="Office Contact" [value]="deathNoticeData.ientCustomer."></view-label>
+                                    <view-label class="pb10" label="Email" [value]="deathNoticeData.ientCustomer."></view-label> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="box h100">
+                    <div class="box-header">Address Details</div>
+                    <div class="box-pad">
+                      <view-label label="Line 1" class="pb10" [value]="
+                          deathNoticeData.ientCustomer.iPermanentaddress.line1
+                        "></view-label>
+                      <view-label label="Line 2" class="pb10" [value]="
+                          deathNoticeData.ientCustomer.iPermanentaddress.line2
+                        "></view-label>
+                      <view-label label="Line 3" class="pb10" [value]="
+                          deathNoticeData.ientCustomer.iPermanentaddress.line3
+                        "></view-label>
+                      <view-label label="Province" class="pb10" [value]="
+                          deathNoticeData.ientCustomer.iPermanentaddress
+                            .provinceDescription
+                        "></view-label>
+                      <view-label label="Island" class="pb10" [value]="
+                          deathNoticeData.ientCustomer.iPermanentaddress
+                            .islandDescription
+                        "></view-label>
+                      <view-label label="Tikina" class="pb10" [value]="
+                          deathNoticeData.ientCustomer.iPermanentaddress
+                            .tikinaDescription
+                        "></view-label>
+                      <view-label label="Village" class="pb10" [value]="
+                          deathNoticeData.ientCustomer.iPermanentaddress
+                            .village
+                        "></view-label>
+                      <view-label label="Po Box No" class="pb10" [value]="
+                          deathNoticeData.ientCustomer.iPermanentaddress.poBoxNo
+                        "></view-label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="box h100">
+                    <div class="box-header">KYC Details</div>
+                    <div class="box-pad">
+                      <view-label label="FNPF No" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.fnpfNo"></view-label>
+                      <view-label label="Driving License No" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.driverLicenseNo"></view-label>
+                      <view-label label="Voter ID" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.voterId"></view-label>
+                      <view-label label="National ID" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.nationalId"></view-label>
+                      <view-label label="TIN" class="pb10" [value]="deathNoticeData.ientCustomer.tin"></view-label>
+                      <view-label label="Passport No" class="pb10" [value]="deathNoticeData.ientCustomer.passportNo">
+                      </view-label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="box h100">
+                    <div class="box-header">Social Platform Details</div>
+                    <div class="box-pad">
+                      <view-label label="Facebook ID" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.facebookId"></view-label>
+                      <view-label label="LinkedIn ID" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.linkedinId"></view-label>
+                      <view-label label="Whatsapp" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.whatsappNumber"></view-label>
+                      <view-label label="Viber" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.viberNumber"></view-label>
+                      <view-label label="Skype ID" class="pb10"
+                        [value]="deathNoticeData.ientCustomer.skypeId"></view-label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 p10">
+                  <div class="box h100">
+                    <div class="box-header">Comments</div>
+                    <div class="box-pad">
+                      <app-input-control type="textarea" className="notes" [(ngModel)]="deathNoticeData.comments"
+                        name="comments" label="Comments" [maxLength]="250">
+                      </app-input-control>
+                    </div>
+                  </div>
+                </div>
+              </row>
+              } @if(editData === true){
+              <row>
+                <div class="col-md-3">
+                  <div class="box h100">
+                    <div class="box-header">Death Notice Information</div>
+                    <div class="box-pad">
+                      <app-input-control class="pb10" label="First Name" name="firstName" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.firstName" [errorTrue]="errorTrue"
+                        [required]="true" [maxLength]="250"></app-input-control>
+                      <app-input-control class="pb10" label="Middle Name" name="middleName" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.middleName" [maxLength]="250"></app-input-control>
+                      <app-input-control class="pb10" label="Last Name" name="lastName" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.lastName" [errorTrue]="errorTrue" [required]="true"
+                        [maxLength]="250"></app-input-control>
+                      <div class="bottom-border"></div>
+                      <div class="pb10"></div>
+                      <!-- <app-input-control
+                              class="pb10"
+                              label="Death Certificate Ref No"
+                              name="deathNoticeRefNo"
+
+                              [(ngModel)]="deathNoticeData.deathNoticeRefNo"
+                              [errorTrue]="errorTrue"
+                              [required]="true"
+                              [maxLength]="250"
+                            ></app-input-control> -->
+                      <app-input-control type="date" label="Date of Death" [(ngModel)]="deathNoticeData.dateOfDeath"
+                        name="dateOfDeath" [maxDate]="currentDate" class="mb20" [errorTrue]="errorTrue"
+                        [required]="true"></app-input-control>
+                      <app-input-control type="text" label="Cause of Death" [(ngModel)]="deathNoticeData.causeOfDeath"
+                        name="causeOfDeath" class="mb20" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+
+                      <app-input-control type="date" label="Notice Date" [(ngModel)]="deathNoticeData.noticeDate"
+                        name="noticeDate" class="mb20" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+
+                      <app-input-control type="select" label="Paper" [(ngModel)]="deathNoticeData.paperValue"
+                        name="paperValue" defaultOption="--Select--" [items]="initialData.DDLValues.DDLPaper"
+                        key="constant" keyName="description" [errorTrue]="errorTrue"
+                        [required]="true"></app-input-control>
+                      <app-input-control type="select" label="Branch" [(ngModel)]="deathNoticeData.branchValue"
+                        name="branchValue" defaultOption="--Select--" [items]="initialData.DDLValues.DDLBranch"
+                        key="constant" keyName="description" [errorTrue]="errorTrue"
+                        [required]="true"></app-input-control>
+                      <div class="bottom-border"></div>
+                      <div class="pb10"></div>
+                      <app-input-control class="pb10" label="Date Of Birth" name="dateOfBirth" type="date" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.dateOfBirth" [errorTrue]="errorTrue"
+                        [required]="true" [maxDate]="currentDate"></app-input-control>
+
+                      <app-input-control class="pb10" label="Gender" name="genderValue" [errorTrue]="errorTrue"
+                        [(ngModel)]="deathNoticeData.ientCustomer.genderValue" [required]="true" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [items]="initialData.DDLValues.DDLGender" key="constant" keyName="description" type="select"
+                        defaultOption="--Select--"></app-input-control>
+                      <app-input-control class="pb10" label="Nationality" name="nationalityValue" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="
+                          deathNoticeData.ientCustomer.nationalityValue
+                        " [errorTrue]="errorTrue" [required]="true" [items]="initialData.DDLValues.DDLNationality"
+                        key="constant" keyName="description" type="select"
+                        defaultOption="--Select--"></app-input-control>
+                      <div class="bottom-border"></div>
+                      <div class="pb10"></div>
+                      <app-input-control class="pb10" label="Email ID" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.emailId" name="emailId"
+                        type="email"></app-input-control>
+                      <app-input-control class="pb10" label="Contact No" [errorTrue]="errorTrue" [required]="true"
+                        [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.contactNo" [minLength]="5" [maxLength]="10"
+                        name="contactNo" type="number"></app-input-control>
+                      <app-input-control class="pb10" label="Alternate Contact No" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [minLength]="5" [maxLength]="15" [(ngModel)]="
+                          deathNoticeData.ientCustomer.alternateContactNo
+                        " name="alternateContactNo" type="number"></app-input-control>
+                      <div class="bottom-border"></div>
+                      <div class="pb10"></div>
+                      <app-input-control class="pb10" label="Father Name" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.fatherName" name="fatherName"></app-input-control>
+                      <app-input-control class="pb10" label="Mother Name" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.motherName" name="motherName"></app-input-control>
+                      <app-input-control class="pb10" label="Guardian Name" [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " [(ngModel)]="deathNoticeData.ientCustomer.gaurdianName"
+                        name="gaurdianName"></app-input-control>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="box h100">
+                    <div class="box-header">Address Details</div>
+                    <div class="box-pad">
+                      <app-address-edit [errorTrue]="errorTrue" [ientAddress]="
+                          deathNoticeData.ientCustomer.iPermanentaddress
+                        " [btnClicked]="
+                          deathNoticeData.ientCustomer.customerId !== 0
+                        " type="residential"></app-address-edit>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="box h100">
+                    <div class="box-header">
+                      KYC Details <span>(Any one field is Mandatory)</span>
+                    </div>
+                    <div class="box-pad">
+                      <row>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="FNPF No" [btnClicked]="
+                              deathNoticeData.ientCustomer.customerId !== 0
+                            " [errorTrue]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === '' &&
+                              errorTrue
+                            " [required]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === ''
+                            " [(ngModel)]="deathNoticeData.ientCustomer.fnpfNo" [maxLength]="20"
+                            name="fnpfNo "></app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Driving License No" [btnClicked]="
+                              deathNoticeData.ientCustomer.customerId !== 0
+                            " [(ngModel)]="
+                              deathNoticeData.ientCustomer.driverLicenseNo
+                            " name="driverLicenseNo " [maxLength]="20" [errorTrue]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === '' &&
+                              errorTrue
+                            " [required]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === ''
+                            "></app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Voter ID" [btnClicked]="
+                              deathNoticeData.ientCustomer.customerId !== 0
+                            " [(ngModel)]="deathNoticeData.ientCustomer.voterId" name="voterId " [maxLength]="20"
+                            [errorTrue]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === '' &&
+                              errorTrue
+                            " [required]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === ''
+                            "></app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="National ID" [btnClicked]="
+                              deathNoticeData.ientCustomer.customerId !== 0
+                            " [(ngModel)]="
+                              deathNoticeData.ientCustomer.nationalId
+                            " name="nationalId " [maxLength]="20" [errorTrue]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === '' &&
+                              errorTrue
+                            " [required]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === ''
+                            "></app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="TIN" [btnClicked]="
+                              deathNoticeData.ientCustomer.customerId !== 0
+                            " [(ngModel)]="deathNoticeData.ientCustomer.tin" name="tin " [maxLength]="20" [errorTrue]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === '' &&
+                              errorTrue
+                            " [required]="
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === ''
+                            "></app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Passport No" [btnClicked]="
+                              deathNoticeData.ientCustomer.customerId !== 0
+                            " [(ngModel)]="
+                              deathNoticeData.ientCustomer.passportNo
+                            " name="passportNo " [maxLength]="20" [errorTrue]="
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === '' &&
+                              errorTrue
+                            " [required]="
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.birthRegNo === ''
+                            "></app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Birth Reg No" [btnClicked]="
+                              deathNoticeData.ientCustomer.customerId !== 0
+                            " [(ngModel)]="
+                              deathNoticeData.ientCustomer.birthRegNo
+                            " name="birthRegNo  " [maxLength]="20" [errorTrue]="
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.passportNo === '' &&
+                              errorTrue
+                            " [required]="
+                              deathNoticeData.ientCustomer?.tin === '' &&
+                              deathNoticeData.ientCustomer?.nationalId === '' &&
+                              deathNoticeData.ientCustomer?.driverLicenseNo ===
+                                '' &&
+                              deathNoticeData.ientCustomer?.voterId === '' &&
+                              deathNoticeData.ientCustomer?.fnpfNo === '' &&
+                              deathNoticeData.ientCustomer?.passportNo === ''
+                            " />
+                        </div>
+                      </row>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="box h100">
+                    <div class="box-header">Social Platform Details</div>
+                    <div class="box-pad">
+                      <row>
+                        <app-input-control label="Facebook ID" [btnClicked]="
+                            deathNoticeData.ientCustomer.customerId !== 0
+                          " [(ngModel)]="deathNoticeData.ientCustomer.facebookId" name="facebookId"
+                          class="pb10 col-md-12"></app-input-control>
+                        <app-input-control label="LinkedIn ID" [btnClicked]="
+                            deathNoticeData.ientCustomer.customerId !== 0
+                          " [(ngModel)]="deathNoticeData.ientCustomer.linkedinId" name="linkedinId"
+                          class="pb10 col-md-12"></app-input-control>
+                        <app-input-control label="Whatsapp" [btnClicked]="
+                            deathNoticeData.ientCustomer.customerId !== 0
+                          " [(ngModel)]="
+                            deathNoticeData.ientCustomer.whatsappNumber
+                          " name="whatsappNumber" class="pb10 col-md-12"></app-input-control>
+                        <app-input-control label="Viber" [btnClicked]="
+                            deathNoticeData.ientCustomer.customerId !== 0
+                          " [(ngModel)]="deathNoticeData.ientCustomer.viberNumber" name="viberNumber"
+                          class="pb10 col-md-12"></app-input-control>
+                        <app-input-control label="Skype ID" [btnClicked]="
+                            deathNoticeData.ientCustomer.customerId !== 0
+                          " [(ngModel)]="deathNoticeData.ientCustomer.skypeId" name="skypeId"
+                          class="pb10 col-md-12"></app-input-control>
+                      </row>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 p10">
+                  <div class="box h100">
+                    <div class="box-header">Comments</div>
+                    <div class="box-pad">
+                      <app-input-control type="textarea" className="notes" [(ngModel)]="deathNoticeData.comments"
+                        name="comments" label="Comments" [maxLength]="250">
+                      </app-input-control>
+                    </div>
+                  </div>
+                </div>
+              </row>
+
+              }
+            </row>
+          </form>
+        </scroll>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #customerSearchDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        Customer
+        <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>List
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" (click)="dialogClose()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="mb20"></div>
+    <div class="dialog-content">
+      <div class="content-wrapper">
+        <app-table [pagination]="pagination" [columns]="customerColumns" [columnsName]="customerColumnsName"
+          (pageChanged)="pageChanged($event)" [dataSource]="customertableData" columnID="customerId"
+          [hideSelectAll]="true">
+          <ng-template cellDef="customerRefNo" let-element>
+            <div (click)="openCustomerInSearch(element.customerId)" class="pointer text-underline">
+              {{ element.customerRefNo }}
+            </div>
+          </ng-template>
+          <ng-template cellDef="statusdescription" let-element>
+            <div class="status status-{{ element.statusValue }}">
+              {{ element.statusdescription }}
+            </div>
+          </ng-template>
+          <ng-template cellDef="customerName" let-element>
+            @if(element.customerName.length>25){
+            <div class="ellipse-text" matTooltip="{{ element.customerName }}">
+              {{ element.customerName }}
+            </div>
+            } @else{
+            <div>{{ element.customerName }}</div>
+            }
+          </ng-template>
+          <ng-template cellHeaderDef="dateOfBrith">
+            <div class="w100px">DOB</div>
+          </ng-template>
+          <ng-template cellDef="dateOfBrith" let-element>
+            <div class="w100px">{{ element.dateOfBrith | appDate }}</div>
+          </ng-template>
+
+          <ng-template cellDef="emailId" let-element>
+            @if(element.emailId.length>25){
+            <div class="ellipse-text" matTooltip="{{ element.emailId }}">
+              {{ element.emailId }}
+            </div>
+            } @else{
+            <div>{{ element.emailId }}</div>
+            }
+          </ng-template>
+          <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+          </ng-template>
+        </app-table>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #searchTemplate>
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-title">Customer Search</div>
+        <div class="slot-right">
+          <div class="btn-group">
+            <app-icon-button name="search" toolTip="Search" (click)="onSearch1()"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+            <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-content">
+        <scroll>
+          <div class="dialog-content-inner">
+            <form #l="ngForm" (submit)="onSearch1()">
+              <row>
+                <div class="col-md-3 border-right">
+                  <row>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="Customer No" [(ngModel)]="customer.customerRefNo"
+                        name="customerRefNo" (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="select" defaultOption="--Select--" label="Customer Status"
+                        [(ngModel)]="customer.customerStatusValue" name="customerStatusValue"
+                        [items]="initialData.DDLValues.DDLCustomerStatus" key="constant" keyName="description"
+                        (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                <div class="col-md-3 border-right">
+                  <row>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="First Name" [(ngModel)]="customer.firstName"
+                        name="firstName" [maxLength]="250" (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="Middle Name" [(ngModel)]="customer.middleName"
+                        name="middleName" [maxLength]="250" (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="Last Name" [maxLength]="250" [(ngModel)]="customer.lastName"
+                        name="lastName" (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="select" defaultOption="--Select--" label="Gender"
+                        [(ngModel)]="customer.genderValue" name="genderValue" [items]="initialData.DDLValues.DDLGender"
+                        key="constant" keyName="description" placeholder="Select Gender"
+                        (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="date" label="Date of Birth " [(ngModel)]="customer.dateOfBirth"
+                        name="dateOfBirth" (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                <div class="col-md-3 border-right">
+                  <row>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="email" label="Email ID" [(ngModel)]="customer.emailId" name="emailId"
+                        (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="number" label="Contact No" [minLength]="5" [maxLength]="10"
+                        [(ngModel)]="customer.contactNo" name="contactNo" (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                <div class="col-md-3">
+                  <row>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="FNPF No" [(ngModel)]="customer.pfNo" name="pfNo"
+                        (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="Driving License No" [(ngModel)]="customer.drivingLicenseNo"
+                        name="drivingLicenseNo"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="Voter ID" [(ngModel)]="customer.voterId" name="voterId"
+                        (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <!-- <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="National ID"
+                                                [(ngModel)]="customer.nationalId" name="nationalId"
+                                                (onEnter)="onSearch1()"></app-input-control>
+                                        </div> -->
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="TIN No" [(ngModel)]="customer.tin" name="tin"
+                        (onEnter)="onSearch1()"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="text" label="Passport ID" [(ngModel)]="customer.passportNo"
+                        name="passportNo" (onEnter)="onSearch1()">
+                      </app-input-control>
+                    </div>
+                  </row>
+                </div>
+              </row>
+            </form>
+          </div>
+        </scroll>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/estate.svg"></ion-icon>
+        <div class="screen-text">Death Notice</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

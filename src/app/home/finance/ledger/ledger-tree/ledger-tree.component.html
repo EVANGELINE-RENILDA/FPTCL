@@ -1,0 +1,207 @@
+<div class="v-flex h100" appAccess="ALGSC" [parentId]="pageId">
+  <div class="justify-end">
+    <!-- <div class="col-md-3">
+      <app-input-control label="Region" [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"
+        [(ngModel)]="regionTypeVal" name="regionTypeVal" (onSelect)="getAllLedger()" type="select"
+        defaultOption="--Select--" [sort]="true"></app-input-control>
+    </div> -->
+    <div class="analystic_btn" (click)="getLedgerDetails(profitandLoss.actLedgerId)">
+      <ion-icon name="analytics-outline"></ion-icon>
+      <label>Profit & Loss</label>
+    </div>
+  </div>
+
+  <!-- <row> -->
+  <div class="flex-1 relative">
+    <div class="ab">
+      <div class="rel">
+        <div class="d-flex h100">
+          <div class="col-md-3">
+            <div class="v-flex h100">
+              <div class="finance-header-card assets">
+                <div class="finance-header-title">Assets</div>
+                <div class="ml-auto">
+                  <button mat-icon-button (click)="addLedger('ASSET')" appButtonAccess="LdgrAssetsNewBtn">
+                    <ion-icon name="add-outline" class="text-white"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="flex-1 relative h100">
+                <div class="ab">
+                  <div class="rel">
+                    <tree-root [nodeData]="assetNode" key="actGroupId">
+                      <ng-template #nodeContents let-node>
+                        <div class="group-title" (click)="getLedgerDetails(node.actLedgerId)">{{ node.ledgerName }}
+                        </div>
+                        <div class="slot-end">
+                          @if (node.isDefaultGroup === 'Y') {
+                          <button class="group-icon-button grey">
+                            <ion-icon name="lock-closed" class="lock-primary"></ion-icon>
+                          </button>
+                          } @else {
+                          <button class="group-icon-button danger" appButtonAccess="LdgrAssetsDelBtn">
+                            <ion-icon name="remove-outline" class="text-danger"
+                              (click)="ledgerDelete(node.actLedgerId)"></ion-icon>
+                          </button>
+                          }
+                          <!-- <button class="group-icon-button success" (click)="addLedger('ASSET')">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button> -->
+                        </div>
+                      </ng-template>
+                    </tree-root>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="v-flex h100">
+              <div class="finance-header-card liability">
+                <div class="finance-header-title">Liability and Equity</div>
+                <div class="ml-auto">
+                  <button mat-icon-button (click)="addLedger('LIABT')" appButtonAccess="LdgrLibEqNewBtn">
+                    <ion-icon name="add-outline" class="text-white"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="flex-1 relative h100">
+                <div class="ab">
+                  <div class="rel">
+                    <tree-root [nodeData]="liablesNode" key="actGroupId">
+                      <ng-template #nodeContents let-node>
+                        <div class="group-title" (click)="getLedgerDetails(node.actLedgerId)">{{ node.ledgerName }}
+                        </div>
+                        <div class="slot-end">
+                          @if (node.isDefaultGroup === 'Y') {
+                          <button class="group-icon-button grey">
+                            <ion-icon name="lock-closed" class="lock-primary"></ion-icon>
+                          </button>
+                          } @else {
+                          <button class="group-icon-button danger" appButtonAccess="LdgrLibEqDelBtn">
+                            <ion-icon name="remove-outline" class="text-danger"
+                              (click)="ledgerDelete(node.actLedgerId)"></ion-icon>
+                          </button>
+                          }
+                          <!-- <button class="group-icon-button success" (click)="addLedger('LIABT')">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button> -->
+                        </div>
+                      </ng-template>
+                    </tree-root>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="v-flex">
+              <div class="finance-header-card income">
+                <div class="finance-header-title">Income</div>
+                <div class="ml-auto">
+                  <button mat-icon-button (click)="addLedger('INCME')" appButtonAccess="LdgrIncomeNewBtn">
+                    <ion-icon name="add-outline" class="text-white"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              <tree-root [nodeData]="incomeNode" key="actGroupId">
+                <ng-template #nodeContents let-node>
+                  <div class="group-title" (click)="getLedgerDetails(node.actLedgerId)">{{ node.ledgerName }}</div>
+                  <div class="slot-end">
+                    @if (node.isDefaultGroup === 'Y') {
+                    <button class="group-icon-button grey">
+                      <ion-icon name="lock-closed" class="lock-primary"></ion-icon>
+                    </button>
+                    } @else {
+                    <button class="group-icon-button danger" appButtonAccess="LdgrIncomeDelBtn">
+                      <ion-icon name="remove-outline" class="text-danger"
+                        (click)="ledgerDelete(node.actLedgerId)"></ion-icon>
+                    </button>
+                    }
+                    <!-- <button class="group-icon-button success" (click)="addLedger('INCME')">
+                      <ion-icon name="add-outline"></ion-icon>
+                    </button> -->
+                  </div>
+                </ng-template>
+              </tree-root>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="v-flex h100 t-root">
+              <div class="finance-header-card expense">
+                <div class="finance-header-title">Expense</div>
+                <div class="ml-auto">
+                  <button mat-icon-button (click)="addLedger('EXPNS')" appButtonAccess="LdgrExpenseNewBtn">
+                    <ion-icon name="add-outline" class="text-white"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="flex-1 relative h100">
+                <div class="ab">
+                  <div class="rel">
+                    <tree-root [nodeData]="expensiveNode" key="actGroupId">
+                      <ng-template #nodeContents let-node>
+                        <div class="group-title" (click)="getLedgerDetails(node.actLedgerId)">{{ node.ledgerName }}
+                        </div>
+                        <div class="slot-end">
+                          @if (node.isDefaultGroup === 'Y') {
+                          <button class="group-icon-button grey">
+                            <ion-icon name="lock-closed" class="lock-primary"></ion-icon>
+                          </button>
+                          } @else {
+                          <button class="group-icon-button danger" appButtonAccess="LdgrExpenseDelBtn">
+                            <ion-icon name="remove-outline" class="text-danger"
+                              (click)="ledgerDelete(node.actLedgerId)"></ion-icon>
+                          </button>
+                          }
+                          <!-- <button class="group-icon-button success" (click)="addLedger('EXPNS')">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button> -->
+                        </div>
+                      </ng-template>
+                    </tree-root>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- </row> -->
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      @if(regionTypeVal === 'REGIO'){
+      <li class="screen-name link">
+        <!-- <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div> -->
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text">Ledger</div>
+      </li>
+      }
+
+      @else {
+      <li class="screen-name link">
+        <!-- <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div> -->
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text">Ledger</div>
+      </li>
+      }
+
+    </ul>
+  </div>
+</ng-template>

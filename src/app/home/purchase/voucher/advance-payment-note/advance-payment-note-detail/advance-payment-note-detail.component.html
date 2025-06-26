@@ -1,0 +1,922 @@
+<div class="v-flex h100">
+  @if (selectedTab === 0 || selectedTab === 1 ) {
+    @if(advancePaymentNote.statusValue === 'APROV' || advancePaymentNote.statusValue  === 'CANCL') {
+  <form #z="ngForm" class="flex-end pr20 header-bg h55">
+    <div class="col-md-3 header-input">
+      <app-input-control
+        type="select"
+        label="Document Name"
+        [(ngModel)]="voucherConfigId"
+        name="voucherConfigId"
+        valuetype="int"
+        [items]="initialData.DDLValues.DDLVoucherConfig"
+        key="id"
+        keyName="name"
+        [errorTrue]="errorTrue"
+        [required]="true"
+        label="Document Name"
+        (change)="getVoucherDetail(voucherConfigId)"
+        defaultOption="--Select--"
+      ></app-input-control>
+    </div>
+    <div class="col-md-1 end d-flex align-items-center">
+      <app-icon-button
+        name="add"
+        toolTip="Add New"
+        (click)="navigateDetail(z)"
+      ></app-icon-button>
+    </div>
+  </form>
+  }
+  }
+  <form
+    #l="ngForm"
+    (ngSubmit)="saveAdvancePaymentNotes(l)"
+    class="content-header"
+  >
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Vendor Name</label>
+        <div class="content">
+          {{
+            advancePaymentNote.pentActVendor.vendorName
+              ? advancePaymentNote.pentActVendor.vendorName
+              : "-"
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Vendor ID </label>
+        <div class="content">
+          {{
+            advancePaymentNote.pentActVendor.vendorCode
+              ? advancePaymentNote.pentActVendor.vendorCode
+              : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Document No</label>
+        <div class="content">
+          {{ advancePaymentNote.apnRefNo ? advancePaymentNote.apnRefNo : "-" }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Document Name</label>
+        <div class="content">
+          {{
+            advancePaymentNote.ibusActVoucherConfig.voucherName
+              ? advancePaymentNote.ibusActVoucherConfig.voucherName
+              : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <view-label label="Branch" [value]="branchName"></view-label>
+      </div>
+      <!-- <div class="card-content">
+                <app-input-control type="date" [required]="true"
+                    label="Document Date | Effective Date"></app-input-control>
+            </div> -->
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Created Date</label>
+        <div class="content">
+          {{
+            advancePaymentNote.enteredDate
+              | appDate : appSetting.environment.dateViewFormatWithTime
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Created By</label>
+        <div class="content">
+          {{
+            advancePaymentNote.enteredByUsername
+              ? advancePaymentNote.enteredByUsername
+              : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Posting Date</label>
+        <div class="content">
+          {{
+            advancePaymentNote.approvedDate
+              | appDate : appSetting.environment.dateViewFormatWithTime
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <app-input-control
+          type="date"
+          label="Document Date"
+          [(ngModel)]="advancePaymentNote.documentDate"
+          name="documentDate"
+          [required]="true"
+          [errorTrue]="errorTrue"
+          (onChange)="documentDateConversioDate()"
+          [btnClicked]="__isDisabled()"
+        ></app-input-control>
+      </div>
+    </div>
+
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Region</label>
+        <div class="content">
+          {{
+            advancePaymentNote.regionDescription
+              ? advancePaymentNote.regionDescription
+              : "-"
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <view-label
+            label="Status"
+            status="{{ advancePaymentNote.statusValue }}"
+            statusValue="{{ advancePaymentNote.statusDescription }}"
+          ></view-label>
+      </div>
+    </div>
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content btn-group">
+          @if(advancePaymentNote.purAdvancePaymentNoteId === 0 ){
+          <app-icon-button
+            name="save"
+            toolTip="Save" (click)="saveAdvancePaymentNotes(l)"          ></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+          }
+          @else {
+
+            <app-icon-button name="save" toolTip="Update" (click)="saveAdvancePaymentNotes(l)"></app-icon-button>
+            <app-icon-button name="refresh" toolTip="Refresh"
+            (click)="openAdvancePaymentNotes(advancePaymentNote.purAdvancePaymentNoteId)"></app-icon-button>
+          }
+          @if(!__hideBtn()) {
+          <app-icon-button name="accept" toolTip="Complete"
+   ></app-icon-button>
+          }
+        </div>
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+  <div class="content-body flex-1 relative">
+    @if(selectedTab === 0){
+
+      <form>
+
+      </form>
+    <div class="ab">
+      <div class="rel">
+        <form
+          #a="ngForm"
+
+          class="col-md-12 p10" (ngSubmit)="saveAdvancePaymentNotes(a)"
+        >
+          <row>
+            <div class="col-md-6 border-right">
+              <div class="col-md-3 pt14 vendor-header">Debit Info</div>
+
+              <div class="d-flex">
+                <div class="col-md-6 pt14">
+                  @if(!__isDisabled() || advancePaymentNote.documentDate ===''){
+                  <app-search-vendor
+                    label="Vendor Name"
+                    [(ngModel)]="advancePaymentNote.actVendorId"
+                    name="actVendorId"
+                    [displayText]="advancePaymentNote.pentActVendor.vendorName"
+                    (onSelect)="doVendorSelect($event)"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                    [btnClicked]="
+                      __isDisabled() || advancePaymentNote.documentDate === ''
+                    " screenType="Advance Payment Note" module="Purchase" navigateUrl="/home/purchase/advance-payment-note/search" screenType1="Details"
+                  ></app-search-vendor>
+                  } @else{
+                  <div class="content vendor-header">
+                    {{
+                      advancePaymentNote.pentActVendor.vendorName
+                        ? advancePaymentNote.pentActVendor.vendorName
+                        : "-"
+                    }}
+                  </div>
+                  }
+                </div>
+
+                <div class="col-md-6 pt14">
+                  <view-label
+                    label="Vendor Ledger Name"
+                    [value]="advancePaymentNote.iVendorActLedger.ledgerName"
+                  ></view-label>
+                </div>
+              </div>
+
+              <div class="d-flex">
+                <div class="col-md-6 pt14">
+                  <app-input-control
+                    type="select"
+                    label="Payment Mode"
+                    [(ngModel)]="advancePaymentNote.modeValue"
+                    name="modeValue"
+                    [items]="
+                      initialData.DDLValues.configAdvancePaymentNoteModeValue
+                    "
+                    key="constant"
+                    keyName="description"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                    [btnClicked]="
+                      __isDisabled() || advancePaymentNote.documentDate === ''
+                    "
+                    defaultOption="--Select--"
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6 pt14">
+                  <view-label
+                    label="Vendor Payee Name"
+                    [value]="advancePaymentNote.pentActVendor.chequePaymentName"
+                  ></view-label>
+                </div>
+              </div>
+              @if(advancePaymentNote.modeValue === 'CHEQ' ||
+              advancePaymentNote.modeValue === 'BKTRS'){
+              <div class="d-flex">
+                <div class="col-md-6 pt14">
+                  <app-input-control
+                    label="Vendor Bank "
+                    type="select"
+                    name="actVendorBankDetailId"
+                    [(ngModel)]="advancePaymentNote.actVendorBankDetailId"
+                    [items]="initialData.DDLValues.DDLVendorBank"
+                    key="actVendorBankDetailId"
+                    keyName="bankAccountNo"
+                    (change)="getBankNameBasedOnBankId()"
+                    [btnClicked]="
+                      __isDisabled() || advancePaymentNote.documentDate === ''
+                    "
+                  ></app-input-control>
+                </div>
+                <div class="col-md-6 pt14">
+                  <view-label
+                    label="Bank Account No / AC No"
+                    [value]="bankAccountNo"
+                  ></view-label>
+                </div>
+              </div>
+              }
+            </div>
+            <div class="col-md-6">
+              <div class="col-md-3 pt14 vendor-header">Credit Info</div>
+              @if(advancePaymentNote.modeValue === 'CHEQ' ||
+              advancePaymentNote.modeValue === 'BKTRS'){
+              <div class="col-md-6 pt14">
+                <app-input-control
+                  type="select"
+                  label="Company Bank Ac"
+                  [(ngModel)]="advancePaymentNote.actCompanyBranchBankDetailId"
+                  name="actCompanyBranchBankDetailId"
+                  defaultOption="--Select--"
+                  [items]="initialData.DDLValues.DDLBankBranch"
+                  key="actCompanyBranchBankDetailId"
+                  keyName="bankName"
+                  (change)="
+                    bankBranchAc(
+                      advancePaymentNote.actCompanyBranchBankDetailId
+                    )
+                  "
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                  [btnClicked]="
+                    __isDisabled() || advancePaymentNote.documentDate === ''
+                  "
+                >
+                </app-input-control>
+              </div>
+              <div class="col-md-6 pt14">
+                <view-label
+                  label="Bank Account No / AC No"
+                  [value]="branchBankAccountNo"
+                ></view-label>
+              </div>
+              } @if(advancePaymentNote.modeValue === 'CHEQ'){
+              <div class="col-md-6 pt14">
+                <app-input-control
+                  label="Cheque No "
+                  type="text"
+                  [(ngModel)]="advancePaymentNote.chequeNumber"
+                  name="chequeNumber"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                  [btnClicked]="
+                    __isDisabled() || advancePaymentNote.documentDate === ''
+                  "
+                ></app-input-control>
+              </div>
+              <div class="col-md-6 pt14">
+                <app-input-control
+                  type="date"
+                  label="Cheque Date"
+                  [(ngModel)]="advancePaymentNote.chequeDate"
+                  name="chequeDate"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                  [btnClicked]="
+                    __isDisabled() || advancePaymentNote.documentDate === ''
+                  "
+                ></app-input-control>
+              </div>
+              } @if(advancePaymentNote.modeValue === 'BKTRS'){
+              <div class="col-md-6 pt14">
+                <app-input-control
+                  type="date"
+                  label="Transaction Date"
+                  [(ngModel)]="advancePaymentNote.chequeDate"
+                  name="chequeDate"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                  [btnClicked]="
+                    __isDisabled() || advancePaymentNote.documentDate === ''
+                  "
+                ></app-input-control>
+              </div>
+              <div class="col-md-6 pt14">
+                <app-input-control
+                  label="Transaction No"
+                  [(ngModel)]="advancePaymentNote.chequeNumber"
+                  name="chequeNumber"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                  [btnClicked]="
+                    __isDisabled() || advancePaymentNote.documentDate === ''
+                  "
+                ></app-input-control>
+              </div>
+              } @if(advancePaymentNote.modeValue === 'CASH' ||
+              advancePaymentNote.modeValue ===''){
+              <div
+                class="col-md-6"
+                [ngClass]="{
+                  pt14:
+                    advancePaymentNote.modeValue !== 'CASH' &&
+                    advancePaymentNote.modeValue !== ''
+                }"
+              >
+                <app-search-debit
+                  label="Company Casbook Ledger"
+                  [(ngModel)]="advancePaymentNote.cashbookLedgerId"
+                  name="cashbookLedgerId"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                  [displayText]="advancePaymentNote.ibusActLedger.ledgerName"
+                  [isChecked]="advancePaymentNote.modeValue"
+                  getRegionValue="REGI1"
+                  (onSelect)="onLedgerSelect($event)"
+                  [btnClicked]="
+                    advancePaymentNote.statusValue === 'APROV' ||
+                    advancePaymentNote.statusValue === 'CANCL' ||
+                    advancePaymentNote.documentDate === ''
+                  "
+                ></app-search-debit>
+              </div>
+              }
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+
+    } @if(selectedTab === 1){
+    <div class="v-flex h100">
+      <div class="end gap-5 p10">
+        <div class="col-md-2 only-input">
+          <app-auto-get-item
+            [partyId]="advancePaymentNote.actVendorId"
+            [displayText]="autoSearchItems.autoSearchText"
+            [voucherType]="
+              advancePaymentNote.ibusActVoucherConfig.voucherTypeValue
+            "
+            [voucherConfigId]="advancePaymentNote.actVoucherConfigId"
+            [documentDate]="advancePaymentNote.documentDate"
+            [(ngModel)]="autoSearchItems.autoSearchItemId"
+            name="autoSearchItemId"
+            [regionValue]="advancePaymentNote.regionValue"
+            (onSelect)="doGetItemSelect($event)"
+            [btnClicked]="
+              advancePaymentNote.documentDate === '' || __isDisabled()
+            "
+          ></app-auto-get-item>
+        </div>
+        <app-icon-button
+          name="add"
+          toolTip="Get Item"
+          (click)="createNewAdvancePaymentNoteDetail()"
+          appAccess=""
+          [parentId]="pageId"
+        >
+        </app-icon-button>
+
+        <!-- <div class="d-flex gap-10">
+          <app-icon-button
+            name="search"
+            toolTip="Get Item"
+            (click)="createNewAdvancePaymentNoteDetail()"
+          ></app-icon-button>
+          <app-icon-button
+            name="add"
+            toolTip="WPO"
+            (click)="createNewAdvancePaymentNoteDetailWpo()"
+          ></app-icon-button>
+        </div> -->
+        <!-- </row> -->
+      </div>
+      <form
+        #b="ngForm"
+        (ngSubmit)="saveAdvancePaymentNotes(b)"
+        class="flex-1 relative"   >
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell tw50 text-center">#</th>
+                <th class="app-table-header-cell tw50 text-center">
+                  <div class="header-cell-title">PO No</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">PO Amount</div>
+                  <div class="header-cell-subtitle">
+                    {{
+                      advancePaymentNote.ilistbusPurAdvancePaymentNoteDetail
+                        .currencyValue
+                    }}
+                  </div>
+                </th>
+                <!-- <th class="app-table-header-cell tw100 text-right">
+                  Debit Note
+                </th> -->
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Advance Paid</div>
+                  <div class="header-cell-subtitle">
+                    {{
+                      advancePaymentNote.ilistbusPurAdvancePaymentNoteDetail
+                        .currencyValue
+                    }}
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Balance Amount To Be Paid</div>
+                  <div class="header-cell-subtitle">
+                    {{
+                      advancePaymentNote.ilistbusPurAdvancePaymentNoteDetail
+                        .currencyValue
+                    }}
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">Total Pay Amount</div>
+                  <div class="header-cell-subtitle">
+                    {{
+                      advancePaymentNote.ilistbusPurAdvancePaymentNoteDetail
+                        .currencyValue
+                    }}
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">Delete</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (item of
+              advancePaymentNote.ilistbusPurAdvancePaymentNoteDetail; track
+              $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ $index + 1 }}
+                </td>
+                <!-- <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                  {{items.ibusPurPurchaseInvoice.invoiceReferenceNo}}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{items.ibusPurPurchaseInvoice.pActVoucherConfig.voucherName}}
+                  </div>
+                </td> -->
+                <td class="app-table-cell text-right">
+                  {{ item.ibusPurPurchaseOrder.purchaseOrderNumber }}
+                </td>
+                <td class="app-table-cell text-right">
+                  {{ item.ibusPurPurchaseOrder.netAmount }}
+                </td>
+                <td class="app-table-cell text-right">
+                  {{ item.previousPaidAmount }}
+                </td>
+                <td class="app-table-cell text-right">
+                  {{ item.balancePaidAmount }}
+                </td>
+                <td class="app-table-cell text-right">
+                  <app-input-control
+                    type="number"
+                    [(ngModel)]="item.paidAmount"
+                    name="paidAmount{{ $index }}"
+                    [decimal]="2"
+                    [required]="true"
+                    [errorTrue]="errorTrue"
+                    [max]="item.balanceAmount"
+                    (onBlur)="
+                      gainLossForPointZeroOneDifference($event, item, $index)
+                    "
+                  ></app-input-control>
+                </td>
+                <td class="app-table-cell end text-right">
+                  <app-icon-button
+                    name="doc-delete"
+                    toolTip="Delete"
+                    (click)="itemsDelete(item, $index)"
+                  ></app-icon-button>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </form>
+    </div>
+    } @else if(selectedTab === 2 && advancePaymentNote.purAdvancePaymentNoteId >
+    0){
+    <app-advance-payment-note-notes
+      [parentData]="advancePaymentNote"
+      (notesValue)="getNotesValue($event)"
+    >
+    </app-advance-payment-note-notes>
+    } @else if(selectedTab === 3 && advancePaymentNote.purAdvancePaymentNoteId >
+    0){
+    <app-advance-payment-note-attachment
+      [parentData]="advancePaymentNote"
+    ></app-advance-payment-note-attachment>
+    }
+    @else if(selectedTab === 4 ){
+
+    <!-- <app-advance-payment-note-preview [parentData]="advancePaymentNote"></app-advance-payment-note-preview> -->
+
+    <div class="print-wrap">
+      <row>
+        <div class="col-md-4">
+          <div class="ptb14"></div>
+          <app-input-control type="textarea" [maxLength]="250" className="notes-2"
+            label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="advancePaymentNote.ibusActVoucherConfig.pdfOtherComments"
+            name="pdfOtherComments"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" (click)="viewAdvancePurPaymentNoteReceipt()"></app-icon-button>
+          </div>
+        </div>
+        <div class="col-md-8">
+            <div class="d-flex gap-5 end">
+              <button type="submit" class="approve-btn" (click)="openEmailHistory()">Send Email</button>
+              <!-- <app-send-email [name]="purchaseOrder.sentActVendor
+              .vendorName" [documentDate]="purchaseOrder.documentDate" [netAmount]="purchaseOrder.netAmount"
+                [refNumber]="purchaseOrder.purchaseQuotationRefNo"
+                [voucherName]="purchaseOrder.sentActVoucherConfig.voucherTypeDescription" [emailId]="purchaseOrder.sentActVendor
+              .emailId" [blob]="blob"></app-send-email> -->
+              <!-- <app-icon-button name="clear" toolTip="Close"></app-icon-button>-->
+               <button type="submit" class="cancel-btn" (click)="closePdf()"> Close </button>
+            </div>
+            <div class="pt8"></div>
+          <div class="pdf-viewer">
+            <div class="ab">
+              <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+    }
+  </div>
+  <div
+    class="card-footer"
+    footerpanel="footerpanel{{ pageId }}"
+    trigger="trigger{{ pageId }}"
+  >
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div
+          class="tabs"
+          (click)="onSelectTab(0)"
+          [ngClass]="{ tabClass: selectedTab === 0 }"
+        >
+          <ion-icon name="pricetag-outline"></ion-icon>
+          <div>Vendor</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="onSelectTab(1)"
+          [ngClass]="{ tabClass: selectedTab === 1 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        @if(advancePaymentNote.purAdvancePaymentNoteId > 0){
+        <div
+          class="tabs"
+          (click)="onSelectTab(2)"
+          [ngClass]="{ tabClass: selectedTab === 2 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="onSelectTab(3)"
+          [ngClass]="{ tabClass: selectedTab === 3 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        <div
+          class="tabs"
+          (click)="onSelectTab(4)"
+          [ngClass]="{ tabClass: selectedTab === 4 }"
+        >
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        }
+      </div>
+      <div class="open-arrow" id="trigger{{ pageId }}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea-1">
+          <app-input-control
+            type="textarea"
+            [maxLength]="250"
+            className="notes"
+            label="Common Narration Text"
+            [(ngModel)]="advancePaymentNote.comments"
+            name="comments"
+            [btnClicked]="__isDisabled()"
+          ></app-input-control>
+        </div>
+        <div class="col-md-8 pad-0 d-flex">
+          <div class="d-flex w100 p8">
+            <div class="d-flex justify-content-between w100">
+              <div class="w100">
+                <view-label
+                  label="Document Currency"
+                  value="FJD"
+                  class="mb20"
+                ></view-label>
+              </div>
+              <!-- <table class="app-table account-table">
+                  @for(currency of
+                  advancePaymentNote.ilstbusActCurrencyExchangeRate; track
+                  $index){
+
+                  <tr class="app-table-row">
+                    <td class="app-table-cell">
+                      {{ currency.description }}
+                    </td>
+                    <td class="app-table-cell">
+                      <total-value
+                        toTotal="advancePayment"
+                        currentRateElement="ibusPurPurchaseOrder"
+                        totalAfterDiscount="totalAfterDiscount"
+                        [updateSequence]="internalUpdateSequence"
+                        [items]="
+                          advancePaymentNote.ilistbusPurAdvancePaymentNoteDetail
+                        "
+                        [currencyRate]="advancePaymentNote.currencyRate"
+                        [(exchangeRateArray)]="
+                          advancePaymentNote.ilstbusActCurrencyExchangeRate
+                        "
+                      ></total-value>
+                    </td>
+                  </tr>
+                  }
+                </table> -->
+            </div>
+          </div>
+          <div class="d-flex w100 p8 bg-sub-footer p8">
+            <div>
+              <div class="w100">
+                <view-label
+                  label="Reporting Currency"
+                  [value]="advancePaymentNote.currencyValue"
+                  class="mb20"
+                ></view-label>
+              </div>
+              <form #c="ngForm" (ngSubmit)="saveAdvancePaymentNotes(c)">
+                <app-input-control
+                  label="Conversion Rate"
+                  [(ngModel)]="advancePaymentNote.currencyRate"
+                  name="currencyRate"
+                  [btnClicked]="
+                    advancePaymentNote.currencyValue ===
+                    advancePaymentNote.pentActVendor.currencyValue
+                  "
+                  [decimal]="8"
+                  [required]="true"
+                  [errorTrue]="errorTrue"
+                ></app-input-control>
+              </form>
+            </div>
+            <!-- <table class="app-table account-table">
+              @for(currency of advancePaymentNote.ilstbusActCurrencyExchangeRate; track $index){
+                <tr class="app-table-row">
+                  <td class="app-table-cell">
+                    {{currency.description}}
+                  </td>
+                  <td class="app-table-cell">
+                    <total-value
+                    totalAfterDiscount="totalAfterDiscount"
+                    totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency"
+                    taxAmount="vatAmount"
+                    [updateSequence]="internalUpdateSequence"
+                    [items]="purchaseOrder.lstentPurPurchaseOrderItem"
+                    [currencyRate]="purchaseOrder.currencyRate"
+                    [(exchangeRateArray)]="purchaseOrder.ilstActCurrencyExchangerate"
+                    [sameCurrency]="
+                      purchaseOrder.docCurreny === purchaseOrder.currencyValue
+                    "
+                  ></total-value>
+                  </td>
+                </tr>
+              }
+            </table> -->
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+<!-- </div> -->
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" >
+        <div class="back-btn" (click)="navigateToList()">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToPurchase()">Purchase</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Advance Payment Note</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <div class="status-table-header">
+    <div class="changed-by_label">Changed By | Changed Date</div>
+    <div class="pl14">Status</div>
+  </div>
+  @for (item of advancePaymentNote.ilistbusPurAdvancePaymentNoteStatusHistory;
+  track $index){
+  <div class="status-table-content">
+    <div class="changed-by">
+      {{ item.changedByUsername ? item.changedByUsername : "-" }}
+      <div class="changed-by_sub">
+        {{
+          item.effectiveDate ? (item.effectiveDate | appDate : "datetime") : "-"
+        }}
+      </div>
+    </div>
+    <div class="status_align pl14">
+      <div class="status-PRSTV">
+        {{ item.statusDescription ? item.statusDescription : "-" }}
+      </div>
+    </div>
+  </div>
+  <!-- <div class="mat-menu-drop"> -->
+  <!-- <app-table
+      [hideSelectAll]="true"
+      [showPaginator]="false"
+      [columns]="statusMenu"
+      [columnsName]="statusMenuName"
+      [dataSource]="tableStatusMenuData"
+    >
+      <ng-template cellHeaderDef="fileName">
+        <div class="header-cell-title">Changed By | Effective Date</div>
+      </ng-template>
+      <ng-template cellDef="fileName" let-element>
+        <div class="header-cell-title">{{element.changedBy}}</div>
+        <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+      </ng-template>
+    </app-table> -->
+  <!-- </div> -->
+  }
+</mat-menu>
+
+
+<ng-template #mailTemplate>
+  <div class="dialog-box p-3">
+    <!-- <div class=""> -->
+      <div class="label-value-head" >
+        Send Email
+      </div>
+      <div class="ml-auto">
+        <button mat-icon-button (click)="onNoClick()">
+          <!-- <ion-icon name="close-outline" (click)="this.dialog.closeDialog()"></ion-icon> -->
+          <app-icon-button name="close" (click)="dialogService.closeAll()"></app-icon-button>
+        </button>
+      <!-- </div>/ -->
+    </div>
+    <div class="mat-dialog-content" >
+            <scroll>
+            <form class="h100" #l="ngForm">
+           <div class="container-fluid h100">
+             <row>
+               <div class="col-md-12">
+                 <app-input-control type="email" label="To" [(ngModel)]="mailInfo.toMailList" name="toMailList" [required]="true" [errorTrue]="errorTrue" ></app-input-control>
+               </div>
+               <div class="col-md-12">
+                 <app-input-control  type="email" label="CC" [(ngModel)]="mailInfo.ccMailList" name="ccMailList" [multiEmail]="true"></app-input-control>
+               </div>
+               <div class="col-md-12 d-flex align-items-center">
+                 <div class="form-group">
+                   <label class="label-value">From :  </label>
+                   <div class="form-value">
+                     {{appService.userData.firstName}} {{appService.userData.middleName}} {{appService.userData.lastName}}
+                   </div>
+                 </div>
+               </div>
+               <div class="col-md-12 mt10">
+                 <app-input-control label="Subject" [(ngModel)]="fullSubject" name="fullSubject" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+               </div>
+               <div class="col-md-12">
+                 <div class="mail-content mail-box">
+                   <!-- <app-input-control type="textarea" label="Content" [(ngModel)]="fullContent" name="fullContent" [closeBlind]="true" [required]="true" [errorTrue]="errorTrue" [maxlength]="500"></app-input-control> -->
+                   <!-- <label class="label-value"> Content</label> -->
+                  <div class="form-value">
+                    <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                    [required]="true" [(ngModel)]="fullContent" name="fullContent"
+                    label="Content"></app-input-control>
+                  </div>
+                 </div>
+               </div>
+               <div class="col-md-12">
+                 <div class="down-content">
+                   <!-- {{downContent}}
+                     -->
+                     This is an auto-generated email. Please do not reply to this email.
+                     Please find the PDF below :-
+                 </div>
+               </div>
+              <!-- <div class="d-flex"> -->
+                <div class="col-md-6 d-flex gap-10  mt20">
+                  <app-checkbox [checked]="mailInfo.isIncludePdf === 'Y'" (change)="doPdfChange($event)" color="primary"></app-checkbox>Include Invoice
+                </div>
+                <div>
+
+                </div>
+              <!-- </div> -->
+               <div class="col-md-6 d-flex gap-10 mt20">
+                 <app-checkbox [checked]="mailInfo.isIncludeAttachment === 'Y'" (change)="doAttachment($event)" color="primary"></app-checkbox>Additional Attachment
+               </div>
+               <ng-container >
+                @if(mailInfo.isIncludeAttachment === 'Y'){
+
+                  <div class="p-3">
+                    <app-drop-zone type="set" [multiple]="true" (onUpload)="loadAttachment($event)"></app-drop-zone>
+                  </div>
+                }
+               </ng-container>
+              </row>
+              <div mat-dialog-actions class="d-flex align-items-baseline justify-content-end my-1 gap-10 mt30">
+                <button class="approve-btn"  (click)="sendEmailforVoucher(l)" >
+                    Send Mail
+                </button>
+                <button class="complete-btn"  >
+                  Refresh
+              </button>
+            </div>
+           </div>
+         </form>
+         </scroll>
+
+     </div>
+
+  </div>
+</ng-template>

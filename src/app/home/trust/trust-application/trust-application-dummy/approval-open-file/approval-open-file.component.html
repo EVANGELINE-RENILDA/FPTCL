@@ -1,0 +1,56 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/trust-summary.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Approval Of Opened File</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <row>
+            <div class="col-md-9">
+                <row>
+                    <div class="col-md-4"> <view-label label="Assigned Officer"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedToFullname}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="Assigned Date"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedDate | appDate}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="TAT"
+                            value=" {{application.ientTrustApplicationAssignedOfficer .tatDays}} Days"></view-label>
+                    </div>
+                </row>
+            </div>
+            <div class="col-md-3">
+               
+            </div>
+        </row>
+        <div class="mb26"></div>
+        <div class="pl15 mb26 ">
+            <div class="col-md-12">
+                <form #notiForm="ngForm">
+                    <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue"
+                        [(ngModel)]="notesMessage" name="notesMessage" [maxLength]="250"
+                        [required]="true" label="Notes"></app-input-control>
+                </form>
+                <div class="end gap-10 mb26">
+                    @if(type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                    <app-icon-button name="save" toolTip="Save"
+                        (click)="saveTrustApplicationNotes()"></app-icon-button>
+                    }
+                  
+                </div>
+            </div>
+            <div class="mb26"></div>
+            <div class="col-md-12 end gap-10">
+                @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Complete </button>
+                }
+                    </div>
+         </div>
+         </accordion-body>
+         </accordion-item>
+ 

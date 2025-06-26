@@ -1,0 +1,23 @@
+{
+  "accountsPath": "http://192.168.0.5:8888/",
+  "applicationPath": "http://192.168.0.5:8015/",
+  "adminPath": "http://192.168.0.5:9901/",
+  "baseAppPath": "",
+  "goToAdmin": "http://192.168.0.5/admin_web/login",
+  "imagePath": "",
+  "encrypt": true,
+  "maxFileSize": 104857600,
+  "fileSizeErrorMsg": "Upload File size Below 3 MB",
+  "adminLink": "http://192.168.0.5/AdminAPPServerUI/",
+  "fileAccept": "application/pdf, image/*",
+  "serverDateFormat": "dd-MM-yyyy",
+  "serverDateFormatWithTime": "dd-MM-yyyy HH:mm",
+  "dateViewFormat": "dd MMM yyyy",
+  "dateViewFormatWithTime": "dd MMM yyyy HH:mm",
+  "monthviewFormatWithTime": "dd MMM yyyy HH:mm",
+  "returnDataFormat": "dd/MM/yyyy",
+  "utcTime": true,
+  "clientCode": "FPDB",
+  "countryCode": "+679",
+  "userManualLocation": "assets/userManual/"
+}

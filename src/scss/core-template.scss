@@ -1,0 +1,185 @@
+view-label {
+    display: block;
+}
+
+
+
+.view-label {
+    &.label-flex {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .view-label-text {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-light-color);
+    }
+
+    .view-label-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-dark-color);
+        // color: red;
+        line-height: 18px;
+        padding-top: 5px;
+        word-wrap: break-word;
+        // padding-top: 5px;
+
+        .text-ellipse {
+            min-width: 20px;
+            max-width: 150px;
+            text-wrap: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+//status
+
+.status-SENT {
+    .view-label-value {
+        color: #439326 !important;
+    }
+}
+
+.status-PRSTV {
+    .view-label-value {
+        color: #1B808D;
+    }
+}
+
+.status-ENGAD,
+.status-SENT {
+    .view-label-value {
+        color: #439326;
+    }
+}
+
+.status-QUAFD {
+    .view-label-value {
+        color: #035C3C;
+    }
+}
+
+.status-CUSTR {
+    .view-label-value {
+        color: #C53B00;
+    }
+}
+
+.status-REPET {
+    .view-label-value {
+        color: #011C62;
+    }
+}
+
+.status-LOYAL {
+    .view-label-value {
+        color: #392E10;
+    }
+}
+
+.status-suspended {
+    .view-label-value {
+        color: #FF5151;
+    }
+}
+
+.status-cancelled {
+    .view-label-value {
+        color: #FF0000;
+    }
+}
+
+.status-OPEN {
+    .view-label-value {
+        color: #988004;
+    }
+}
+
+.status-CLSED {
+    .view-label-value {
+        color: #392E10;
+    }
+}
+
+.status-DISED {
+    .view-label-value {
+        color: #454129;
+    }
+}
+
+.pr-1 {
+    padding-right: 8px;
+}
+
+.status-PEVRI {
+    .view-label-value {
+        color: #B59E88;
+    }
+}
+
+.status-PNDSU {
+    .view-label-value {
+        color: #F9A85E;
+    }
+}
+
+.status-PNDAP {
+    .view-label-value {
+        color: #2479A8;
+    }
+}
+
+.status-RJCTD,
+.status-CNCLD {
+    .view-label-value {
+        color: #C20000;
+    }
+}
+
+.status-APRVD {
+    .view-label-value {
+        color: #009720;
+    }
+}
+
+.status-CONTD {
+    .view-label-value {
+        color: #011C62;
+    }
+}
+
+.status-open {
+    .view-label-value {
+        color: #988004;
+    }
+}
+
+.status-nego {
+    .view-label-value {
+        color: #454129;
+    }
+}
+
+.status-CLDWN {
+    .view-label-value {
+        color: #927218;
+    }
+}
+.text{
+    //    .view-label-value{
+           color: red !important;
+    //    }
+    }
+
+.status-Active{
+  color: green !important;
+}
+.status-InActive{
+  color: red !important;
+}
+

@@ -1,0 +1,49 @@
+.hr {
+    border: 1px solid #DBE0E1;
+}
+
+.py10 {
+    margin: 8px 0px;
+}
+
+.pb16 {
+    padding-bottom: 16px;
+}
+
+.pos-abs1 {
+    position: absolute;
+    width: 94%;
+    justify-content: end;
+    z-index: 0;
+}
+
+.date-fix {
+    width: 250px;
+
+}
+
+.table-sub-header {
+    background-color: #DFF0FD;
+
+    td {
+        text-align: start;
+        height: 40px;
+        font-weight: 500;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+}
+
+.acc-back {
+    background-color: #fff;
+    z-index: 5;
+    position: relative;
+}
+
+.w180 {
+    width: 195px;
+}
+
+// .content-header {
+//     height: 120px !important;
+// }

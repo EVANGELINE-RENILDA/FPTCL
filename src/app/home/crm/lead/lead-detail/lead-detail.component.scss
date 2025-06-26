@@ -1,0 +1,41 @@
+.card {
+    padding: 15px;
+    background-color: #fff;
+
+    .card-header {
+        font-size: 14px;
+        font-weight: 700;
+        padding-bottom: 15px;
+    }
+
+    .card-content {
+        display: flex;
+        word-break: break-word;
+    }
+}
+
+.accordian-content {
+    padding: 5px 20px;
+}
+
+.hr {
+    border: 1px solid #DBE0E1;
+}
+
+.notes-context {
+    font-weight: 700;
+    color: #848484;
+    padding-bottom: 5px;
+}
+
+.notes-border-left {
+    border-left: 1px solid #848484;
+    padding-left: 5px;
+
+}
+
+.notes-list {
+    &:hover {
+        font-weight: 600;
+    }
+}

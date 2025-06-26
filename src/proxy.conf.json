@@ -1,0 +1,20 @@
+{
+  "/fptcl-app": {
+    "target": "https://greatly-smashing-chow.ngrok-free.app/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/fptcl-admin": {
+    "target": "https://greatly-smashing-chow.ngrok-free.app/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/fptcl-account": {
+    "target": "https://greatly-smashing-chow.ngrok-free.app/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

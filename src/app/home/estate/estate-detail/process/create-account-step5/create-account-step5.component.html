@@ -1,0 +1,60 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div> Create Account</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="bg-white-padd">
+            <row>
+                <div class="col-md-9">
+                    <row>
+                       
+                        <div class="col-md-4"> <view-label label="Assigned Officer"
+                                value="{{application.ientEstateApplicationAssignedOfficerHistory.assignedToFullname}}"></view-label>
+                        </div>
+                        <div class="col-md-4"> <view-label label="Assigned Date"
+                                value="{{application.ientEstateApplicationAssignedOfficerHistory.assignedDate | appDate}}"></view-label>
+                        </div>
+                        <!-- <div class="col-md-4"> <view-label label="TAT"
+                                value=" {{application.ientEstateApplicationAssignedOfficerHistory.tatDays}} Days"></view-label>
+                        </div> -->
+                    </row>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex">
+                        @if(this.type.isEditable === 'Y'){
+
+                        @if(this.application.reAssignFlag === 'True'){
+                        <form #p="ngForm" class="col-md-10 w250">
+                            <app-input-control type="select" key="constant" keyName="description"
+                                placeholder="Officer" [items]="assignedOfficerDDL"
+                                defaultOption="--Select--"
+                                [(ngModel)]="estateApplicationAssignedOfficer.assignedTo"
+                                name="assignedTo"></app-input-control>
+                        </form>
+                        <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignEstate()"
+                                toolTip="Reassign"></app-icon-button></div>
+                        }
+
+                        @if(this.application.selfAssignFlag ===' True'){
+                        <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignEstate()"
+                                toolTip="Self Assign"></app-icon-button></div>
+                        }
+                        }
+                    </div>
+                </div>
+            </row>
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper">
+                    <app-table [columns]="column" [columnsName]="columnName" [hasPagination]="true" />
+                    </div>
+                    </div>
+                    </div>
+                    </accordion-body>
+                    </accordion-item>

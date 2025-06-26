@@ -1,0 +1,107 @@
+<div class="v-flex h100">
+    <div class="end gap-5 p10">
+        <div class="col-md-2 only-input">
+          <app-auto-get-item [partyId]="receiptNote.actCustomerId" [regionValue]="regionDetailValue"
+      [displayText]="autoSearchItems.autoSearchText"
+      [voucherType]="receiptNote.iActVoucherConfig.voucherTypeValue"
+      [voucherConfigId]="receiptNote.iActVoucherConfig.actVoucherConfigId"
+      [documentDate]="receiptNote.documentDate" (clear)="clearDisplayText()"
+      [(ngModel)]="autoSearchItems.autoSearchItemId" name="autoSearchItemId"
+      (onSelect)="doGetItemSelect($event)"
+      [disabled]="receiptNote.documentDate ==='' || hideBtnBasedonStatus()" [btnClicked]="__isDisabled()"></app-auto-get-item>
+        </div>
+        <app-icon-button name="add" toolTip="Get Item" (click)="createNewReceiptNoteDetailForSo()" [__disabled]="
+        receiptNote.documentDate === '' || __isDisabled()
+      ">
+        </app-icon-button>
+    </div>
+    <form #itemtab="ngForm"  class="flex-1 relative">
+        <scroll>
+                    <table class="app-table account-table">
+                <thead class="app-table-head">
+                  <tr class="app-table-header-row">
+                    <th class="app-table-header-cell tw50 text-center">#</th>
+                    <th class="app-table-header-cell tw100">
+                        <div class="header-cell-title">  SI No</div>
+                        <div class="header-cell-subtitle"> Document Name
+                        </div>
+                      </th>
+                    <th class="app-table-header-cell tw100">
+                      <div class="header-cell-title">SI Amount</div>
+                      <!-- <div class="header-cell-subtitle">Name | Description</div> -->
+                    </th>
+                    <th class="app-table-header-cell tw100">Credit Note</th>
+                    <th class="app-table-header-cell tw100 text-right">
+                      <div class="header-cell-title">Received Till Date</div>
+                      <!-- <div class="header-cell-subtitle">Unit</div> -->
+                    </th>
+                    <th class="app-table-header-cell tw100 text-right">
+                      <div class="header-cell-title">Total Balance Amount</div>
+                    </th>
+                    <th class="app-table-header-cell tw100 text-right">
+                      <div class="header-cell-title">Receipt Amount</div>
+                      <!-- <div class="header-cell-subtitle">Value</div> -->
+                    </th>
+
+                    @if(__isDisabled()){
+                    <th class="app-table-header-cell tw100">
+                      <div class="flex-center">
+                        <app-icon-button name="doc-delete" toolTip="Delete">
+                        </app-icon-button>
+                      </div>
+                    </th>
+                    }
+                  </tr>
+                </thead>
+                <tbody class="app-table-body">
+                  @for (items of lstentSalReceiptNoteDetailRaw; track
+                  $index) {
+                  <tr class="app-table-row">
+                    <td class="app-table-cell text-center">
+                      {{ $index + 1 }}
+                    </td>
+                    <td class="app-table-cell">
+                      {{items.ibusSalesInvoice.saleInvoiceReferenceNo ? items.ibusSalesInvoice.saleInvoiceReferenceNo :'-'}}
+                    </td>
+                    <td class="app-table-cell text-right">
+                      <div class="table-cell-header">
+                        {{items.ibusSalesInvoice.pActVoucherConfig.voucherName }}
+                      </div>
+                      <div class="table-cell-subtitle">
+                        {{items.ibusSalesInvoice.netAmount}}
+                      </div>
+                    </td>
+                    <td class="app-table-cell">
+                      {{items.creditAmount}}
+                    </td>
+                    <td class="app-table-cell text-right">
+                      <div class="table-cell-header">
+                        {{ items.receivedTillDate}}
+                      </div>
+                      <div class="table-cell-subtitle">
+                        {{items.balanceAmount}}
+                      </div>
+                    </td>
+                    <td class="app-table-cell text-right">
+                      <!-- {{element.unitPrice}} -->
+                       <app-input-control type="number" [(ngModel)]="items.receivedAmount" name="receivedAmount"
+                       [decimal]="2" valuetype="int"  [required]="true"
+                       [errorTrue]="errorTrue" [btnClicked]="__isDisabled()">
+
+                       </app-input-control>
+                    </td>
+                    <td class="center">
+                        <app-icon-button name="doc-delete" toolTip="Delete" (click)="itemsDelete(items,$index)">
+                        </app-icon-button>
+                      </td>
+
+                  </tr>
+                  }
+                </tbody>
+              </table>
+        </scroll>
+
+
+
+    </form>
+</div>

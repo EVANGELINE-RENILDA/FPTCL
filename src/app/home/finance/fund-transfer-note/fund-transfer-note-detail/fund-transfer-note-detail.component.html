@@ -1,0 +1,580 @@
+<div class="v-flex h100" appAccess="FTNSC" [parentId]="pageId">
+  @if(fundTransferId !==0){ @if(fundTransferNote.statusValue === 'APROV' ||
+  fundTransferNote.statusValue === 'CANCL' ){
+  <form #y="ngForm" (ngSubmit)="navigateToDetail(y)" class="flex-end pt8 pr20 header-bg h55">
+    <div class="col-md-3">
+      <app-input-control type="select" label="Document Name" [(ngModel)]="voucherConfigId" name="voucherConfigId"
+        [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+        [required]="true" (onSelect)="getVoucherDetail(voucherId)" type="select"
+        defaultOption="--Select--"></app-input-control>
+    </div>
+    <!--
+      <div class="col-md-3">
+        <app-input-control label="Region" [items]="regionValueDDL" key="constant" keyName="description" [(ngModel)]="regionValue" name="regionValue" type="select" defaultOption="--Select--" ></app-input-control>
+      </div> -->
+    <app-icon-button name="add" appButtonAccess="FTNNB"></app-icon-button>
+  </form>
+  } @else{
+  @if( selectedTab === 0){
+  <div class="mw10">
+    <div class="submit-btn bor-rad" (click)="directApproved()" appButtonAccess="COMBT">Complete</div>
+  </div>}
+  } }
+  <form #l="ngForm" class="content-header">
+    <div class="card-box border-right w100">
+      <div class="card-content">
+        <app-input-control type="date" label="Document Date" [(ngModel)]="fundTransferNote.documentDate"
+          name="documentDate" [required]="true" [errorTrue]="errorTrue"
+          [btnClicked]="screenDisabled()"></app-input-control>
+      </div>
+      <div class="card-content">
+        <label>Branch Name</label>
+        <div class="content">
+          {{
+          fundTransferNote.sentActCompanyBranch.branchName
+          ? fundTransferNote.sentActCompanyBranch.branchName
+          : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Document No</label>
+        <div class="content">
+          {{
+          fundTransferNote.fundTransferNoteRefNo
+          ? fundTransferNote.fundTransferNoteRefNo
+          : "-"
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Document Name</label>
+        <div class="content">
+          {{
+          fundTransferNote.ibusActVoucherConfig.voucherName
+          ? fundTransferNote.ibusActVoucherConfig.voucherName
+          : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Created Date</label>
+        <div class="content">
+          {{ fundTransferNote.enteredDate | appDate }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Created By</label>
+        <div class="content">
+          {{
+          fundTransferNote.enteredByUserName
+          ? fundTransferNote.enteredByUserName
+          : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="date" label="Transaction Date" [(ngModel)]="fundTransferNote.chequeDate"
+          name="chequeDate" [minDate]="fundTransferNote.documentDate"
+          [btnClicked]="screenDisabled()"></app-input-control>
+      </div>
+      <div class="card-content">
+        <app-input-control type="number" label="Reference Number" [(ngModel)]="fundTransferNote.referenceNumber"
+          [maxlength]="20" name="referenceNumber" [btnClicked]="screenDisabled()"></app-input-control>
+      </div>
+    </div>
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content">
+          <label>Status</label>
+          <div class="content status-{{ fundTransferNote.statusValue }}">
+            {{ fundTransferNote.statusDescription }}
+          </div>
+        </div>
+        @if(fundTransferNote.actFundTransferNoteId === 0){
+        <div class="card-content btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveFundTransferNote('save')"
+            appButtonAccess="SAVBT"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="doClear()" appButtonAccess="FTNCB"></app-icon-button>
+        </div>
+        }@else {
+        @if(selectedTab === 0){
+
+        <div class="card-content btn-group">
+          @if(this.fundTransferNote.statusValue
+          !== 'APROV' && this.fundTransferNote.statusValue !== 'CANCL'){
+          <app-icon-button name="save" toolTip="Update" (click)="saveFundTransferNote()"
+            appButtonAccess="UPDBT"></app-icon-button>
+          }
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="
+              openFundTransferNote(fundTransferNote.actFundTransferNoteId)
+            " appButtonAccess="REFSH"></app-icon-button>
+        </div>
+        }
+        }
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <form #a="ngForm" class="ptb14">
+      <row>
+        <div class="col-md-6 border-right">
+          <row>
+            <div class="col-md-12">
+              <label class="label-bold">Debit Info</label>
+            </div>
+          </row>
+          <row>
+            <div class="col-md-6 pt14">
+              <app-input-control type="select" label="Ledger Type" [(ngModel)]="fundTransferNote.debitLedgerTypeValue"
+                name="debitLedgerTypeValue" [items]="initialData.DDLValues.LedgerType" key="constant"
+                keyName="description" [required]="true" [errorTrue]="errorTrue" (onSelect)="ledgerDebitClear()"
+                [btnClicked]="screenDisabled()" defaultOption="--Select--"></app-input-control>
+            </div>
+            <div class="col-md-6 pt14 pl14 only-input">
+              <label class="default-label">Debit Ledger</label>
+              <app-search-debit [(ngModel)]="fundTransferNote.companyDebitAccountId" name="companyDebitAccountId"
+                valueType="int" [required]="true" [errorTrue]="errorTrue" [displayText]="
+                  fundTransferNote.ibusCompanyDebitActLedger.ledgerName
+                " [getTypeValue]="fundTransferNote.debitLedgerTypeValue" [_getRegionValue]="regionValue"
+                (onSelect)="onLedgerSelect($event)" [__fundTrnsferNote]="fundTransferNote"
+                [modeType]="fundTransferNote.debitLedgerTypeValue"
+                [btnClicked]="screenDisabled() || fundTransferNote.debitLedgerTypeValue === ''">
+                <!-- getRegionValue="REGI1" -->
+              </app-search-debit>
+              @if(fundTransferNote.companyDebitAccountId){
+              <label class="default-label">{{
+                fundTransferNote.ibusCompanyDebitActLedger.codeName
+                }}</label>
+              }
+            </div>
+            <div class="col-md-6 pt14">
+              <app-input-control type="number" label="Amount ({{currency}})" [(ngModel)]="fundTransferNote.debitAmount"
+                name="creditAmount" [decimal]="2" [required]="true" [errorTrue]="errorTrue"
+                (onChange)="fixData(fundTransferNote.debitAmount)" (onSelect)="
+                  getDebitAmount(fundTransferNote.debitAmount);
+                  getCreditAmount(fundTransferNote.debitAmount)
+                " [btnClicked]="screenDisabled()" [min]="1"></app-input-control>
+            </div>
+          </row>
+        </div>
+        <div class="col-md-6">
+          <row>
+            <div class="col-md-12">
+              <label class="label-bold">Credit Info</label>
+            </div>
+          </row>
+          <row>
+            <div class="col-md-6 pt14">
+              <app-input-control type="select" label="Ledger Type" [(ngModel)]="fundTransferNote.creditLedgerTypeValue"
+                name="creditLedgerTypeValue" [items]="initialData.DDLValues.LedgerType" key="constant"
+                keyName="description" [required]="true" [errorTrue]="errorTrue"
+                (onSelect)="ledgerClear(fundTransferNote.creditLedgerTypeValue)" [btnClicked]="screenDisabled()"
+                defaultOption="--Select--"></app-input-control>
+            </div>
+            <div class="col-md-6 pt14 pl14 only-input">
+              <label class="default-label">Credit Ledger</label>
+              <app-search-credit [(ngModel)]="fundTransferNote.companyCreditAccountId" name="companyCreditAccountId"
+                valueType="int" [required]="true" [errorTrue]="errorTrue" [displayText]="
+                fundTransferNote.ibusCompanyCreditActLedger.ledgerName
+              " [getTypeValue]="fundTransferNote.creditLedgerTypeValue" [_getRegionValue]="regionValue"
+                (onSelect)="doSelectCreditLedger($event)" [__fundTrnsferNote]="fundTransferNote"
+                [modeType]="fundTransferNote.creditLedgerTypeValue"
+                [btnClicked]="screenDisabled() || fundTransferNote.creditLedgerTypeValue === ''">
+                <!-- getRegionValue="REGI1" -->
+              </app-search-credit>
+              @if(fundTransferNote.companyCreditAccountId){
+              <label class="default-label">{{
+                fundTransferNote.ibusCompanyCreditActLedger.codeName
+                }}</label>
+              }
+            </div>
+            <div class="col-md-6 pt14">
+              <app-input-control type="number" label="Amount ({{currency}})" [(ngModel)]="fundTransferNote.creditAmount"
+                name="creditAmount" [decimal]="2" [btnClicked]="true" [btnClicked]="true" [min]="1"
+                [errorText]="'Invalid'"></app-input-control>
+            </div>
+          </row>
+        </div>
+      </row>
+    </form>
+    } @if (this.fundTransferId !== 0){ @if(selectedTab === 1){
+
+    <div class="flex-1 relative mh100">
+      <scroll>
+        <table class="app-table account-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <th class="app-table-header-cell text-center">
+                <div>#</div>
+              </th>
+              <th class="app-table-header-cell">
+                <div class="header-cell-title">Notes</div>
+                <div class="header-cell-subtitle">Created By | Date & Time</div>
+              </th>
+              <th class="app-table-header-cell  addNotes">
+                @if( this.fundTransferNote.statusValue !== 'APROV' && this.fundTransferNote.statusValue !== 'CANCL'){
+                <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"
+                  appButtonAccess="FTNNB"></app-icon-button>
+                }
+              </th>
+            </tr>
+          </thead>
+          <tbody class="app-table-body">
+            @for (notes of fundTransferNote.ilistbusActNotes; track notes; let i
+            = $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ i + 1 }}
+              </td>
+              <td class="app-table-cell">
+                <div>
+                  {{ notes.notesDetail }}
+                </div>
+                <div class="table-cell-subtitle fw-600">
+                  {{ notes.createdFullName }} |
+                  {{ notes.createdDate | appDate }} {{ notes.createdDate | appDate: 'hh:mm a' }}
+                </div>
+              </td>
+              <td></td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </scroll>
+    </div>
+    } @else if(selectedTab === 2){
+
+    <div class="v-flex h100">
+      <div class="search_text pl12px">
+        <app-input-control placeholder="Search By Any File Name" type="text" [(ngModel)]="filterFileName"
+          namee="filterFileName" [search]="true"></app-input-control>
+      </div>
+      <div class="flex-1 relative mh100">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center">#</th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">File Name</div>
+                  <div class="header-cell-subtitle">
+                    Created By | Date & Time
+                  </div>
+                </th>
+                <th class="app-table-header-cell">File Format</th>
+                <th class="app-table-header-cell">Size</th>
+                <th class="app-table-header-cell">
+                  <div class="flex-center">
+
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"
+                      appButtonAccess="FTAUB">
+                    </app-icon-button>
+
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (doc of fundTransferNote.ilistbusActAttachments |
+              filterAndSort : filterFileName : 'attachmentFileName' : false;
+              track doc; let i = $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div>
+                    {{ doc.attachmentFileName }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ doc.modifiedByFullName }} |
+                    {{ doc.createdDate | appDate }} {{ doc.createdDate | appDate: 'hh:mm a' }}
+                  </div>
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.attachmentType }}
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.attachmentSize }}
+                </td>
+                <td class="app-table-cell">
+                  <div class="flex-center">
+                    <app-icon-button name="download" toolTip="Download" (click)="downloadAttachment(doc, 'down')"
+                      appButtonAccess="FTADB"></app-icon-button>
+                    <app-icon-button name="doc-view" toolTip="View" (click)="downloadAttachment(doc, 'view')"
+                      appButtonAccess="FTGPB"></app-icon-button>
+                    <app-icon-button name="doc-delete" toolTip="Delete" (click)="deleteActAttachmentFile(doc)"
+                      appButtonAccess="FTADE"
+                      [__disabled]="fundTransferNote.statusValue === 'APROV' || fundTransferNote.statusValue === 'CANCL'">
+                    </app-icon-button>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </div>
+    </div>
+
+    <!-- <app-table [hideSelectAll]="true" [showPaginator]="false" [columns]="attachment" [columnsName]="attachmentsName"  [dataSource]="fundTransferNote.ilistbusActAttachments">
+      <ng-template cellHeaderDef="attachmentFileName">
+        <div class="header-cell-title">File Name</div>
+        <div class="header-cell-subtitle">Created By | Date | Time</div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="action">
+        <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"></app-icon-button>
+      </ng-template>
+
+      <ng-template cellDef="action">
+        <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"></app-icon-button>
+      </ng-template>
+
+      <ng-template #slotLeft>
+        <div class="search_text">
+          <app-input-control placeholder="Search By Any File Name" type="text" [search]="true" [(ngModel)]="filterFileName"></app-input-control>
+        </div>
+      </ng-template>
+    </app-table> -->
+    } @else if(selectedTab === 3 && fundTransferNote.statusValue === 'APROV'){
+    <div class="print-wrap flex-1 relative h100">
+      <!-- <div class="ab"> -->
+      <!-- <div class="rel m-8px"> -->
+      <row className="h100">
+        <div class="col-md-4">
+          <app-input-control type="textarea" [maxLength]="250" className="notes-3" [(ngModel)]="
+                  fundTransferNote.ibusActVoucherConfig.pdfOtherComments
+                " name="pdfOtherComments" label="COMMENTS OR SPECIAL INSTRUCTIONS"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" appButtonAccess="UPDBT"
+              (click)="viewfundTransferNoteReceipt()"></app-icon-button>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="pdf-viewer">
+            <div class="ab">
+              <object [data]="fileUrl | appSafe : 'resourceUrl'" type="application/pdf"></object>
+            </div>
+          </div>
+        </div>
+      </row>
+      <!-- </div> -->
+      <!-- </div> -->
+    </div>
+    } }
+  </div>
+
+  <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon name="analytics-outline"></ion-icon>
+          <div>Details</div>
+        </div>
+        @if (this.fundTransferId !== 0){
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if(selectedTab === 3 || fundTransferNote.statusValue === 'APROV'){
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        }
+        }
+      </div>
+      <div class="open-arrow" id="trigger{{ pageId }}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [(ngModel)]="fundTransferNote.comment" name="comment" [maxLength]="250"
+            className="notes" label="Notes" [btnClicked]="screenDisabled()"></app-input-control>
+        </div>
+        <div class="col-md-4">
+          <view-label label="Document Currency" value="{{currency}}"></view-label>
+        </div>
+        <div class="col-md-4">
+          <div class="justify-end">
+            <div class="f-content-txt">
+              <div>Total Debit Amount</div>
+              <div>Total Credit Amount</div>
+              <!-- <div>Difference</div> -->
+            </div>
+            <div class="text-end">
+              <div>{{ fundTransferNote.debitAmount | number : '1.2-2'}}</div>
+              <div>{{ fundTransferNote.creditAmount | number : '1.2-2' }}</div>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Fund Transfer Note</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Fund Transfer Note > Detail > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveFundTransferNoteNotes()"
+            appButtonAccess="FTNSB"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="notesClear()"
+            appButtonAccess="FTNCB"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #b="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Status" [(ngModel)]="fundTransferNoteforNotes.statusValue"
+                name="statusValue" [items]="initialData.DDLValues.DDLFlowStatus" key="constant" keyName="description"
+                [required]="true" [errorTrue]="errorTrue" defaultOption="--Select--">
+              </app-input-control>
+            </div>
+            @if(fundTransferNoteforNotes.statusValue === 'CANCL' &&
+            fundTransferNote.statusValue ==='APROV'){
+            <div class="col-md-6">
+              <app-input-control type="date" label="Reversal Effective Date"
+                [(ngModel)]="fundTransferNoteforNotes.temporaryDocumentDate" name="temporaryDocumentDate"
+                [minDate]="fundTransferNote.documentDate" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+            </div>
+            }
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1" [(ngModel)]="fundTransferNoteforNotes.notesDetail"
+                name="notesDetail" [maxLength]="250" label="Notes"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Fund Transfer Note > Detail > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <app-drop-zone [multiple]="true" [accept]="accept" [fileType]="fileType" appButtonAccess="FTABB"
+          (onUpload)="uploadAttachemnt($event)"></app-drop-zone>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of fundTransferNote.ilistbusActFundTransferNoteStatusHistory;
+      track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByUserName ? status.changedByUserName : "-" }}
+          </div>
+          <div class="sub-status_by">{{ status.effectiveDate | appDate }} {{ status.effectiveDate | appDate:'hh:mm a' }}
+          </div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>
+
+<ng-template #Template>
+  <div class="ab bgc">
+    <div class="rel">
+      <div class="p-fix d-flex justify-content-end p10">
+        <div class="download-button">
+          <button color="primary" (click)="downloadImage()">Download</button>
+        </div>
+        <div class="close-button">
+          <button color="danger" (click)="dialog.closeAll()">Close</button>
+        </div>
+      </div>
+      <div class="d-flex align-items-center h100 justify-content-center w100">
+        <div class="d-flex align-items-center h100 justify-content-center w100 relative">
+          <div class="ab">
+            <div class="rel">
+              <div class="dis-none wcheck active">
+                <img [src]="filePath | appSafe : 'resourceUrl'" alt="PreviewImages" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<app-documents #DocumentsComponent class="none"></app-documents>

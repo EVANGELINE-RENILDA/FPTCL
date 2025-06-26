@@ -1,0 +1,42 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <div class="dialog-title gap-8"><ion-icon src="{{icon}}"></ion-icon>{{title}} > View Email History
+        </div>
+        <div class="slot-right">
+            <div class="btn-group">
+
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <div class="dialog-content-inner h100">
+            <!-- {{xData.email.ientCommunicationTracking.fromEmailId}} -->
+            <scroll>
+                <row>
+                    <div class="col-md-3 border-right p15">
+                        <view-label label="From " class="mb26"
+                            value="{{xData.email.ientCommunicationTracking.fromEmailId}}"></view-label>
+                        <view-label label="To " class="mb26"
+                            value="{{xData.email.ientCommunicationTracking.toEmailId}}"></view-label>
+                        <view-label label="Date " class="mb26"
+                            value="{{xData.email.ientCommunicationTracking.sentDate | appDate}}"></view-label>
+                    </div>
+                    <div class="col-md-9 d-flex justify-content-between  p15">
+
+
+                        <div class="mail-content">
+
+                            {{xData.email.ientCommunicationTracking.mailContent}}
+                        </div>
+                        <div class="end">
+                            <view-label label="Status "
+                                class="mb26 status-{{xData.email.ientCommunicationTracking.sentStatusValue}}"
+                                value="{{xData.email.ientCommunicationTracking.sentStatusDescription}}"></view-label>
+                        </div>
+                    </div>
+                </row>
+            </scroll>
+        </div>
+    </div>
+</div>

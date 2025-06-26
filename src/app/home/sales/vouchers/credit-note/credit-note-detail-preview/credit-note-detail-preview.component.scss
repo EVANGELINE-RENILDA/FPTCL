@@ -1,0 +1,97 @@
+.cancel-btn{
+  min-width: 80px;
+}
+.dialog-box {
+display: flex;
+flex-direction: column;
+height: 100%;
+
+.dialog-header {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 1rem;
+  background: #fff;
+
+  h6 {
+    font-weight: 400;
+    font-size: 15px;
+    color:#000000;
+    margin: 0 !important;
+  }
+}
+
+.mat-dialog-content {
+  padding: 1rem;
+  margin: 0 !important;
+  flex: 1;
+  position: relative;
+  height: 100%;
+  max-height: 100% !important;
+  width: 100% !important;
+
+  .text {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: #e0f0fb;
+    // background: rgba(255, 143, 116, 0.116);
+  }
+}
+
+.mat-dialog-actions {
+  margin: 0 !important;
+  max-height: 50px;
+  min-height: 50px;
+  display: flex;
+  padding: 0 1rem;
+}
+}
+.mat-dialog-title{
+font-weight: 400;
+  font-size: 15px;
+  color: #000;
+  margin: 0 !important;
+}
+.label-value {
+font-size: 14px !important;
+font-weight: 500 !important;
+
+}
+.label-value-head {
+font-size: 15px !important;
+font-weight: 500 !important;
+
+}
+
+.form-value {
+font-size: 14px !important;
+font-weight: 600 !important;
+// margin-left: 0.5rem;
+}
+.mail-content {
+white-space: pre-wrap;
+word-break: break-word;
+}
+.mail-box {
+
+.form-control {
+  min-height: 237px !important;
+}
+}
+.mat-dialog-actions {
+margin: 0 !important;
+height: 60px;
+}
+
+.p-3{
+padding: 16px;
+}
+.head{
+font-weight: 400;
+  font-size: 15px;
+  color: #000;
+  margin: 0 !important;
+}
+.mt30{
+margin-top: 30px;
+}

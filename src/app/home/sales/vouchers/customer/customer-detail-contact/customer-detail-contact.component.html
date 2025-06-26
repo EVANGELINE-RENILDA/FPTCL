@@ -1,0 +1,126 @@
+<div class="v-flex h100">
+    <div>
+        <div class="end p10">
+            <app-icon-button name="add" toolTip="Add" (click)="createNewContact(0)"></app-icon-button>
+        </div>
+    </div>
+    <div class="h100">
+        <app-table class="h100" [hasHeader]="false" [columns]="contactColumn" [hideSelectAll]="true" [hasIndex]="true"
+            [columnsName]="contactColumnName" [dataSource]="parentData.lstCustomerContact" [hasIndex]="true">
+            <ng-template cellDef="add" let-element>
+                <app-icon-button name="open" (click)="createNewContact(element.actcustomercontactId)"></app-icon-button>
+            </ng-template>
+
+            <ng-template cellDef="ContactName" let-element>
+                <div>
+                    {{ element.firstname}} {{element.middlename}} {{element.lastname}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="contactNo" let-element>
+                <div>
+                    {{ element.phoneno}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="email" let-element>
+                <div>
+                    {{ element.emailid}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="beginDate" let-element>
+                <div>
+                    {{ element.effectiveDatetime | appDate}}
+                </div>
+            </ng-template>
+            <ng-template cellDef="status" let-element>
+                <div class="status status-{{element.statusdescription}}">{{element.statusdescription}}</div>
+
+                
+            </ng-template>
+
+        </app-table>
+    </div>
+</div>
+
+<ng-template #contactDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Sales >
+                Customer > Detail >
+                @if(newContactEdit === true){
+
+                Add Contact
+                }
+                @else {
+                Edit Contact
+                }
+
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(newContactEdit === true){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveCustomerContact()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="clearSalesCustomerContact()"></app-icon-button>
+                    }
+                    @else {
+                    <app-icon-button name="save" toolTip="Update" (click)="saveCustomerContact()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openSalesCustomerContact(customerContact.actcustomercontactId,'refresh')"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #c="ngForm">
+                    <row>
+                        <div class="col-md-4"><app-input-control label="First Name" type="text" [required]="true"
+                                [errorTrue]="errorTrue" [(ngModel)]="customerContact.firstname" name="firstname"
+                                placeholder="Enter First Name"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="
+                             Middle Name" type="text" [(ngModel)]="customerContact.middlename" name="middlename"
+                                placeholder="Enter Middle Name"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Last Name" type="text" [required]="true"
+                                [(ngModel)]="customerContact.lastname" name="lastname" placeholder="Enter Last Name"
+                                [errorTrue]="errorTrue"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Email ID" type="email" [required]="true"
+                                [(ngModel)]="customerContact.emailid" name="emailid" [errorTrue]="errorTrue"
+                                [email]="true" placeholder="Enter Email Id" [required]="true"></app-input-control></div>
+
+                        <div class="col-md-4"><app-input-control label="Contact No" type="number"
+                                [errorTrue]="errorTrue" [required]="true" [(ngModel)]="customerContact.phoneno"
+                                name="phoneno" placeholder="Enter Contact No" [maxLength]="10"
+                                [minLength]="5"></app-input-control></div>
+                        <div class="col-md-4">
+                            <app-input-control type="select" label="Contact Type"
+                                [(ngModel)]="customerContact.contacttypevalue" name="contacttypevalue" [required]="true"
+                                [errorTrue]="errorTrue" [items]="initialData.DDLValues.configcustAddressType"
+                                key="constant" keyName="description">
+                            </app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control type="select" label="Gender" [(ngModel)]="customerContact.gendervalue"
+                                name="gendervalue" [required]="true" [errorTrue]="errorTrue"
+                                [items]="initialData.DDLValues.configCustGender" key="constant" keyName="description"
+                                defaultOption="--Select--"></app-input-control>
+                        </div>
+
+                        <div class="col-md-4"><app-input-control label="Status" type="select" [errorTrue]="errorTrue"
+                                [required]="true" [(ngModel)]="customerContact.statusValue" name="statusValue"
+                                [items]="initialData.DDLValues.configCustStatus" key="constant" keyName="description"
+                                defaultOption="--Select--"></app-input-control></div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

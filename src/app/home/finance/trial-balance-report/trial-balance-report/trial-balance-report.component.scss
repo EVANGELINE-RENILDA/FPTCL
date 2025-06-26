@@ -1,0 +1,135 @@
+.space {
+  display: flex;
+  justify-content: space-between;
+}
+.center {
+  display: flex;
+  justify-content: center;
+}
+.pr {
+  padding-right: 10px;
+}
+.mr-3 {
+  margin-right: 1rem !important;
+  margin-left: 1rem !important;
+  // padding-bottom: 2px;
+  display: flex;
+  align-items: center;
+}
+.mr-2 {
+  margin-right: 0.5rem !important;
+}
+.parant-color {
+  color: #964b00;
+}
+.child-color {
+  color: #11802c;
+}
+.result-panel {
+  .report-header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+
+    .report-header-flex {
+      flex: 0 0 100%;
+      max-width: 100%;
+
+      .report-header-bg {
+        background-color: #edeef4 !important;
+        // font-size: 14px;
+        // font-weight: 500;
+        text-transform: capitalize !important;
+        font-size: var(--table-header-font-size) !important;
+        font-weight: 600;
+        border: none !important;
+
+        .parant {
+          cursor: pointer;
+
+          .report-header-flex {
+            flex: 1;
+          }
+
+          .report-header-const {
+            width: 503px;
+
+            .ml-210 {
+              margin-left: 210px;
+            }
+          }
+        }
+
+        .part-1 {
+          // flex-grow: 1;
+          flex: 1;
+          padding: 3px 5px;
+        }
+        .part-2 {
+          flex: 1;
+          padding: 3px 0px;
+          width: 50px;
+          span {
+            font-size: var(--table-data-sub-font-size);
+            font-weight: 500 !important;
+            color: var(--table-header-sub-color) !important;
+          }
+        }
+      }
+    }
+  }
+}
+.border-left-secondary {
+  border-left: 1px solid #cccccc !important;
+}
+
+.border-bottom-secondary {
+  border-bottom: 1px solid #cccccc !important;
+}
+.border-top-secondary {
+  border-top: 1px solid #cccccc !important;
+}
+.report-body {
+  cursor: pointer;
+
+  .report-data-flex {
+    flex: 1;
+    .report-data-flex-child {
+      flex-grow: 1;
+      padding: 0.532rem;
+    }
+  }
+  .part-2 {
+    span {
+      margin-right: 5px;
+    }
+  }
+
+  .report-data-const {
+    width: 503px;
+    .report-data-const-child {
+      padding: 0.55rem;
+      .mr-15rem {
+        margin-right: 15rem;
+      }
+      .mr-5px {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+.text-right {
+  text-align: right;
+}
+.xp-3 {
+  padding: 0 0.55rem;
+  text-align: right;
+}
+.px35 {
+  padding: 0 15px;
+}
+.margin {
+  margin-bottom: 15px;
+  margin-top: 5px;
+}

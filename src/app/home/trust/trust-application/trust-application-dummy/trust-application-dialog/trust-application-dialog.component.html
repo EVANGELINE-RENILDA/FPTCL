@@ -1,0 +1,39 @@
+@if(type === 'client'){
+<div class="dialog-container">
+    <div class="dialog-header">
+        <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                src="assets/icons/accordian/addinfo.svg"></ion-icon>
+            Trust Application <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Client
+            Information<ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+            Detail
+        </div>
+        <div class="slot-right d-flex gap-10">
+            @if(method === 'update'){
+            <div class="d-flex gap-10">
+                <app-icon-button name="edit" toolTip="Edit" (click)="editDatas()"></app-icon-button>
+            </div>
+            }
+            @if(method === 'create'){
+            <app-icon-button name="save" toolTip="Save" (click)="saveClient()"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="clearData('client')"></app-icon-button>
+            }
+            @if(updateBtns){
+
+            }
+            <app-icon-button name="close" toolTip="Close" (click)="closeAllDialogs()"></app-icon-button>
+
+
+        </div>
+    </div>
+    <div class="dialog-content">
+        <scroll>
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+        </scroll>
+
+    </div>
+</div>
+}

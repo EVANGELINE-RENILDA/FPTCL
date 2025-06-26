@@ -1,0 +1,30 @@
+<ng-template #abc>
+    <div class="ab bgc">
+        <div class="rel">
+            <div class="p-fix d-flex">
+                <div class="download-button">
+                    <button (click)="download()">
+                        Download
+                    </button>
+                </div>
+                <div class="close-button">
+                    <button (click)="close()">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+            <div class="d-flex align-items-center h100 justify-content-center w100">
+                <div class="d-flex align-items-center h100 justify-content-center w100 relative">
+                    <div class="ab">
+                        <div class="rel">
+                            <div class="dis-none wcheck active">
+                                <img [src]="filePath" alt="PreviewImages">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

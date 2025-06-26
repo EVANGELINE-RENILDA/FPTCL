@@ -1,0 +1,86 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/receipt-fund.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Notify Deceased Estate</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <row>
+            <div class="col-md-9">
+                <row>
+                    <div class="col-md-4"> <view-label label="Assigned Officer"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedToFullname}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="Assigned Date"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedDate | appDate}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="TAT"
+                            value=" {{application.ientTrustApplicationAssignedOfficer.tatDays}} Days"></view-label>
+                    </div>
+                </row>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex">
+                    <!-- @if(this.application.assignedOfficerFlag === 'True'){
+                    @if(this.application.reAssignFlag === 'True'){ -->
+                    <form #p="ngForm" class="col-md-10 w250">
+                        <app-input-control type="select" key="constant" keyName="description" placeholder="Officer"
+                            defaultOption="--Select--"></app-input-control>
+                    </form>
+                    <div class="col-md-2"><app-icon-button name="reassign" toolTip="Reassign"></app-icon-button></div>
+                    <!-- } -->
+                    <!-- @if(this.application.selfAssignFlag ===' True'){
+                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                            toolTip="Self Assign"></app-icon-button></div>
+                    } -->
+                    <!-- } -->
+                </div>
+            </div>
+        </row>
+        <div class="mb26"></div>
+        <div class=" d-flex align-items-center gap-10">
+            <app-input-control label="Death Notice Ref No"></app-input-control>
+            <app-icon-button name="search"></app-icon-button>
+        </div>
+
+        <!-- @if(editData === false){ -->
+        <row>
+            <div class="col-md-4"><view-label label="Person Name" value="Jose"></view-label></div>
+            <div class="col-md-4"><view-label label="Date Of Death" value="05 May 2024"></view-label></div>
+            <div class="col-md-4"><view-label label="Notice Date" value="07 Jun 2024"></view-label></div>
+            <div class="col-md-12 mb20"></div>
+            <div class="col-md-4"><view-label label="Entered By" value="Estate Officer 1"></view-label></div>
+            <div class="col-md-4"><view-label label="Entered Date" value="04 Jul 2024"></view-label></div>
+            <div class="col-md-4"><view-label label="Branch" value="Port Suva"></view-label></div>
+            <!-- <div class="col-md-12 end">
+                <app-icon-button name="edit" toolTip="Edit" (click)="editNotify()"></app-icon-button>
+            </div> -->
+        </row>
+        <!-- }
+        @else{
+        <row>
+            <div class="col-md-4"><app-input-control label="Person Name"></app-input-control></div>
+            <div class="col-md-4"><app-input-control label="Date Of Death"></app-input-control></div>
+            <div class="col-md-4"><app-input-control label="Notice Date"></app-input-control></div>
+           <div class="col-md-12 mb20"></div> 
+        <div class="col-md-4"><app-input-control label="Entered By"></app-input-control></div>
+        <div class="col-md-4"><app-input-control label="Entered Date"></app-input-control></div>
+        <div class="col-md-4"><app-input-control label="Branch"></app-input-control></div>
+        <div class="col-md-12 end">
+            <div class="d-flex gap-10">
+                <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                <app-icon-button name="save" toolTip="Save" (click)="saveNotify()"></app-icon-button>
+            </div>
+        </div>
+        </row>
+        } -->
+        <div class="col-md-12 end">
+            <button type="submit" class="approve-btn"> Death Notice Identified </button>
+        </div>
+    </accordion-body>
+</accordion-item>

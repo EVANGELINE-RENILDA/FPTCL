@@ -1,0 +1,236 @@
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                <div class="screen-text">Budget</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Budget Review</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<div class="content-wrapper">
+    <app-multi-page-url
+        url="/home/budget/configuration/budget-configuration/budget-configuration-detail"></app-multi-page-url>
+    <div class="sticky-card">
+        <row>
+
+            <div class="col-md-3">
+                <view-label label="Budget Name" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Created Date" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Status" value=""></view-label>
+            </div>
+
+            <div class="col-md-12 mb20"></div>
+
+            <div class="col-md-3">
+                <view-label label="Budget Type" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Created By" value=""></view-label>
+            </div>
+
+        </row>
+    </div>
+
+    <div class="sub-table bg-white-padd w100">
+        <div class="table-container">
+            <div class="table-wrapper">
+                <table class="w100">
+                    <tr>
+                        <th>Budget Name</th>
+                        <th>Fiscal Year</th>
+                        <th>Name of the Department</th>
+                        <th>User ID - Access</th>
+                        <th>Date and Time</th>
+                        <th>Status</th>
+                        <th>Open</th>
+                    </tr>
+                    <tr>
+                        <td>Financial Budget</td>
+                        <td>Jan-23 To Dec-23</td>
+                        <td>Sales & Marketing</td>
+                        <td>Kandhan</td>
+                        <td>07/02/2023 18:08:00</td>
+                        <td>Pending</td>
+                        <td>
+                            <div class="d-flex justify-content-center pointer" (click)="navigateView()">
+                                View
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Financial Budget</td>
+                        <td>Jan-23 To Dec-23</td>
+                        <td>Production</td>
+                        <td>Balaji</td>
+                        <td>07/02/2023 18:08:00</td>
+                        <td>Pending</td>
+                        <td>
+                            <div class="d-flex justify-content-center pointer" (click)="navigateView()">
+                                View
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Financial Budget</td>
+                        <td>Jan-23 To Dec-23</td>
+                        <td>Administration</td>
+                        <td>John</td>
+                        <td>07/02/2023 18:08:00</td>
+                        <td>Pending</td>
+                        <td>
+                            <div class="d-flex justify-content-center pointer">
+                                <app-icon-button name="open" toolTip="Open Selected" (click)="navigateView()"></app-icon-button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="sub-table bg-white-padd w100 mb20">
+        <div class="table-container">
+            <div class="table-wrapper">
+                <table class="w100 table2">
+                    <tr>
+                        <th>Name of the Department</th>
+                        <th>Account</th>
+                        <th>Account Type</th>
+                        <th>Jan-23</th>
+                        <th>Feb-23</th>
+                        <th>Mar-23</th>
+                        <th>Apr-23</th>
+                        <th>Consolidate (YTD)</th>
+                    </tr>
+                    <tr>
+                        <td>Sales & Marketing</td>
+                        <td>Income & Expense</td>
+                        <td rowspan="4">Sales</td>
+                        <td>100,000.00</td>
+                        <td>100,000.00</td>
+                        <td>100,000.00</td>
+                        <td>100,000.00</td>
+                        <td>400,000.00</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Administration</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Production</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>800,000.00</td>
+                        <td>800,000.00</td>
+                        <td>800,000.00</td>
+                        <td>800,000.00</td>
+                        <td>3,200,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>Sales & Marketing</td>
+                        <td>Income & Expense</td>
+                        <td rowspan="4">Purchase</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Administration</td>
+                        <td>Income & Expense</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Production</td>
+                        <td>Income & Expense</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>200,000.00</td>
+                        <td>200,000.00</td>
+                        <td>200,000.00</td>
+                        <td>200,000.00</td>
+                        <td>800,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>Sales & Marketing</td>
+                        <td>Balance Sheet</td>
+                        <td rowspan="3">Plan & Machinery</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Administration</td>
+                        <td>Balance Sheet</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Production</td>
+                        <td>Balance Sheet</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="2">TOTAL</td>
+                        <td>1,100,000.00</td>
+                        <td>1,100,000.00</td>
+                        <td>1,100,000.00</td>
+                        <td>1,100,000.00</td>
+                        <td>4,400,000.00</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

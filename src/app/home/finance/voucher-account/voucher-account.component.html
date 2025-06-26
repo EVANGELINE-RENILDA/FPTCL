@@ -1,0 +1,326 @@
+<div class="content-wrapper" appAccess="AVASC" [parentId]="pageId">
+
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" columnID="leadId"
+        [dataSource]="tableData" (pageChanged)="pageChanged($event)" (onSelect)="onSelect($event)"
+        [hideSelectAll]="true">
+        <ng-template #slotRight>
+            <app-icon-button name="add" toolTip="Add New" (click)="createDialogBox()"
+                appButtonAccess="VochrActNewBtn"></app-icon-button>
+        </ng-template>
+
+        <!-- <ng-template cellHeaderDef="voucherName" >
+            <div class="center">
+                Voucher Name
+            </div>
+        </ng-template>
+        <ng-template cellDef="voucherName" let-element>
+            <div class="center" >
+               {{ element.voucherName}}
+            </div>
+        </ng-template> -->
+        <ng-template cellDef="effectiveDate" let-element>{{element.effectiveDate | appDate}}</ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="openDialogBox(element.actVoucherAccountConfigId)"></app-icon-button>
+        </ng-template>
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="250px"></app-search>
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Voucher Account Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"
+                        appButtonAccess="VochrActNewBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="createVoucherAccountSearch('clear')"
+                        appButtonAccess="VochrActNewBtn"></app-icon-button>
+                    <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (ngSubmit)="onSearch()">
+                        <row>
+                            <!-- <div class="col-md-3">
+                              <view-label label="Branch" value="{{branchName}}"></view-label>
+
+                            </div> -->
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Voucher Type"
+                                    [items]="initialData.DDLValues.ddlVoucherSubTypeCVA" key="constant"
+                                    keyName="description" [(ngModel)]="searchParams.lstrVoucherTypeValue"
+                                    defaultOption="All" name="lstrVoucherTypeValue" (onEnter)="onSearch()"
+                                    (onSelect)="getVoucherNameByVoucherType(searchParams.lstrVoucherTypeValue)"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Voucher Name"
+                                    [(ngModel)]="searchParams.lngactVoucherConfigId" name="lngactVoucherConfigId2"
+                                    defaultOption="All" (onEnter)="onSearch()" [items]="voucherNameDDL" key="id"
+                                    keyName="description"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Effect Type"
+                                    [items]="initialData.DDLValues.ddlEffectCVA" key="constant" keyName="description"
+                                    [(ngModel)]="searchParams.lstrEffectTypeValue" name=" lstrEffectTypeValue"
+                                    defaultOption="All" (onEnter)="onSearch()"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="select" label="Voucher Account Type"
+                                    [(ngModel)]="searchParams.lstrBranchAccountTypeValue"
+                                    name="lstrBranchAccountTypeValue" [items]="initialData.DDLValues.ddlLedgerTypeCVA"
+                                    defaultOption="All" key="constant" keyName="description"
+                                    (onEnter)="onSearch()"></app-input-control>
+                            </div>
+                            <div class="col-md-3">
+                                <app-input-control type="date" label="Created Date From"
+                                    [(ngModel)]="searchParams.ldtmEffectiveDateFrom"
+                                    [maxDate]="searchParams.ldtmEffectiveDateTo" name="ldtmEffectiveDateFrom"
+                                    (onEnter)="onSearch()" placeholder="Select Date"
+                                    [maxDate]="currentDate"></app-input-control>
+                            </div>
+
+                            <div class="col-md-3">
+                                <app-input-control type="date" label="Created Date To"
+                                    [(ngModel)]="searchParams.ldtmEffectiveDateTo"
+                                    [minDate]="searchParams.ldtmEffectiveDateFrom" name="ldtmEffectiveDateTo"
+                                    (onEnter)="onSearch()" placeholder="Select Date"
+                                    [maxDate]="currentDate"></app-input-control>
+                            </div>
+                            <!-- <div class="col-md-3">
+                                <app-input-control type="select" label="Region" [(ngModel)]="searchParams.regionValue"
+                                    name="regionValue" [items]="initialData.DDLValues.DDLRegion" defaultOption="All"
+                                    key="constant" keyName="description" (onEnter)="onSearch()"></app-input-control>
+                            </div> -->
+
+
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #accountDialog>
+    <div class="dialog-container">
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">Add Account List </div>
+                <div class="slot-right">
+                    <div class="btn-group ">
+                        @if(voucherAccount.actVoucherAccountConfigId === 0){
+
+                        <app-icon-button name="save" toolTip="Save" (click)="saveVoucherAccount()"
+                            appButtonAccess="VochrActSaveBtn"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="doDetailClear()"
+                            appButtonAccess="VochrActClearBtn"></app-icon-button>
+                        }
+                        @else {
+                        <app-icon-button name="save" toolTip="Update" (click)="saveVoucherAccount()"
+                            appButtonAccess="VochrActUpdateBtn"></app-icon-button>
+                        <app-icon-button name="refresh" toolTip="refresh"
+                            (click)="openvoucherAccoutDetails(voucherAccount.actVoucherAccountConfigId)"
+                            appButtonAccess="VochrActRefreshBtn"></app-icon-button>
+                        }
+                        <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <scroll>
+                    <div class="dialog-content-inner">
+                        @if(data.showErrorMessage){
+                        <div class="error-panel">
+                            <app-error-message></app-error-message>
+                        </div>
+                        }
+                        <form #l="ngForm">
+                            <row>
+                                <div class="col-md-3">
+                                    <app-input-control type="select" defaultOption="--Select--" label="Voucher Category"
+                                        (onSelect)="getVoucherTypeByVoucherCategory(voucherAccount.voucherCategoryValue);voucherAccount.voucherTypeValue='';voucherAccount.actVoucherConfigId=0"
+                                        [items]="initialData.DDLValues.ddlVoucherCategoryCVA" key="constant"
+                                        keyName="description" [(ngModel)]="voucherAccount.voucherCategoryValue"
+                                        name="voucherCategoryValue" [required]="true"
+                                        [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-3">
+                                    <app-input-control type="select" defaultOption="--Select--" label="Voucher Type"
+                                        placeholder="Enter Service No" [items]="ddlVoucherList" key="constant"
+                                        keyName="description" name="voucherTypeValue"
+                                        (onSelect)="getVoucherNameByVoucherType(voucherAccount.voucherTypeValue);voucherAccount.actVoucherConfigId=0 "
+                                        [(ngModel)]="voucherAccount.voucherTypeValue" [required]="true"
+                                        [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-3">
+                                    <app-input-control type="select" defaultOption="--Select--" label="Voucher Name"
+                                        [(ngModel)]="voucherAccount.actVoucherConfigId" [items]="voucherNameDDL"
+                                        key="id" keyName="description" valueType="int"
+                                        (onSelect)="openVoucherConfig(voucherAccount.actVoucherConfigId)"
+                                        name="actVoucherConfigId" [required]="true"
+                                        [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <!-- <div class="col-md-3">
+                                    <app-input-control type="select" label="Region" defaultOption="--Select--"
+                                        [(ngModel)]="voucherAccount.regionValue" [items]="regionValueDDl" key="constant"
+                                        keyName="description" name="regionValue" [required]="true"
+                                        [errorTrue]="errorTrue"></app-input-control>
+                                </div> -->
+                                <div class="col-md-3">
+                                    <app-input-control type="text" label="Voucher Nature" [btnClicked]="true"
+                                        [(ngModel)]="voucherAccount.ientActVoucherConfig.voucherNatureDescription"
+                                        name=" voucherNatureDescription" [required]="true"
+                                        [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-3">
+                                    <app-input-control type="date" label="Created Date"
+                                        [(ngModel)]="voucherAccount.effectiveDate" name="effectiveDate"
+                                        [required]="true" [errorTrue]="errorTrue"
+                                        [btnClicked]="true"></app-input-control>
+                                </div>
+                                <div class="col-md-3">
+                                    <app-input-control type="select" defaultOption="--Select--"
+                                        label="Voucher Account Type" [items]="initialData.DDLValues.ddlLedgerTypeCVA"
+                                        key="constant" keyName="description" name="voucherAccountTypeValue"
+                                        [required]="true" [errorTrue]="errorTrue" placeholder="Select Created Date"
+                                        [(ngModel)]="voucherAccount.voucherAccountTypeValue"
+                                        name="voucherAccountTypeValue"></app-input-control>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <app-input-control type="number" label="Index Number"
+                                        [(ngModel)]="voucherAccount.indexNumber" valueType="int" name="indexNumber"
+                                        [required]="true" [errorTrue]="errorTrue" [maxLength]="2"></app-input-control>
+                                </div>
+                                <div class="col-md-3">
+                                    <app-input-control type="select" defaultOption="--Select--" label="Effect Type"
+                                        [(ngModel)]="voucherAccount.effectTypeValue" name="effectTypeValue"
+                                        [items]="initialData.DDLValues.ddlEffectCVA" key="constant"
+                                        keyName="description" (onSelect)="loadEntryType(voucherAccount.effectTypeValue)"
+                                        [required]="true" [errorTrue]="errorTrue"
+                                        [btnClicked]="isEffective"></app-input-control>
+                                </div>
+                                @if(voucherAccount.effectTypeValue !== 'NOIMP'){
+
+                                <div class="col-md-3">
+                                    <app-input-control type="select" defaultOption="--Select--" label="Entry Type"
+                                        [(ngModel)]="voucherAccount.entryTypeValue"
+                                        [items]="initialData.DDLValues.ddlEntryTypeCVA" key="constant"
+                                        keyName="description" name="entryTypeValue" [btnClicked]="true"
+                                        [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                }
+                                @if(voucherAccount.entryTypeValue === 'SINGL' && voucherAccount.effectTypeValue !==
+                                'NOIMP'){
+
+                                <div class="col-md-3">
+                                    <!-- <app-input-control type="search" label="Ledger Name" defaultOption="--Select--"
+                                        placeholder="Enter Created By"
+                                        [(ngModel)]="voucherAccount.netAmountDebitLedgerId"
+                                        name="netAmountDebitLedgerId" [items]="initialData.DDLValues.DDlAllUser"
+                                        key="constant" keyName="description" [search]="true"></app-input-control> -->
+
+                                    <app-search-debit label="Ledger Name"
+                                        [displayText]="voucherAccount.ientLedger.ledgerName"
+                                        (onSelect)="doSelectLedgerName($event)"
+                                        [(ngModel)]="voucherAccount.netAmountDebitLedgerId"
+                                        name="netAmountDebitLedgerId"
+                                        [valuetype]="(voucherAccount.debitPartyAccountFlag === '' || voucherAccount.debitPartyAccountFlag === 'N') ? 'int' :''"
+                                        [required]="(voucherAccount.debitPartyAccountFlag === '' || voucherAccount.debitPartyAccountFlag === 'N') && errorTrue"
+                                        [errorTrue]="(voucherAccount.debitPartyAccountFlag === '' || voucherAccount.debitPartyAccountFlag === 'N') && errorTrue"
+                                        [btnClicked]="voucherAccount.debitPartyAccountFlag === 'Y' || voucherAccount.regionValue === ''"
+                                        regionValue='REGI1'></app-search-debit>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-checkbox class="cb-0" name="debitPartyAccountFlag"
+                                        [checked]="voucherAccount.debitPartyAccountFlag === 'Y'"
+                                        (change)="debitPartyChange($event)"
+                                        [required]="voucherAccount.netAmountDebitLedgerId === 0 || voucherAccount.debitPartyAccountFlag === 'N'"
+                                        color="primary" [disabled]="voucherAccount.netAmountDebitLedgerId > 0">Party
+                                        Account</mat-checkbox>
+
+                                </div>
+                                }
+                                @if(voucherAccount.entryTypeValue === 'DBLE' && voucherAccount.effectTypeValue !==
+                                'NOIMP'){
+                                <div class="col-md-3 only-input pt-4 pl-4">                                 
+                                    <app-search-debit label="Debit Ledger"
+                                        [(ngModel)]="voucherAccount.netAmountDebitLedgerId"
+                                        name="netAmountDebitLedgerId" (onSelect)="doSelectLedgerName($event)"
+                                        valueType="int"
+                                        [required]="voucherAccount.debitPartyAccountFlag === '' || voucherAccount.debitPartyAccountFlag === 'N'"
+                                        [errorTrue]="errorTrue"
+                                        [btnClicked]="voucherAccount.debitPartyAccountFlag === 'Y'" [search]="true"
+                                        regionValue="REGI1"
+                                        [displayText]="voucherAccount.ientLedger.ledgerName"></app-search-debit>
+                                </div>
+
+                                <div class="col-md-3 only-input pt-4 pl-4">
+                                    <!-- {{errorTrue}} -->
+                                    <app-search-debit label="Credit Ledger"
+                                        [(ngModel)]="voucherAccount.netAmountCreditLedgerId"
+                                        name="netAmountCreditLedgerId" (onSelect)="doSelectCreditLedgerName($event);"
+                                        [required]="voucherAccount.creditPartyAccountFlag === '' || voucherAccount.creditPartyAccountFlag === 'N'"
+                                        [errorTrue]="(voucherAccount.creditPartyAccountFlag === '' || voucherAccount.creditPartyAccountFlag === 'N') && errorTrue"
+                                        [btnClicked]="voucherAccount.creditPartyAccountFlag === 'Y'" [search]="true"
+                                        [displayText]="voucherAccount.ientCreditLedger.ledgerName"
+                                        valueType="int"></app-search-debit>
+
+                                    <!-- <label class="default-label">wertyui</label> -->
+
+                                </div>
+                                <div class="col-md-3 btn-group">
+                                    <app-checkbox name="debitPartyAccountFlag"
+                                        [checked]="voucherAccount.debitPartyAccountFlag === 'Y'"
+                                        (change)="debitPartyChange($event)" [btnClicked]="voucherAccount.netAmountDebitLedgerId !== 0 ||
+                                         voucherAccount.creditPartyAccountFlag=== 'Y'"></app-checkbox>Debit Party
+                                    Account
+                                </div>
+                                <div class="col-md-3 btn-group">
+                                    <app-checkbox class="cb-0" name="creditPartyAccountFlag"
+                                        [checked]="voucherAccount.creditPartyAccountFlag === 'Y'"
+                                        (change)="creditPartyChange($event)" [btnClicked]="voucherAccount.netAmountCreditLedgerId !== 0 ||
+                                        voucherAccount.debitPartyAccountFlag === 'Y'">
+                                    </app-checkbox>Credit Party Account
+                                </div>
+
+
+                                }
+
+
+                            </row>
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Voucher Account </div>
+
+            </li>
+
+
+        </ul>
+    </div>
+</ng-template>

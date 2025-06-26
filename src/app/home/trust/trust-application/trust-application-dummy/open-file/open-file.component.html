@@ -1,0 +1,193 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/open-file.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Open File</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="bg-white-padd">
+            <row>
+                <div class="col-md-9">
+                    <row>
+                        <div class="col-md-4"> <view-label label="Assigned Officer"
+                                value="{{application.ientTrustApplicationAssignedOfficer.assignedToFullname}}"></view-label>
+                        </div>
+                        <div class="col-md-4"> <view-label label="Assigned Date"
+                                value="{{application.ientTrustApplicationAssignedOfficer.assignedDate | appDate}}"></view-label>
+                        </div>
+                        <div class="col-md-4"> <view-label label="TAT"
+                                value=" {{application.ientTrustApplicationAssignedOfficer.tatDays}} Days"></view-label>
+                        </div>
+                    </row>
+                </div>
+                <div class="col-md-3 end">
+                    <div class="d-flex">
+                        @if(this.type.isEditable === 'Y'){
+
+                        @if(this.application.reAssignFlag === 'True'){
+                        <form #p="ngForm" class="col-md-10 w250">
+                            <app-input-control type="select" key="constant" keyName="description" placeholder="Officer"
+                                [items]="assignedOfficerDDL" defaultOption="--Select--"
+                                [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                                name="assignedTo"></app-input-control>
+                        </form>
+                        <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                                toolTip="Reassign"></app-icon-button></div>
+                        }
+                        @if(this.application.selfAssignFlag === 'True'){
+                        <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                                toolTip="Self Assign"></app-icon-button></div>
+
+                        }
+                        }
+                    </div>
+                </div>
+            </row>
+            <app-tab-sub-group (tabChange)="onChange($event)">
+                <app-sub-tab tabTitle="Detail">
+                    <div class="mb20"></div>
+                    @if(editData === true){
+                    <row>
+                        <div class="col-md-3 pl15">
+                            <app-input-control type="special" label="File Number"
+                                [(ngModel)]="application.ientFptclFile.fileNo" name="fileNo" />
+                        </div>
+                        <div class="col-md-3 pl15">
+                            <app-input-control label="File Type" [(ngModel)]="application.ientFptclFile.fileTypeValue"
+                                name="fileTypeValue" [items]="initialData.DDLValues.DDLFileType" key="constant"
+                                keyName="description" type="select" defaultOption="--Select--" />
+                        </div>
+                        <div class="col-md-3 pl15">
+                            <app-input-control type="text" label="File Name"
+                                [(ngModel)]="application.ientFptclFile.fileName" name="fileName" />
+                        </div>
+                        <div class="col-md-3 pl15">
+                            <app-input-control type="select" label="Customer Name"
+                                [(ngModel)]="application.ientFptclFile.customerId" name="customerId"
+                                [items]="customerDDL" key="id" keyName="fullName" defaultOption="--Select--" />
+                        </div>
+                        <div class="col-md-3 pl15">
+                            <app-input-control type="select" label="Status"
+                                [(ngModel)]="application.ientFptclFile.statusValue" name="statusValue"
+                                [items]="initialData.DDLValues.DDLFPTCLFileStatus" key="constant" keyName="description"
+                                type="select" defaultOption="--Select--" />
+                        </div>
+                        <div class="col-md-3 d-flex gap-10 pl15 mt20">
+
+                            <app-checkbox (change)="isPhysical($event)"
+                                [checked]="  this.application.ientFptclFile.isPhysicalFile ==='Y'"> </app-checkbox>Is
+                            Physical
+                        </div>
+                        @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                        <div class="col-md-12 end d-flex gap-10">
+                            @if(application.ientFptclFile.fileId === 0){
+
+                            <app-icon-button name="save" (click)="saveOpenFile()"></app-icon-button>
+                            <app-icon-button name="clear" (click)="clearData()"></app-icon-button>
+                            }
+                            @else {
+                            <app-icon-button name="save" toolTip="Update" (click)="saveOpenFile()"></app-icon-button>
+                            <app-icon-button name="refresh" toolTip="Refresh"
+                                (click)="refreshOpenFile()"></app-icon-button>
+                            }
+                        </div>
+                        }
+                    </row>
+                    }
+                    @else {
+                    <row>
+                        <div class="col-md-3 pl15">
+                            <view-label label="File Number" [value]="application.ientFptclFile.fileNo" />
+                        </div>
+                        <div class="col-md-3 pl15">
+                            <view-label label="File Type" [value]="application.ientFptclFile.fileTypeDescription" />
+                        </div>
+                        <div class="col-md-3 pl15">
+                            <view-label label="File Name" [value]="application.ientFptclFile.fileName" />
+                        </div>
+                        <div class="col-md-3 pl15">
+                            <view-label label="Customer Name" [value]="application.ientFptclFile.customerName" />
+                        </div>
+                        <div class="col-md-12 mb20">
+
+                        </div>
+                        <div class="col-md-3 pl15">
+                            <view-label label="Status  " [value]="application.ientFptclFile.statusDescription" />
+                        </div>
+                        <div class="col-md-3 pl15">
+                            Is Physical
+                            <app-checkbox (change)="isPhysical($event)" [btnClicked]="true"
+                                [checked]="  this.application.ientFptclFile.isPhysicalFile ==='Y'"> </app-checkbox>
+                        </div>
+
+                        <div class="col-md-12 mt20 end">
+                            @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                            <app-icon-button name="edit" toolTip="Edit" (click)="editOpenFile()"></app-icon-button>
+                            }
+                        </div>
+                    </row>
+                    }
+
+                    <div class="mb26"></div>
+                    <form #notiForm="ngForm">
+                        <row>
+                            <div class="col-md-12">
+                                <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                    [maxLength]="250" [required]="true" label="Notes" [(ngModel)]="notesMessage"
+                                    name="notesMessage"></app-input-control>
+                            </div>
+                            <div class="col-md-12 mb26 gap-10 end">
+                                @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                                <app-icon-button name="save" toolTip="Save"
+                                    (click)="saveTrustApplication()"></app-icon-button>
+                                }
+                                <!-- @if(trustApplicationNotes.isUpdateButtonShow ==='Y'){
+                            <app-icon-button name="save" toolTip="Update" (click)="saveTrustApplication()"></app-icon-button>
+                            <app-icon-button name="refresh" toolTip="Refresh" (click)=" refeshData()"></app-icon-button>
+                            }
+                            @else {
+        
+                            <app-icon-button name="clear" toolTip="Clear" (click)="clearCourtOrderNotes()"></app-icon-button>
+                            } -->
+                            </div>
+                            <div class=""></div>
+                        </row>
+                    </form>
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Linked Document">
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+                            <app-table [columns]="linkedColumns" [columnsName]="linkedColumnsName"
+                                [hideSelectAll]="true" [dataSource]="tableLinkedData">
+                                <ng-template cellDef="action" let-element>
+                                    <app-icon-button name="doc-download"
+                                        (click)="downloadLinkedFile(element)"></app-icon-button>
+                                </ng-template>
+                            </app-table>
+                        </div>
+                    </div>
+                </app-sub-tab>
+            </app-tab-sub-group>
+        </div>
+
+
+
+
+
+
+        <div class="col-md-12 end gap-10">
+            @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+            <button type="submit" class="approve-btn" (click)="completeApplicationStage()">File Opened</button>
+            <button type="submit" class="complete-btn" (click)="cancelProcess()"> Cancel</button>
+            }
+        </div>
+
+
+
+    </accordion-body>
+</accordion-item>

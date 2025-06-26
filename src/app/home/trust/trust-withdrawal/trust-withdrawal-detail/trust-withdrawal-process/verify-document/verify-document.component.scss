@@ -1,0 +1,15 @@
+.const1 {
+    height: 150px;
+    overflow: auto;
+    border: 1px solid #eee;
+    padding-top: 10px;
+    width: 100%;
+}
+
+.sub-table {
+    tr {
+        td {
+            text-align: start !important;
+        }
+    }
+}

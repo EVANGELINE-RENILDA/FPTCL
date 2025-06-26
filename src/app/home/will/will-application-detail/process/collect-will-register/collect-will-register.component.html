@@ -1,0 +1,191 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+      <div class="accordion-header-content">
+        <div class="accordion-title">
+          <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+          <div class="accordion-title-content">
+            <div>Collect Registered Will</div>
+          </div>
+        </div>
+      </div>
+    </accordion-header>
+    <accordion-body>
+
+      <div class="outer-content-wrapper">
+        <div class="content-wrapper">
+          <row>
+            <div class="col-md-9">
+              <row>
+                <div class="col-md-4"> <view-label label="Assigned Officer" [value]="application.ientWillApplicationAssignedOfficerHistory.assignedToFullname"></view-label>
+                </div>
+                <div class="col-md-4"> <view-label label="Assigned Date" [value]="application.ientWillApplicationAssignedOfficerHistory.assignedDate | appDate"></view-label>
+                </div>
+                <!-- <div class="col-md-4"> <view-label label="TAT" value=" 5 Days"></view-label> -->
+                <!-- </div> -->
+              </row>
+            </div>
+            <div class="col-md-3">
+              <div class="d-flex">
+                @if(this.type.isEditable === 'Y'){
+                    @if(this.application.reAssignFlag === 'True'){
+                <form #p="ngForm" class="col-md-10 w250">
+                  <app-input-control type="select" key="constant" keyName="description"
+                  placeholder="Officer" [items]="assignedOfficerDDL"
+                  defaultOption="--Select--"
+                  [(ngModel)]="willApplicationAssignedOfficer.assignedTo"
+                  name="assignedTo" ></app-input-control>
+                
+                </form>
+                <div class="col-md-2"><app-icon-button name="reassign" toolTip="Reassign" (click)="reAssignWill()"></app-icon-button></div>
+                 } 
+                    @if(this.application.selfAssignFlag ===' True'){
+                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignWill()"
+                            toolTip="Self Assign"></app-icon-button></div>
+                    }
+                }
+              </div>
+            </div>
+          </row>
+          <row>
+            <div class="col-md-6 mt10 mb20">
+              <div class="outer-content-wrapper">
+                <div class="content-wrapper">
+                  <div>
+                    <!-- @if (loading) { -->
+                    <app-table [columns]="linkedColumns" [columnsName]="linkedColumnsName"
+                      [dataSource]="requireTableData" [hideSelectAll]="true" [showPaginator]="false"
+                      >
+                      <ng-template cellDef="action" let-element>
+                       
+                          <app-icon-button name="doc-download" (click)="downloadFile(element)">
+                          </app-icon-button>
+                         <!-- <app-icon-button name="doc-view" (click)="viewFile(element)">
+                          </app-icon-button> -->
+                   
+                      </ng-template>
+                    </app-table>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mt10">
+              <form #notiForm="ngForm">
+                <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue" [maxLength]="250"
+                  [required]="true" label="Notes" [(ngModel)]="notesMessage" name="notesMessage"></app-input-control>
+              </form>
+              @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True' &&
+            application.statusValue!=='WCNLD'){
+              <div class="end gap-10 mb26">
+                <app-icon-button name="save" toolTip="Save" (click)="saveNotes()"></app-icon-button>
+              </div>
+            }
+
+            </div>
+            <div class="pb10"></div>
+
+          </row>
+          <div class="col-md-12 end gap-10">
+            @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True' &&
+            application.statusValue!=='WCNLD'){
+            <button type="submit" class="complete-btn" (click)="cancelProcess()">Cancel</button>
+            <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Registered Will Collected</button>
+            }
+          </div>
+        </div>
+      </div>
+
+    </accordion-body>
+  </accordion-item>
+
+  <ng-template #Template>
+    <div class="ab bgc">
+        <div class="rel">
+            <div class="p-fix d-flex">
+                <div class="download-button">
+                    <button color="primary" (click)="downloadImageFile()">
+                        Download
+                    </button>
+                </div>
+                <div class="close-button">
+                    <button color="danger" (click)="dialog.closeDialog()">
+                        Close
+                    </button>
+                </div> 
+
+            </div>
+            <div class="d-flex align-items-center h100 justify-content-center w100">
+                <div class="d-flex align-items-center h100 justify-content-center w100 relative">
+                    <div class="ab">
+                        <div class="rel">
+                            <div class="dis-none wcheck active">
+                                <img [src]="filePath" alt="PreviewImages">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #notesCancelDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/trust.svg"></ion-icon>
+                Reason For Cancellation
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="cancelApplicationStage()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearCancelNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialogClose()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #x="ngForm">
+                    <row>
+
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="cancelNotesDescription" name="cancelNotesDescription" [maxLength]="250"
+                                [required]="true" label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #cancelAlert>
+    <div class="dialog-container">
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+                <div class="notification-header">
+                    <div class="notification-icon">
+                        <ion-icon name="warning-outline"></ion-icon>
+                    </div>
+                    <div class="notification-title">Alert</div>
+                </div>
+                <div class="text-center p10">
+                    Are you sure you want to cancel this process
+                </div>
+                <div class="center">
+                    <div class="notification-button">
+                        <button class="btn-notification" (click)="cancelNotesDialog()">Yes</button>
+                        <button class="btn-notification cancel-btn" (click)="dialog.closeAll()">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

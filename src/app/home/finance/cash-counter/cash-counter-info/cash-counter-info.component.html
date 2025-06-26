@@ -1,0 +1,149 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="dialog-title">
+      <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+      @if(cashCounter.cashCounterId === 0){ Cash Counter > Details > New }
+      @if(cashCounter.cashCounterId !== 0){ Cash Counter > Details > Edit }
+      <!-- @if(lockLedger.actLedgerLockHistoryId === 0){ Ledger > Detail > Add Lock
+      Detail } @else{ Ledger > Detail > Edit Lock Detail } -->
+    </div>
+    <div class="slot-right">
+      <div class="btn-group">
+        @if(cashCounter.cashCounterId === 0) {
+        <div class="col-md-12 btn-group">
+          <div class="ml-auto d-flex gap pt-2">
+            <app-icon-button
+              name="save"
+              toolTip="Save"
+              class="mr6"
+              (click)="saveCashCounter('save')"
+              [parentId]="pageId"
+            ></app-icon-button>
+            <app-icon-button
+              name="clear"
+              toolTip="Clear"
+              (click)="doClear()"
+            ></app-icon-button>
+            <app-icon-button
+              name="close"
+              toolTip="Close"
+              (click)="dialog.closeDialog()"
+            ></app-icon-button>
+          </div>
+        </div>
+
+        } 
+        @else {
+        <div class="col-md-12 btn-group">
+          <div class="ml-auto d-flex gap-10 pt-2">
+            <app-icon-button
+              name="save"
+              toolTip="Update"
+              (click)="saveCashCounter('update')"
+             
+              [parentId]="pageId"
+            ></app-icon-button>
+            <app-icon-button
+              name="refresh"
+              toolTip="Refresh"
+              (click)="refreshCashCounter()"
+             
+            ></app-icon-button>
+            <app-icon-button
+              name="close"
+              toolTip="Close"
+              (click)="dialog.closeDialog()"
+            ></app-icon-button>
+          </div>
+        </div>
+        }
+        <ng-container *ngIf="!editBtn">
+          <div class="col-md-12 btn-group">
+            <div class="ml-auto d-flex gap pt-2">
+              <app-icon-button
+                name="edit"
+                toolTip="Edit"
+                (click)="cashCounterEdit()"
+                [hidden]="hideBtnBasedonStatus()"
+                [parentId]="pageId"
+              ></app-icon-button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="dialog-content-inner h100">
+      <div class="v-flex h100 relative bg-white">
+        <form #a="ngForm" autocomplete="off" class="h100">
+          <div class="ab">
+            <div class="rel">
+              <div class="row w100">
+                <div class="col-md-12">
+                  <ng-container>
+                    <div class="bank-detail p-2">
+                      <div class="d-flex">
+                        <div class="card-detail-panel w100">
+                          <div class="card-detail-panel-border">
+                            <div class="col-md-12">
+                              <app-input-control
+                                type="number"
+                                class="unEditableField"
+                                label="Cash Counter Number"
+                                [(ngModel)]="cashCounter.cashCounterNo"
+                                name="cashCounterNo"
+                                [btnClicked]="true"
+                              ></app-input-control>
+                            </div>
+
+                            <div class="col-md-12">
+                              <app-input-control
+                                type="text"
+                                label="Cash Counter Name"
+                                [maxLength]="50"
+                                [(ngModel)]="cashCounter.cashCounterName"
+                                name="cashCounterName"
+                                [required]="true"
+                                [errorTrue]="errorTrue"
+                                [btnClicked]="!editBtn"
+                              ></app-input-control>
+                            </div>
+                            <div class="col-md-12">
+                              <app-input-control
+                                type="text"
+                                label="Cash Counter Code"
+                                [maxLength]="6"
+                                [(ngModel)]="cashCounter.cashCounterCode"
+                                name="cashCounterCode"
+                                [required]="true"
+                                [errorTrue]="errorTrue"
+                                [btnClicked]="!editBtn"
+                              ></app-input-control>
+                            </div>
+                            <div class="col-md-12">
+                              <div class="d-flex status">
+                                <div>Status : &nbsp;</div>
+                                <div class="mx-1">
+                                  <accouts-status-table
+                                    [statusDescription]="
+                                      cashCounter.statusDescription
+                                    "
+                                  ></accouts-status-table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

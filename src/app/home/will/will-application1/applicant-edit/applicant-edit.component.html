@@ -1,0 +1,1490 @@
+<div class="dialog-container">
+  @if(name === 'applicant'){
+  <div class="dialog-header">
+    <div class="dialog-title">Applicant Details</div>
+    <div class="slot-right">
+      <div class="btn-group">
+        @if(editData === false){
+        <app-icon-button name="edit" toolTip="Edit" (click)="editValues()"></app-icon-button>
+        }
+        @if(editData === true){
+        @if(willApplicant.appWillApplicationApplicantId === 0){
+        <app-icon-button name="save" toolTip="Save" (click)="saveApplicant()"></app-icon-button>
+        <app-icon-button name="clear" toolTip="Clear" (click)="clearApplicant()"></app-icon-button>
+        }
+        @else{
+        <app-icon-button name="save" toolTip="Update" (click)="saveApplicant()"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshApplicant()"></app-icon-button>
+        }
+        }
+        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-content py10">
+    <scroll>
+      <form #a="ngForm" class="dialog-content-inner">
+        <row>
+          <div class="pb10"></div>
+          @if(editData === true && willApplicant.appWillApplicationApplicantId === 0){
+          <div class="d-flex w100 align-items-center">
+            <div class="col-md-3 pl10">
+              <app-input-control label="Customer" [items]="initialData.DDLValues.DDLCustomer" key="id" type="select"
+                [(ngModel)]="willApplicant.customerId" name="customerId" defaultOption="--Select--"
+                (onSelect)="openCustomer($event,'applicant')" keyName="fullName"></app-input-control>
+            </div>
+            <div class="col-md-1">
+              <app-icon-button name="search" toolTip="Search"></app-icon-button>
+            </div>
+          </div>
+          }
+          @if(editData === false){
+          <div class="d-flex w100 p10">
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Applicant Information</div>
+                <div class=" box-pad">
+                  <view-label class="pb10" label=" CRM No" [value]="willApplicant.ientCustomer.customerId"></view-label>
+
+                  <!-- <view-label class="pb10" label="Client Name"
+                value="{{trustApplicationApplicant}}"></view-label> -->
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="First Name"
+                    [value]="willApplicant.ientCustomer.firstName"></view-label>
+                  <view-label class="pb10" label="Middle Name"
+                    [value]="willApplicant.ientCustomer.middleName"></view-label>
+                  <view-label class="pb10" label="Last Name" [value]="willApplicant.ientCustomer.lastName"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Date Of Birth"
+                    [value]="willApplicant.ientCustomer.dateOfBirth | appDate"></view-label>
+                  <view-label class="pb10" label="Date Of Death"
+                    [value]="willApplicant.ientCustomer.dateOfDeath | appDate"></view-label>
+                  <view-label class="pb10" label="Gender"
+                    [value]="willApplicant.ientCustomer.genderDescription"></view-label>
+                  <view-label class="pb10" label="Nationality"
+                    [value]="willApplicant.ientCustomer.nationalityDescription"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Email ID" [value]="willApplicant.ientCustomer.emailId"></view-label>
+                  <view-label class="pb10" label="Contact No"
+                    [value]="willApplicant.ientCustomer.contactNo"></view-label>
+                  <view-label class="pb10" label="Alternate Contact No"
+                    [value]="willApplicant.ientCustomer.alternateContactNo"></view-label>
+                  <view-label class="pb10" label="Marital Status"
+                    [value]="willApplicant.maritalStatusDescription"></view-label>
+                  <view-label class="pb10" label="Occupation" [value]="willApplicant.occupation"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Father Name"
+                    [value]="willApplicant.ientCustomer.fatherName"></view-label>
+                  <view-label class="pb10" label="Mother Name"
+                    [value]="willApplicant.ientCustomer.motherName"></view-label>
+                  <view-label class="pb10" label="Guardian Name"
+                    [value]="willApplicant.ientCustomer.gaurdianName"></view-label>
+                  <!-- <view-label class="pb10" label="Home Contact" [value]="willApplicant.ientCustomer.contactNo"></view-label>
+                  <view-label class="pb10" label="Office Contact" [value]="willApplicant.ientCustomer."></view-label>
+                  <view-label class="pb10" label="Email" [value]="willApplicant.ientCustomer."></view-label> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Address Details</div>
+                <div class=" box-pad">
+                  <view-label label="Line 1" class="pb10"
+                    [value]="willApplicant.ientCustomer.iPermanentaddress.line1"></view-label>
+                  <view-label label="Line 2" class="pb10"
+                    [value]="willApplicant.ientCustomer.iPermanentaddress.line2"></view-label>
+                  <view-label label="Line 3" class="pb10"
+                    [value]="willApplicant.ientCustomer.iPermanentaddress.line3"></view-label>
+                  <view-label label="Province" class="pb10"
+                    [value]="willApplicant.ientCustomer.iPermanentaddress.provinceDescription"></view-label>
+                  <view-label label="Island" class="pb10"
+                    [value]="willApplicant.ientCustomer.iPermanentaddress.islandDescription"></view-label>
+                  <view-label label="Village" class="pb10"
+                    [value]="willApplicant.ientCustomer.iPermanentaddress.village"></view-label>
+                  <view-label label="Po Box No" class="pb10"
+                    [value]="willApplicant.ientCustomer.iPermanentaddress.poBoxNo"></view-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> KYC Details</div>
+                <div class=" box-pad">
+                  <view-label label="FNPF No" class="pb10" [value]="willApplicant.ientCustomer.fnpfNo"></view-label>
+                  <view-label label="Driving License No" class="pb10"
+                    [value]="willApplicant.ientCustomer.driverLicenseNo"></view-label>
+                  <view-label label="Voter ID" class="pb10" [value]="willApplicant.ientCustomer.voterId"></view-label>
+                  <view-label label="National ID" class="pb10"
+                    [value]="willApplicant.ientCustomer.nationalId"></view-label>
+                  <view-label label="TIN" class="pb10" [value]="willApplicant.ientCustomer.tin"></view-label>
+                  <view-label label="Passport No" class="pb10" [value]="willApplicant.ientCustomer.passportNo">
+                  </view-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">Social Platform Details</div>
+                <div class=" box-pad">
+                  <view-label label="Facebook ID" class="pb10"
+                    [value]="willApplicant.ientCustomer.facebookId"></view-label>
+                  <view-label label="LinkedIn ID" class="pb10"
+                    [value]="willApplicant.ientCustomer.linkedinId"></view-label>
+                  <view-label label="Whatsapp" class="pb10"
+                    [value]="willApplicant.ientCustomer.whatsappNumber"></view-label>
+                  <view-label label="Viber" class="pb10" [value]="willApplicant.ientCustomer.viberNumber"></view-label>
+                  <view-label label="Skype ID" class="pb10" [value]="willApplicant.ientCustomer.skypeId"></view-label>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+          @if(editData === true){
+          <div class="d-flex w100 p10">
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Applicant Information</div>
+                <div class=" box-pad">
+                  <app-input-control class="pb10" label="First Name" name="firstName"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.firstName" [errorTrue]="errorTrue" [required]="true"
+                    [maxLength]="250"></app-input-control>
+                  <app-input-control class="pb10" label="Middle Name" name="middleName"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.middleName" [maxLength]="250"></app-input-control>
+                  <app-input-control class="pb10" label="Last Name" name="lastName"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.lastName" [errorTrue]="errorTrue" [required]="true"
+                    [maxLength]="250"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Date Of Birth" name="dateOfBirth" type="date"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.dateOfBirth" [errorTrue]="errorTrue" [required]="true"
+                    [maxDate]="currentDate"></app-input-control>
+                  <app-input-control class="pb10" label="Date Of Death" name="dateOfDeath" type="date"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.dateOfDeath" [maxDate]="currentDate"></app-input-control>
+
+                  <app-input-control class="pb10" label="Gender" name="genderValue" [errorTrue]="errorTrue"
+                    [(ngModel)]="willApplicant.ientCustomer.genderValue" [required]="true"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [items]="initialData.DDLValues.DDLGender" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <app-input-control class="pb10" label="Nationality" name="nationalityValue"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.nationalityValue" [errorTrue]="errorTrue" [required]="true"
+                    [items]="initialData.DDLValues.DDLNationality" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Email ID"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.emailId" name="emailId" type="email"></app-input-control>
+                  <app-input-control class="pb10" label="Contact No"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.contactNo" [minLength]="5" [maxLength]="10" name="contactNo"
+                    type="number"></app-input-control>
+                  <app-input-control class="pb10" label="Alternate Contact No"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0" [minLength]="5" [maxLength]="10"
+                    [(ngModel)]="willApplicant.ientCustomer.alternateContactNo" name="alternateContactNo"
+                    type="number"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Father Name"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.fatherName" name="fatherName"></app-input-control>
+                  <app-input-control class="pb10" label="Mother Name"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.motherName" name="motherName"></app-input-control>
+                  <app-input-control class="pb10" label="Guardian Name"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willApplicant.ientCustomer.gaurdianName" name="gaurdianName"></app-input-control>
+                  <app-input-control class="pb10" label="Marital Status" name="maritalStatusValue"
+                    [(ngModel)]="willApplicant.maritalStatusValue" [errorTrue]="errorTrue" [required]="true"
+                    [items]="initialData.DDLValues.DDLMaritialStatus" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <app-input-control class="pb10" label="Occupation" [(ngModel)]="willApplicant.occupation"
+                    [errorTrue]="errorTrue" [required]="true" name="occupation"></app-input-control>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Address Details</div>
+                <div class=" box-pad">
+                  <app-address-edit [errorTrue]="errorTrue" [ientAddress]="willApplicant.ientCustomer.iPermanentaddress"
+                    [btnClicked]="willApplicant.ientCustomer.customerId !== 0" type="residential"></app-address-edit>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">
+                  KYC Details <span>(Any one field is Mandatory)</span>
+                </div>
+                <div class=" box-pad">
+                  <row>
+
+                    <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                        [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                        [errorTrue]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.birthRegNo==='' "
+                        [(ngModel)]="willApplicant.ientCustomer.fnpfNo" [maxLength]="20"
+                        name="fnpfNo "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Driving License No"
+                        [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willApplicant.ientCustomer.driverLicenseNo" name="driverLicenseNo "
+                        [maxLength]="20"
+                        [errorTrue]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Voter ID"
+                        [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willApplicant.ientCustomer.voterId" name="voterId " [maxLength]="20"
+                        [errorTrue]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="National ID"
+                        [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willApplicant.ientCustomer.nationalId" name="nationalId " [maxLength]="20"
+                        [errorTrue]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo===''&& willApplicant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="TIN"
+                        [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willApplicant.ientCustomer.tin" name="tin " [maxLength]="20"
+                        [errorTrue]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.nationalId===''&& willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.birthRegNo===''&& willApplicant.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willApplicant.ientCustomer?.passportNo===''&& willApplicant.ientCustomer?.nationalId===''&& willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.birthRegNo===''&& willApplicant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Passport No"
+                        [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willApplicant.ientCustomer.passportNo" name="passportNo " [maxLength]="20"
+                        [errorTrue]="willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId===''&& willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo===''&& willApplicant.ientCustomer?.birthRegNo===''  && errorTrue "
+                        [required]="willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId===''&& willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Birth Reg No"
+                        [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willApplicant.ientCustomer.birthRegNo" name="birthRegNo  " [maxLength]="20"
+                        [errorTrue]="willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId===''&& willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.passportNo==='' && errorTrue "
+                        [required]="willApplicant.ientCustomer?.tin===''&& willApplicant.ientCustomer?.nationalId===''&& willApplicant.ientCustomer?.driverLicenseNo==='' && willApplicant.ientCustomer?.voterId==='' && willApplicant.ientCustomer?.fnpfNo==='' && willApplicant.ientCustomer?.passportNo==='' " />
+                    </div>
+
+                  </row>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">Social Platform Details</div>
+                <div class=" box-pad">
+                  <row>
+                    <app-input-control label="Facebook ID" [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willApplicant.ientCustomer.facebookId" name="facebookId"
+                      class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="LinkedIn ID" [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willApplicant.ientCustomer.linkedinId" name="linkedinId"
+                      class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Whatsapp" [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willApplicant.ientCustomer.whatsappNumber" name="whatsappNumber"
+                      class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Viber" [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willApplicant.ientCustomer.viberNumber" name="viberNumber"
+                      class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Skype ID" [btnClicked]="willApplicant.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willApplicant.ientCustomer.skypeId" name="skypeId"
+                      class="pb10 col-md-12"></app-input-control>
+                  </row>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          }
+
+
+
+        </row>
+      </form>
+    </scroll>
+
+  </div>
+  }
+  @if(name === 'spouse'){
+  <div class="dialog-header">
+    <div class="dialog-title">Spouse Details</div>
+    <div class="slot-right">
+      <div class="btn-group">
+        @if(editData === false){
+        <app-icon-button name="edit" toolTip="Edit" (click)="editValues()"></app-icon-button>
+        }
+        @if(editData === true){
+        @if(willSpouse.willApplicationSpouseId === 0){
+        <app-icon-button name="save" toolTip="Save" (click)="saveSpouse()"></app-icon-button>
+        <app-icon-button name="clear" toolTip="Clear" (click)="clearSpouse()"></app-icon-button>
+        }
+        @else{
+        <app-icon-button name="save" toolTip="Update" (click)="saveSpouse()"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshSpouse()"></app-icon-button>
+        }
+        }
+        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-content py10">
+    <scroll>
+      <form #b="ngForm" class="dialog-content-inner">
+        <row>
+          <div class="pb10"></div>
+          @if(editData === true && willSpouse.willApplicationSpouseId === 0){
+          <div class="d-flex w100 align-items-center">
+            <div class="col-md-3 pl10">
+              <app-input-control label="Customer" [items]="initialData.DDLValues.DDLCustomer" key="id" type="select"
+                [(ngModel)]="willSpouse.customerId" name="customerId" defaultOption="--Select--"
+                (onSelect)="openCustomer($event,'applicant')" keyName="fullName"></app-input-control>
+            </div>
+            <div class="col-md-1">
+              <app-icon-button name="search" toolTip="Search"></app-icon-button>
+            </div>
+          </div>
+          }
+          @if(editData === false){
+          <div class="d-flex w100 p10">
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Applicant Information</div>
+                <div class=" box-pad">
+                  <view-label class="pb10" label=" CRM No"></view-label>
+
+                  <!-- <view-label class="pb10" label="Client Name"
+                    value="{{trustApplicationApplicant}}"></view-label> -->
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="First Name" [value]="willSpouse.ientCustomer.firstName"></view-label>
+                  <view-label class="pb10" label="Middle Name"
+                    [value]="willSpouse.ientCustomer.middleName"></view-label>
+                  <view-label class="pb10" label="Last Name" [value]="willSpouse.ientCustomer.lastName"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Date Of Birth"
+                    [value]="willSpouse.ientCustomer.dateOfBirth | appDate"></view-label>
+                  <view-label class="pb10" label="Date Of Death"
+                    [value]="willSpouse.ientCustomer.dateOfDeath | appDate"></view-label>
+                  <view-label class="pb10" label="Gender"
+                    [value]="willSpouse.ientCustomer.genderDescription"></view-label>
+                  <view-label class="pb10" label="Nationality"
+                    [value]="willSpouse.ientCustomer.nationalityDescription"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Email ID" [value]="willSpouse.ientCustomer.emailId"></view-label>
+                  <view-label class="pb10" label="Contact No" [value]="willSpouse.ientCustomer.contactNo"></view-label>
+                  <view-label class="pb10" label="Alternate Contact No"
+                    [value]="willSpouse.ientCustomer.alternateContactNo"></view-label>
+
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Father Name"
+                    [value]="willSpouse.ientCustomer.fatherName"></view-label>
+                  <view-label class="pb10" label="Mother Name"
+                    [value]="willSpouse.ientCustomer.motherName"></view-label>
+                  <view-label class="pb10" label="Guardian Name"
+                    [value]="willSpouse.ientCustomer.gaurdianName"></view-label>
+                  <!-- <view-label class="pb10" label="Home Contact" [value]="willSpouse.ientCustomer.contactNo"></view-label>
+                      <view-label class="pb10" label="Office Contact" [value]="willSpouse.ientCustomer."></view-label>
+                      <view-label class="pb10" label="Email" [value]="willSpouse.ientCustomer."></view-label> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Address Details</div>
+                <div class=" box-pad">
+                  <view-label label="Line 1" class="pb10"
+                    [value]="willSpouse.ientCustomer.iPermanentaddress.line1"></view-label>
+                  <view-label label="Line 2" class="pb10"
+                    [value]="willSpouse.ientCustomer.iPermanentaddress.line2"></view-label>
+                  <view-label label="Line 3" class="pb10"
+                    [value]="willSpouse.ientCustomer.iPermanentaddress.line3"></view-label>
+                  <view-label label="Province" class="pb10"
+                    [value]="willSpouse.ientCustomer.iPermanentaddress.provinceDescription"></view-label>
+                  <view-label label="Island" class="pb10"
+                    [value]="willSpouse.ientCustomer.iPermanentaddress.islandDescription"></view-label>
+                  <view-label label="Village" class="pb10"
+                    [value]="willSpouse.ientCustomer.iPermanentaddress.village"></view-label>
+                  <view-label label="Po Box No" class="pb10"
+                    [value]="willSpouse.ientCustomer.iPermanentaddress.poBoxNo"></view-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> KYC Details</div>
+                <div class=" box-pad">
+                  <view-label label="FNPF No" class="pb10" [value]="willSpouse.ientCustomer.fnpfNo"></view-label>
+                  <view-label label="Driving License No" class="pb10"
+                    [value]="willSpouse.ientCustomer.driverLicenseNo"></view-label>
+                  <view-label label="Voter ID" class="pb10" [value]="willSpouse.ientCustomer.voterId"></view-label>
+                  <view-label label="National ID" class="pb10"
+                    [value]="willSpouse.ientCustomer.nationalId"></view-label>
+                  <view-label label="TIN" class="pb10" [value]="willSpouse.ientCustomer.tin"></view-label>
+                  <view-label label="Passport No" class="pb10" [value]="willSpouse.ientCustomer.passportNo">
+                  </view-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">Social Platform Details</div>
+                <div class=" box-pad">
+                  <view-label label="Facebook ID" class="pb10"
+                    [value]="willSpouse.ientCustomer.facebookId"></view-label>
+                  <view-label label="LinkedIn ID" class="pb10"
+                    [value]="willSpouse.ientCustomer.linkedinId"></view-label>
+                  <view-label label="Whatsapp" class="pb10"
+                    [value]="willSpouse.ientCustomer.whatsappNumber"></view-label>
+                  <view-label label="Viber" class="pb10" [value]="willSpouse.ientCustomer.viberNumber"></view-label>
+                  <view-label label="Skype ID" class="pb10" [value]="willSpouse.ientCustomer.skypeId"></view-label>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+          @if(editData === true){
+          <div class="d-flex w100 p10">
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Applicant Information</div>
+                <div class=" box-pad">
+                  <app-input-control class="pb10" label="First Name" name="firstName"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.firstName" [errorTrue]="errorTrue" [required]="true"
+                    [maxLength]="250"></app-input-control>
+                  <app-input-control class="pb10" label="Middle Name" name="middleName"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.middleName" [maxLength]="250"></app-input-control>
+                  <app-input-control class="pb10" label="Last Name" name="lastName"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.lastName" [errorTrue]="errorTrue" [required]="true"
+                    [maxLength]="250"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Date Of Birth" name="dateOfBirth" type="date"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.dateOfBirth" [errorTrue]="errorTrue" [required]="true"
+                    [maxDate]="currentDate"></app-input-control>
+                  <app-input-control class="pb10" label="Date Of Death" name="dateOfDeath" type="date"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.dateOfDeath" [maxDate]="currentDate"></app-input-control>
+
+                  <app-input-control class="pb10" label="Gender" name="genderValue"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0" [errorTrue]="errorTrue"
+                    [(ngModel)]="willSpouse.ientCustomer.genderValue" [required]="true"
+                    [items]="initialData.DDLValues.DDLGender" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <app-input-control class="pb10" label="Nationality" name="nationalityValue"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.nationalityValue" [errorTrue]="errorTrue" [required]="true"
+                    [items]="initialData.DDLValues.DDLNationality" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Email ID" [(ngModel)]="willSpouse.ientCustomer.emailId"
+                    name="emailId" [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    type="email"></app-input-control>
+                  <app-input-control class="pb10" label="Contact No"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.contactNo" [minLength]="5" [maxLength]="10" name="contactNo"
+                    type="number"></app-input-control>
+                  <app-input-control class="pb10" label="Alternate Contact No"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0" [minLength]="5" [maxLength]="10"
+                    [(ngModel)]="willSpouse.ientCustomer.alternateContactNo" name="alternateContactNo"
+                    type="number"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Father Name"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.fatherName" name="fatherName"></app-input-control>
+                  <app-input-control class="pb10" label="Mother Name"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.motherName" name="motherName"></app-input-control>
+                  <app-input-control class="pb10" label="Guardian Name"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                    [(ngModel)]="willSpouse.ientCustomer.gaurdianName" name="gaurdianName"></app-input-control>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Address Details</div>
+                <div class=" box-pad">
+                  <app-address-edit [errorTrue]="errorTrue" [ientAddress]="willSpouse.ientCustomer.iPermanentaddress"
+                    [btnClicked]="willSpouse.ientCustomer.customerId !== 0" type="residential"></app-address-edit>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">
+                  KYC Details <span>(Any one field is Mandatory)</span>
+                </div>
+                <div class=" box-pad">
+                  <row>
+
+                    <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                        [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                        [errorTrue]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.birthRegNo==='' "
+                        [(ngModel)]="willSpouse.ientCustomer.fnpfNo" [maxLength]="20"
+                        name="fnpfNo "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Driving License No"
+                        [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willSpouse.ientCustomer.driverLicenseNo" name="driverLicenseNo " [maxLength]="20"
+                        [errorTrue]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Voter ID"
+                        [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willSpouse.ientCustomer.voterId" name="voterId " [maxLength]="20"
+                        [errorTrue]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="National ID"
+                        [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willSpouse.ientCustomer.nationalId" name="nationalId " [maxLength]="20"
+                        [errorTrue]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo===''&& willSpouse.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="TIN"
+                        [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willSpouse.ientCustomer.tin" name="tin " [maxLength]="20"
+                        [errorTrue]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.nationalId===''&& willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.birthRegNo===''&& willSpouse.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willSpouse.ientCustomer?.passportNo===''&& willSpouse.ientCustomer?.nationalId===''&& willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.birthRegNo===''&& willSpouse.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Passport No"
+                        [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willSpouse.ientCustomer.passportNo" name="passportNo " [maxLength]="20"
+                        [errorTrue]="willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId===''&& willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo===''&& willSpouse.ientCustomer?.birthRegNo===''  && errorTrue "
+                        [required]="willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId===''&& willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Birth Reg No"
+                        [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                        [(ngModel)]="willSpouse.ientCustomer.birthRegNo" name="birthRegNo  " [maxLength]="20"
+                        [errorTrue]="willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId===''&& willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.passportNo==='' && errorTrue "
+                        [required]="willSpouse.ientCustomer?.tin===''&& willSpouse.ientCustomer?.nationalId===''&& willSpouse.ientCustomer?.driverLicenseNo==='' && willSpouse.ientCustomer?.voterId==='' && willSpouse.ientCustomer?.fnpfNo==='' && willSpouse.ientCustomer?.passportNo==='' " />
+                    </div>
+
+                  </row>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">Social Platform Details</div>
+                <div class=" box-pad">
+                  <row>
+                    <app-input-control label="Facebook ID" [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willSpouse.ientCustomer.facebookId" name="facebookId"
+                      class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="LinkedIn ID" [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willSpouse.ientCustomer.linkedinId" name="linkedinId"
+                      class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Whatsapp" [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willSpouse.ientCustomer.whatsappNumber" name="whatsappNumber"
+                      class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Viber" [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willSpouse.ientCustomer.viberNumber" name="viberNumber"
+                      class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Skype ID" [btnClicked]="willSpouse.ientCustomer.customerId !== 0"
+                      [(ngModel)]="willSpouse.ientCustomer.skypeId" name="skypeId"
+                      class="pb10 col-md-12"></app-input-control>
+                  </row>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          }
+
+
+
+        </row>
+      </form>
+    </scroll>
+
+  </div>
+  }
+
+  @if(name === 'children'){
+  <div class="dialog-header">
+    <div class="dialog-title">Children Details</div>
+    <div class="slot-right">
+      <div class="btn-group">
+        @if(editData === false){
+        <app-icon-button name="edit" toolTip="Edit" (click)="editValues()"></app-icon-button>
+        }
+        @if(editData === true){
+        @if(subId=== 0){
+        <app-icon-button name="save" toolTip="Save" (click)="saveChildren()"></app-icon-button>
+        <app-icon-button name="clear" toolTip="Clear" (click)="clearChildren()"></app-icon-button>
+        }
+        @else{
+        <app-icon-button name="save" toolTip="Update" (click)="saveChildren()"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshChildren()"></app-icon-button>
+        }
+        }
+        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-content py10">
+    <scroll>
+      <form #c="ngForm" class="dialog-content-inner">
+        <row>
+          <div class="pb10"></div>
+          @if(editData === true){
+          <div class="d-flex w100 align-items-center">
+            <div class="col-md-3 pl10">
+              <app-input-control label="Customer" [items]="initialData.DDLValues.DDLCustomer" key="id" type="select"
+                [(ngModel)]="willChildren.customerId" name="customerId" defaultOption="--Select--"
+                (onSelect)="openCustomer($event,'applicant')" keyName="fullName"></app-input-control>
+            </div>
+            <div class="col-md-1">
+              <app-icon-button name="search" toolTip="Search"></app-icon-button>
+            </div>
+          </div>
+          }
+          @if(editData === false){
+          <div class="d-flex w100 p10">
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Applicant Information</div>
+                <div class=" box-pad">
+                  <view-label class="pb10" label=" CRM No"></view-label>
+
+                  <!-- <view-label class="pb10" label="Client Name"
+                    value="{{trustApplicationApplicant}}"></view-label> -->
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="First Name"
+                    [value]="willChildren.ientCustomer.firstName"></view-label>
+                  <view-label class="pb10" label="Middle Name"
+                    [value]="willChildren.ientCustomer.middleName"></view-label>
+                  <view-label class="pb10" label="Last Name" [value]="willChildren.ientCustomer.lastName"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Date Of Birth"
+                    [value]="willChildren.ientCustomer.dateOfBirth | appDate"></view-label>
+                  <view-label class="pb10" label="Date Of Death"
+                    [value]="willChildren.ientCustomer.dateOfDeath | appDate"></view-label>
+                  <view-label class="pb10" label="Gender"
+                    [value]="willChildren.ientCustomer.genderDescription"></view-label>
+                  <view-label class="pb10" label="Nationality"
+                    [value]="willChildren.ientCustomer.nationalityDescription"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Email ID" [value]="willChildren.ientCustomer.emailId"></view-label>
+                  <view-label class="pb10" label="Contact No"
+                    [value]="willChildren.ientCustomer.contactNo"></view-label>
+                  <view-label class="pb10" label="Alternate Contact No"
+                    [value]="willChildren.ientCustomer.alternateContactNo"></view-label>
+
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Father Name"
+                    [value]="willChildren.ientCustomer.fatherName"></view-label>
+                  <view-label class="pb10" label="Mother Name"
+                    [value]="willChildren.ientCustomer.motherName"></view-label>
+                  <view-label class="pb10" label="Guardian Name"
+                    [value]="willChildren.ientCustomer.gaurdianName"></view-label>
+                  <!-- <view-label class="pb10" label="Home Contact" [value]="willChildren.ientCustomer.contactNo"></view-label>
+                      <view-label class="pb10" label="Office Contact" [value]="willChildren.ientCustomer."></view-label>
+                      <view-label class="pb10" label="Email" [value]="willChildren.ientCustomer."></view-label> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Address Details</div>
+                <div class=" box-pad">
+                  <view-label label="Line 1" class="pb10"
+                    [value]="willChildren.ientCustomer.iPermanentaddress.line1"></view-label>
+                  <view-label label="Line 2" class="pb10"
+                    [value]="willChildren.ientCustomer.iPermanentaddress.line2"></view-label>
+                  <view-label label="Line 3" class="pb10"
+                    [value]="willChildren.ientCustomer.iPermanentaddress.line3"></view-label>
+                  <view-label label="Province" class="pb10"
+                    [value]="willChildren.ientCustomer.iPermanentaddress.provinceDescription"></view-label>
+                  <view-label label="Island" class="pb10"
+                    [value]="willChildren.ientCustomer.iPermanentaddress.islandDescription"></view-label>
+                  <view-label label="Village" class="pb10"
+                    [value]="willChildren.ientCustomer.iPermanentaddress.village"></view-label>
+                  <view-label label="Po Box No" class="pb10"
+                    [value]="willChildren.ientCustomer.iPermanentaddress.poBoxNo"></view-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> KYC Details</div>
+                <div class=" box-pad">
+                  <view-label label="FNPF No" class="pb10" [value]="willChildren.ientCustomer.fnpfNo"></view-label>
+                  <view-label label="Driving License No" class="pb10"
+                    [value]="willChildren.ientCustomer.driverLicenseNo"></view-label>
+                  <view-label label="Voter ID" class="pb10" [value]="willChildren.ientCustomer.voterId"></view-label>
+                  <view-label label="National ID" class="pb10"
+                    [value]="willChildren.ientCustomer.nationalId"></view-label>
+                  <view-label label="TIN" class="pb10" [value]="willChildren.ientCustomer.tin"></view-label>
+                  <view-label label="Passport No" class="pb10" [value]="willChildren.ientCustomer.passportNo">
+                  </view-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">Social Platform Details</div>
+                <div class=" box-pad">
+                  <view-label label="Facebook ID" class="pb10"
+                    [value]="willChildren.ientCustomer.facebookId"></view-label>
+                  <view-label label="LinkedIn ID" class="pb10"
+                    [value]="willChildren.ientCustomer.linkedinId"></view-label>
+                  <view-label label="Whatsapp" class="pb10"
+                    [value]="willChildren.ientCustomer.whatsappNumber"></view-label>
+                  <view-label label="Viber" class="pb10" [value]="willChildren.ientCustomer.viberNumber"></view-label>
+                  <view-label label="Skype ID" class="pb10" [value]="willChildren.ientCustomer.skypeId"></view-label>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+          @if(editData === true){
+          <div class="d-flex w100 p10">
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Applicant Information</div>
+                <div class=" box-pad">
+                  <app-input-control class="pb10" label="First Name" name="firstName" [btnClicked]="true"
+                    [(ngModel)]="willChildren.ientCustomer.firstName" [errorTrue]="errorTrue" [required]="true"
+                    [maxLength]="250"></app-input-control>
+                  <app-input-control class="pb10" label="Middle Name" name="middleName"
+                    [(ngModel)]="willChildren.ientCustomer.middleName" [maxLength]="250"></app-input-control>
+                  <app-input-control class="pb10" label="Last Name" name="lastName"
+                    [(ngModel)]="willChildren.ientCustomer.lastName" [errorTrue]="errorTrue" [required]="true"
+                    [maxLength]="250"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Date Of Birth" name="dateOfBirth" type="date"
+                    [(ngModel)]="willChildren.ientCustomer.dateOfBirth" [errorTrue]="errorTrue" [required]="true"
+                    [maxDate]="currentDate"></app-input-control>
+                  <app-input-control class="pb10" label="Date Of Death" name="dateOfDeath" type="date"
+                    [(ngModel)]="willChildren.ientCustomer.dateOfDeath" [maxDate]="currentDate"></app-input-control>
+
+                  <app-input-control class="pb10" label="Gender" name="genderValue" [errorTrue]="errorTrue"
+                    [(ngModel)]="willChildren.ientCustomer.genderValue" [required]="true"
+                    [items]="initialData.DDLValues.DDLGender" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <app-input-control class="pb10" label="Nationality" name="nationalityValue"
+                    [(ngModel)]="willChildren.ientCustomer.nationalityValue" [errorTrue]="errorTrue" [required]="true"
+                    [items]="initialData.DDLValues.DDLNationality" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Email ID" [(ngModel)]="willChildren.ientCustomer.emailId"
+                    name="emailId" type="email"></app-input-control>
+                  <app-input-control class="pb10" label="Contact No" [(ngModel)]="willChildren.ientCustomer.contactNo"
+                    [minLength]="5" [maxLength]="10" name="contactNo" type="number"></app-input-control>
+                  <app-input-control class="pb10" label="Alternate Contact No"
+                    [(ngModel)]="willChildren.ientCustomer.alternateContactNo" name="alternateContactNo" [minLength]="5"
+                    [maxLength]="10" type="number"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Father Name" [(ngModel)]="willChildren.ientCustomer.fatherName"
+                    name="fatherName"></app-input-control>
+                  <app-input-control class="pb10" label="Mother Name" [(ngModel)]="willChildren.ientCustomer.motherName"
+                    name="motherName"></app-input-control>
+                  <app-input-control class="pb10" label="Guardian Name"
+                    [(ngModel)]="willChildren.ientCustomer.gaurdianName" name="gaurdianName"></app-input-control>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Address Details</div>
+                <div class=" box-pad">
+                  <app-address-edit [errorTrue]="errorTrue" [ientAddress]="willChildren.ientCustomer.iPermanentaddress"
+                    type="residential"></app-address-edit>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">
+                  KYC Details <span>(Any one field is Mandatory)</span>
+                </div>
+                <div class=" box-pad">
+                  <row>
+
+                    <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                        [errorTrue]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.birthRegNo==='' "
+                        [(ngModel)]="willChildren.ientCustomer.fnpfNo" [maxLength]="20"
+                        name="fnpfNo "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Driving License No"
+                        [(ngModel)]="willChildren.ientCustomer.driverLicenseNo" name="driverLicenseNo " [maxLength]="20"
+                        [errorTrue]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Voter ID"
+                        [(ngModel)]="willChildren.ientCustomer.voterId" name="voterId " [maxLength]="20"
+                        [errorTrue]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="National ID"
+                        [(ngModel)]="willChildren.ientCustomer.nationalId" name="nationalId " [maxLength]="20"
+                        [errorTrue]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo===''&& willChildren.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="TIN"
+                        [(ngModel)]="willChildren.ientCustomer.tin" name="tin " [maxLength]="20"
+                        [errorTrue]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.nationalId===''&& willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.birthRegNo===''&& willChildren.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willChildren.ientCustomer?.passportNo===''&& willChildren.ientCustomer?.nationalId===''&& willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.birthRegNo===''&& willChildren.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Passport No"
+                        [(ngModel)]="willChildren.ientCustomer.passportNo" name="passportNo " [maxLength]="20"
+                        [errorTrue]="willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId===''&& willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo===''&& willChildren.ientCustomer?.birthRegNo===''  && errorTrue "
+                        [required]="willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId===''&& willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Birth Reg No"
+                        [(ngModel)]="willChildren.ientCustomer.birthRegNo" name="birthRegNo  " [maxLength]="20"
+                        [errorTrue]="willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId===''&& willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.passportNo==='' && errorTrue "
+                        [required]="willChildren.ientCustomer?.tin===''&& willChildren.ientCustomer?.nationalId===''&& willChildren.ientCustomer?.driverLicenseNo==='' && willChildren.ientCustomer?.voterId==='' && willChildren.ientCustomer?.fnpfNo==='' && willChildren.ientCustomer?.passportNo==='' " />
+                    </div>
+
+                  </row>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">Social Platform Details</div>
+                <div class=" box-pad">
+                  <row>
+                    <app-input-control label="Facebook ID" [(ngModel)]="willChildren.ientCustomer.facebookId"
+                      name="facebookId" class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="LinkedIn ID" [(ngModel)]="willChildren.ientCustomer.linkedinId"
+                      name="linkedinId" class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Whatsapp" [(ngModel)]="willChildren.ientCustomer.whatsappNumber"
+                      name="whatsappNumber" class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Viber" [(ngModel)]="willChildren.ientCustomer.viberNumber"
+                      name="viberNumber" class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Skype ID" [(ngModel)]="willChildren.ientCustomer.skypeId" name="skypeId"
+                      class="pb10 col-md-12"></app-input-control>
+                  </row>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          }
+
+
+
+        </row>
+      </form>
+    </scroll>
+
+  </div>
+  }
+  @if(name === 'testator'){
+  <div class="dialog-header">
+    <div class="dialog-title">Testator Details</div>
+    <div class="slot-right">
+      <div class="btn-group">
+        @if(editData === false){
+        <app-icon-button name="edit" toolTip="Edit" (click)="editValues()"></app-icon-button>
+        }
+        @if(editData === true){
+        @if(willTestator.appWillApplicationTestatorId === 0){
+        <app-icon-button name="save" toolTip="Save" (click)="saveTestator()"></app-icon-button>
+        <app-icon-button name="clear" toolTip="Clear" (click)="clearTestator()"></app-icon-button>
+        }
+        @else{
+        <app-icon-button name="save" toolTip="Update" (click)="saveTestator()"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshTestator()"></app-icon-button>
+        }
+        }
+        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-content py10">
+    <scroll>
+      <form #d="ngForm" class="dialog-content-inner">
+        <row>
+          <div class="pb10"></div>
+          @if(editData === true){
+          <div class="d-flex w100 align-items-center">
+            <div class="col-md-3 pl10">
+              <app-input-control label="Customer" [items]="initialData.DDLValues.DDLCustomer" key="id" type="select"
+                [(ngModel)]="willTestator.customerId" name="customerId" defaultOption="--Select--"
+                (onSelect)="openCustomer($event,'applicant')" keyName="fullName"></app-input-control>
+            </div>
+            <div class="col-md-1">
+              <app-icon-button name="search" toolTip="Search"></app-icon-button>
+            </div>
+          </div>
+          }
+          @if(editData === false){
+          <div class="d-flex w100 p10">
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Testator Information</div>
+                <div class=" box-pad">
+                  <view-label class="pb10" label=" CRM No"></view-label>
+
+                  <!-- <view-label class="pb10" label="Client Name"
+                    value="{{trustApplicationTestator}}"></view-label> -->
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="First Name"
+                    [value]="willTestator.ientCustomer.firstName"></view-label>
+                  <view-label class="pb10" label="Middle Name"
+                    [value]="willTestator.ientCustomer.middleName"></view-label>
+                  <view-label class="pb10" label="Last Name" [value]="willTestator.ientCustomer.lastName"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Date Of Birth"
+                    [value]="willTestator.ientCustomer.dateOfBirth | appDate"></view-label>
+                  <view-label class="pb10" label="Date Of Death"
+                    [value]="willTestator.ientCustomer.dateOfDeath | appDate"></view-label>
+                  <view-label class="pb10" label="Gender"
+                    [value]="willTestator.ientCustomer.genderDescription"></view-label>
+                  <view-label class="pb10" label="Nationality"
+                    [value]="willTestator.ientCustomer.nationalityDescription"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Email ID" [value]="willTestator.ientCustomer.emailId"></view-label>
+                  <view-label class="pb10" label="Contact No"
+                    [value]="willTestator.ientCustomer.contactNo"></view-label>
+                  <view-label class="pb10" label="Alternate Contact No"
+                    [value]="willTestator.ientCustomer.alternateContactNo"></view-label>
+                  <view-label class="pb10" label="Marital Status"
+                    [value]="willTestator.maritalStatusDescription"></view-label>
+                  <view-label class="pb10" label="Occupation" [value]="willTestator.occupation"></view-label>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <view-label class="pb10" label="Father Name"
+                    [value]="willTestator.ientCustomer.fatherName"></view-label>
+                  <view-label class="pb10" label="Mother Name"
+                    [value]="willTestator.ientCustomer.motherName"></view-label>
+                  <view-label class="pb10" label="Guardian Name"
+                    [value]="willTestator.ientCustomer.gaurdianName"></view-label>
+                  <!-- <view-label class="pb10" label="Home Contact" [value]="willTestator.ientCustomer.contactNo"></view-label>
+                      <view-label class="pb10" label="Office Contact" [value]="willTestator.ientCustomer."></view-label>
+                      <view-label class="pb10" label="Email" [value]="willTestator.ientCustomer."></view-label> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Address Details</div>
+                <div class=" box-pad">
+                  <view-label label="Line 1" class="pb10"
+                    [value]="willTestator.ientCustomer.iPermanentaddress.line1"></view-label>
+                  <view-label label="Line 2" class="pb10"
+                    [value]="willTestator.ientCustomer.iPermanentaddress.line2"></view-label>
+                  <view-label label="Line 3" class="pb10"
+                    [value]="willTestator.ientCustomer.iPermanentaddress.line3"></view-label>
+                  <view-label label="Province" class="pb10"
+                    [value]="willTestator.ientCustomer.iPermanentaddress.provinceDescription"></view-label>
+                  <view-label label="Island" class="pb10"
+                    [value]="willTestator.ientCustomer.iPermanentaddress.islandDescription"></view-label>
+                  <view-label label="Village" class="pb10"
+                    [value]="willTestator.ientCustomer.iPermanentaddress.village"></view-label>
+                  <view-label label="Po Box No" class="pb10"
+                    [value]="willTestator.ientCustomer.iPermanentaddress.poBoxNo"></view-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> KYC Details</div>
+                <div class=" box-pad">
+                  <view-label label="FNPF No" class="pb10" [value]="willTestator.ientCustomer.fnpfNo"></view-label>
+                  <view-label label="Driving License No" class="pb10"
+                    [value]="willTestator.ientCustomer.driverLicenseNo"></view-label>
+                  <view-label label="Voter ID" class="pb10" [value]="willTestator.ientCustomer.voterId"></view-label>
+                  <view-label label="National ID" class="pb10"
+                    [value]="willTestator.ientCustomer.nationalId"></view-label>
+                  <view-label label="TIN" class="pb10" [value]="willTestator.ientCustomer.tin"></view-label>
+                  <view-label label="Passport No" class="pb10" [value]="willTestator.ientCustomer.passportNo">
+                  </view-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">Social Platform Details</div>
+                <div class=" box-pad">
+                  <view-label label="Facebook ID" class="pb10"
+                    [value]="willTestator.ientCustomer.facebookId"></view-label>
+                  <view-label label="LinkedIn ID" class="pb10"
+                    [value]="willTestator.ientCustomer.linkedinId"></view-label>
+                  <view-label label="Whatsapp" class="pb10"
+                    [value]="willTestator.ientCustomer.whatsappNumber"></view-label>
+                  <view-label label="Viber" class="pb10" [value]="willTestator.ientCustomer.viberNumber"></view-label>
+                  <view-label label="Skype ID" class="pb10" [value]="willTestator.ientCustomer.skypeId"></view-label>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+          @if(editData === true){
+          <div class="d-flex w100 p10">
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Testator Information</div>
+                <div class=" box-pad">
+                  <app-input-control class="pb10" label="First Name" name="firstName"
+                    [(ngModel)]="willTestator.ientCustomer.firstName" [errorTrue]="errorTrue" [required]="true"
+                    [maxLength]="250"></app-input-control>
+                  <app-input-control class="pb10" label="Middle Name" name="middleName"
+                    [(ngModel)]="willTestator.ientCustomer.middleName" [maxLength]="250"></app-input-control>
+                  <app-input-control class="pb10" label="Last Name" name="lastName"
+                    [(ngModel)]="willTestator.ientCustomer.lastName" [errorTrue]="errorTrue" [required]="true"
+                    [maxLength]="250"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Date Of Birth" name="dateOfBirth" type="date"
+                    [(ngModel)]="willTestator.ientCustomer.dateOfBirth" [errorTrue]="errorTrue" [required]="true"
+                    [maxDate]="currentDate"></app-input-control>
+                  <app-input-control class="pb10" label="Date Of Death" name="dateOfDeath" type="date"
+                    [(ngModel)]="willTestator.ientCustomer.dateOfDeath" [maxDate]="currentDate"></app-input-control>
+
+                  <app-input-control class="pb10" label="Gender" name="genderValue" [errorTrue]="errorTrue"
+                    [(ngModel)]="willTestator.ientCustomer.genderValue" [required]="true"
+                    [items]="initialData.DDLValues.DDLGender" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <app-input-control class="pb10" label="Nationality" name="nationalityValue"
+                    [(ngModel)]="willTestator.ientCustomer.nationalityValue" [errorTrue]="errorTrue" [required]="true"
+                    [items]="initialData.DDLValues.DDLNationality" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Email ID" [(ngModel)]="willTestator.ientCustomer.emailId"
+                    name="emailId" type="email"></app-input-control>
+                  <app-input-control class="pb10" label="Contact No" [minLength]="5" [maxLength]="10"
+                    [(ngModel)]="willTestator.ientCustomer.contactNo" name="contactNo"
+                    type="number"></app-input-control>
+                  <app-input-control class="pb10" label="Alternate Contact No" [minLength]="5" [maxLength]="10"
+                    [(ngModel)]="willTestator.ientCustomer.alternateContactNo" name="alternateContactNo"
+                    type="number"></app-input-control>
+                  <div class="bottom-border"></div>
+                  <div class="pb10"></div>
+                  <app-input-control class="pb10" label="Father Name" [(ngModel)]="willTestator.ientCustomer.fatherName"
+                    name="fatherName"></app-input-control>
+                  <app-input-control class="pb10" label="Mother Name" [(ngModel)]="willTestator.ientCustomer.motherName"
+                    name="motherName"></app-input-control>
+                  <app-input-control class="pb10" label="Guardian Name"
+                    [(ngModel)]="willTestator.ientCustomer.gaurdianName" name="gaurdianName"></app-input-control>
+                  <app-input-control class="pb10" label="Marital Status" name="maritalStatusValue"
+                    [(ngModel)]="willTestator.maritalStatusValue" [errorTrue]="errorTrue" [required]="true"
+                    [items]="initialData.DDLValues.DDLMaritialStatus" key="constant" keyName="description" type="select"
+                    defaultOption="--Select--"></app-input-control>
+                  <app-input-control class="pb10" label="Occupation" [(ngModel)]="willTestator.occupation"
+                    [errorTrue]="errorTrue" [required]="true" name="occupation"></app-input-control>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header "> Address Details</div>
+                <div class=" box-pad">
+                  <app-address-edit [errorTrue]="errorTrue" [ientAddress]="willTestator.ientCustomer.iPermanentaddress"
+                    type="residential"></app-address-edit>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">
+                  KYC Details <span>(Any one field is Mandatory)</span>
+                </div>
+                <div class=" box-pad">
+                  <row>
+
+                    <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                        [errorTrue]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.birthRegNo==='' "
+                        [(ngModel)]="willTestator.ientCustomer.fnpfNo" [maxLength]="20"
+                        name="fnpfNo "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Driving License No"
+                        [(ngModel)]="willTestator.ientCustomer.driverLicenseNo" name="driverLicenseNo " [maxLength]="20"
+                        [errorTrue]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Voter ID"
+                        [(ngModel)]="willTestator.ientCustomer.voterId" name="voterId " [maxLength]="20"
+                        [errorTrue]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="National ID"
+                        [(ngModel)]="willTestator.ientCustomer.nationalId" name="nationalId " [maxLength]="20"
+                        [errorTrue]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo===''&& willTestator.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="TIN"
+                        [(ngModel)]="willTestator.ientCustomer.tin" name="tin " [maxLength]="20"
+                        [errorTrue]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.nationalId===''&& willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.birthRegNo===''&& willTestator.ientCustomer?.birthRegNo==='' && errorTrue "
+                        [required]="willTestator.ientCustomer?.passportNo===''&& willTestator.ientCustomer?.nationalId===''&& willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.birthRegNo===''&& willTestator.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Passport No"
+                        [(ngModel)]="willTestator.ientCustomer.passportNo" name="passportNo " [maxLength]="20"
+                        [errorTrue]="willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId===''&& willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo===''&& willTestator.ientCustomer?.birthRegNo===''  && errorTrue "
+                        [required]="willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId===''&& willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.birthRegNo==='' "></app-input-control>
+                    </div>
+                    <div class="col-md-12"><app-input-control type="text" label="Birth Reg No"
+                        [(ngModel)]="willTestator.ientCustomer.birthRegNo" name="birthRegNo  " [maxLength]="20"
+                        [errorTrue]="willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId===''&& willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.passportNo==='' && errorTrue "
+                        [required]="willTestator.ientCustomer?.tin===''&& willTestator.ientCustomer?.nationalId===''&& willTestator.ientCustomer?.driverLicenseNo==='' && willTestator.ientCustomer?.voterId==='' && willTestator.ientCustomer?.fnpfNo==='' && willTestator.ientCustomer?.passportNo==='' " />
+                    </div>
+
+                  </row>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box h100">
+                <div class="box-header ">Social Platform Details</div>
+                <div class=" box-pad">
+                  <row>
+                    <app-input-control label="Facebook ID" [(ngModel)]="willTestator.ientCustomer.facebookId"
+                      name="facebookId" class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="LinkedIn ID" [(ngModel)]="willTestator.ientCustomer.linkedinId"
+                      name="linkedinId" class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Whatsapp" [(ngModel)]="willTestator.ientCustomer.whatsappNumber"
+                      name="whatsappNumber" class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Viber" [(ngModel)]="willTestator.ientCustomer.viberNumber"
+                      name="viberNumber" class="pb10 col-md-12"></app-input-control>
+                    <app-input-control label="Skype ID" [(ngModel)]="willTestator.ientCustomer.skypeId" name="skypeId"
+                      class="pb10 col-md-12"></app-input-control>
+                  </row>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          }
+
+
+
+        </row>
+      </form>
+    </scroll>
+
+  </div>
+  }
+  @if(name === 'realestate'){
+  <div class="dialog-header">
+    <div class="dialog-title">Real Estate</div>
+    <div class="slot-right">
+      <div class="btn-group">
+        <app-icon-button name="save" toolTip="save"></app-icon-button>
+        <app-icon-button name="clear" toolTip="clear"></app-icon-button>
+        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <div class="content-wrapper py10">
+    <row>
+      <div class="col-md-4 p20">
+        <div class="box h100">
+          <div class="v-flex h100">
+            <div class="box-header">
+              <ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+              General Information
+            </div>
+            <div class="box-pad h100">
+              <div class="relative h100">
+                <scroll>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Title" [(ngModel)]="willRealEstate"
+                      name=""></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="select" label="Tenancy" [(ngModel)]="willRealEstate"
+                      name=""></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="select" label="Tenure" [(ngModel)]="willRealEstate"
+                      name=""></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Landlord Name" [(ngModel)]="willRealEstate"
+                      name=""></app-input-control>
+                  </div>
+                </scroll>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 p20">
+        <div class="box h100">
+          <div class="box-header">
+            <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+            Address
+          </div>
+          <div class="box-pad">
+            <app-address-edit type="residential" [ientAddress]="willRealEstate.ientAddress" [errorTrue]="errorTrue"
+              [required]="true"></app-address-edit>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 p20">
+        <div class="box h100">
+          <div class="box-header">
+            <ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+            Additional Information
+          </div>
+          <div class="box-pad">
+            <div class="pb10">
+              <app-drop-zone type="1" fileType="pdf" [accept]="accept"
+                (onUpload)="uploadDeliveryAttachment($event)"></app-drop-zone>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </row>
+  </div>
+  }
+  @if(name === 'bank'){
+  <div class="dialog-header">
+    <div class="dialog-title">Bank/Credit Union/Other Financial Institution Accounts</div>
+    <div class="slot-right">
+      <div class="btn-group">
+        <app-icon-button name="save" toolTip="save"></app-icon-button>
+        <app-icon-button name="clear" toolTip="clear"></app-icon-button>
+        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <div class="content-wrapper py10">
+    <row>
+      <div class="col-md-6 p20">
+        <div class="box h100">
+          <div class="v-flex h100">
+            <div class="box-header">
+              <ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+              General Information
+            </div>
+            <div class="box-pad h100">
+              <div class="relative h100">
+                <scroll>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Institution"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="select" label="Ac No"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="select" label="BSB"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="select" label="Account Type"></app-input-control>
+                  </div>
+                </scroll>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 p20">
+        <div class="box h100">
+          <div class="box-header">
+            <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+            Address
+          </div>
+          <div class="box-pad">
+            <app-address-edit type="bank"></app-address-edit>
+          </div>
+        </div>
+      </div>
+    </row>
+  </div>
+  }@if(name === 'shares'){
+    <div class="dialog-header">
+      <div class="dialog-title">Shares/Stocks/Managed Investments</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="save"></app-icon-button>
+          <app-icon-button name="clear" toolTip="clear"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <form #f="ngForm" class="dialog-content py10">
+      <div class="dialog-content-inner h100">
+      <row>
+        <div class="col-md-6 p20">
+          <div class="box h100">
+            <div class="v-flex h100">
+              <div class="box-header">
+                <ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+                General Information
+              </div>
+              <div class="box-pad h100">
+                <div class="relative h100">
+                  <scroll>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Company"></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Shares / Unit No:"></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Location"></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Certificate"></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Account Type"></app-input-control>
+                    </div>
+                  </scroll>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 p20">
+          <div class="box h100">
+            <div class="box-header">
+              <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+              Address
+            </div>
+            <div class="box-pad">
+              <app-address-edit type="bank"></app-address-edit>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+    </form>
+  }@if(name === 'insurance'){
+  <div class="dialog-header">
+    <div class="dialog-title">Insurance Policies</div>
+    <div class="slot-right">
+      <div class="btn-group">
+        <app-icon-button name="save" toolTip="save"></app-icon-button>
+        <app-icon-button name="clear" toolTip="clear"></app-icon-button>
+        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <form #h="ngForm" class="dialog-content py10">
+    <div class="dialog-content-inner h100">
+    <row>
+      <div class="col-md-6 p20">
+        <div class="box h100">
+          <div class="v-flex h100">
+            <div class="box-header">
+              <ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+              General Information
+            </div>
+            <div class="box-pad h100">
+              <div class="relative h100">
+                <scroll>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Company"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Policy No"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Insured Amount"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Last Premium Paid"></app-input-control>
+                  </div>
+                </scroll>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 p20">
+        <div class="box h100">
+          <div class="box-header">
+            <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+            Address
+          </div>
+          <div class="box-pad">
+            <app-address-edit type="bank"></app-address-edit>
+          </div>
+        </div>
+      </div>
+    </row>
+  </div>
+  </form>
+  }@if(name === 'vehicle'){
+  <div class="dialog-header">
+    <div class="dialog-title">Vehicle</div>
+    <div class="slot-right">
+      <div class="btn-group">
+        <app-icon-button name="save" toolTip="save"></app-icon-button>
+        <app-icon-button name="clear" toolTip="clear"></app-icon-button>
+        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <form #i="ngForm" class="dialog-content py10">
+    <div class="dialog-content-inner h100">
+    <row>
+      <div class="col-md-12 p20">
+        <div class="box h100">
+          <div class="box-header">
+            <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+            General Information
+          </div>
+          <div class="box-pad">
+            <div class="col-md-12">
+              <app-input-control type="text" label="Reg No"></app-input-control>
+            </div>
+            <div class="col-md-12">
+              <app-input-control type="select" label="Vehicle Type"></app-input-control>
+            </div>
+            <div class="col-md-12">
+              <app-input-control type="text" label="Make"></app-input-control>
+            </div>
+            <div class="col-md-12">
+              <app-input-control type="text" label="Model"></app-input-control>
+            </div>
+          </div>
+        </div>
+      </div>
+    </row>
+  </div>
+  </form>
+  }
+
+</div>

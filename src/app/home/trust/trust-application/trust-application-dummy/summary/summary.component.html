@@ -1,0 +1,104 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/trust-summary.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Summary</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <row>
+            <div class="col-md-9">
+                <row>
+                    <div class="col-md-4"> <view-label label="Assigned Officer"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedToFullname}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="Assigned Date"
+                            value="{{application.ientTrustApplicationAssignedOfficer.assignedDate | appDate}}"></view-label>
+                    </div>
+                    <div class="col-md-4"> <view-label label="TAT"
+                            value=" {{application.ientTrustApplicationAssignedOfficer .tatDays}} Days"></view-label>
+                    </div>
+                </row>
+            </div>
+            <div class="col-md-3">
+                <!-- <div class="d-flex">
+                    @if(this.application.assignedOfficerFlag === 'True'){
+                    @if(this.application.reAssignFlag === 'True'){
+                    <form #p="ngForm" class="col-md-10 w250">
+                        <app-input-control type="select" key="constant" keyName="description"
+                            placeholder="Officer" [items]="assignedOfficerDDL" defaultOption="--Select--"
+                            [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                            name="assignedTo"></app-input-control>
+                    </form>
+                    <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                            toolTip="Reassign"></app-icon-button></div>
+                    }
+                    @if(this.application.selfAssignFlag ===' True'){
+                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                            toolTip="Self Assign"></app-icon-button></div>
+                    }
+                    }
+                </div> -->
+            </div>
+        </row>
+        <div class="mb26"></div>
+        <div class="pl15 mb26 ">
+            <!-- @if(summaryEdit === false){ --> 
+            <row>
+
+                <div class="col-md-4 mb15"><view-label label="Trust Ac No" value="{{trustAccNo}}"></view-label></div>
+
+                <div class="col-md-4 mb15"><view-label label="File No" value="{{application.fileNo}}"></view-label>
+                </div>
+                <div class="col-md-4 mb15"><view-label label="Creation Date"
+                        value="{{application.appliedDate | appDate}}"></view-label></div>
+                <div class="col-md-4"><view-label label="Benificiary Name" value="{{beneName}}"></view-label></div>
+                <!-- <div class="col-md-4"><view-label label="Date Of Birth" value=""></view-label></div> -->
+                <div class="col-md-4"><view-label label="Closure Date"
+                        value="{{application.modifiedDate | appDate}}"></view-label></div>
+            </row>
+            <!-- }
+            @else {
+            <row>
+                <div class="col-md-4 mb15"><app-input-control type="" label="Trust Ac No"></app-input-control>
+                </div>
+                <div class="col-md-4 mb15"><app-input-control type="" label="File No"></app-input-control></div>
+                <div class="col-md-4 mb15"><app-input-control type="" label="Creation Date"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control type="" label="Benificiary Name"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control type="" label="Date Of Birth"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control type="" label="Closure Date"></app-input-control></div>
+            </row>
+            } -->
+
+        </div>
+
+        <div class="p10">
+            <row>
+                <div class="col-md-6"></div>
+                <div class="col-md-6 d-flex gap-10 mb26 end p10">
+                    <button type="submit" class="info-btn"  (click)="generatedStatementForTrustApplication()"><ion-icon class="pl10px" name="download-outline"></ion-icon>
+                        Generate Statement</button>
+                    <!-- @if(summaryEdit === true){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveSummary()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    }
+                    @else{
+                    <app-icon-button name="edit" toolTip="Edit" (click)="editSummaryDetails()"></app-icon-button>
+                    } -->
+                </div>
+                <!-- <div class="col-md-12 end p25">
+                    <app-icon-button name="accept" toolTip="Complete"></app-icon-button>
+                </div> -->
+            </row>
+        </div>
+
+    </accordion-body>
+</accordion-item>

@@ -1,0 +1,69 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material'as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$fptcl-primary: mat.define-palette(mat.$indigo-palette);
+$fptcl-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$fptcl-warn: mat.define-palette(mat.$red-palette);
+
+$fptcl-custom-level: mat.define-typography-level($font-family: '"Wix Madefor Text", sans-serif',
+    $font-weight: 400,
+    $font-size: 14px,
+    $line-height: 1,
+    $letter-spacing: normal,
+);
+
+$fptcl-typography: mat.define-typography-config($font-family: '"Wix Madefor Text", sans-serif',
+    $body-1: mat.define-typography-level(14px, 14px, 400),
+    $body-2: mat.define-typography-level(14px, 14px, 400),
+);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$fptcl-theme: mat.define-light-theme((color: (primary: $fptcl-primary,
+            accent: $fptcl-accent,
+            warn: $fptcl-warn,
+        ),
+        typography: $fptcl-typography,
+        density: 0));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($fptcl-theme);
+
+
+:root {
+    --font-family: "Wix Madefor Text", sans-serif;
+    --font-default-size: 14px;
+    --font-default-weight: 400;
+
+    // colors
+    --body-background-color: #F2F2F2;
+    --text-dark-color: #231F20;
+    --text-light-color: #676767;
+    --text-light-color1: #A8A8A8;
+    --text-light-color2: #848484;
+    --text-light-color3: #e9e9e9;
+    --app-primary: #0079C4;
+    --app-danger: #BE1622;
+    --app-warning: #EC681C;
+    --app-info: #BC9809;
+    --app-success: #439326;
+    --assets-header: #0186ff;
+    --liablity-header: #f9a83c;
+    --income-header: #25be5b;
+    --expense-header: #e92652;  
+
+}

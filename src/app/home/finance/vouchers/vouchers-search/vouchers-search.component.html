@@ -1,0 +1,105 @@
+<div class="content-wrapper" appAccess="AVOSC" [parentId]="pageId">
+  <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+    [hideSelectAll]="true" (pageChanged)="pageChanged($event)" columnID="actvoucherconfigid"
+    (onSelect)="onSelect($event)">
+    <ng-template cellDef="action" let-element>
+      <app-icon-button name="open" toolTip="Open"
+        (click)="openVoucherConfig(element.actvoucherconfigid)"></app-icon-button>
+    </ng-template>
+    <ng-template cellDef="effectivedate" let-element>
+      {{element.effectivedate | appDate}}
+    </ng-template>
+
+    <ng-template #slotLeft>
+      <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="200px"></app-search>
+    </ng-template>
+    <ng-template #slotRight cellDef="let element">
+      <div>
+        <app-icon-button name="add" toolTip="Add New" (click)="createNewVoucherConfig(0)"
+          appButtonAccess="CrmCustAppAddBtn" appButtonAccess="VochrNewBtn"></app-icon-button>
+      </div>
+    </ng-template>
+  </app-table>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Voucher Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear"
+            (click)="createNewVoucherConfigSearch('clear')"></app-icon-button>
+          <app-icon-button name="close"  (click)="appSearch.close()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row>
+              <div class="col-md-3 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="text" label="Voucher Name" [(ngModel)]="voucher.voucherName"
+                      name="voucherName"></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-3 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="select" label="Voucher Category" [errorTrue]="errorTrue" [required]="true"
+                      [(ngModel)]="voucher.voucherCategoryValue" name="voucherCategoryValue"
+                      [items]="initialData.DDLValues.ConfigVoucherTypeValue" key="constant" defaultOption="--Select--"
+                      keyName="description"
+                      (onSelect)="getVoucherSubTypeByVoucherType(voucher.voucherCategoryValue)"></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-3 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="select" label="Voucher Type" [errorTrue]="errorTrue" [required]="true"
+                      [(ngModel)]="voucher.voucherTypeValue" name="voucherTypeValue" defaultOption="--Select--"
+                      [items]="subtype" key="constant" keyName="description"></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-3">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="select" defaultOption="All" label="Voucher Nature"
+                      [(ngModel)]="voucher.lstrVoucherNatureValue" name="lstrVoucherNatureValue"
+                      [items]="initialData.DDLValues.ConfigVoucherNatureValue" key="constant"
+                      keyName="description"></app-input-control>
+                  </div>
+                </row>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Voucher</div>
+
+      </li>
+
+
+    </ul>
+  </div>
+</ng-template>

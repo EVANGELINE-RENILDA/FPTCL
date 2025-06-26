@@ -1,0 +1,11 @@
+.tfoot-td {
+  // background-color: white !important;
+ td{
+  position: sticky;
+  bottom: 0;
+  // background-color: white !important;
+  z-index: 999;
+  opacity: 1 !important;
+  border-bottom: none !important;
+ }
+}

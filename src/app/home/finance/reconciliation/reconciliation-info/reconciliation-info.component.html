@@ -1,0 +1,116 @@
+<div class="v-flex h100" [parentId]="pageId" appAccess="">
+
+    <div class="content-body flex-1">
+        <div class="d-flex">
+            <div class="bank-detail col-md-6">
+                <div class="heading">
+                    <div>Reconciliation Book Details</div>
+                </div>
+                <div class="d-flex flex-1">
+                    <div class="card-detail-panel w100">
+
+                        <div class="card-detail-panel-border pt-2">
+                            <div class="col-md-12 d-flex">
+                                <div class="col-md-6 h230 space-around v-flex">
+                                    <div class=" sub-data-label text-right">
+                                        Branch
+                                    </div>
+                                    <div class=" sub-data-label text-right">
+                                        Cashier Name
+                                    </div>
+                                    <div class=" sub-data-label text-right">
+                                        Cash Counter
+                                    </div>
+                                    <div class=" sub-data-label text-right">
+                                        Deposit Book No
+                                    </div>
+                                    <div class=" sub-data-label text-right">
+                                        Effective date
+                                    </div>
+                                </div>
+                                <hr class="hr-color">
+                                <div class="col-md-6 h230 space-around v-flex">
+                                    <div class=" sub-value text-left">
+                                        <label-dash [value]="branchName" />
+                                    </div>
+                                    <div class=" sub-value text-left">
+                                        <label-dash [value]="cashCounterDepositBook.cashierName" />
+                                    </div>
+                                    <div class=" sub-value text-left">
+                                        <label-dash [value]="cashCounterDepositBook.cashCounterNo" />
+                                    </div>
+                                    <div class=" sub-value text-left">
+                                        <label-dash [value]="cashCounterDepositBook.depositBookNo" />
+                                    </div>
+                                    <div class=" sub-value text-left">
+                                        <label-dash [value]="cashCounterDepositBook.effectiveDate | appDate" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="bank-detail col-md-6">
+                <div class="heading">
+                    <div>Additional Details</div>
+                </div>
+                <div class="col-md-12 px-0 pt-2 card-detail-panel-border">
+                    <div class="col-md-12 d-flex">
+                        <div class="col-md-6 h230 space-around v-flex">
+                            <div class="sub-data-label text-right">
+                                Open Time
+                            </div>
+                            <div class="sub-data-label text-right">
+                                Close Time
+                            </div>
+                            <div class="sub-data-label text-right">
+                                Reconciled By
+                            </div>
+                            <div class="sub-data-label text-right">
+                                Reconciled Date
+                            </div>
+                            <div class="sub-data-label text-right">
+                                Book Status
+                            </div>
+                        </div>
+                        <hr class="hr-color">
+                        <div class="col-md-6 h230 space-around v-flex">
+                            <div class="sub-value text-left">
+                                <label-dash [value]="cashCounterDepositBook.openTime | appDate: 'hh:mm a'" />
+                            </div>
+                            <div class="sub-value text-left">
+                                <label-dash [value]="cashCounterDepositBook.closeTime | appDate: 'hh:mm a'" />
+                            </div>
+                            <div class="sub-value text-left">
+                                <label-dash [value]="cashCounterDepositBook.reconciledBy" />
+                            </div>
+                            <div class="sub-value text-left">
+                                <label-dash [value]="cashCounterDepositBook.reconciledDate | appDate" />
+                            </div>
+                            <div class="sub-value text-left bold">
+                                <label-dash [value]="cashCounterDepositBook.statusDescription" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #breadCrumb>
+        <div class="breadcrumb">
+            <ul>
+                <li class="screen-name link" (click)="navigateDetail()">
+                    <div class="back-btn">
+                        <ion-icon src="assets/icons/back.svg"></ion-icon>
+                    </div>
+                    <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                    <div class="screen-text">Reconciliation Book</div>
+                </li>
+                <li class="screen-name">
+                    <div class="screen-text">Info</div>
+                </li>
+            </ul>
+        </div>
+    </ng-template>

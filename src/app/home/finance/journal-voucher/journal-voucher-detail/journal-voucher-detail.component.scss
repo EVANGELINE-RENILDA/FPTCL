@@ -1,0 +1,36 @@
+::ng-deep.top-spacer {
+    margin-top: -16px;
+}
+
+::ng-deep.textarea-length-1 {
+    position: absolute;
+    top: -24px;
+    right: 0;
+    font-size: var(--label-font-size);
+    font-weight: var(--label-font-weight);
+    color: var(--label-color);
+    display: flex;
+    align-items: end;
+}
+
+::ng-deep.text-area-btn {
+
+    border: none;
+    background: var(--app-primary);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    margin-left: 10px;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.notes-add-btn {
+    display: flex;
+    justify-content: end;
+    padding-right: 20px;
+}
+

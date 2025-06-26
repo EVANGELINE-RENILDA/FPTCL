@@ -1,0 +1,116 @@
+<div class="v-flex h100">
+  <div class="text-align-center">
+    ITGalax Solutions Private Limited
+    <br />
+    Bank Reconciliation Statement Summary
+  </div>
+  <br />
+  <form #y="ngForm" class="flex-end pt8 pr20 header-bg h55">
+    <div class="col-md-2">
+      <app-input-control
+        label="Region"
+        type="select"
+        defaultOption="--Select--"
+        valueType="int"
+        [items]="initialData.DDLValues?.DDLRegion"
+        [(ngModel)]="searchParams.regionValue"
+        name="regionValue"
+        key="constant"
+        keyName="description"
+      ></app-input-control>
+    </div>
+
+    <div class="col-md-1">
+      <app-icon-button
+        name="download"
+        toolTip="Export To Excel"
+      ></app-icon-button>
+    </div>
+  </form>
+
+  <div class="flex-1 relative">
+    <scroll>
+      <table class="app-table account-table">
+        <thead class="app-table-head">
+          <tr class="app-table-header-row">
+            <th class="app-table-header-cell text-center">#</th>
+            <th class="app-table-header-cell">
+              List of Bank Account Reconcile
+            </th>
+            <th class="app-table-header-cell">Balance As per Book</th>
+            <th class="app-table-header-cell">Balance As per Bank</th>
+            <th class="app-table-header-cell">Difference</th>
+            <th class="app-table-header-cell">Last Recon Date</th>
+          </tr>
+        </thead>
+        <tbody class="app-table-body">
+          @for (item of searchParams.plstentActBankReconciliationSummary; track
+          item; let i = $index) {
+          <tr class="app-table-row">
+            <td class="app-table-cell text-center">{{ i + 1 }}</td>
+            <td class="app-table-cell">
+              {{ item.bankAccountNo }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.bookBalance | appCurrency }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.bankBalance | appCurrency }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.differenceAmount | appCurrency }}
+            </td>
+            <td class="app-table-cell">
+              {{ item.lastReconciliationDate | appDate }}
+            </td>
+          </tr>
+          }
+        </tbody>
+        <tfoot>
+          @for(item of searchParams.plstentActBankReconciliationSummary; track
+          item) {
+          <tr class="h40">
+            <td class="app-table-footer" colspan="3">
+              <div class="text-center"><b>Total</b></div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalBookBalance | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalBankBalance | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ searchParams.totalDifference | appCurrency }}</b>
+              </div>
+            </td>
+            <td class="app-table-footer d-flex align-items-center h40">
+              <div class="text-center">
+                <b>{{ item.lastReconciliationDate | appDate }}</b>
+              </div>
+            </td>
+          </tr>
+          }
+        </tfoot>
+      </table>
+    </scroll>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" >
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Bank Reconsiliation Summary</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

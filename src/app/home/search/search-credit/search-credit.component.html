@@ -1,0 +1,12 @@
+<app-auto-complete [disabled]="__btnClicked" [displayText]="displayText" [items]="items"
+    (onInput)="getSearchData($event)" keyName="codeName" (onSelect)="valueSelected($event)"
+    [errorTrue]="control?.control?.invalid && __errorTrue" [errorText]="__errorText" [label]="__label"
+    [required]="__required" (onClear)="onAction('clear')" (onSearch)="openSearch($event)">
+</app-auto-complete>
+<ng-template #LedgerSearchPopupDialog>
+    <app-ledger-search [items]="ledgerSearchList"
+        [displayText]="__fundTrnsferNote?.ibusCompanyCreditActLedger?.ledgerName"
+        [regionValue]="!!regionValue?regionValue:__fundTrnsferNote.regionValue" [isModeType]="true"
+        [modeType]="__fundTrnsferNote.creditLedgerTypeValue" [isNoCashorBank]="_isNoCashorBankVal"
+        [isBankorCash]="noCashorBankValue" [isChecked]="__fundTrnsferNote.creditLedgerTypeValue" ></app-ledger-search>
+</ng-template>

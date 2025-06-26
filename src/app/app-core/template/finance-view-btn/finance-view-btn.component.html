@@ -1,0 +1,49 @@
+<div class="flex-center">
+  <app-icon-button
+    name="doc-view"
+    (click)="viewFile()"
+    toolTip="View"
+  ></app-icon-button>
+  <app-icon-button
+    name="doc-download"
+    (click)="viewFile()"
+    toolTip="Download"
+  ></app-icon-button>
+  <app-icon-button
+    name="doc-delete"
+    (click)="deleteActAttachmentFile()"
+    toolTip="Delete"
+  ></app-icon-button>
+</div>
+
+
+<ng-template #Template>
+    <div class="ab bgc">
+        <div class="rel">
+            <div class="p-fix d-flex">
+                <div class="download-button">
+                    <button color="primary" (click)="downloadFile()">
+                        Download
+                    </button>
+                </div>
+                <div class="close-button">
+                    <button color="danger" (click)="close()">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+            <div class="d-flex align-items-center h100 justify-content-center w100">
+                <div class="d-flex align-items-center h100 justify-content-center w100 relative">
+                    <div class="ab">
+                        <div class="rel">
+                            <div class="dis-none wcheck active">
+                                <img [src]="filePath | appSafe: 'resourceUrl'" alt="PreviewImages">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

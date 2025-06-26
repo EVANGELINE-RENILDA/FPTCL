@@ -1,0 +1,91 @@
+<div class="content-wrapper">
+
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" [showPaginator]="false" columnID="purchaseRegisterid"
+        [hideSelectAll]="true">
+        <ng-template cellDef="debitAmt" let-element>
+            <div class="pl60">
+                {{element.debitAmt}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="creditAmt" let-element>
+            <div class="pl60">
+                {{element.creditAmt}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="closingBalance" let-element>
+            <div class="pl60">
+                {{element.closingBalance}}
+            </div>
+        </ng-template>
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open" (click)="navigateToDetail()"></app-icon-button>
+        </ng-template>
+        <ng-template #slotLeft>
+            <div class="col-md-4">
+                <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+            </div>
+        </ng-template>
+        <ng-template #slotRight>
+            <div class="px10">
+                <view-label label="Report Generating Date & Time" value="06/04/2024 10:03 AM"></view-label>
+            </div>
+            <app-icon-button name="download" toolTip="Export To Excel"
+                appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+
+        </ng-template>
+
+    </app-table>
+</div>
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Purchase Register Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createPurchaseRegisterSearch()"></app-icon-button>
+                    <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (ngSubmit)="searchPurchaseRegister()">
+
+                        <row className="row-h100">
+                            <div class="col-md-4"><app-input-control label="Fiscal Year"
+                                    type="select"></app-input-control></div>
+                            <div class="col-md-4"><app-input-control label="Branch" type="select"></app-input-control>
+                            </div>
+                            <div class="col-md-4"><app-input-control label="From Date" type="date"></app-input-control>
+                            </div>
+                            <div class="col-md-4"><app-input-control label="To Date" type="date"></app-input-control>
+                            </div>
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text">Purchase</div>
+
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Purchase Register</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

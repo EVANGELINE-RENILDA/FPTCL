@@ -1,0 +1,1234 @@
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn" (click)="navigateToList()">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>{{this.objType}}
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">
+          @if(objType ==='new' || objType === 'detail'){
+          Receipt
+          } 
+          @else if(objType ==='change') {
+          Receipt Change In Detail
+          } @else if(objType==='reversal'){
+          Receipt Change In Reversal
+          }
+          
+        </div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<div class="content-wrapper">
+
+  @if(receiptTrustEstate.transactionPostingId!==0 && receiptTrustEstate.isDirectApproval==='Y'){
+  @if(receiptTrustEstate.statusValue==='PNDSB' || receiptTrustEstate.statusValue==='PDNVR'){
+
+  <div class="col-md-1 ml-auto m-8px" appButtonAccess="JornlVochrReversNewBtn">
+    <button type="submit" class="approve-btn" (click)="saveTransactionPostingNotes('APPRD')">Complete</button>
+
+  </div>
+  }
+  }
+  @if(receiptTrustEstate.transactionPostingId!==0){
+  @if(receiptTrustEstate.statusValue==='APPRD' ){
+    @if(objType!=='reversal'){
+      @if( objType !=='change'){
+
+        <div class="col-md-1 ml-auto m-8px" appButtonAccess="JornlVochrReversNewBtn">
+          <button type="submit" class="complete-btn" (click)="saveTransactionPostingNotes('CNCLD')">Cancel</button>
+      
+        </div>
+      }
+
+    }
+
+  }
+  }
+  <app-multi-page-url [id]="" url="/home/trust/trust-application/detail"></app-multi-page-url>
+  <div class="card">
+    <div class="cus-card">
+      <div class="item-content">
+        <table>
+          <tr>
+            <td>
+              <div class="t-head">Document Number</div>
+              <div class="t-body">
+                {{
+                receiptTrustEstate.documentNumber
+                ? receiptTrustEstate.documentNumber
+                : "-"
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="t-head">Document Date</div>
+              <div class="t-body">
+                {{
+                receiptTrustEstate.documentDate
+                ? (receiptTrustEstate.documentDate | appDate)
+                : "-"
+                }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="item-content">
+        <table>
+          <tr>
+            <td>
+              <div>
+                <label class="branch">Branch Name</label>
+                <div class="branch-value">
+                  {{ branchName ? branchName : "-" }}
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="t-head">Receipt Amount ({{currency}})</div>
+              <div class="t-body">
+                {{ receiptTrustEstate.inputValue | appCurrency}}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="item-content">
+        <table>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Created By</div>
+              <div class="t-body el" [matTooltip]="receiptTrustEstate.enterByFullName" [matTooltipPosition]="'above'">
+                {{
+                receiptTrustEstate.enterByFullName
+                ? receiptTrustEstate.enterByFullName
+                : "-"
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Created Date</div>
+              <div class="t-body">
+                {{
+                receiptTrustEstate.enteredDate
+                ? (receiptTrustEstate.enteredDate | appDate)
+                : "-"
+                }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="item-content">
+        <table>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Posted By</div>
+              <div class="t-body el" [matTooltip]="receiptTrustEstate.postedByFullName" [matTooltipPosition]="'above'">
+                {{
+                receiptTrustEstate.postedByFullName
+                ? receiptTrustEstate.postedByFullName
+                : "-"
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Posted Date</div>
+              <div class="t-body">
+                {{
+                receiptTrustEstate.postedDate
+                ? (receiptTrustEstate.postedDate | appDate)
+                : "-"
+                }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="item-content">
+        <table>
+          <tr class="v-flex">
+            <td>
+              <!-- <div class="t-head">Status</div>
+              <div class="t-body">{{receiptTrustEstate.statusDescription ? receiptTrustEstate.documentNumber:"-"}}</div> -->
+              <!-- <view-label label="Status" status="{{ receiptTrustEstate.statusValue }}"
+                statusValue="{{ receiptTrustEstate.statusDescription }}"></view-label> -->
+
+
+              <view-label label="Status" status="{{ receiptTrustEstate.statusValue }}"
+                statusValue="{{ receiptTrustEstate.statusDescription }}"></view-label>
+            </td>
+          </tr>
+          <tr class="v-flex">
+            <td>
+              <div class="t-head">Assigned Officer</div>
+              <div class="t-body el" [matTooltip]="assignedOfficerName" [matTooltipPosition]="'above'">
+                {{ assignedOfficerName ? assignedOfficerName : "-" }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card pb26">
+    <div class="d-flex">
+      <div class="color1">
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+      </div>
+      <div class="color">Customer Information</div>
+    </div>
+    <div class="border mb26 mt10"></div>
+    <div class="d-flex gap25 w100">
+      <div class="voucher-detail">
+        <view-label label=" Account Number"
+          value="{{ receiptTrustEstate.customerAccountNumber == 0 ? '-' : receiptTrustEstate.customerAccountNumber}}"></view-label>
+        <view-label label="Customer Name" value="{{ receiptTrustEstate.pentCustomer.customerName }}"></view-label>
+      </div>
+      <div class="voucher-detail border-right-cus">
+        <view-label label="File Type" value="{{ receiptTrustEstate.fileTypeDescription }}"></view-label>
+        <view-label label="Account Type" value="{{ receiptTrustEstate.accountTypeDescription }}"></view-label>
+      </div>
+      <div class="voucher-detail">
+        <view-label label="Date of Birth"
+          value="{{ receiptTrustEstate.pentCustomer.dateOfBirth | appDate }}"></view-label>
+        <view-label label="Gender" value="{{ receiptTrustEstate.pentCustomer.genderDescription }}"></view-label>
+      </div>
+      <div class="voucher-detail">
+        <view-label label="Contact No
+        " value="{{ receiptTrustEstate.pentCustomer.contactNo }}"></view-label>
+        <view-label label="Email Id" value="{{ receiptTrustEstate.pentCustomer.emailId }}"></view-label>
+      </div>
+    </div>
+  </div>
+
+  @if (receiptTrustEstate.voucherTypeValue === 'RCHDT') {
+  <div class="card">
+    <div class="d-flex">
+      <div class="color1">
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+      </div>
+      <div class="color">Receipt Information</div>
+    </div>
+    <div class="border mb26 mt10"></div>
+    <div class="d-flex gap25 w100">
+      <div class="voucher-detail">
+        <div class="t-head">Receipt No</div>
+        <div class="t-body" (click)="openReceiptDetail(receiptTrustEstate.changeInDocumentId)">
+          {{
+          receiptTrustEstate.changeInDocumentNumber
+          ? receiptTrustEstate.changeInDocumentNumber
+          : "-"
+          }}
+        </div>
+      </div>
+      <div class="voucher-detail border-right-cus">
+        <view-label label="Receipt Date" value="{{receiptTrustEstate.changeInReceiptDate | appDate}}"></view-label>
+      </div>
+      <div class="voucher-detail">
+        <view-label label="Receipt Amount" value="{{receiptTrustEstate.changeInReceiptAmount}}"></view-label>
+      </div>
+      <div class="voucher-detail">
+        <view-label label="Account No" value="{{receiptTrustEstate.changeInReceiptAccountNo}}"></view-label>
+      </div>
+    </div>
+  </div>
+  }
+
+  <app-tab-group (tabChange)="onTabChange($event)">
+    <app-tab tabTitle="Application">
+      <accordion>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title open-visible">
+                <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                <div class="">Voucher Information</div>
+              </div>
+              <div class="accordion-title open-hide">
+                <row class="row-w100">
+                  <div class="accordion-title">
+                    <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                    <div class="">Finance Information</div>
+                  </div>
+                </row>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="accordian-content">
+              @if(receiptTrustEstate.transactionPostingId>0){
+              <form #financeInformation="ngForm">
+                <row>
+                  <div class="col-md-3 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/application.svg" class="pr5px"></ion-icon>
+                      Account Information
+                    </div>
+                    @if(editTrust === false){
+                    <view-label label="Branch" class="pb10" value="{{ branchName }}"></view-label>
+
+                    <view-label class="pb10" label="File Type"
+                      value="{{ receiptTrustEstate.fileTypeDescription }}"></view-label>
+                    <view-label class="pb10" label="Account Type"
+                      value="{{ receiptTrustEstate.accountTypeDescription }}"></view-label>
+
+                    <view-label class="pb10" label="Account Number"
+                      value="{{ receiptTrustEstate.customerAccountNumber }}"></view-label>
+
+                    } @else {
+                    <div class="col-md-12 mb20">
+                      <view-label label="Branch" value="{{ branchName }}"></view-label>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="File Type" [(ngModel)]="receiptTrustEstate.fileTypeValue"
+                        name="fileTypeValue" [items]="initialData.DDLValues.DDLFileType" key="constant"
+                        keyName="description" [required]="true" [errorTrue]="errorTrue" (onSelect)="
+                          fileData(receiptTrustEstate.fileTypeValue);
+                          receiptTrustEstate.customerAccountNumber = 0;
+                          receiptTrustEstate.accountTypeValue = '';
+                          receiptTrustEstate.appEventMappingId = 0
+                        " defaultOption="--Select--">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Account Type"
+                        [(ngModel)]="receiptTrustEstate.accountTypeValue" name="accountTypeValue"
+                        [items]="casAccountType" key="constant" keyName="description" [required]="true"
+                        [errorTrue]="errorTrue" [btnClicked]="receiptTrustEstate.fileTypeValue === ''" (onSelect)="
+                          accountNum(receiptTrustEstate.accountTypeValue); receiptTrustEstate.appEventMappingId = 0
+                        " defaultOption="--Select--">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label=" Account Number"
+                        [(ngModel)]="receiptTrustEstate.customerAccountNumber" name="customerAccountNumber"
+                        [items]="accountNumber" key="ledgerId" keyName="code" (onSelect)="
+                          bankCode(
+                            receiptTrustEstate.customerAccountNumber,
+                            true
+                          )
+                        " defaultOption="--Select--" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                    </div>
+
+                    }
+                  </div>
+                  <div class="col-md-3 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon name="person-outline" class="pr5px"></ion-icon>
+                      Configuration Information
+                    </div>
+                    @if(editTrust === false){
+
+                    <view-label class="pb10" label="Event" value="{{ receiptTrustEstate.eventName }}"></view-label>
+                    <view-label class="pb10" label="Sub Event"
+                      value="{{ receiptTrustEstate.subEventName }}"></view-label>
+                    <view-label class="pb10" label="Posting Matrix"
+                      value="{{ receiptTrustEstate.postingMatrix }}"></view-label>
+                    <view-label class="pb10" label="Transaction Code"
+                      value="{{ receiptTrustEstate.transactionCode }}"></view-label>
+                    } @else {
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Event" [(ngModel)]="receiptTrustEstate.eventId"
+                        name="eventId" (onSelect)="
+                          getListOfSubEventByEventId(
+                            receiptTrustEstate.eventId
+                          );
+                          receiptTrustEstate.appEventMappingId = 0;
+                          receiptTrustEstate.subEventId = 0
+                        " [items]="eventddl" key="id" keyName="name" defaultOption="--Select--" [required]="true"
+                        [errorTrue]="errorTrue" valueType="int">
+                      </app-input-control>
+                    </div>
+
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Sub Event" [(ngModel)]="receiptTrustEstate.subEventId"
+                        name="subEventId" (onSelect)="
+                          getEventMappingIdPostingMatrixByEventandSubEventId(
+                            receiptTrustEstate.subEventId
+                          );
+                          receiptTrustEstate.appEventMappingId = 0
+                        " key="id" keyName="name" [items]="subeventddl" defaultOption="--Select--" [required]="true"
+                        [errorTrue]="errorTrue">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Posting Matrix"
+                        [(ngModel)]="receiptTrustEstate.appEventMappingId" name="appEventMappingId"
+                        [items]="postingMatrixddl" key="id" keyName="description" (onSelect)="transactionData($event)"
+                        [required]="true" defaultOption="--Select--" [errorTrue]="errorTrue">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Transaction Code"
+                        [(ngModel)]="receiptTrustEstate.transactionCode" name="transactionCode" [btnClicked]="true">
+                      </app-input-control>
+                    </div>
+                    }
+                  </div>
+
+                  <div class="col-md-3 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/customer-service.svg" class="pr5px"></ion-icon>
+                      Document Information
+                    </div>
+                    @if(editTrust === false){
+
+                    <view-label class="pb10" label="Document Date"
+                      value="{{ receiptTrustEstate.documentDate | appDate }}"></view-label>
+                    <view-label class="pb10" label="Primary Value ({{currency}})"
+                      value="{{ receiptTrustEstate.inputValue }}"></view-label>
+                    } @else {
+                    <!-- <div class="col-md-12">
+                        <app-input-control type="select" label="Branch" [(ngModel)]="receiptTrustEstate.branchId"
+                          name="branchId" [items]="DDLBranch" key="branchId" keyName="branchDescription" [required]="true"
+                          [errorTrue]="errorTrue"> </app-input-control>
+                      </div> -->
+
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Document Date" [(ngModel)]="receiptTrustEstate.documentDate"
+                        name="documentDate" [minDate]="receiptTrustEstate.documentDate" [required]="true"
+                        [errorTrue]="errorTrue">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Primary Value ({{currency}})"
+                        (onChange)="calculatePostingValue()" [(ngModel)]="receiptTrustEstate.inputValue"
+                        name="inputValue" [required]="true" [errorTrue]="errorTrue" [min]="1">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <view-label class="pb10" label="Auto Posting Value ({{currency}})"
+                          value="{{receiptTrustEstate.postingValue}}"></view-label>
+                    </div>
+                    } @if(editTrust===false){
+
+                    <view-label class="pb10" label="Auto Posting Value ({{currency}})"
+                      value="{{ receiptTrustEstate.postingValue }}"></view-label>
+                    } @else{
+                    <!-- <view-label class="pb10 pl" label="Primary Value"
+                      value="{{receiptTrustEstate.inputValue}}"></view-label> -->
+                    <!-- <view-label class="pb10 pl" label="Auto Posting Value"
+                      value="{{receiptTrustEstate.postingValue}}"></view-label> -->
+                    } @if(editTrust === false){
+                    <div class="col-md-12 textarea-cus">
+                 
+                      <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                        [required]="true" [(ngModel)]="receiptTrustEstate.narrative" name="narrative"
+                        [btnClicked]="true" label="Narrative"></app-input-control>
+                    </div>
+
+                    } @else{
+                    <div class="col-md-12 textarea-cus">
+                     
+                      <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                        [required]="true" [(ngModel)]="receiptTrustEstate.narrative" name="narrative"
+                        [btnClicked]="true" label="Narrative"></app-input-control>
+                    </div>
+
+                    }
+                  </div>
+                  <div class="col-md-3 mb26">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/customer-service.svg" class="pr5px"></ion-icon>
+                      Payment Information
+                    </div>
+                    @if(editTrust === false){
+                    <view-label class="pb10" label="Payment Mode"
+                      value="{{ receiptTrustEstate.paymentModeDescription }}"></view-label>
+                    @if(receiptTrustEstate.paymentModeDescription !== 'Cash' ){
+                    <view-label class="pb10" label="Bank Code"
+                      value="{{ receiptTrustEstate.bankCode }}"></view-label>
+                    <view-label class="pb10" label="Bank Account Number"
+                      value="{{ receiptTrustEstate.bankAccountNumber }}"></view-label>
+                    <view-label class="pb10" label="Transaction Date"
+                      value="{{ receiptTrustEstate.chequeTransactionDate }}"></view-label>
+                    <view-label class="pb10" label="Transaction Number"
+                      value="{{ receiptTrustEstate.chequeTransactionNumber }}"></view-label>
+                    }
+                    } @else {
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Payment Mode"
+                        [(ngModel)]="receiptTrustEstate.paymentModeValue" name="paymentModeValue" [required]="true"
+                        [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLPayment" key="constant"
+                        keyName="description" defaultOption="--Select--" (onSelect)="getBankDetails()">
+                      </app-input-control>
+                    </div>
+                    @if(this.receiptTrustEstate.paymentModeValue==='CHEQU'){
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Bank Code" [(ngModel)]="receiptTrustEstate.bankId"
+                        (onSelect)="getAccountNo(receiptTrustEstate.bankId)" name="bankId" [required]="true"
+                        [errorTrue]="errorTrue" defaultOption="--Select--" [items]="checkcodeDDl" key="bankId"
+                        keyName="bankCode" [showExtraSpace]="true">
+                        <!-- <div class="text-icon d-flex" (click)="createBankDetail()">
+                          <ion-icon name="add-outline"></ion-icon>
+                          <div>Add Bank</div>
+                        </div> -->
+                        <add-bank [referenceId]="receiptTrustEstate.referenceId" [branchName]="branchName"
+                          (onComplete)="this.bankCode(this.receiptTrustEstate.customerAccountNumber)"
+                          (onClose)="getDDL()"></add-bank>
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Bank Account Number"
+                        [(ngModel)]="receiptTrustEstate.bankAccountNumber" name="bankAccountNumber" [required]="true"
+                        [errorTrue]="errorTrue" [btnClicked]="true">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Cheque Date"
+                        [(ngModel)]="receiptTrustEstate.chequeTransactionDate" name="chequeTransactionDate"
+                        [minDate]="receiptTrustEstate.enteredDate" [required]="true" [errorTrue]="errorTrue">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="number" label="Cheque Number"
+                        [(ngModel)]="receiptTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber "
+                        [required]="true" [errorTrue]="errorTrue" [btnClicked]="receiptTrustEstate.bankId === 0"
+                        [maxLength]="25">
+                      </app-input-control>
+                    </div>
+                    } @if (this.receiptTrustEstate.paymentModeValue==='BKTRN') {
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Bank Code" [(ngModel)]="receiptTrustEstate.bankId"
+                        (onSelect)="getAccountNo(receiptTrustEstate.bankId)" name="bankId" [required]="true"
+                        [errorTrue]="errorTrue" defaultOption="--Select--" [items]="checkcodeDDl" key="bankId"
+                        keyName="bankCode" [showExtraSpace]="true">
+                        <!-- <div class="text-icon d-flex" (click)="createBankDetail()">
+                          <ion-icon name="add-outline"></ion-icon>
+                          <div>Add Bank</div>
+                        </div> -->
+                        <add-bank [referenceId]="receiptTrustEstate.referenceId" [branchName]="branchName"
+                          (onComplete)="this.bankCode(this.receiptTrustEstate.customerAccountNumber)"
+                          (onClose)="getDDL()"></add-bank>
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Bank Account Number"
+                        [(ngModel)]="receiptTrustEstate.bankAccountNumber" name="bankAccountNumber" [required]="true"
+                        [errorTrue]="errorTrue" [btnClicked]="true">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Transaction Date"
+                        [(ngModel)]="receiptTrustEstate.chequeTransactionDate" name="chequeTransactionDate "
+                        [required]="true" [errorTrue]="errorTrue" [btnClicked]="receiptTrustEstate.bankId === 0"
+                        [minDate]="receiptTrustEstate.enteredDate">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="number" label="Transaction Number"
+                        [(ngModel)]="receiptTrustEstate.chequeTransactionNumber" name="chequeTransactionNumber"
+                        [required]="true" [errorTrue]="errorTrue" [btnClicked]="receiptTrustEstate.bankId === 0"
+                        [maxLength]="25">
+                      </app-input-control>
+                    </div>
+                    } }
+                  </div>
+                </row>
+              </form>
+              } @else{
+              <form #financeInformation="ngForm">
+                <row>
+                  <div class="col-md-3 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/application.svg" class="pr5px"></ion-icon>
+                      Account Information
+                    </div>
+
+                    <div class="col-md-12 mb20">
+                      <view-label label="Branch" value="{{ branchName }}"></view-label>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="File Type" [(ngModel)]="receiptTrustEstate.fileTypeValue"
+                        name="fileTypeValue" [items]="initialData.DDLValues.DDLFileType" key="constant"
+                        keyName="description" [required]="true" [errorTrue]="errorTrue" (onSelect)="
+                          fileData(receiptTrustEstate.fileTypeValue);
+                          receiptTrustEstate.customerAccountNumber = 0;
+                          receiptTrustEstate.accountTypeValue = '';
+                          receiptTrustEstate.appEventMappingId = 0
+                        " defaultOption="--Select--">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Account Type"
+                        [(ngModel)]="receiptTrustEstate.accountTypeValue" name="accountTypeValue"
+                        [items]="casAccountType" key="constant" keyName="description" [required]="true"
+                        [errorTrue]="errorTrue" [btnClicked]="receiptTrustEstate.fileTypeValue === ''" (onSelect)="
+                          accountNum(receiptTrustEstate.accountTypeValue);
+                          receiptTrustEstate.customerAccountNumber = 0;
+                          receiptTrustEstate.appEventMappingId = 0
+                        " defaultOption="--Select--">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label=" Account Number"
+                        [(ngModel)]="receiptTrustEstate.customerAccountNumber" name="customerAccountNumber"
+                        [items]="accountNumber" key="ledgerId" keyName="code" (onSelect)="
+                          bankCode(receiptTrustEstate.customerAccountNumber, true)
+                        " defaultOption="--Select--"></app-input-control>
+                    </div>
+                  </div>
+                  <div class="col-md-3 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon name="person-outline" class="pr5px"></ion-icon>
+                      Configuration Information
+                    </div>
+
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Event" [(ngModel)]="receiptTrustEstate.eventId"
+                        name="eventId" (onSelect)="
+                          getListOfSubEventByEventId(
+                            receiptTrustEstate.eventId
+                          );
+                          receiptTrustEstate.subEventId = 0;
+                          receiptTrustEstate.appEventMappingId = 0
+                        " [items]="eventddl" key="id" keyName="name" defaultOption="--Select--" [required]="true"
+                        [errorTrue]="errorTrue" valueType="int">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Sub Event" [(ngModel)]="receiptTrustEstate.subEventId"
+                        name="subEventId" (onSelect)="
+                          getEventMappingIdPostingMatrixByEventandSubEventId(
+                            receiptTrustEstate.subEventId
+                          );
+                          receiptTrustEstate.appEventMappingId = 0
+                        " key="id" keyName="name" [items]="subeventddl" defaultOption="--Select--" [required]="true"
+                        [errorTrue]="errorTrue" valueType="int">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Posting Matrix" (onSelect)="transactionData($event)"
+                        [(ngModel)]="receiptTrustEstate.appEventMappingId" name="appEventMappingId"
+                        [items]="postingMatrixddl" key="id" keyName="description" valueType="int"
+                        defaultOption="--Select--" [required]="true" [errorTrue]="errorTrue">
+                      </app-input-control>
+                    </div>
+
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Transaction Code"
+                        [(ngModel)]="receiptTrustEstate.transactionCode" name="transactionCode" [btnClicked]="true">
+                      </app-input-control>
+                    </div>
+                  </div>
+                  <div class="col-md-3 border-right">
+                    <div class="view-label-container-title mb26">
+                      <ion-icon src="assets/icons/accordian/customer-service.svg" class="pr5px"></ion-icon>
+                      Document Information
+                    </div>
+
+                    <div class="col-md-12">
+                      <app-input-control type="date" label="Document Date" [(ngModel)]="receiptTrustEstate.documentDate"
+                        name="documentDate" [minDate]="receiptTrustEstate.documentDate" [required]="true"
+                        [errorTrue]="errorTrue">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="text" label="Primary Value ({{currency}})"
+                        (onChange)="calculatePostingValue()" [(ngModel)]="receiptTrustEstate.inputValue"
+                        name="inputValue" [required]="true" [errorTrue]="errorTrue" [min]="1">
+                      </app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <view-label class="pb10" label="Auto Posting Value ({{currency}})"
+                          value="{{receiptTrustEstate.postingValue}}"></view-label>
+                    </div>
+                    <div class="col-md-12">
+                   
+                      <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                        [required]="true" [(ngModel)]="receiptTrustEstate.narrative"
+                        name="narrative" label="Narrative"></app-input-control>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 mb26">
+                    <div class="pr5px mb44">
+                      <div class="col-md-12 textarea-cus">
+                        <div class="view-label-container-title mb26">
+                          <ion-icon src="assets/icons/accordian/customer-service.svg" class="pr5px"></ion-icon>
+                          Payment Information
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="select" label="Payment Mode"
+                            [(ngModel)]="receiptTrustEstate.paymentModeValue" name="paymentModeValue" [required]="true"
+                            [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLPayment" key="constant"
+                            keyName="description" defaultOption="--Select--"
+                            (onSelect)="(receiptTrustEstate.referenceId)">
+                          </app-input-control>
+                        </div>
+                        @if(this.receiptTrustEstate.paymentModeValue==='CHEQU'){
+                        <div class="col-md-12">
+                          <app-input-control type="select" label="Bank Code" [(ngModel)]="receiptTrustEstate.bankId"
+                            (onSelect)="getAccountNo(receiptTrustEstate.bankId)" name="bankId" [required]="true"
+                            [errorTrue]="errorTrue" defaultOption="--Select--" [items]="checkcodeDDl" key="bankId"
+                            keyName="bankCode" [showExtraSpace]="true">
+                            <!-- <div class="text-icon d-flex" (click)="createBankDetail()">
+                              <ion-icon name="add-outline"></ion-icon>
+                              <div>Add Bank</div>
+                            </div> -->
+                            <add-bank [referenceId]="receiptTrustEstate.referenceId" [branchName]="branchName"
+                              (onComplete)="this.bankCode(this.receiptTrustEstate.customerAccountNumber)"
+                              (onClose)="getDDL()"></add-bank>
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Bank Account Number"
+                            [(ngModel)]="receiptTrustEstate.bankAccountNumber" name="bankAccountNumber"
+                            [required]="true" [errorTrue]="errorTrue" [btnClicked]="true">
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="date" label="Cheque Date" [(ngModel)]="
+                              receiptTrustEstate.chequeTransactionDate
+                            " name="chequeTransactionDate" [required]="true" [errorTrue]="errorTrue"
+                            [btnClicked]="receiptTrustEstate.bankId === 0" [minDate]="receiptTrustEstate.enteredDate">
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Cheque Number" [(ngModel)]="
+                              receiptTrustEstate.chequeTransactionNumber
+                            " name="chequeTransactionNumber" [required]="true" [errorTrue]="errorTrue"
+                            [btnClicked]="receiptTrustEstate.bankId === 0" [minLength]="8" [maxLength]="25">
+                          </app-input-control>
+                        </div>
+                        } @if
+                        (this.receiptTrustEstate.paymentModeValue==='BKTRN') {
+                        <div class="col-md-12">
+                          <app-input-control type="select" label="Bank Code" [(ngModel)]="receiptTrustEstate.bankId"
+                            (onSelect)="getAccountNo(receiptTrustEstate.bankId)" name="bankId" [required]="true"
+                            [errorTrue]="errorTrue" defaultOption="--Select--" [items]="checkcodeDDl" key="bankId"
+                            keyName="bankCode" [showExtraSpace]="true">
+                            <!-- <div class="text-icon d-flex" (click)="createBankDetail()">
+                              <ion-icon name="add-outline"></ion-icon>
+                              <div>Add Bank</div>
+                            </div> -->
+                            <add-bank [referenceId]="receiptTrustEstate.referenceId" [branchName]="branchName"
+                              (onComplete)="this.bankCode(this.receiptTrustEstate.customerAccountNumber)"
+                              (onClose)="getDDL()"></add-bank>
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Bank Account Number"
+                            [(ngModel)]="receiptTrustEstate.bankAccountNumber" name="bankAccountNumber"
+                            [required]="true" [errorTrue]="errorTrue" [btnClicked]="true">
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="date" label="Transaction Date" [(ngModel)]="
+                              receiptTrustEstate.chequeTransactionDate
+                            " name="chequeTransactionDate" [required]="true" [errorTrue]="errorTrue"
+                            [btnClicked]="receiptTrustEstate.bankId === 0" [minDate]="receiptTrustEstate.enteredDate">
+                          </app-input-control>
+                        </div>
+                        <div class="col-md-12">
+                          <app-input-control type="text" label="Transaction Number" [(ngModel)]="
+                              receiptTrustEstate.chequeTransactionNumber
+                            " name="chequeTransactionDate" [required]="true" [errorTrue]="errorTrue"
+                            [btnClicked]="receiptTrustEstate.bankId === 0" [maxLength]="25">
+                          </app-input-control>
+                        </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </row>
+              </form>
+              }
+
+              <div class="d-flex end gap-10">
+                @if(this.receiptTrustEstate.transactionPostingId===0 && editAccess){
+                <app-icon-button name="save" toolTip="Save" (click)="saveTransactionPosting()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="Clear()"></app-icon-button>
+                } @else {
+                @if(this.editTrust===false && editAccess){
+                @if( receiptTrustEstate.statusValue != 'APPRD' ){
+                <app-icon-button name="edit" toolTip="Edit" (click)="editTransaction()"></app-icon-button>
+                }
+                } @else if( receiptTrustEstate.transactionPostingId!==0 && editAccess) {
+
+                <div class="col-md-3 d-flex gap-10 end">
+                  <app-icon-button name="save" (click)="updateTransactionPosting()" toolTip="Update"></app-icon-button>
+                  <app-icon-button name="refresh" toolTip="Refresh" (click)="
+                      openTransactionPosting(
+                        receiptTrustEstate.transactionPostingId,
+                        'refresh'
+                      )
+                    "></app-icon-button>
+                </div>
+                } }
+
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title open-visible">
+                <ion-icon src="assets/icons/accordian/application.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Transaction Preview</div>
+                </div>
+              </div>
+              <div class="accordion-title open-hide">
+                <row class="row-w100">
+                  <div class="accordion-title">
+                    <ion-icon src="assets/icons/accordian/application.svg"></ion-icon>
+                    <div class="accordion-title-content">
+                      <div>Transaction Preview</div>
+                    </div>
+                  </div>
+                </row>
+              </div>
+            </div>
+          </accordion-header>
+
+          <accordion-body>
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <div class="justify-content-end gap1">
+                  <div class="d-flex trans gap">
+                    <div class="gap1">Total Debit ({{currency}})</div>
+                    <div class="color">{{ receiptTrustEstate.totalDebit | appCurrency}}</div>
+                  </div>
+                  <div class="d-flex trans gap mr40">
+                    <div class="gap">Total Credit ({{currency}})</div>
+                    <div class="color">
+                      {{ receiptTrustEstate.totalCredit | appCurrency}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="v-flex" appAccess="FUDTN">
+                  <div class="relat scroller">
+                    <app-table class="sub-table" [pagination]="pagination" [columns]="columns"
+                      [columnsName]="columnsName" [dataSource]="tableData" [hasHeader]="false" [showPaginator]="false"
+                      [hideSelectAll]="true">
+                      <ng-template cellHeaderDef="groupName" let-element>
+                        <div>Group Name</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="ledgerName" let-element>
+                        <div>Ledger Name</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="postingType" let-element>
+                        <div>Posting Nature</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="postingValue" let-element>
+                        <div class="amount-align">Posting Value ({{currency}}) </div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="postingType2" let-element>
+                        <div class="">Posting Type</div>
+                      </ng-template>
+                      <ng-template cellHeaderDef="postingBooks" let-element>
+                        <div class="">Posting Books</div>
+                      </ng-template>
+                      <ng-template cellDef="groupName" let-element>
+                        <div>{{ element.groupName }}</div>
+                      </ng-template>
+                      <ng-template cellDef="ledgerName" let-element>
+                        <div>{{ element.ledgerName }}</div>
+                      </ng-template>
+
+                      <ng-template cellDef="postingValue" let-element>
+                        <div class="amount-align">
+
+                          {{ element.postingValue }}
+
+
+                        </div>
+                      </ng-template>
+
+                      <ng-template cellDef="postingType2" let-element>
+                        @if(element.isPrimaryPosting==='N'){
+                        <div>Auto Posting</div>
+                        } @else {
+                        <div>Primary Posting</div>
+
+                        }
+                      </ng-template>
+
+                      <ng-template cellDef="postingBooks" let-element>
+                        @if(element.isCorporateGl==='N'){
+                        <div class="">Trust&Estate</div>
+                        } @else {
+                        <div class="">Corporate</div>
+
+                        }
+                      </ng-template>
+                      <ng-template cellDef="postingType" let-element>
+                        <div class="">{{ element.postingNatureDescription }}</div>
+                      </ng-template>
+                    </app-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+      </accordion>
+    </app-tab>
+
+    @if(receiptTrustEstate.transactionPostingId !==0 ){
+    <app-tab tabTitle="History">
+      <accordion>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon name="notifications-outline"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Notes</div>
+                  <div class="accordian-title-count">
+                    {{
+                    receiptTrustEstate.plstentTransactionPostingNotes.length
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <div class="p16px pb26 wrap-content">
+                  <!-- @if(this.receiptTrustEstate.transactionPostingId===0){ -->
+                  <div class="justify-content-end d-flex">
+
+
+                    @if(editAccess && (receiptTrustEstate.statusValue!=='CNCLD' &&
+                    receiptTrustEstate.statusValue!=='APPRD') ){
+                    <app-icon-button name="add" toolTip="Create" (click)="createNotes()"></app-icon-button>
+                    }
+
+                    <!-- <app-input-control type="select" [(ngModel)]="assignedOfficer.assingedOfficier"
+                    name="assingedOfficier" [items]="assignedOfficerddl" key="constant"
+                    [errorTrue]="errorTrue" [required]="true" keyName="description"></app-input-control>
+
+                    <div class="col-md-2"><app-icon-button name="reassign" toolTip="Reassign"
+                      (click)="reAssignTransactionPostingAssignedOfficer(assignedOfficer.assingedOfficier)"></app-icon-button>
+                  </div> -->
+                  </div>
+
+                  <!-- } -->
+
+                  @for (item of notesList; track $index) {
+                  <div class="border-bottom notes-list">
+                    <div class="mx10">{{ item.notes }}</div>
+                    <div class="d-flex justify-content-end notes-context">
+                      <div style="padding-right: 5px">
+                        {{ item.enteredByFullName }}
+                      </div>
+                      <div class="notes-border-left">
+                        {{ item.enteredDate | appDate: appSetting.environment.dateViewFormatWithTime }}
+                      </div>
+                      <div style="padding-right: 5px"></div>
+                      <!-- <div class=" notes-border-left status-{{item.actionStatusValue}}">
+                                              {{item.actionStatusDescription}}
+                                          </div> -->
+                      <div style="padding-right: 5px"></div>
+                      <div class=" notes-border-left status-{{ item.statusValue }}">
+                        {{ item.statusDescription }}
+                      </div>
+                      <div class="card-1-header-label px-2"></div>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Assigned Officer</div>
+                  <div class="accordian-title-count">
+                    {{ assignOfficerData.length }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                  [hasPagination]="true" [dataSource]="assignOfficerData" [hideSelectAll]="true">
+                  <!-- <ng-template cellDef="statusDescription" let-element>
+                    <div class=" status-{{element.statusValue}}">{{element.statusDescription}}</div>
+                </ng-template> -->
+
+                  <ng-template cellHeaderDef="assignedOfficerFullName" let-element>
+                    Assigned Officer
+                  </ng-template>
+                  <ng-template cellDef="assignedOfficerFullName" let-element>
+
+                    {{ element.assignedOfficerFullName }}
+
+                  </ng-template>
+
+                  <ng-template cellHeaderDef="assignedByFullName" let-element>
+                    Assigned By
+                  </ng-template>
+                  <ng-template cellDef="assignedByFullName" let-element>
+                    {{ element.assignedByFullName }}
+                  </ng-template>
+
+                  <ng-template cellDef="assignedDate" let-element>
+
+                    {{ element.assignedDate | appDate : appSetting.environment.dateViewFormatWithTime
+                    }}
+
+                  </ng-template>
+                  <ng-template cellHeaderDef="statusDescription" let-element>
+                    Status
+                  </ng-template>
+                  <ng-template cellDef="statusDescription" let-element>
+                    <div class=" status-{{ element.statusValue }}">
+                      {{ element.statusDescription }}
+                    </div>
+                  </ng-template>
+                  <ng-template #slotRight>
+                    <!-- @if(receiptTrustEstate.assignedOfficerFlag === true){ -->
+                    <div class="d-flex align-items-center">
+                      @if(this.receiptTrustEstate.reAssignFlag === true &&
+                      (receiptTrustEstate.statusValue==='PNDSB' || receiptTrustEstate.statusValue==='PDNVR'||
+                      receiptTrustEstate.statusValue==='PNDAP')){
+                      <form #p="ngForm" class="col-md-10 w250">
+                        <app-input-control type="select" [(ngModel)]="assignedOfficer.assingedOfficier"
+                          name="assingedOfficier" [items]="assignedOfficerddl" key="constant" [errorTrue]="errorTrue1"
+                          [required]="true" keyName="description"></app-input-control>
+                      </form>
+                      <div class="col-md-2">
+                        <div class="col-md-2">
+                          <app-icon-button name="reassign" toolTip="Reassign" (click)="
+                              reAssignTransactionPostingAssignedOfficer(
+                                assignedOfficer.assingedOfficier
+                              )
+                            "></app-icon-button>
+                        </div>
+                      </div>
+                      }
+                      @if(this.receiptTrustEstate.selfAssignFlag === true &&
+                      (receiptTrustEstate.statusValue==='PNDSB' || receiptTrustEstate.statusValue==='PDNVR'||
+                      receiptTrustEstate.statusValue==='PNDAP')){
+
+                      <div class="col-md-2">
+                        <app-icon-button name="self-assign" (click)="
+                            selfAssignTransactionPostingAssignedHistory()
+                          " toolTip="Self Assign"></app-icon-button>
+                      </div>
+                      }
+                    </div>
+                    <!-- } -->
+                  </ng-template>
+                </app-table>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+      </accordion>
+      <div class="bg-white-padd">
+        <app-tab-sub-group>
+          <app-sub-tab tabTitle="Status History">
+            <div class="status-padding">
+              <!-- @if (receiptTrustEstate.plstentTransactionPostingStatusHistory.length > 0) { -->
+              <div class="status-history">
+                <ul>
+                  @for (x of
+                  receiptTrustEstate.plstentTransactionPostingStatusHistory;
+                  track $index) {
+                  <li>
+                    <div class="status-history-title status-{{ x.statusValue }}">
+                      {{ x.statusDescription }}
+                    </div>
+
+                    <div class="status-history-subtitle">
+                      {{ x.changedByFullName }} |
+                      {{ x.changedDate | appDate }} |
+                      {{ x.changedDate | appDate : "hh:mm a" }}
+                    </div>
+                  </li>
+                  }
+                </ul>
+              </div>
+              <!-- } -->
+            </div>
+          </app-sub-tab>
+          <app-sub-tab tabTitle="Communication History">
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName" [hasPagination]="true"
+                  [dataSource]="emailHistoryTableData" [hideSelectAll]="true">
+                  <ng-template cellHeaderDef="toEmailId">
+                    To Email
+                  </ng-template>
+                  <ng-template cellDef="toEmailId" let-element>
+                    {{ element.ientCommunicationTracking?.toEmailId }}
+                  </ng-template>
+                  <ng-template cellDef="sentDate" let-element>
+                    {{ element.sendDate | appDate : appSetting.environment.dateViewFormatWithTime
+                    }}
+                  </ng-template>
+                  
+                  <ng-template cellDef="sentStatusDescription" let-element>
+                    <!-- <div class="status-{{element.ientCommunicationTracking?.sentStatusValue}}">
+                      {{element.statusDescription}}
+                    </div> -->
+                    <div class=" status-{{ element.statusValue }}">
+                      {{ element.statusDescription }}
+                    </div>
+                  </ng-template>
+
+                  <ng-template cellDef="action" let-element>
+                    <!-- <app-icon-button name="add" toolTip="Create" ></app-icon-button> -->
+                    <app-icon-button name="open" toolTip="Open" (click)="viewEmailDetail(element)"></app-icon-button>
+                  </ng-template>
+                </app-table>
+              </div>
+            </div>
+          </app-sub-tab>
+        </app-tab-sub-group>
+      </div>
+    </app-tab>
+
+    @if( receiptTrustEstate.statusValue === 'APPRD' ){
+      <app-tab tabTitle="Print">
+        <div class="v-flex h100">
+          <div class="bg-white-padd p16px h300" >
+            <div class="outer-content-wrapper h100">
+              <div class=" content-wrapper overflow-none m-8px">
+                <!-- <row> -->
+                  <!-- <div class="wrap-content col-md-4">
+                    <app-input-control type="textarea" [maxLength]="250" className="notes-2" name="pdfOtherComments"
+                    [(ngModel)]="paymentTrustEstate" 
+                    label="COMMENTS OR SPECIAL INSTRUCTIONS"></app-input-control>
+                    <div class="end">
+                      <app-icon-button name="save" toolTip="Update" class=""></app-icon-button>
+                    </div>
+                  </div> -->
+  
+                  <div class="wrap-content col-md-12 h100">
+                    <div class="pdf-viewer">
+                      <object type="application/pdf" [data]="fileUrl | appSafe: 'resourceUrl'"></object>
+                    </div>
+                  </div>
+                <!-- </row> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </app-tab>
+    }
+
+    @if(receiptTrustEstate.lstentTransactionPostingErrorMessage?.length > 0) {
+    <app-tab tabTitle="Error Message">
+      <accordion>
+        <accordion-item [isOpen]="true">
+          <accordion-body>
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <app-table [columns]="errormsgColumns" [columnsName]="errormsgColumnsName"
+                  [dataSource]="receiptTrustEstate.lstentTransactionPostingErrorMessage" [hideSelectAll]="true"
+                  [showPaginator]="false">
+                  <!-- <ng-template cellDef="assignedOfficerFullName" let-element let-index>{{index}} </ng-template>
+                  <ng-template cellHeaderDef="assignedOfficerFullName" let-element>
+                    <div class="center">S No</div>
+                  </ng-template> -->
+                  <ng-template cellDef="assignedDate" let-element>
+                    <div class="center">{{element.messageDesc}}</div>
+                  </ng-template>
+                  <ng-template cellHeaderDef="assignedDate" let-element>
+                    <div class="center">Error Message Description</div>
+                  </ng-template>
+                  <ng-template cellDef="assignedByFullName" let-element>
+                    <div class="center">{{element.insertedByFullname}}</div>
+                  </ng-template>
+                  <ng-template cellHeaderDef="assignedByFullName" let-element>
+                    <div class="center">Inserted By</div>
+                  </ng-template>
+                  <ng-template cellDef="statusDescription" let-element>
+                    <div class="center">{{element.insertedDate| appDate}}</div>
+                  </ng-template>
+                  <ng-template cellHeaderDef="statusDescription" let-element>
+                    <div class="center">Inserted Date</div>
+                  </ng-template>
+                </app-table>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+      </accordion>
+    </app-tab>}
+    }
+  </app-tab-group>
+
+  <ng-template #notesDialog>
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-title">
+          <ion-icon class="fos-20" src="assets/icons/human-icon.svg"></ion-icon>Receipt Trust And Estate Application >
+          Detail > Add Notes
+        </div>
+        <div class="slot-right">
+          <div class="btn-group">
+            <app-icon-button name="save" toolTip="Save" (click)="saveTransactionPostingNotes(false)"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="clearNotes()"></app-icon-button>
+            <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-content">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <div class="dialog-content-inner h100">
+          <form #notesForm="ngForm">
+            <row>
+              <div class="col-md-4 mb26">
+                <app-input-control type="select" label="Status" [(ngModel)]="receiptTrustEstateNotes.statusValue"
+                  name="statusValue" [items]="statusddl" key="constant" keyName="description"></app-input-control>
+              </div>
+              <!-- <div class="col-md-4 mb26"> <app-input-control type="select" label="Action Status"
+                                    [required]="true"></app-input-control>
+                              </div>
+                              <div class="col-md-4 mb26"> <app-input-control type="select" label="Application Stage"
+
+                                      [required]="true"></app-input-control></div> -->
+              <div class="col-md-12 mb26">
+                <app-input-control type="textarea" className="notes" label="Notes"
+                  [(ngModel)]="receiptTrustEstateNotes.notes" name="notes" [maxLength]="500"></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

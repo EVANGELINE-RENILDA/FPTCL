@@ -1,0 +1,170 @@
+<!-- [parentId]="pageId" -->
+<div class="content-wrapper" appAccess="CUSTR">
+  <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+  @if(bankReconciliationReportResult.length !== 0){
+  <row>
+    <div class="col-md-3 py-2">
+      <view-label label="Report Generating Date & Time"
+        value="{{bankReconciliationReportResult.Table4[0].ReportDate | appDate}}"></view-label>
+    </div>
+    <div class="col-md-3 py-2">
+      <view-label label="Bank Ledger Name"
+        value="{{bankReconciliationReportResult.Table4[0].LEDGER_NAME}}"></view-label>
+    </div>
+    <div class="col-md-3 py-2">
+      <view-label label="Bank Ledger Code"
+        value="{{bankReconciliationReportResult.Table4[0].CODE_NAME}}"></view-label>
+    </div>
+    <div class="col-md-3 py-2">
+      <view-label label="Date Of Bank Statement"
+        value="{{bankReconciliationReportResult.Table4[0].ReconciliedDate | appDate}}"></view-label>
+    </div>
+  </row>
+  <div class="card h100">
+    <div class="sub-table w100">
+      <b>Reconciled:</b>
+      <table class="w100">
+        <tr>
+          <th>Date</th>
+          <th>Ref No</th>
+          <th>Particulars</th>
+          <th>Payment</th>
+          <th>Receipt</th>
+        </tr>
+        @if(bankReconciliationReport && bankReconciliationReportResult.Table !==''){
+        @for(element of bankReconciliationReportResult.Table; track $index){
+        <tr>
+          <td>{{element.DOCUMENT_DATE | appDate}}</td>
+          <td>{{element.REFERENCE_NUMBER}}</td>
+          <td>{{element.PAYEE_NAME}}</td>
+          <td class="text-right">{{element.PAYMENT_AMOUNT | appCurrency}}</td>
+          <td class="text-right">{{element.DEPOSIT_AMOUNT | appCurrency}}</td>
+        </tr>
+        }
+        <tr class="tfoot-td">
+          <td colspan="3" class="text-center "><b>Total</b></td>
+          <td class="text-right "><b>{{bankReconciliationReportResult.Table5[0].PAYMENT_AMOUNT | appCurrency}}</b></td>
+          <td class="text-right "><b>{{bankReconciliationReportResult.Table5[0].DEPOSIT_AMOUNT | appCurrency}}</b></td>
+        </tr>
+        }
+      </table>
+    </div>
+
+    <div class="sub-table w100">
+      <b>Outstanding :</b>
+      <table class="w100">
+        <tr>
+          <th>Date</th>
+          <th>Ref No</th>
+          <th>Particulars</th>
+          <th class="text-right">Payment</th>
+          <th class="text-right">Receipt</th>
+        </tr>
+        @if( bankReconciliationReport && bankReconciliationReportResult.Table1 !==''){
+        @for(element of bankReconciliationReportResult.Table1;track $index){
+        <tr>
+          <td>{{element.DOCUMENT_DATE | appDate}}</td>
+          <td>{{element.REFERENCE_NUMBER}}</td>
+          <td>{{element.PAYEE_NAME}}</td>
+          <td class="text-right">{{element.PAYMENT_AMOUNT | appCurrency}}</td>
+          <td class="text-right">{{element.DEPOSIT_AMOUNT | appCurrency}}</td>
+        </tr>
+        }
+        <tr class="tfoot-td">
+          <td colspan="3" class="text-center "><b>Total</b></td>
+          <td class="text-right "><b>{{bankReconciliationReportResult.Table6[0].PAYMENT_AMOUNT | appCurrency}}</b></td>
+          <td class="text-right "><b>{{bankReconciliationReportResult.Table6[0].DEPOSIT_AMOUNT | appCurrency}}</b></td>
+        </tr>
+        }
+      </table>
+    </div>
+
+    <div class="sub-table w100">
+      <b>Reconciliation:</b>
+      <table class="w100">
+        @if(bankReconciliationReport && bankReconciliationReportResult.Table4 !==''){
+        <tbody>
+          <tr>
+            <td class="text-left">Ledger Balance on <span>{{bankReconciliationReportResult.Table4[0].LedgerBindDate |
+                appDate}}</span></td>
+            <td class="text-right">{{bankReconciliationReportResult.Table2[0].Ledger_Balance | appCurrency}}</td>
+          </tr>
+          <tr>
+            <td class="text-left">Add: Outstanding Payment</td>
+            <td class="text-right">{{bankReconciliationReportResult.Table2[0].Outstanding_Payment | appCurrency}}</td>
+          </tr>
+          <tr>
+            <td class="text-left">Subtotal</td>
+            <td class="text-right">{{bankReconciliationReportResult.Table2[0].Sub_total | appCurrency}}</td>
+          </tr>
+          <tr>
+            <td class="text-left">Deduct:Outstanding Deposits</td>
+            <td class="text-right">{{bankReconciliationReportResult.Table2[0].Outstanding_Deposits | appCurrency}}</td>
+          </tr>
+          <tr>
+            <th class="text-left">Expected Balance on Statement</th>
+            <td class="text-right"><b>{{bankReconciliationReportResult.Table2[0].Expected_Balance | appCurrency}}</b>
+            </td>
+          </tr>
+        </tbody>
+        }
+      </table>
+    </div>
+  </div>
+  }
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Bank reconcaillation Report Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="getBankReconciliationReport()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearReport()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row>
+              <div class="col-md-4">
+                <app-input-control type="select" label="Region" [(ngModel)]="bankReconciliationReport.regionValue"
+                  name="regionValue" [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"
+                  [errorTrue]="errorTrue" [required]="true"></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control type="select" label="Bank Ledger" [(ngModel)]="bankReconciliationReport.bankLedgerId"
+                  name="bankLedgerId" [items]="initialData.DDLValues.DDLBankLedger" key="id" keyName="description"
+                  [required]="true" [errorTrue]="errorTrue"></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control type="date" label="Reconciled Date"
+                  [(ngModel)]="bankReconciliationReport.currentReconciliationDate" name="currentReconciliationDate"
+                  [required]="true" [errorTrue]="errorTrue"></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text">Accounts</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Bank Reconciliation Report</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

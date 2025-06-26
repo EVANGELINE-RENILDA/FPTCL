@@ -1,0 +1,247 @@
+<form #a="ngForm" class="flex-1 relative h100">
+  <scroll>
+    <table class="app-table account-table">
+      <thead class="app-table-head">
+        <tr class="app-table-header-row">
+          <th class="app-table-header-cell tw50 text-center">#</th>
+          <th class="app-table-header-cell">
+            <div class="header-cell-title">Item | Service Code</div>
+            <div class="header-cell-subtitle">Name | Description</div>
+          </th>
+          <th class="app-table-header-cell">
+            <div class="header-cell-title">Item | Ledger Code</div>
+            <div class="header-cell-subtitle">Item Ledger Name</div>
+          </th>
+          <th class="app-table-header-cell tw75 text-right">
+            <div class="header-cell-title">Quantity</div>
+            <div class="header-cell-subtitle">Unit</div>
+          </th>
+          <th class="app-table-header-cell tw100 text-right">
+            <div class="header-cell-title">Unit Price</div>
+            <div class="header-cell-subtitle">
+              ({{ salesInvoice.currencyValue }})
+            </div>
+          </th>
+          <th class="app-table-header-cell tw75 text-right">
+            <div class="header-cell-title">Dis %</div>
+            <div class="header-cell-subtitle">Value</div>
+          </th>
+          <th class="app-table-header-cell tw100 text-right">
+            <div class="header-cell-title">After Dis %</div>
+            <div class="header-cell-subtitle">
+              Rep CCY ({{ salesInvoice.currencyValue }})
+            </div>
+          </th>
+          <th class="app-table-header-cell tw75 text-right">
+            <div class="header-cell-title">Tax%</div>
+            <div class="header-cell-subtitle">Value</div>
+          </th>
+          <th class="app-table-header-cell tw75 text-right">
+            <div class="header-cell-title">Total</div>
+            <div class="header-cell-subtitle">
+              Rep CCY({{ salesInvoice.currencyValue }})
+            </div>
+          </th>
+          @if(!isEditDisabled()){
+          <th class="app-table-header-cell tw100">
+            <div class="flex-center gap-5">
+              <app-icon-button name="add" toolTip="Add New" (click)="createNewSalesInvoiceItem()" appAccess="ADIBT"
+                [parentId]="pageId">
+              </app-icon-button>
+              @if (isNarrationOpened) {
+              <app-icon-button name="down" toolTip="Narration Down" (click)="toggleNarration()"
+                toolTip="Open Narration">
+              </app-icon-button>
+              } @else{
+              <app-icon-button name="up" toolTip="Narration Up" (click)="toggleNarration()" toolTip="Close Narration">
+              </app-icon-button>
+              }
+            </div>
+          </th>
+          }
+        </tr>
+      </thead>
+      @if(!canAddItem()){
+      <ng-container [ngTemplateOutlet]="itemReadOnly"></ng-container>
+      } @else {
+      <tbody class="app-table-body">
+        @for (element of salesInvoice.plistentSalSalesInvoiceItem; track $index) {
+        <tr class="app-table-row">
+          <td class="app-table-cell text-center">
+            {{ $index + 1 }}
+          </td>
+          <td class="app-table-cell">
+            <div class="table-cell-header only-input">
+              <auto-search-items [(ngModel)]="salesInvoice.plistentSalSalesInvoiceItem[$index].pentInvItem.invItemId"
+                [displayText]="salesInvoice.plistentSalSalesInvoiceItem[$index].pentInvItem.itemName" [required]="true"
+                [errorTrue]="errorTrue" name="invItemId{{ $index }}" valueType="int"
+                (onSelect)="doSelectLedgerName($event,salesInvoice.plistentSalSalesInvoiceItem, $index)" />
+            </div>
+            <div class="table-cell-subtitle">
+              {{ element.pentInvItem.itemCode || "-"}}
+            </div>
+          </td>
+          <td class="app-table-cell">
+            <div class="table-cell-header only-input">
+              <app-search-debit [(ngModel)]="salesInvoice.plistentSalSalesInvoiceItem[$index].itemLedgerId"
+                name="itemLedgerId{{ $index }}" (onSelect)="doSelectLedgerName1($event, salesInvoice.plistentSalSalesInvoiceItem,$index)" valueType="int"
+                [required]="true" [errorTrue]="errorTrue"  [search]="true" [btnClicked]="
+                salesInvoice.pActVoucherConfig.isItemLedgerEditable === 'N'"
+                [displayText]="salesInvoice.plistentSalSalesInvoiceItem[$index].itemLedgerName"></app-search-debit>
+            </div>
+            <div class="table-cell-subtitle">
+              {{element.itemLedgerCode || "-"}}
+            </div>
+          </td>
+          <td class="app-table-cell text-right">
+            <div class="table-cell-header only-input">
+              <app-input-control type="number" [(ngModel)]="salesInvoice.plistentSalSalesInvoiceItem[$index].quantity"
+                name="quantity{{ $index }}" [decimal]="2" [required]="true" [errorTrue]="errorTrue"
+                valuetype="int"></app-input-control>
+            </div>
+            <div class="table-cell-subtitle">
+              {{element.pentInvItem.stockUnitValue || "-"}}
+            </div>
+          </td>
+          <td class="app-table-cell text-right">
+            <app-input-control type="number" [(ngModel)]="salesInvoice.plistentSalSalesInvoiceItem[$index].unitPrice"
+              name="unitPrice{{ $index }}" [decimal]="2" [required]="true" [errorTrue]="errorTrue" valuetype="int">
+            </app-input-control>
+          </td>
+          <td class="app-table-cell text-right">
+            <div class="table-cell-header only-input">
+              <app-input-control type="number"
+                [(ngModel)]="salesInvoice.plistentSalSalesInvoiceItem[$index].discountPercentage" [decimal]="2"
+                name="discountPercentage{{ $index }}" [max]="100"></app-input-control>
+            </div>
+            <div class="table-cell-subtitle">
+              {{ element.discountPrice ? element.discountPrice : "-" }}
+            </div>
+          </td>
+          <td class="app-table-cell text-right">
+            <div class="table-cell-header">
+              {{ element.totalAfterDiscount }}
+            </div>
+            <div class="table-cell-subtitle">
+              {{element.totalAfterDiscountReportingCurrency || "-"}}
+            </div>
+          </td>
+          <td class="app-table-cell text-right">
+            <div class="table-cell-header only-input">
+              <app-input-control type="number"
+                [(ngModel)]="salesInvoice.plistentSalSalesInvoiceItem[$index].taxPercentage"
+                name="taxPercentage{{ $index }}" [decimal]="2"
+                [btnClicked]="canAddItem() || salesInvoice.pActVoucherConfig.isTaxEditable === 'N' || element.pentInvItem.actTaxCodeValue === 'VAT-C'" />
+            </div>
+            <div class="table-cell-subtitle">{{ element.vatAmount }}</div>
+          </td>
+          <td class="app-table-cell text-right">
+            <div class="table-cell-header">
+              <item-value [(item)]="
+                    salesInvoice.plistentSalSalesInvoiceItem[$index]
+                  " discountValue="discountPrice" totalAfterDiscount="totalAfterDiscount"
+                totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency" total="totalPrice"
+                totalReportingCurrency="totalPriceReportingCurrency" taxAmount="vatAmount"
+                [unitPrice]="salesInvoice.plistentSalSalesInvoiceItem[$index].unitPrice"
+                [quantity]="salesInvoice.plistentSalSalesInvoiceItem[$index].quantity"
+                [taxPercentage]="salesInvoice.plistentSalSalesInvoiceItem[$index].taxPercentage"
+                [discountPercentage]="salesInvoice.plistentSalSalesInvoiceItem[$index].discountPercentage"
+                [(updateSequence)]="itemUpdated" [currencyRate]="salesInvoice.currencyRate">
+                {{ element.totalPrice }}
+              </item-value>
+            </div>
+            <div class="table-cell-subtitle">
+              {{element.totalPriceReportingCurrency || "-"}}
+            </div>
+          </td>
+          <td class="app-table-cell">
+            <div class="space-evenly align-items-center">
+              <app-icon-button name="doc-delete" toolTip="Delete" (click)="itemsDelete(element, $index)"
+                appAccess="DELIM" [parentId]="pageId"></app-icon-button>
+            </div>
+          </td>
+        </tr>
+        @if (isNarrationOpened) {
+        <tr class="app-table-row narration-border-none">
+          <td class="app-table-cell " [colSpan]="1"></td>
+          <td class="app-table-cell" [colSpan]="8">
+            <app-input-control type="text" placeholder="Narration" [(ngModel)]="element.narration"
+              name="narration{{ $index }}" [maxLength]="250" [btnClicked]="canAddItem()"></app-input-control>
+          </td>
+          <td></td>
+        </tr>
+        }
+        }
+      </tbody>
+      }
+
+    </table>
+
+    <total-value discountValue="discountPrice" totalAfterDiscount="totalAfterDiscount"
+      totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency" total="totalPrice"
+      totalReportingCurrency="totalPriceReportingCurrency" taxAmount="vatAmount" [updateSequence]="itemUpdated"
+      [items]="salesInvoice.plistentSalSalesInvoiceItem" (onCalculated)="onTotalValue($event)"
+      (onExchangeRateCal)="getExchangeRateLst($event)" [(exchangeRateArray)]="salesInvoice.pilstActCurrencyExchangerate"
+      [currencyRate]="salesInvoice.currencyRate"></total-value>
+
+  </scroll>
+</form>
+
+<ng-template #itemReadOnly>
+  <tbody class="app-table-body">
+    @for (element of salesInvoice.plistentSalSalesInvoiceItem; track $index) {
+    <tr class="app-table-row">
+      <td class="app-table-cell text-center">
+        {{ $index + 1 }}
+      </td>
+      <td class="app-table-cell">
+        <div class="table-cell-header only-input"> {{ element.pentInvItem.itemName || "-"}}</div>
+        <div class="table-cell-subtitle">{{ element.pentInvItem.itemCode || "-"}}</div>
+      </td>
+      <td class="app-table-cell">
+        <div class="table-cell-header only-input">{{element.strItemLedgerName || "-"}}</div>
+        <div class="table-cell-subtitle">{{element.strItemLedgerCode || "-"}}</div>
+      </td>
+      <td class="app-table-cell text-right">
+        <div class="table-cell-header only-input">{{ element.quantity ? element.quantity : "0" }}</div>
+        <div class="table-cell-subtitle">{{element.pentInvItem.stockUnitValue || "-"}}</div>
+      </td>
+      <td class="app-table-cell text-right">
+        {{ element.unitPrice ? element.unitPrice : "0" }}
+      </td>
+      <td class="app-table-cell text-right">
+        <div class="table-cell-header only-input">{{element.discountPercentage || 0}}</div>
+        <div class="table-cell-subtitle">{{ element.discountPrice ? element.discountPrice : "-" }}</div>
+      </td>
+      <td class="app-table-cell text-right">
+        <div class="table-cell-header">{{ element.totalAfterDiscount }}</div>
+        <div class="table-cell-subtitle">{{element.totalAfterDiscountReportingCurrency || "-"}}</div>
+      </td>
+      <td class="app-table-cell text-right">
+        <div class="table-cell-header only-input">{{ element.taxPercentage }}</div>
+        <div class="table-cell-subtitle">{{ element.vatAmount }}</div>
+      </td>
+      <td class="app-table-cell text-right">
+        <div class="table-cell-header">{{ element.totalPrice }}</div>
+        <div class="table-cell-subtitle">
+          {{ element.totalPriceReportingCurrency || "-"}}
+        </div>
+      </td>
+      <!-- <td class="app-table-cell">
+        <div class="space-evenly align-items-center">
+
+        </div>
+      </td> -->
+    </tr>
+    @if (isNarrationOpened) {
+    <tr class="app-table-row narration-border-none">
+      <td class="app-table-cell " [colSpan]="1"></td>
+      <td class="app-table-cell" [colSpan]="8">
+        <app-input-control type="text" placeholder="Narration" [(ngModel)]="element.narration"
+          name="narration{{ $index }}" [maxLength]="250" [btnClicked]="canAddItem()"></app-input-control>
+      </td>
+    </tr>
+    }
+    }
+  </tbody>
+</ng-template>

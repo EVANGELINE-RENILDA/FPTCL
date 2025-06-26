@@ -1,0 +1,150 @@
+<div class="content-wrapper">
+  <app-table
+    [pagination]="pagination"
+    [columns]="columns"
+    [columnsName]="columnsName"
+    [dataSource]="tableData"
+    [showPaginator]="false"
+    [hideSelectAll]="true"
+    [hasIndex]="true"
+  >
+    <ng-template cellDef="month" let-element>
+      <div class="pl60">{{ element.TransactionMonth }}</div>
+    </ng-template>
+    <ng-template cellDef="vatPaidAmount" let-element>
+      <div class="pl60">{{ element.TAXAmount }}</div>
+    </ng-template>
+    <ng-template cellDef="open" let-element>
+      <app-icon-button
+        name="open"
+        toolTip="Open Selected"
+        (click)="vatPaidDetail(element)"
+      ></app-icon-button>
+    </ng-template>
+
+    <ng-template #slotLeft>
+      <div class="col-md-4">
+        <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+      </div>
+    </ng-template>
+    <ng-template #slotRight>
+      <div class="px10">
+        <view-label
+          label="Report Generating Date & Time"
+          value="{{ currentDate }}"
+        ></view-label>
+      </div>
+      <app-icon-button
+        name="download"
+        toolTip="Export To Excel"
+        appButtonAccess="CrmCustAppAddBtn"
+      ></app-icon-button>
+    </ng-template>
+  </app-table>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Vat Paid Summary Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search"></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            (click)="clearReport()"
+          ></app-icon-button>
+          <app-icon-button
+            name="close"
+            (click)="appSearch.close()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row className="row-h100">
+              <div class="col-md-4">
+                <app-input-control
+                  label="Fiscal Year"
+                  type="select"
+                  defaultOption="--Select--"
+                  valueType="int"
+                  [items]="initialData.DDLValues?.DDLFiscalYear"
+                  [(ngModel)]="searchParams.fiscalYearId"
+                  name="fiscalYearId"
+                  key="id"
+                  keyName="description"
+                  (onChange)="clearDate()"
+                ></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control
+                  label="Branch"
+                  type="select"
+                  defaultOption="--All--"
+                  valueType="int"
+                  [items]="initialData.DDLValues.DDLBranches"
+                  [(ngModel)]="searchParams.companyBranchId"
+                  name="companyBranchId"
+                  key="id"
+                  keyName="code"
+                ></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control
+                  label="Region"
+                  type="select"
+                  defaultOption="--Select--"
+                  valueType="int"
+                  [items]="initialData.DDLValues?.DDLRegion"
+                  [(ngModel)]="searchParams.regionValue"
+                  name="regionValue"
+                  key="constant"
+                  keyName="description"
+                ></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control
+                  label="From Date"
+                  type="date"
+                  placeholder="DD/MM/YYY"
+                  [(ngModel)]="searchParams.fromDate"
+                  name="fromDate"
+                  [maxDate]="searchParams.toDate"
+                ></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control
+                  label="To Date"
+                  type="date"
+                  placeholder="DD/MM/YYY"
+                  [(ngModel)]="searchParams.toDate"
+                  name="toDate"
+                  [maxDate]="searchParams.fromDate"
+                ></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text">Purchase</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">VAT Paid Summary</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

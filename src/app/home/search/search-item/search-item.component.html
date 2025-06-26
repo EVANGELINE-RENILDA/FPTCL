@@ -1,0 +1,15 @@
+<app-auto-complete [disabled]="__btnClicked" [displayText]="displayText" [items]="items"
+    (onInput)="getSearchData($event)" keyName="itemName" (onSelect)="valueSelected($event)"
+    [errorTrue]="control?.control?.invalid && __errorTrue" [errorText]="__errorText" [label]="__label"
+    [required]="__required" (onClear)="onAction('clear')" (onSearch)="openSearch()">
+    <!-- <ng-template #option let-item>
+        {{item.id}}
+    </ng-template> -->
+</app-auto-complete>
+
+<ng-template #notesDialog>
+  <div class="p-3 h100">
+      <!-- <app-vendor-search (dataSelected)="getVednorData($event)"  [statusValue]="statusValue" [openStatus]="false" ></app-vendor-search> -->
+       <app-items-search (onSelect)="getVednorData($event)" ></app-items-search>
+  </div>
+</ng-template>

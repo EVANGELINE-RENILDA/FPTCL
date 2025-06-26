@@ -1,0 +1,122 @@
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToPurchase()">Purchase</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Summary of Statement Account - Vendor</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<div class="content-wrapper" appAccess="CUSTR">
+  <div class="between">
+    <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+    <div class="flex-end align-items-center p-2">
+      Report Date & Time : {{ currentDate | appDate }}
+    </div>
+  </div>
+  <div class="sub-table">
+    <table class="w100">
+      <thead class="h40 thead-th">
+        <tr>
+          <th>#</th>
+          <th>Doc No</th>
+          <th>Doc Date</th>
+          <th>Voucher Name</th>
+          <th>Vendor Name</th>
+          <th>Invoice Value</th>
+          <th>Balance Due</th>
+          <th>0 - 30 Days Due</th>
+          <th>31 - 60 Days Due</th>
+          <th>61 - 90 Days Due</th>
+          <th>90 Days Due</th>
+        </tr>
+      </thead>
+      @if(reportResult.Table?.length > 0){
+      <tbody>
+        @for (element of reportResult.Table; track $index) {
+        <tr>
+          <td>{{$index+1}}</td>
+          <td>{{element.INVOICE_REFERENCE_NO}}</td>
+          <td>{{element.DOCUMENT_DATE | date:dateFormat}}</td>
+          <td>{{element.VOUCHER_NAME}}</td>
+          <td>{{element.VENDOR_NAME}}</td>
+          <td class="text-right">{{element.Actual_Amount | appCurrency}}</td>
+          <td class="text-right">{{element.BalanceAmount | appCurrency}}</td>
+          <td class="text-right">{{element.DaysDue0to30 | appCurrency}}</td>
+          <td class="text-right">{{element.DaysDue31to60 | appCurrency}}</td>
+          <td class="text-right">{{element.DaysDue61to90 | appCurrency}}</td>
+          <td class="text-right">{{element.DaysDue90 | appCurrency}}</td>
+        </tr>
+        <tr class="tfoot-td">
+          <td colspan="5" class="text-center "><b>Subtotal</b></td>
+          <td class="text-right "><b>{{reportResultAmount[0].Total_Actual_Amount | appCurrency}}</b></td>
+          <td class="text-right "><b>{{reportResultAmount[0].Total_BalanceAmount | appCurrency}}</b></td>
+          <td class="text-right "><b>{{reportResultAmount[0].Total_DaysDue0to30 | appCurrency}}</b></td>
+          <td class="text-right "><b>{{reportResultAmount[0].Total_DaysDue31to60 | appCurrency}}</b></td>
+          <td class="text-right "><b>{{reportResultAmount[0].Total_DaysDue61to90 | appCurrency}}</b></td>
+          <td class="text-right "><b>{{reportResultAmount[0].Total_DaysDue90 | appCurrency}}</b></td>
+        </tr>
+        }
+      </tbody>
+      } @else if (reportResult.Table?.length === 0) {
+      <app-empty-state></app-empty-state>
+      }
+    </table>
+  </div>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Purchase Order Outstanding Report</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search"
+            (click)="clearReports?generateReportwithoutVendorId():generateCreditorsDetailReportWithForm()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearReport()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner">
+        <form #l="ngForm" autocomplete="off">
+          <row>
+            <div class="col-md-3">
+              <app-search-vendor label="Vendor Name" (onSelect)="doVenorSelect($event)" [errorTrue]="errorTrue"
+                valuetype="int" [hideNewBtn]="true" [hideStatus]="true" statusValue="ACTIV"
+                [disabled]="screenDisabled()" [(ngModel)]="purchaseReport.vendorId" name="vendorId"
+                [displayText]="purchaseReport.vendarName" [closeOverLay]="false"></app-search-vendor>
+            </div>
+            <div class="col-md-3">
+              <app-input-control type="date" label="Statement Date" placeholder="DD/MM/YYYY"
+                [(ngModel)]="purchaseReport.toDate" name="toDate"></app-input-control>
+            </div>
+            <div class="col-md-3">
+              <app-input-control type="select" label="Currency Value" key="constant" keyName="description"
+                [items]="initialData.DDLValues.iddlcurrency" [(ngModel)]="purchaseReport.currencyValue"
+                name="currencyValue"></app-input-control>
+            </div>
+            <div class="col-md-3">
+              <app-input-control type="select" label="Region" [(ngModel)]="purchaseReport.regionValue"
+                name="regionValue" [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"
+                [errorTrue]="errorTrue" [required]="true"></app-input-control>
+            </div>
+
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

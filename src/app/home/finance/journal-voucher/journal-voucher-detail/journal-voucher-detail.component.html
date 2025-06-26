@@ -1,0 +1,665 @@
+<div class="v-flex h100" appAccess="AJVSC" [parentId]="pageId">
+  @if(journalVoucher.statusValue === 'APROV' &&
+  journalVoucher.reversingJournalId === 0 && selectedTab === 0){
+  <form #z="ngForm" class="flex-end pr20 header-bg h55">
+    <div class="col-md-3 header-input">
+      <app-input-control type="select" label="Document Name" [(ngModel)]="voucherId" name="voucherId"
+        [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+        [required]="true" (onSelect)="getVoucherDetail(voucherId)" defaultOption="--Select--"></app-input-control>
+    </div>
+
+    <div class="col-md-1 end d-flex align-items-center">
+      <app-icon-button name="add" toolTip="Add New" (click)="navigateDetail(l)"
+        appButtonAccess="JornlVochrNewBtn"></app-icon-button>
+    </div>
+    @if(journalVoucher.statusValue==='APROV'){
+
+    <div class="col-md-2" appButtonAccess="JornlVochrReversNewBtn">
+      <div class="submit-btn bor-rad" (click)="naviagteReversingJournal()">
+        Reverse Journal
+      </div>
+    </div>
+    }
+  </form>
+  } @if(journalVoucher.actJournalVoucherId && (journalVoucher.statusValue !==
+  'APROV' && journalVoucher.statusValue !== 'CANCL' && selectedTab === 0)){
+  <div class="flex-end pt8 pr20 pb8">
+    <div class="submit-btn bor-rad" (click)="directApproved()">Complete</div>
+  </div>
+  }
+  <form #l="ngForm" class="content-header">
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Include Bank / Cash Ledger</label>
+        <div class="toggle">
+          <mat-slide-toggle [hideIcon]="true" (change)="toggleIncludeBank($event.checked)"
+            [checked]="journalVoucher.isIncludeBankLedger === 'Y'" [disabled]="screenDisabled()"></mat-slide-toggle>
+        </div>
+      </div>
+      @if(journalVoucher.reversingJournalId !==0){
+      <div class="card-content">
+        <label>Reversing Journal Document No</label>
+        <div class="content" (click)="naviagteReversingJournalOpen()">
+          <label-dash [value]="journalVoucher.reversingJournalRefNo"></label-dash>
+        </div>
+      </div>
+      }
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Document No</label>
+        <div class="content">
+          <label-dash [value]="journalVoucher.journalVoucherNo"></label-dash>
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Document Name</label>
+        <div class="content">
+          <label-dash [value]="journalVoucher.ibusActVoucherConfig.voucherName"></label-dash>
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <view-label label="Branch" [value]="journalVoucher.ibusActBranch.branchName"></view-label>
+      </div>
+      <div class="card-content">
+        <app-input-control type="number" label="Reference Number" [(ngModel)]="journalVoucher.referenceNo"
+          name="referenceNo" [maxLength]="20" [btnClicked]="screenDisabled()"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Posting Date</label>
+        <div class="content">
+          <label-dash [value]="journalVoucher.postingDate | appDate"></label-dash>
+        </div>
+      </div>
+      <div class="card-content">
+        <app-input-control type="date" label="Document | Effective Date" [(ngModel)]="journalVoucher.documentDate"
+          [btnClicked]="screenDisabled()" name="documentDate" [required]="true"
+          [errorTrue]="errorTrue"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Created Date</label>
+        <div class="content">
+          {{ journalVoucher.enteredDate | appDate }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Created By</label>
+        <div class="content">
+          <label-dash [value]="journalVoucher.enteredByUserName"></label-dash>
+        </div>
+      </div>
+    </div>
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content">
+          <label>Status</label>
+          <div class="content status-{{ journalVoucher.statusValue }}">
+            {{ journalVoucher.statusDescription }}
+          </div>
+        </div>
+        @if(journalVoucher.actJournalVoucherId === 0){
+        <div class="card-content btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveJournalVoucher('save')"
+            appButtonAccess="JornlVochrSaveBtn"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearJournalVoucher()"
+            appButtonAccess="JornlVochrClearBtn"></app-icon-button>
+        </div>
+        } @else{ @if(selectedTab === 0){
+
+        <div class="card-content btn-group">
+          @if(this.journalVoucher.statusValue
+          !== 'APROV' && this.journalVoucher.statusValue !== 'CANCL'){
+          <app-icon-button name="save" toolTip="Update" (click)="saveJournalVoucher()"
+            appButtonAccess="JornlVochrUpdateBtn"></app-icon-button>
+          }
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshJournalVoucher()"
+            appButtonAccess="JornlVochrRefreshBtn"></app-icon-button>
+        </div>
+        } }
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <form #a="ngForm" class="flex-1 relative h100">
+      <scroll>
+        <table class="app-table account-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <th class="app-table-header-cell tw50 text-center">#</th>
+              <th class="app-table-header-cell">
+                <div class="header-cell-title">Ledger Code</div>
+                <div class="header-cell-subtitle">Name | Description</div>
+              </th>
+              <th class="app-table-header-cell text-right">
+                <div class="header-cell-title">Debit Amount</div>
+                <div class="header-cell-subtitle">({{currency}})</div>
+              </th>
+              <th class="app-table-header-cell text-right">
+                <div class="header-cell-title">Credit Amount</div>
+                <div class="header-cell-subtitle">({{currency}})</div>
+              </th>
+              <th class="app-table-header-cell">
+                <div class="header-cell-title">Narration</div>
+              </th>
+              <th class="app-table-header-cell">
+                <div class="space-evenly">
+                  <app-icon-button name="add" toolTip="Add New" (click)="
+                      addNewItemLst(
+                        journalVoucher.ilistbusActJournalVoucherDetail.length
+                      )
+                    " [hidden]="screenDisabled()" appButtonAccess="JornlVochrItemNewBtn">
+                  </app-icon-button>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="app-table-body">
+            @for (element of journalVoucher.ilistbusActJournalVoucherDetail;
+            track element; let i = $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ i + 1 }}
+              </td>
+              <td class="app-table-cell only-input">
+                <app-search-debit [(ngModel)]="element.ledgerAccountId" name="ledgerAccountId{{ i }}"
+                  [displayText]="element.ientLedger.codeName" (onSelect)="onLedgerSelect($event, element)"
+                  [btnClicked]="screenDisabled()" [noCashorBankValue]="journalVoucher.isIncludeBankLedger"
+                  valueType="int" [regionValue]="
+                    !!regionValue ? regionValue : journalVoucher.regionValue
+                  " [isNoCashorBank]="
+                    journalVoucher.isIncludeBankLedger === 'Y' ? false : true
+                  " [required]="true" [errorTrue]="errorTrue" [noCashorBank]="journalVoucher.isIncludeBankLedger">
+                </app-search-debit>
+                <!-- @if(fundTransferNote.companyDebitAccountId){ -->
+                <label class="default-label">
+                  {{
+                  element.ientLedger.ledgerName
+                  ? element.ientLedger.ledgerName
+                  : "-"
+                  }}</label>
+                <!-- } -->
+              </td>
+              <td class="app-table-cell text-right">
+                <app-input-control type="number" [maxLength]="12" [(ngModel)]="element.debitAmount"
+                  name="debitAmount{{ i }}" [valueType]="
+                    (element.creditAmount | iszero) &&
+                    (element.debitAmount | iszero)
+                      ? 'int'
+                      : ''
+                  " [errorTrue]="errorTrue" [required]="true" [decimal]="2" [btnClicked]="
+                    !(element.creditAmount | iszero) || screenDisabled()
+                  " [required]="
+                    (element.creditAmount | iszero) &&
+                    (element.debitAmount | iszero)
+                  " [errorTrue]="
+                    (element.creditAmount | iszero) &&
+                    (element.debitAmount | iszero) &&
+                    errorTrue
+                  " (ngModelChange)="differenceDebitandCredit()" (onClear)="resetDebitandCreditAmount(i)"
+                  (onBlur)="resetDebitandCreditAmount(i)"></app-input-control>
+              </td>
+              <td class="app-table-cell text-right">
+                <app-input-control type="number" [maxLength]="12" [(ngModel)]="element.creditAmount"
+                  name="creditAmount{{ i }}" [valueType]="
+                    (element.creditAmount | iszero) &&
+                    (element.debitAmount | iszero)
+                      ? 'int'
+                      : ''
+                  " [errorTrue]="errorTrue" [required]="
+                    (element.creditAmount | iszero) &&
+                    (element.debitAmount | iszero)
+                  " [btnClicked]="
+                    !(element.debitAmount | iszero) || screenDisabled()
+                  " [decimal]="2" [required]="
+                    (element.creditAmount | iszero) &&
+                    (element.debitAmount | iszero)
+                  " [errorTrue]="
+                    (element.creditAmount | iszero) &&
+                    (element.debitAmount | iszero) &&
+                    errorTrue
+                  " (ngModelChange)="differenceDebitandCredit()" (onClear)="resetDebitandCreditAmount(i)"
+                  (onBlur)="resetDebitandCreditAmount(i)"></app-input-control>
+                <!-- </div> -->
+              </td>
+              <td class="app-table-cell">
+                <app-input-control type="text" [(ngModel)]="element.narration" [maxLength]="100"
+                  name="narration{{ i }}"></app-input-control>
+              </td>
+              <td class="app-table-cell">
+                <div class="space-evenly">
+                  <app-icon-button name="doc-delete" toolTip="Delete" (click)="checkDeleteItem(element, i)"
+                    [hidden]="screenDisabled()" appButtonAccess="DELIM"></app-icon-button>
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </scroll>
+    </form>
+
+    <!-- <app-table
+      [hasHeader]="false"
+      [columns]="items"
+      [columnsName]="itemsName"
+      [dataSource]="tableItemData"
+      [hideSelectAll]="true"
+    >
+      <ng-template cellHeaderDef="ledger">
+        <div class="header-cell-title">Ledger Code</div>
+        <div class="header-cell-subtitle">Name | Description</div>
+      </ng-template>
+      <ng-template cellDef="ledger" let-element>
+        <div>{{ element.ledgerCode }}</div>
+        <div class="table-cell-subtitle">
+          {{ element.name }}
+        </div>
+      </ng-template>
+      <ng-template cellHeaderDef="debitAmt">
+        <div class="header-cell-title text-end h100">Debit Amount</div>
+      </ng-template>
+      <ng-template cellDef="debitAmt" let-element>
+        <div class="text-end">{{ element.debitAmt }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="creditAmt">
+        <div class="header-cell-title text-end h100">Credit Amount</div>
+      </ng-template>
+      <ng-template cellDef="creditAmt" let-element>
+        <div class="text-end">{{ element.creditAmt }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="narration">
+        <div class="header-cell-title pl32 h100">Narration</div>
+      </ng-template>
+      <ng-template cellDef="narration" let-element>
+        <div class="pl32">{{ element.narration }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="add">
+        <div class="flex-center">
+          <app-icon-button
+            name="add"
+            toolTip="Add New"
+            (click)="addNewItemLst()"
+          ></app-icon-button>
+        </div>
+      </ng-template>
+      <ng-template cellDef="add" let-element>
+        <div class="space-evenly">
+          <app-icon-button
+            name="doc-delete"
+            toolTip="Add New"
+          ></app-icon-button>
+          <app-icon-button
+            name="add"
+            toolTip="Add New"
+            (click)="addNewItemLst()"
+          ></app-icon-button>
+        </div>
+      </ng-template>
+    </app-table> -->
+    } @else if(selectedTab === 1 && journalVoucherId !==0){
+    <div class="flex-1 relative h100">
+      <scroll>
+        <table class="app-table account-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <th class="app-table-header-cell text-center">#</th>
+              <th class="app-table-header-cell">
+                <div class="header-cell-title">Notes</div>
+                <div class="header-cell-subtitle">Created By | Date & Time</div>
+              </th>
+              <th class="app-table-header-cell">
+                <div class="notes-add-btn">
+                  @if(journalVoucher.statusValue !== 'APROV' && journalVoucher.statusValue !== 'CANCL' ){
+                  <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"
+                    appButtonAccess="JVNNM"></app-icon-button>
+                  }
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="app-table-body">
+            @for (notes of journalVoucher.ilistbusActNotes; track notes; let i =
+            $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ i + 1 }}
+              </td>
+              <td class="app-table-cell">
+                <div>
+                  {{ notes.notesDetail }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{ notes.createdFullName }} |
+                  {{ notes.createdDate | appDate }} {{ notes.createdDate | appDate: 'hh:mm a' }}
+                </div>
+              </td>
+              <td></td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </scroll>
+    </div>
+    } @else if(selectedTab === 2 && journalVoucherId !==0){
+
+    <div class="v-flex h100">
+      <div class="search_text pl12px">
+        <app-input-control placeholder="Search By Any File Name" type="text" [(ngModel)]="filterFileName"
+          namee="filterFileName" [search]="true"></app-input-control>
+      </div>
+      <div class="flex-1 relative mh100">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center">#</th>
+                <th class="app-table-header-cell pl12px">
+                  <div class="header-cell-title">File Name</div>
+                  <div class="header-cell-subtitle">
+                    Created By | Date & Time
+                  </div>
+                </th>
+                <th class="app-table-header-cell">File Format</th>
+                <th class="app-table-header-cell">Size</th>
+                <th class="app-table-header-cell tw100">
+                  <div class="flex-center">
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"
+                      appButtonAccess="JVANB">
+                    </app-icon-button>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (doc of journalVoucher.ilistbusActAttachments | filterAndSort
+              : filterFileName : 'attachmentFileName' : false ; track doc; let i
+              = $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div>
+                    {{ doc.attachmentFileName }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ doc.modifiedByFullName }} |
+                    {{ doc.createdDate | appDate }} {{ doc.createdDate | appDate: 'hh:mm a' }}
+                  </div>
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.attachmentType }}
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.attachmentSize }}
+                </td>
+                <td class="app-table-cell">
+                  <div class="flex-center">
+                    <app-icon-button name="download" toolTip="Download" (click)="downloadDocumentImage(doc)"
+                      appButtonAccess="JVADB"></app-icon-button>
+                    <app-icon-button name="doc-view" toolTip="View" (click)="openDocumentImage(doc)"
+                      appButtonAccess="JornlVochrAtchViewBtn"></app-icon-button>
+                    <app-icon-button name="doc-delete" toolTip="Delete" (click)="deleteActAttachmentFile(doc)"
+                      appButtonAccess="JornlVochrAtchDeleBtn"
+                      [__disabled]="journalVoucher.statusValue === 'APROV' || journalVoucher.statusValue === 'CANCL'"></app-icon-button>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </div>
+    </div>
+
+    <!-- <app-table
+      [hideSelectAll]="true"
+      [showPaginator]="false"
+      [columns]="attachment"
+      [columnsName]="attachmentsName"
+      [dataSource]="tableAttachmentData"
+    >
+      <ng-template cellHeaderDef="fileName">
+        <div class="header-cell-title">File Name</div>
+        <div class="header-cell-subtitle">Created By | Date | Time</div>
+      </ng-template>
+      <ng-template cellDef="fileName" let-element>
+        <div class="header-cell-title">{{ element.fileName }}</div>
+        <div class="header-cell-subtitle">
+          {{ element.createdBy }} | {{ element.date }} | {{ element.time }}
+        </div>
+      </ng-template>
+
+      <ng-template cellHeaderDef="action">
+        <app-icon-button
+          name="add"
+          toolTip="Add New"
+          (click)="createNewAttachment()"
+        ></app-icon-button>
+      </ng-template>
+
+      <ng-template #slotLeft>
+        <div class="search_text">
+          <app-input-control
+            placeholder="Search By Any File Name"
+            type="text"
+            [search]="true"
+          ></app-input-control>
+        </div>
+      </ng-template>
+    </app-table> -->
+    }@else if(selectedTab === 3 && journalVoucherId !== 0){
+    <div class="print-wrap flex-1 relative h100">
+      <row className="h100">
+        <div class="col-md-4">
+          <app-input-control type="textarea" [maxLength]="250" className="notes-1"
+            label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="journalVoucher.ibusActVoucherConfig.pdfOtherComments"
+            name="pdfOtherComments"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" (click)="viewJournalVoucherReceipt()"
+              appButtonAccess="JornlVochrPrintSaveViewBtn"></app-icon-button>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="pdf-viewer">
+            <div class="ab">
+              <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        @if(journalVoucher.actJournalVoucherId !== 0){
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if(journalVoucher.statusValue === 'APROV'){
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        } }
+      </div>
+      <div class="open-arrow" id="trigger{{ pageId }}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [maxLength]="250" className="notes" label="Common Narration Text"
+            [applybtn]="true" [(ngModel)]="journalVoucher.documentHeaderText" name="documentHeaderText"
+            [btnClicked]="screenDisabled()" (onApplyChange)="commonNarrationFill($event)"></app-input-control>
+        </div>
+        <div class="col-md-4">
+          <view-label label="Reporting Currency" value="{{ journalVoucher.docCurrencyValue }}"></view-label>
+        </div>
+        <div class="col-md-4">
+          <div class="justify-end">
+            <div class="f-content-txt">
+              <div>Total Debit</div>
+              <div>Total Credit</div>
+              <div>Difference</div>
+            </div>
+            <div class="text-end">
+              <div>{{ totalDebit | number : '1.2-2'}}</div>
+              <div>{{ totalCredit | number : '1.2-2' }}</div>
+              <div>{{ differeceValueString }}{{ differeceValue | number : '1.2-2' }}</div>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">
+          Journal Voucher
+        </div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Journal Voucher > Detail > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveJournalVoucherNotes()"
+            appButtonAccess="JVNSM"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearNotes()"
+            appButtonAccess="JVNCB"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <form #b="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Status" [(ngModel)]="journalVoucherNotes.statusValue"
+                name="statusValue" [items]="initialData.DDLValues.DDLFlowStatus" key="constant" keyName="description"
+                defaultOption="--Select--" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+            </div>
+            @if(journalVoucherNotes.statusValue === 'CANCL' &&
+            journalVoucher.statusValue === 'APROV'){
+            <div class="col-md-6">
+              <app-input-control type="date" label="Reversal Effective Date"
+                [(ngModel)]="journalVoucherNotes.temporaryDocumentDate" name="temporaryDocumentDate"
+                [minDate]="journalVoucher.documentDate" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+            </div>
+            }
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1" [(ngModel)]="journalVoucherNotes.notesDetail"
+                name="notesDetail" [maxLength]="250" label="Notes"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Journal Voucher > Detail > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <app-drop-zone [multiple]="true" [accept]="accept" [fileType]="fileType" appButtonAccess="JVAUB"
+          (onUpload)="uploadAttachemnt($event)"></app-drop-zone>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of statusLst; track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByUserName ? status.changedByUserName : "-" }}
+          </div>
+          <div class="sub-status_by">{{ status.effectiveDate | appDate }} {{ status.effectiveDate | appDate:'hh:mm a' }}
+          </div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>
+
+<app-documents #DocumentsComponent class="none"></app-documents>

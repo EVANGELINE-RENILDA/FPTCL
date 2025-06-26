@@ -1,0 +1,197 @@
+<div class="content-wrapper" appAccess="ORGCD">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+       [sortColumnsName]="sortColumns" (pageChanged)="pageChanged($event)" columnID="organizationApplicationId" (onSelect)="onSelect($event)">
+        <ng-template cellHeaderDef="action" [hideSelectAll]="true">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.organizationApplicationId)"></app-icon-button>
+        </ng-template>
+
+        <ng-template cellDef="statusDescription" let-element>
+            <!-- <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div> -->
+            <accouts-status-table [statusDescription]="element.statusDescription"></accouts-status-table>
+        </ng-template>
+        <ng-template cellDef="effectiveDate" let-element>
+            {{element.effectiveDate | appDate}}
+        </ng-template>
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+            <form #l="ngForm">
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="col-md-12 mt10">
+
+                        <app-input-control label="" [(ngModel)]="orgRefNo" name="orgRefNo" type="select"
+                            [errorTrue]="errorTrue" [required]="true" placeholder="Select Ref  No"
+                            [items]="initialData.DDLValues.OrganizationDDl" key="code" defaultOption="--Select--"
+                            keyName="description"></app-input-control>
+                    </div>
+                    <div>
+
+                        <app-icon-button name="add" toolTip="Add New" (click)="getInfoBasedOnRefNo()">
+                        </app-icon-button>
+                    </div>
+                </div>
+            </form>
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Organization Application Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="closeAllDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content-inner">
+            <row>
+                <div class="col-md-4"><app-input-control label="Application Ref No "
+                        [(ngModel)]="searchParams.applicationRefNo" name="applicationRefNo"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control label="Organization Name"
+                        [(ngModel)]="searchParams.organizationName" name="organizationName"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control label="Organization Type" type="select"
+                        [(ngModel)]="searchParams.organizationTypeValue" name="organizationTypeValue"
+                        [items]="initialData.DDLValues.OrganizationType" key="constant"
+                        keyName="description"></app-input-control></div>
+                <div class="col-md-4"><app-input-control label="Email ID" type="email"
+                        [(ngModel)]="searchParams.emailId" name="emailId" [email]="true"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control label="Contact No" type="number"
+                        [(ngModel)]="searchParams.contactNo" name="contactNo" [minLength]="5"
+                        [maxLength]="10"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control label="Website" type="special"
+                        [(ngModel)]="searchParams.website" name="website"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control label="Effective Date From" type="date"
+                        [(ngModel)]="searchParams.effectiveDateFrom" name="effectiveDateFrom"
+                        [maxDate]="searchParams.effectiveDateTo"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control label="Effective Date To" type="date"
+                        [(ngModel)]="searchParams.effectiveDateTo" name="effectiveDateTo"
+                        [minDate]="searchParams.effectiveDateFrom"></app-input-control>
+                </div>
+                <div class="col-md-4"><app-input-control label=" Status" type="select"
+                        [(ngModel)]="searchParams.statusValue" name="statusValue"
+                        [items]="initialData.DDLValues.DDLOrgStatus" key="constant"
+                        keyName="description"></app-input-control>
+                </div>
+
+            </row>
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/will.svg"></ion-icon>
+                <div class="screen-text">Organization Change Application</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #info>
+    <div class class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Create Organization Change</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveOrganization()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshDatas()"></app-icon-button>
+                    <app-icon-button name="close" (click)="closeAllDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+            <app-error-message></app-error-message>
+        </div>
+        }
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-4"><view-label label="Application Ref No"
+                                value="{{organizationApplication.applicationRefNo}}"></view-label></div>
+                        <div class="col-md-4"><view-label label="Application Type"
+                                value="{{organizationApplication.applicationTypeDescription}}"></view-label></div>
+                        <div class="col-md-4"><view-label label="Application Status"
+                                value="{{organizationApplication.statusDescription}}"></view-label></div>
+                    </row>
+                    <div class="mb20"></div>
+                    <form #organization="ngForm">
+                        <row>
+                            <div class="col-md-6">
+                                <div class="box h100">
+                                    <div class="box-header ">Organization Details</div>
+                                    <div class=" box-pad">
+                                        <app-input-control label="Organization Name
+                        " [errorTrue]="errorTrue" [required]="true"
+                                            [(ngModel)]="organizationApplication.organizationName"
+                                            name="organizationName"></app-input-control>
+                                        <app-input-control label="Organization Type" type="select"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            [(ngModel)]="organizationApplication.organizationTypeValue"
+                                            name="organizationTypeValue"
+                                            [items]="initialData.DDLValues.OrganizationType" key="constant"
+                                            keyName="description"></app-input-control>
+                                        <app-input-control label="Email ID" type="email" [errorTrue]="errorTrue"
+                                            [required]="true" [email]="true"
+                                            [(ngModel)]="organizationApplication.emailId"
+                                            name="emailId"></app-input-control>
+                                        <app-input-control label="Contact No" type="number" [errorTrue]="errorTrue"
+                                            [required]="true" [minLength]="5" [maxLength]="15"
+                                            [(ngModel)]="organizationApplication.contactNo"
+                                            name="contactNo"></app-input-control>
+                                        <app-input-control label="Website" type="special"
+                                            [(ngModel)]="organizationApplication.website"
+                                            name="website"></app-input-control>
+                                        <app-input-control label="Effective Date" type="date" [errorTrue]="errorTrue"
+                                            [required]="true" [(ngModel)]="organizationApplication.effectiveDate"
+                                            name="effectiveDate"></app-input-control>
+                                        <app-input-control label="Organization Status" [errorTrue]="errorTrue"
+                                            [required]="true" [(ngModel)]="organizationApplication.orgStatusValue"
+                                            name="orgStatusValue" [items]="initialData.DDLValues.DDLStatus"
+                                            key="constant" keyName="description" type="select"></app-input-control>
+
+                                        <!-- <app-input-control label="Branch" type="select" [errorTrue]="errorTrue"
+                            [required]="true" [(ngModel)]="organizationApplication.branchId" name="branchId" [items]="appService.branchDDL"  valueType="int" key="id" keyName="description" ></app-input-control> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box h100">
+                                    <div class="box-header ">Address Details</div>
+                                    <div class=" box-pad">
+                                        <row>
+                                            <app-address-edit type="bank"
+                                                [ientAddress]="organizationApplication.ipermanentAddress"
+                                                [errorTrue]="errorTrue" type="residential"></app-address-edit>
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+
+
+        </div>
+    </div>
+</ng-template>

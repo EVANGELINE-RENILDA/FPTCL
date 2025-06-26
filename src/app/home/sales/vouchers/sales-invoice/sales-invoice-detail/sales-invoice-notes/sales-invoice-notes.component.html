@@ -1,0 +1,59 @@
+<app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+[dataSource]="salesInvoice.plistSalNotes">
+<ng-template cellHeaderDef="add">
+  <app-icon-button name="add" toolTip="Add New" (click)="createNewNotes()"></app-icon-button>
+</ng-template>
+<ng-template cellDef="notes" let-element>
+  {{element.notesDetail}}
+</ng-template>
+<ng-template cellDef="createdBy" let-element>
+  {{element.createdFullName}}
+</ng-template>
+<ng-template cellDef="dateTime" let-element>
+  {{element.createdDate | appDate}} | {{element.createdDate | appDate:'hh:mm a'}}
+</ng-template>
+</app-table>
+
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/sales.svg"></ion-icon>
+        Sales Invoice > Detail >
+        Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveNotes()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #notestab="ngForm">
+          <row>
+            <div class="col-md-6"> <app-input-control type="select" label="Status"
+                [(ngModel)]="salesInvoiceNotes.statusValue" name="statusValue" [items]="statusddl" key="constant"
+                keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+            </div>
+            @if(salesInvoiceNotes.statusValue === 'CANCL' && salesInvoice.statusValue ==='APROV'){
+            <div class="col-md-6">
+              <app-input-control type="date" label="Reversal Date" [(ngModel)]="salesInvoiceNotes.temporaryDocumentDate"
+                name="temporaryDocumentDate" [minDate]="salesInvoice.documentDate"></app-input-control>
+            </div>
+            }
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1" [maxLength]="250" [required]="true" label="Notes"
+                [(ngModel)]="salesInvoiceNotes.notesDetail" name="notesDetail"></app-input-control>
+            </div>
+
+          </row>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+</ng-template>

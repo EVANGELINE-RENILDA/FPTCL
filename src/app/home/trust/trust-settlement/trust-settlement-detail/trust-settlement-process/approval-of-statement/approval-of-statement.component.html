@@ -1,0 +1,124 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Approval Of Statement</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="v-flex gap-10">
+            @for (item of application.lstentTrustSettlementApplicationChecklist; track $index) {
+
+            <div class="d-flex gap-10">
+                <div clas="col-md-2"><app-checkbox [checked]="item.isChecked === 'Y'"
+                        (change)="checkListChange($event,item)"></app-checkbox></div>
+                <div clas="col-md-10">{{item.checklistName}}</div>
+            </div>
+            }
+            <div class="col-md-12 end">
+                @if(this.type.isEditable === 'Y'){
+                <app-icon-button name="save" toolTip="Save" (click)="saveCheckList()"></app-icon-button>
+                }
+            </div>
+
+        </div>
+        <div class="mb20"></div>
+        <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+                <div class="h280">
+                    <!-- @if (loading) { -->
+                    <div class="col-md-12">
+                        <!-- {{this.type.trustSettlementApplicationStageValue}}{{this.type.identificationNo}} -->
+                        <app-table [columns]="courtOrderColumns" [columnsName]="courtOrderColumnsName"
+                            [dataSource]="application.lstentTrustSettlementAssignedOfficerHistory  | trustSettlementPipe: this.type.trustSettlementApplicationStageValue: this.type.identificationNo"
+                            [hideSelectAll]="true" [showPaginator]="false" columnID="trustApplicationDocumentId">
+                            <ng-template cellDef="verificationDate" let-element>
+                                {{element.verifiedDate | appDate}}
+                            </ng-template>
+                            <ng-template cellDef="action" let-element let-index="index">
+                                @if((application.lstentTrustSettlementAssignedOfficerHistory  | trustSettlementPipe: this.type.trustSettlementApplicationStageValue: this.type.identificationNo).length === (index + 1)){
+                                @if(this.type.isEditable === 'Y'){
+                                <app-icon-button name="open" toolTip="Open"
+                                    (click)="createNotesDialog()"></app-icon-button>
+                                }
+                            }
+                            @else {
+                                <span></span>
+                            }
+                            </ng-template>
+
+                        </app-table>
+                        @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True' &&
+                application.statusValue!=='APPRJ'){
+                     <div class="d-flex justify-content-end">
+                        <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Statement Approved</button>
+                     </div>
+                
+                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </accordion-body>
+</accordion-item>
+
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                Trust Settlement Application > Detail > Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveNotes()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialogClose()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #x="ngForm">
+                    <row>
+                        <div class="col-md-4">
+                            <app-input-control label="Action Status" type="select"
+                                [(ngModel)]="trustSettlementNotes.actionStatusValue" defaultOption="--Select--"
+                                [items]="actionStatusDDL" key="constant" keyName="description" name="actionStatusValue"
+                                [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- <app-input-control label="Application Status" type="select" defaultOption="All"
+                                [(ngModel)]="trustSettlementNotes.statusValue" name="statusValue22" [btnClicked]="true"
+                                [items]="initialData.DDLValues.DDLSettlementApplicationStatus" key="constant"
+                                keyName="description" [errorTrue]="errorTrue" [required]="true"></app-input-control> -->
+                            <view-label label="Application Status" value="{{application.statusDescription
+                                }}"></view-label>
+                        </div>
+                        <div class="col-md-4">
+                            <view-label label="Application Stage"
+                                value="{{application.applicationStageDescription}}"></view-label>
+                        </div>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="notesMessage" name="notesMessage" [maxLength]="250" [required]="true"
+                                label="Notes"></app-input-control>
+                        </div>
+                       
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

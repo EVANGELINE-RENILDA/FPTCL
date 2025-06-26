@@ -1,0 +1,19 @@
+@if(__statusDescription ==='In Progress'
+|| __statusDescription==='Pending Submisison'){
+<div class="inpro">{{__statusDescription}}</div>
+}
+@else if(__statusDescription==='Pending Verification' ){
+    <div class="pendingVerification">{{__statusDescription}}</div>
+    }
+@else if(__statusDescription ==='Pending Approval' ){
+<div class="pendap">{{__statusDescription}}</div>
+}
+@else if(__statusDescription === 'Approve' || __statusDescription === 'Active'){
+<div class="active-1">{{__statusDescription}}</div>
+}
+@else if(__statusDescription ==='Rejected' || __statusDescription === 'In Active' || __statusDescription === 'InActive'
+|| __statusDescription === 'Cancelled'  ||  __statusDescription ==='Cancel' || __statusDescription === 'Canceled' ){
+<div class="inactive">{{__statusDescription}}</div>
+}@else {
+<div class="active-1">{{__statusDescription}}</div>
+}

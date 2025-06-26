@@ -1,0 +1,306 @@
+<div class="content-wrapper">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="trustWithdrawalApplicationId" [sortColumnsName]="sortColumns" (onSelect)="onSelect($event)">
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.trustWithdrawalApplicationId)"></app-icon-button>
+        </ng-template>
+        <ng-template cellHeaderDef="applicationRefNo">
+            <div class="header-cell-title">Trust Withdrawal Ref No</div>
+            <div class="header-cell-subtitle"> Lead No</div>
+        </ng-template>
+        <ng-template cellDef="applicationRefNo" let-element>
+            <div>{{element.applicationRefNo}}</div>
+            <div class="table-cell-subtitle"> {{element.leadRefNo}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="beneficiaryCustomerName">
+            <div class="header-cell-title">Benificiary Name</div>
+            <div class="header-cell-subtitle">Guardian Name</div>
+        </ng-template>
+        <ng-template cellDef="beneficiaryCustomerName" let-element>
+            <div>{{element.beneficiaryCustomerName}}</div>
+            <div class="table-cell-subtitle">{{element.gaurdianName}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="withdrawalTypeDescription">
+            <div class="header-cell-title">Withdrawal Type</div>
+            <div class="header-cell-subtitle">Withdrawal Sub Type</div>
+        </ng-template>
+        <ng-template cellDef="withdrawalTypeDescription" let-element>
+            <div>{{element.withdrawalTypeDescription}} </div>
+            <div class="table-cell-subtitle">{{element.withdrawalSubTypeDescription}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="trustAccountNo">
+            <div class="header-cell-title">Trust Application No</div>
+
+        </ng-template>
+        <ng-template cellDef="trustAccountNo" let-element>
+            <div>{{element.trustAccountNo}}</div>
+
+        </ng-template>
+        <ng-template cellHeaderDef="enteredDate">
+            <div class="header-cell-title">Entered Date</div>
+            <div class="header-cell-subtitle">Entered By | Applied Branch</div>
+        </ng-template>
+        <ng-template cellDef="enteredDate" let-element>
+            <div>{{element.enteredDate | appDate}} </div>
+            <div class="table-cell-subtitle">{{element.enteredBy}} | {{element.appliedBranchDescription}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="assignedOfficer">
+            <div class="header-cell-title">Application Stage</div>
+            <div class="header-cell-subtitle">Action Status | Assigned Officer</div>
+        </ng-template>
+        <ng-template cellDef="assignedOfficer" let-element>
+            <div>{{element.applicationStageDescription}} </div>
+            <div class="table-cell-subtitle">{{element.actionStatusDescription}} | {{element.assignedOfficer}}</div>
+            <!-- <div class=" table-cell-subtitle status status-{{element.statusValue}}" >{{element.actionStatusDescription}} | {{element.assignedOfficer}}</div> -->
+        </ng-template>
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+
+            <form #l="ngForm">
+                <div class="d-flex justify-content-end align-items-center">
+
+                    <div class="col-md-12 mt10 w200">
+                        <app-input-control type="select" placeholder="Select Lead No" [(ngModel)]="trustLeadId"
+                            name="voucherConfigId" [items]="initialData.DDLValues.DDLLead" key="id" keyName="code"
+                            [errorTrue]="errorTrue" [required]="true" valueType="int"></app-input-control>
+                    </div>
+                    <div>
+
+                        <app-icon-button name="add" toolTip="Add New" (click)="createNewWillApplication()">
+                        </app-icon-button>
+                    </div>
+                </div>
+            </form>
+
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Trust Withdrawal Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-4"><app-input-control label="Trust Withdrawal Ref No "
+                                [(ngModel)]="searchParams.applicationRefNo" name="applicationRefNo"></app-input-control>
+                        </div>
+                        <!-- <div class="col-md-4"><app-input-control label="Trust No"></app-input-control></div> -->
+                        <div class="col-md-4"><app-input-control label="Lead No" [(ngModel)]="searchParams.leadRefNo"
+                                defaultOption="All" name="leadRefNo" type="select"
+                                [items]="initialData.DDLValues.DDLLead" key="code" keyName="code"></app-input-control>
+                        </div>
+                        <!-- <div class="col-md-4"><app-input-control label="Benificiary Name"
+                                [(ngModel)]="searchParams.be" name="firstName"></app-input-control></div> -->
+                        <div class="col-md-4"><app-input-control label="Guardian Name"
+                                [(ngModel)]="searchParams.gaurdianName" name="gaurdianName"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Withdrawal Type" type="select"
+                                [(ngModel)]="searchParams.withdrawalTypeValue" name="withdrawalTypeValue"
+                                [items]="initialData.DDLValues.DDLWithDrawalType" key="constant" keyName="description"
+                                defaultOption="All"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Withdrawal Sub Type" type="select"
+                                [(ngModel)]="searchParams.withdrawalSubTypeValue" name="withdrawalSubTypeValue"
+                                [items]="initialData.DDLValues.DDLWithDrawalSubType" key="constant"
+                                keyName="description" defaultOption="All"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Applied Branch"
+                                [(ngModel)]="searchParams.appliedBranchValue" [items]="initialData.DDLValues.DDLBranch"
+                                key="constant" keyName="description" defaultOption="All"
+                                name="appliedBranchValue"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Applied Date" type="date"
+                                [(ngModel)]="searchParams.appliedDate" name="appliedDate"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Entered By" [(ngModel)]="searchParams.enteredBy"
+                                name="enteredBy"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Entered Date" type="date"
+                                [(ngModel)]="searchParams.enteredDate" name="enteredDate"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Withdrawal From Amount"
+                                [(ngModel)]="searchParams.availableAmountFrom"
+                                name="availableAmountFrom"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Withdrawal To Amount"
+                                [(ngModel)]="searchParams.availableAmountTo"
+                                name="availableAmountTo"></app-input-control></div>
+
+                        <div class="col-md-4"><app-input-control label="Application Status" type="select"
+                                [(ngModel)]="searchParams.applicationStatusValue" name="applicationStatusValue"
+                                [items]="initialData.DDLValues.DDLTrustWithDrawalApplicationStatus" key="constant"
+                                keyName="description" defaultOption="All"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Application Stage" type="select"
+                                [(ngModel)]="searchParams.applicationStageValue" name="applicationStageValue"
+                                [items]="initialData.DDLValues.DDLTrustWithDrawalApplicationStage" key="constant"
+                                keyName="description" defaultOption="All"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Action Status" type="select"
+                                [(ngModel)]="searchParams.actionStatusValue" name="actionStatusValue"
+                                [items]="initialData.DDLValues.DDLTrustWithDrawalActionStatus" key="constant"
+                                keyName="description" defaultOption="All"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Assigned Officer" type="select"
+                                defaultOption="All" [items]="initialData.DDLValues.Assigned_Officer_DDl" key="constant"
+                                keyName="description" [(ngModel)]="searchParams.assignedOfficer"
+                                name="assignedOfficer"></app-input-control>
+                        </div>
+                    </row>
+                </div>
+            </scroll>
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/will.svg"></ion-icon>
+                <div class="screen-text">Trust Withdrawal</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #willInfo>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/trust.svg"></ion-icon>
+                Trust Withdrawal <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Add New
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveTrustWithdrawal()"
+                        appButtonAccess="CrmCustAppSaveInfoBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearWithdrawal()"
+                        appButtonAccess="CrmCustAppRefreshInfoBtn"></app-icon-button>
+
+                    <app-icon-button name="close" toolTip="Close" appButtonAccess="CrmCustAppCancelBtn"
+                        (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <row class="row-h100">
+                    <scroll>
+                        @if(data.showErrorMessage){
+                        <div class="error-panel">
+                            <app-error-message></app-error-message>
+                        </div>
+                        }
+                        <form #x="ngForm" class="dialog-content-inner">
+                            <row>
+                                <div class="col-md-4"><app-input-control label="Trust Account No" type="select"
+                                        [(ngModel)]="trustWithdrawal.trustId" name="trustId"
+                                        (onSelect)="getValuesOfAccNo(trustWithdrawal.trustId)" [items]="accountsDDL"
+                                        key="id" keyName="code" defaultOption="--Select--"></app-input-control>
+                                </div>
+                                <div class="col-md-4">
+                                    <view-label label="Beneficary Customer Name" [value]="trustWithdrawal.beneficiaryCustomerName"></view-label>
+                                </div>
+                                <div class="col-md-4"><app-input-control label="Type" type="select"
+                                        [(ngModel)]="trustWithdrawal.withdrawalTypeValue" name="withdrawalTypeValue"
+                                        [items]="initialData.DDLValues.DDLWithDrawalType" key="constant"
+                                        keyName="description" defaultOption="--Select--" [errorTrue]="errorTrue"
+                                        [required]="true" (onSelect)="
+                                        getSubTypeByType(trustWithdrawal.withdrawalTypeValue)"></app-input-control>
+                                </div>
+                                <div class="col-md-4"><app-input-control label="Sub Type" type="select"
+                                        [(ngModel)]="trustWithdrawal.withdrawalSubTypeValue"
+                                        name="withdrawalSubTypeValue" [items]="subTypeValue" key="constant"
+                                        keyName="description" defaultOption="--Select--"
+                                        [errorTrue]="this.trustWithdrawal.withdrawalTypeValue !=='OTHER' && errorTrue"
+                                        [required]="this.trustWithdrawal.withdrawalTypeValue !=='OTHER'"></app-input-control>
+                                </div>
+                                <!-- <div class="col-md-4">
+                                    <div class="pb10 checkbox-label">
+                                        Withdrawal By Organization
+                                    </div>
+                                    <div>
+                                        <app-checkbox (click)="withdrawalByOrg($event)"
+                                            [checked]="trustWithdrawal.withdrawlForOrganization==='Y'"></app-checkbox>
+                                    </div>
+                                </div>  -->
+                                <!-- <div class="col-md-4"><app-input-control label="Organization" [items]="organizationDDl"
+                                        [errorTrue]="trustWithdrawal.withdrawlForOrganization==='Y' && errorTrue" [required]="trustWithdrawal.withdrawlForOrganization==='Y'" type="select" key="id" keyName="code"
+                                        valueType="int" [(ngModel)]="trustWithdrawal.organizationId"
+                                        (onSelect)="getOrgDetails(trustWithdrawal.organizationId)"
+                                        [btnClicked]="this.trustWithdrawal.withdrawlForOrganization !== 'Y'"
+                                        defaultOption="--Select--" name="organizationId"></app-input-control></div> -->
+                                <!-- <div class="col-md-4">
+                                   <app-input-control defaultOption="--Select--" label="Bank Name" type="select" [(ngModel)]="trustWithdrawal.organizationBankId" name="organizationBankId" [items]="orgBankDDL" key="id" keyName="code" (onSelect)="getAccountNoFromBank(trustWithdrawal.organizationBankId)"></app-input-control>
+                                </div> -->
+                                <!-- <div class="col-md-4">
+                                    <view-label label="Account No" value="{{accountNo}}"></view-label>
+                                </div> -->
+
+                                <div class="col-md-4"><app-input-control label="Mode Of Application"
+                                        [items]="initialData.DDLValues.DDLModeOfApplication" type="select"
+                                        key="constant" keyName="description" [errorTrue]="errorTrue" [required]="true"
+                                        [(ngModel)]="trustWithdrawal.modeOfApplicationValue" defaultOption="--Select--"
+                                        name="modeOfApplicationValue"></app-input-control>
+                                </div>
+                                <div class="col-md-4"><app-input-control label="Payment Mode"
+                                        [items]="initialData.DDLValues.DDLWithDrawalPaymentMode" type="select"
+                                        key="constant" keyName="description" [errorTrue]="errorTrue" [required]="true"
+                                        [(ngModel)]="trustWithdrawal.paymentModeValue" defaultOption="--Select--"
+                                        name="paymentModeValue"></app-input-control></div>
+                                <div class="col-md-4"><app-input-control label="Withdrawal Mode" [btnClicked]="true"
+                                        [items]="initialData.DDLValues.DDLWithDrawalMode" type="select" key="constant"
+                                        [errorTrue]="errorTrue" [required]="true" keyName="description"
+                                        [(ngModel)]="trustWithdrawal.withdrawalModeValue" defaultOption="--Select--"
+                                        name="withdrawalModeValue"></app-input-control></div>
+                                
+                                <!-- <div class="col-md-4"><app-input-control label="Relationship" [errorTrue]="errorTrue"
+                                        [required]="true" [items]="initialData.DDLValues.DDLRelationship" type="select"
+                                        key="constant" keyName="description"
+                                        [(ngModel)]="trustWithdrawal.relationshipTypeValue" defaultOption="--Select--"
+                                        name="relationshipTypeValue"></app-input-control></div>
+                                <div class="col-md-4 pb20"><view-label label="Stage"
+                                        value="{{trustWithdrawal.applicationStageDescription}}"></view-label></div> -->
+                                <div class="col-md-4 pb20">
+                                    <view-label label="Action Status"
+                                        value="{{trustWithdrawal.actionStatusDescription}}"></view-label>
+                                </div>
+                                <div class="col-md-4 pb20"><view-label label="Application Status"
+                                        value="{{trustWithdrawal.applicationStatusDescription}}"></view-label>
+                                </div>
+                                <div class="col-md-4 pb20"><view-label label="Applied Date"
+                                        value="{{trustWithdrawal.appliedDate | appDate}}"></view-label>
+                                </div>
+                                <div class="col-md-4"><view-label label="Applied Branch"
+                                        value="{{trustWithdrawal.appliedBranchDescription}}"></view-label></div>
+                                <div class="col-md-12 mt10">
+                                    <app-input-control type="textarea" className="notes" label="Reason"
+                                        [(ngModel)]="trustWithdrawal.reasonForWithdrawal" name="reasonForWithdrawal"
+                                        [maxLength]="250"></app-input-control>
+                                </div>
+                            </row>
+                        </form>
+
+                    </scroll>
+                </row>
+            </div>
+        </div>
+    </div>
+</ng-template>

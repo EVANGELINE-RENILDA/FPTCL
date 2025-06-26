@@ -1,0 +1,160 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/register-trust.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Register Trust</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+                <row>
+                    <div class="col-md-9">
+                        <row>
+                            <div class="col-md-4"> <view-label label="Assigned Officer"
+                                    value="{{application.ientTrustApplicationAssignedOfficer.assignedToFullname}}"></view-label>
+                            </div>
+                            <div class="col-md-4"> <view-label label="Assigned Date"
+                                    value="{{application.ientTrustApplicationAssignedOfficer.assignedDate | appDate}}"></view-label>
+                            </div>
+                            <div class="col-md-4"> <view-label label="TAT"
+                                    value=" {{application.ientTrustApplicationAssignedOfficer.tatDays}} Days"></view-label>
+                            </div>
+                        </row>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex">
+                            @if(this.type.isEditable === 'Y'){
+
+                            @if(this.application.reAssignFlag === 'True'){
+                            <form #p="ngForm" class="col-md-10 w250">
+                                <app-input-control type="select" key="constant" keyName="description"
+                                    placeholder="Officer" [items]="assignedOfficerDDL" defaultOption="--Select--"
+                                    [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                                    name="assignedTo"></app-input-control>
+                            </form>
+                            <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                                    toolTip="Reassign"></app-icon-button></div>
+                            }
+                            }
+                            @if(this.application.selfAssignFlag ===' True'){
+                            <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                                    toolTip="Self Assign"></app-icon-button></div>
+                            }
+
+                        </div>
+                    </div>
+                </row>
+                <div class="mb20"></div>
+                <!-- <form #x="ngForm" (ngSubmit)="saveTrustApplication(x)" class="d-flex align-items-center">
+                    <div class="col-md-3 pl15">
+                        <app-input-control type="text" label="Folder Name" [errorTrue]="errorTrue" [required]="true"
+                            [(ngModel)]="application.ientTrustRegister.trustFolderName"
+                            name="trustFolderName"></app-input-control>
+                    </div>
+                    <div class="col-md-1">
+                        <app-icon-button name="save" toolTip="Save" type="submit"></app-icon-button>
+                    </div>
+                </form> -->
+
+                <row>
+                    <div class="col-md-3"><view-label label="File Name"
+                            value="{{application.ientFptclFile.fileName}}"></view-label></div>
+                    <div class="col-md-3"><view-label label="File Type"
+                            value="{{application.ientFptclFile.fileTypeDescription}}"></view-label></div>
+                    <div class="col-md-3"><view-label label="Trust Ref No"
+                            value="{{application.ientTrustRegister.registerRefNo}}"></view-label></div>
+                    <div class="col-md-3 end">
+                        @if(type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+
+                        <app-icon-button name="save" toolTip="Save" (click)="saveTrustRegsiter()"></app-icon-button>
+                        }
+                    </div>
+                </row>
+                <app-table [columns]="courtOrderColumns" [columnsName]="courtOrderColumnsName" [hideSelectAll]="true"
+                    [dataSource]="courtOrderTableData" [showPaginator]="false" columnID="trustApplicationDocumentId">
+                </app-table>
+                <div class="mb20"></div>
+                <!-- @if( application.actionStatusValue==='PENAP'){
+                <form #legalApproveForm="ngForm" class="d-flex align-items-center">
+                    <div class="col-md-3 pl15">
+                 
+                        <app-input-control [items]="initialData.DDLValues.DDLLegalServiceOfficer" key="constant"
+                            type="select" keyName="description" defaultOption="--Select--" [errorTrue]="errorTrue"
+                            [required]="true" [(ngModel)]="application.legalServiceOfficerId"
+                            name="legalServiceOfficerId" label="Assigned Legal Officer"></app-input-control>
+                    </div>
+                    <div class="col-md-1 ">
+                        <app-icon-button name="accept" toolTip="Accept"
+                            (click)="courtOrderLegalApprove()"></app-icon-button>
+                    </div>
+                </form>
+                } -->
+                <!-- @if(application.actionStatusValue === 'APROV'){ -->
+                <row>
+                    <!-- <div class="col-md-5 mb20">
+                        <div class="box" style="padding: 8px 16px;">
+                            <div class="mb20"></div>
+                            <app-drop-zone type="1" fileType="pdf" [accept]="accept"
+                                (onUpload)="uploadCourtDocumentAttachment($event)"></app-drop-zone>
+
+                        </div>
+                        <div class="single-document">
+                            <div class="title">Uploaded Document</div>
+                            <row>
+                                <div class="col-md-6 pl8 mb20"><view-label label="File Name"
+                                        value="{{this.clientDocumentTableData[0]?.ientFile?.fileName  }}"></view-label>
+                                </div>
+                                <div class="col-md-6 pl8 mb20"><view-label label="File Size"
+                                        value="{{this.clientDocumentTableData[0]?.ientFile?.fileSize}}"></view-label>
+                                </div>
+                                <div class="col-md-6 pl8 mb20"> <view-label label="Format"
+                                        value="{{this.clientDocumentTableData[0]?.ientFile?.fileExtension   }}"></view-label>
+                                </div>
+                                @if(this.clientDocumentTableData[0]?.ientFile?.fileName !==''){
+                                <div class="col-md-4 d-flex">
+                                    <app-icon-button name="doc-view" toolTip="View"
+                                        (click)="viewFile(this.clientDocumentTableData[0])">
+                                      
+                                    </app-icon-button>
+                                    <app-icon-button name="doc-download" toolTip="Download"
+                                        (click)="downloadFile(this.clientDocumentTableData[0])">
+                                    </app-icon-button>
+                                    <app-icon-button name="doc-delete" toolTip="Delete"
+                                        (click)="checkDocumentDelete(this.clientDocumentTableData[0])">
+                                    </app-icon-button>
+                                </div>
+                                }
+                            </row>
+                        </div>
+                    </div> -->
+                    <form #y="ngForm" (ngSubmit)="saveTrustApplicationNotes(y)" class="col-md-12">
+                        <div>
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue1"
+                                [maxLength]="250" [required]="true" label="Notes" [(ngModel)]="notesMessage"
+                                name="notesMessage"></app-input-control>
+                        </div>
+                        <div class="end gap-10 mb26">
+                            @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                            <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                            }
+                            <!-- <app-icon-button name="refresh" toolTip="Refresh"></app-icon-button> -->
+                        </div>
+                    </form>
+
+                </row>
+                <!-- } -->
+                <div class="col-md-12 end">
+                    @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                    <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Trust
+                        Registered</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </accordion-body>
+</accordion-item>

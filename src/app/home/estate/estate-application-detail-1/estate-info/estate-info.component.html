@@ -1,0 +1,424 @@
+<div class="dialog-container">
+    @if(type === 'benificiary'){
+    <div class="dialog-header">
+        <div class="dialog-title">Beneficiary Info</div>
+        <div class="slot-right">
+            <div class="btn-group">
+                <app-icon-button name="save" toolTip="Save" (click)="saveEstateApplicationBeneficiary()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clearBeneficiary()"></app-icon-button>
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper py10">
+        <row>
+            <div class="col-md-8">
+                <div class="box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        General Information
+                    </div>
+                    <div class="box-pad">
+                        <form #benificiary="ngForm">
+                            <row>
+                                <div class="col-md-6"><app-input-control label="First Name" [(ngModel)]="estateData.firstName" name="firstName"  [required]="true" [errorTrue]="errorTrue"></app-input-control></div>
+                                <div class="col-md-6"><app-input-control label="Middle Name" [(ngModel)]="estateData.middleName" name="middleName"></app-input-control></div>
+                                <div class="col-md-6"><app-input-control label="Last Name" [(ngModel)]="estateData.lastName" name="lastName"  [required]="true" [errorTrue]="errorTrue"></app-input-control></div>
+                                <!-- <div class="col-md-4"><app-input-control label="Last Name"></app-input-control></div> -->
+                                <div class="col-md-6">
+                                    <div class="checkbox-label">Is Deceased</div>
+                                    <div class="d-flex gap-10">
+                                        <div class="d-flex gap-5">
+                                            <app-checkbox [checked]="false" [btnClicked]="true" ></app-checkbox>Yes
+                                        </div>
+                                        <div class="d-flex gap-5">
+                                            <app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>No
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="checkbox-label">Is Female</div>
+                                    <div class="d-flex gap-10">
+                                        <div class="d-flex gap-5">
+                                            <app-checkbox [checked]="false" [btnClicked]="true"></app-checkbox>Yes
+                                        </div>
+                                        <div class="d-flex gap-5">
+                                            <app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>No
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6"><app-input-control label="Date Of Birth"
+                                        type="date" [(ngModel)]="estateData.dateOfBirth" name="dateOfBirth"  [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-6"><app-input-control label="Date Of Death"
+                                        type="date" [(ngModel)]="estateData.dateOfDeath" name="dateOfDeath"></app-input-control>
+                                </div>
+                                <div class="col-md-6"><app-input-control label="Place Of Death" [(ngModel)]="estateData.placeOfDeath" name="placeOfDeath"></app-input-control></div>
+                                <div class="col-md-6"><app-input-control label="Occupation" [(ngModel)]="estateData.occupation" name="occupation"  [required]="true" [errorTrue]="errorTrue"  ></app-input-control></div>
+                                <div class="col-md-6"><app-input-control label="Maritial Status"
+                                        type="select" [(ngModel)]="estateData.maritalStatusValue"  name="maritalStatusValue" [items]="initialData.DDLValues.DDLMaritalStatus" key="constant" keyName="description" defaultOption="--Select--"  [required]="true" [errorTrue]="errorTrue"></app-input-control></div>
+                                <div class="col-md-6"><app-input-control label="Relationship To The Deceased"
+                                        type="select" [(ngModel)]="estateData.relationshipValue" name="relationshipValue" [items]="initialData.DDLValues.DDLRelationShip" key="constant " keyName="description" defaultOption="--Select--"  [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+    
+                                <div class="col-md-6">
+                                    <app-checkbox [checked]="false"></app-checkbox>
+                                    <div class="checkbox-label">Mentioned In Will</div>                       
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="checkbox-label">Is Resident or Domiciled in Fiji</div>
+                                    <div class="d-flex gap-10">
+                                        <div class="d-flex gap-5">
+                                            <app-checkbox [checked]="false" [btnClicked]="true"></app-checkbox>Yes
+                                        </div>
+                                        <div class="d-flex gap-5">
+                                            <app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>No
+                                        </div>
+                                    </div>
+                                </div>
+                            </row>
+                        </form>
+                      
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-md-4">
+                <div class="box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Address
+                    </div>
+                    <div class="box-pad">
+
+                        <app-address-edit [errorTrue]="errorTrue" type="bank" [ientAddress]="estateApplicationBeneficiary.ientestateApplicationBeneficiaryAddress"></app-address-edit>
+
+                    </div>
+                </div>
+            </div> -->
+
+        </row>
+
+    </div>
+
+    }
+    @if(type==='realestate'){
+    <div class="dialog-header">
+        <div class="dialog-title">Real Estate Info</div>
+        <div class="slot-right">
+            <div class="btn-group">
+                <app-icon-button name="save" toolTip="Save" (click)="saveEstateApplicationRealestate()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clearRealEstate()"></app-icon-button>
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper py10">
+        <row>
+            <div class="col-md-3">
+                <div class="box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Estate Information
+                    </div>
+                    <div class="box-pad">
+                        <form #realEstate="ngForm">
+                            <row>
+                                <div class="col-md-12">
+                                    <app-input-control label="Title No" [(ngModel)]="estateData.titleNo" name="titleNo" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-12">
+                                    <app-input-control type="select" label="Tenancy" [(ngModel)]="estateData.tenancyValue" name="tenancyValue" [items]="initialData.DDLValues.DDLTenancy" key="constant" keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-12">
+                                    <app-input-control type="select" label="Tenure" [(ngModel)]="estateData.tenureValue" name="tenureValue" [items]="initialData.DDLValues.DDLTenancyType" key="constant" keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-12">
+                                    <app-input-control label="Landlord Name" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                            </row>
+                        </form>
+                    
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Address
+                    </div>
+                    <div class="box-pad">
+                        <app-address-edit [errorTrue]="errorTrue" type="bank"  [ientAddress]="estateData.ientestateApplicationRealestateAddress"></app-address-edit>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="box" style="padding: 8px 16px;">
+
+                    <div class="mb20"></div>
+                    <div class="col-md-8 mt8">
+                        <app-input-control type="select" label="Document Type" key="code" defaultOption="--Select--"
+                            keyName="fullName"></app-input-control>
+                    </div>
+                    <app-drop-zone type="1" fileType="pdf"></app-drop-zone>
+
+                </div>
+                <div class="single-document">
+                    <div class="title">Uploaded Document</div>
+                    <row>
+                        <div class="col-md-6 pl8 mb20"><view-label label="File Name" value=""></view-label>
+                        </div>
+                        <div class="col-md-6 pl8 mb20"><view-label label="File Size" value=""></view-label>
+                        </div>
+                        <div class="col-md-6 pl8 mb20"> <view-label label="Format" value=""></view-label>
+                        </div>
+                        <!-- @if(this.clientDocumentTableData[0]?.ientFile?.fileName !==''){
+                        <div class="col-md-4 d-flex">
+                            <app-icon-button name="doc-view" toolTip="View"
+                                (click)="viewFile(this.clientDocumentTableData[0])">
+                            
+                            </app-icon-button>
+                            <app-icon-button name="doc-download" toolTip="Download"
+                                (click)="downloadFile(this.clientDocumentTableData[0])">
+                               
+                            </app-icon-button>
+                            <app-icon-button name="doc-delete" toolTip="Delete"
+                                (click)="checkDocumentDelete(this.clientDocumentTableData[0])">
+                               
+                            </app-icon-button>
+                        </div>
+                        } -->
+                    </row>
+                </div>
+            </div>
+        </row>
+    </div>
+    }
+    @if(type==='creditor'){
+    <div class="dialog-header">
+        <div class="dialog-title">CreditorInfo</div>
+        <div class="slot-right">
+            <div class="btn-group">
+                <app-icon-button name="save" toolTip="Save" (click)="saveEstateCreditor()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clearCreditor()"></app-icon-button>
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper py10">
+        <row>
+            <div class="col-md-4">
+                <div class="box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Estate Information
+                    </div>
+                    <div class="box-pad">
+                        <form #creditor="ngForm">
+                            <row>
+                                <div class="col-md-12">
+                                    <app-input-control label="First Name" [(ngModel)]="estateData.firstName" name="firstName" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-12">
+                                    <app-input-control label="Middle Name" [(ngModel)]="estateData.middleName" name="middleName"></app-input-control>
+                                </div>
+                                <div class="col-md-12">
+                                    <app-input-control label="Last Name" [(ngModel)]="estateData.lastName" name="lastName" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-12">
+                                    <app-input-control type="select" label="Identity Type" [(ngModel)]="estateData.identityValue" name="identityValue" [items]="initialData.DDLValues.DDLIdentity" key="constant" keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+    
+                                <div class="col-md-12">
+                                    <app-input-control label="Identity No" [(ngModel)]="estateData.identityNo" name="identityNo" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                                <div class="col-md-12">
+                                    <app-input-control label="Contact No" type="number" [(ngModel)]="estateData.contactNo" name="contactNo" [minLength]="5" [maxLength]="10"></app-input-control>
+                                </div>
+                            </row>
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 ">
+                <div class="box" style="padding: 8px 16px;">
+
+                    <div class="mb20"></div>
+                    <div class="col-md-8 mt8">
+                        <app-input-control type="select" label="Document Type" key="code" defaultOption="--Select--"
+                            keyName="fullName"></app-input-control>
+                    </div>
+                    <app-drop-zone type="1" fileType="pdf"></app-drop-zone>
+
+                </div>
+                <div class="single-document">
+                    <div class="title">Uploaded Document</div>
+                    <row>
+                        <div class="col-md-6 pl8 mb20"><view-label label="File Name" value=""></view-label>
+                        </div>
+                        <div class="col-md-6 pl8 mb20"><view-label label="File Size" value=""></view-label>
+                        </div>
+                        <div class="col-md-6 pl8 mb20"> <view-label label="Format" value=""></view-label>
+                        </div>
+                        <!-- @if(this.clientDocumentTableData[0]?.ientFile?.fileName !==''){
+                        <div class="col-md-4 d-flex">
+                            <app-icon-button name="doc-view" toolTip="View"
+                                (click)="viewFile(this.clientDocumentTableData[0])">
+                            
+                            </app-icon-button>
+                            <app-icon-button name="doc-download" toolTip="Download"
+                                (click)="downloadFile(this.clientDocumentTableData[0])">
+                               
+                            </app-icon-button>
+                            <app-icon-button name="doc-delete" toolTip="Delete"
+                                (click)="checkDocumentDelete(this.clientDocumentTableData[0])">
+                               
+                            </app-icon-button>
+                        </div>
+                        } -->
+                    </row>
+                </div>
+            </div>
+        </row>
+    </div>
+    }
+    @if(type==='bank'){
+    <div class="dialog-header">
+        <div class="dialog-title">Bank/Credit Union/Other Financial Institution Action</div>
+        <div class="slot-right">
+            <div class="btn-group">
+                <app-icon-button name="save" toolTip="Save" (click)="saveEstateApplicationFinanceDetails()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clearBank()"></app-icon-button>
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper py10">
+        <row>
+            <div class="col-md-6">
+                <div class=" box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Bank Information
+                    </div>
+                    <div class="box-pad">
+                        <form #bank="ngForm">
+                            <row>
+                                <div class="col-md-12">
+                                    <app-input-control label="Institution" [(ngModel)]="estateData.institutionName" name="institutionName" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                    <app-input-control label="AC No" [(ngModel)]="estateData.accountNo" name="accountNo" type="number" [maxLength]="20" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                    <app-input-control label="BSB" [(ngModel)]="estateData.bsb" name="bsb"></app-input-control>
+                                    <app-input-control label="Account Type" [(ngModel)]="estateData.accountTypeDescription" name="accountTypeDescription" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                </div>
+                            </row>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class=" box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Address
+                    </div>
+                    <div class="box-pad">
+                        <app-address-edit type="bank"  [ientAddress]="estateData.ientestateApplicationFinanceDetailsAddress"></app-address-edit>
+                    </div>
+                </div>
+            </div>
+
+        </row>
+    </div>
+    }
+    @if(type==='share'){
+    <div class="dialog-header">
+        <div class="dialog-title">Share/Stocks/Managed Investments</div>
+        <div class="slot-right">
+            <div class="btn-group">
+                <app-icon-button name="save" toolTip="Save" (click)="saveEstateApplicationInvestmentDetails()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clearShare()"></app-icon-button>
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper py10">
+        <row>
+            <div class="col-md-6">
+                <div class=" box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Share Information
+                    </div>
+                    <div class="box-pad">
+                        <form #share="ngForm">
+                            <row>
+                                <div class="col-md-12">
+                                    <app-input-control label="Company" [(ngModel)]="estateData.companyName" name="companyName" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                    <app-input-control label="Share / Unit No" [(ngModel)]="estateData.shareNo" name="shareNo" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                    <app-input-control label="Location"></app-input-control>
+                                    <app-input-control label="Certificate" type="select"></app-input-control>
+                                    <app-input-control label="Account Type" type="select"></app-input-control>
+                                </div>
+                            </row>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class=" box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Address
+                    </div>
+                    <div class="box-pad">
+                        <app-address-edit type="bank"  [ientAddress]="estateData.ientestateApplicationInvestmentDetailsAddress"></app-address-edit>
+                    </div>
+                </div>
+            </div>
+
+        </row>
+    </div>
+    }
+    @if(type==='vehicle'){
+    <div class="dialog-header">
+        <div class="dialog-title">Share/Stocks/Managed Investments</div>
+        <div class="slot-right">
+            <div class="btn-group">
+                <app-icon-button name="save" toolTip="Save" (click)="saveEstateApplicationVehicleDetails()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clearVehicle()"></app-icon-button>
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper py10">
+        <row>
+            <div class="col-md-12">
+                <div class=" box h100">
+                    <div class="box-header">
+                        <ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+                        Share Information
+                    </div>
+                    <div class="box-pad">
+                        <form #vehicle="ngForm">
+                            <row>
+
+                                <app-input-control class="col-md-6" label="Reg No" [(ngModel)]="estateData.vehicleRegNo" name="vehicleRegNo"  [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                <app-input-control class="col-md-6" label="Vehicle Type" type="select" [(ngModel)]="estateData.vehicleTypeValue" name="vehicleTypeValue" [items]="initialData.DDLValues.DDLVehicleType" key="constant" keyName="description"></app-input-control>
+                                <app-input-control class="col-md-6" label="Make" [(ngModel)]="estateData.vehicleMake" name="vehicleMake"></app-input-control>
+                                <app-input-control class="col-md-6" label="Model" type="select" [(ngModel)]="estateData.model" name="model"></app-input-control>
+    
+                            </row>
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+
+
+        </row>
+    </div>
+    }
+</div>

@@ -1,0 +1,95 @@
+.dialog-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 0.5px solid #DBE0E1;
+
+    .dialog-header {
+        display: flex;
+        align-items: center;
+        padding: 19px 20px 9px;
+        position: relative;
+
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            width: calc(100% - 40px);
+            left: 20px;
+            bottom: 1px;
+            height: 1px;
+            background-color: #DBE0E1;
+        }
+
+        .dialog-title {
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+
+            .dialog-header-icon {
+                padding-right: 5px;
+            }
+
+        }
+    }
+
+    .dialog-content {
+        flex: 1;
+        position: relative;
+
+        .dialog-content-inner {
+            padding: 16px;
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 24px;
+            user-select: none;
+            color: var(--app-danger);
+            margin-bottom: 16px;
+
+            .notification-icon {
+                display: flex;
+                align-items: center;
+
+                ion-icon {
+                    color: #be1622;
+                    font-size: 28px;
+                }
+            }
+        }
+
+        .notification-message {
+            text-align: center;
+            overflow-wrap: break-word;
+            flex-grow: 1;
+            overflow: auto;
+            max-height: 250px;
+        }
+
+        .notification-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding-top: 16px;
+        }
+    }
+}
+
+
+.cdk-dialog-container {
+    background: #fff;
+    height: 100%;
+}
+
+.arrow-icon {
+    font-size: 10px;
+    padding: 0 7px;
+}

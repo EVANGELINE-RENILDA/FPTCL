@@ -1,0 +1,366 @@
+<div class="v-flex h100 px-2">
+    <div class="d-flex align-items-center justify-content-between">
+        <h1 class="d-flex text-align-center ">Statement of Accounts - Trust And Estate</h1>
+        <div class="d-flex align-items-center justify-content-end pt">
+            <div class=" d-flex justify-content-end">Report Generating Date & Time :</div>
+            <p class="bold pr pl10">{{soaTrustAndEstateList.reportgeneratedDatetime | appDate}}
+                {{soaTrustAndEstateList.reportgeneratedDatetime | appDate:'hh:mm a'}}</p>
+            <app-icon-button name="download" toolTip="Export To Excel"></app-icon-button>
+
+        </div>
+    </div>
+
+
+    <div class="pt">
+        <accordion>
+            <accordion-item [isOpen]="true">
+                <accordion-header>
+                    <div class="accordion-header-content">
+                        <row class="row-w100">
+                            <div class="accordion-title">
+                                <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                                <div class="">Report Information</div>
+                            </div>
+                        </row>
+                        <div class="accordion-title open-hide">
+
+                            <div class="accordion-title open-visible">
+                                <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                                <div class="">Report Information</div>
+                            </div>
+                        </div>
+                    </div>
+                </accordion-header>
+                <accordion-body>
+
+
+                    <div class="search">
+                        <!-- <div class="border p8 boder-rad"> -->
+                        <row>
+                            <div class="col-md-3 border-right pl">
+
+                                @if(soaTrustAndEstateSearchResult.fiscalYear.length>10){
+                                <div class="narration py10 text-design"
+                                    matTooltip="{{ soaTrustAndEstateSearchResult.fiscalYear }}">
+                                    Fiscal Year:
+                                    <span class="bold">{{ soaTrustAndEstateSearchResult.fiscalYear || '-' }}</span>
+                                </div>
+                                }
+                                @else{
+                                <div class="py10 text-design">
+                                    Fiscal Year:
+                                    <span class="bold">{{ soaTrustAndEstateSearchResult.fiscalYear || '-' }}</span>
+                                </div>
+                                }
+
+
+                                <view-label type="sub-number" label="Account Number"
+                                    value="{{soaTrustAndEstateSearchResult.customerAccountNumber}}"></view-label>
+                            </div>
+                            <div class="col-md-3 border-right pl">
+                                <view-label type="sub" label="File Type"
+                                    value="{{soaTrustAndEstateSearchResult.fileType}}" class="pb10"></view-label>
+                                <view-label type="sub" label="Account Type"
+                                    value="{{soaTrustAndEstateSearchResult.accountType}}"></view-label>
+                            </div>
+                            <div class="col-md-3 border-right pl">
+                                <view-label type="sub" label="File Number"
+                                    value="{{soaTrustAndEstateSearchResult.fileNo}}" class="pb10"></view-label>
+                                <view-label type="sub" label="file Name"
+                                    value="{{soaTrustAndEstateSearchResult.fileName}}"></view-label>
+                            </div>
+                            <div class="col-md-3 pl">
+                                <view-label type="sub" label="From Date"
+                                    value="{{formatDate(soaTrustAndEstateSearchResult.fromDate)}}"
+                                    class="pb10"></view-label>
+                                <view-label type="sub" label="To Date"
+                                    value="{{formatDate(soaTrustAndEstateSearchResult.toDate)}}"></view-label>
+                            </div>
+                        </row>
+                        <!-- </div> -->
+                    </div>
+                    <!-- <div class="accordian-content">
+                        <div class="d-flex  ">
+                           
+                         
+                            <div class="d-flex justify-content-between">
+                                <div class="justify-content-between com-address">
+                                    <p class=" bold pb10">Company Address:</p>
+                                    <p>{{soaTrustAndEstateList.companyName}}</p>
+                                    <p>{{soaTrustAndEstateList.companyAddressline1}}</p>
+                                    <p>{{soaTrustAndEstateList.companyAddressline2}}</p>
+                                    <p>{{soaTrustAndEstateList.companyAddressline3}}</p>
+                                    <p>{{soaTrustAndEstateList.companyAddressline4}}</p>
+                                    <div class="space-between mt10">
+
+                              
+                                    </div>
+                                </div>
+                                <div class="border-right">
+
+                                </div>
+                                <div class="cus-address">
+                                    <p class="bold pb10">Customer Address:</p>
+                                    <p>{{soaTrustAndEstateList.customerName}}</p>
+                                    <p>{{soaTrustAndEstateList.customerAddress}}</p>
+                                </div>
+                            </div>
+                           
+                        
+                        </div>
+                    </div> -->
+                </accordion-body>
+            </accordion-item>
+        </accordion>
+    </div>
+
+
+    <!-- <table class="sub-table">
+            <thead>
+                <tr>
+                    <th>
+                        <div>Document Date</div>
+                        <div>Document Name</div>
+                    </th>
+                    <th>
+                        <div>Account Number</div>
+                        <div>Account Name</div>
+                    </th>
+                    <th>Narrative</th>
+                    <th>File Type / Account Type</th>
+                    <th>
+                        <div class="amount-align">
+                            Debit ({{currencyVal}})
+                        </div>
+                    </th>
+                    <th>
+                        <div class="amount-align">
+                            Credit ({{currencyVal}})
+                        </div>
+                    </th>
+                    <th>
+                        <div class="amount-align">
+                            Running Balance ({{currencyVal}})
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (element of soaTrustAndEstateResult; track element.documentDate) {
+                <tr>
+                    <td>
+                        <div>{{element.documentDate | appDate}}</div>
+                        <div>{{element.documentName}}</div>
+                    </td>
+
+                    <td>
+                        <div class="text-left">{{element.accountNumber}}</div>
+                        <div class="text-left">{{element.customerName}}</div>
+                    </td>
+
+                    <td>
+                        <div class="text-left">{{element.narrative}}</div>
+                    </td>
+
+                    <td>
+                        <div class="text-left">{{element.fileType}} / {{element.accountType}}</div>
+                    </td>
+
+                    <td>
+                        <div class="amount-align">{{element.debit}}</div>
+                    </td>
+
+                    <td>
+                        <div class="amount-align">{{element.credit}}</div>
+                    </td>
+
+                    <td>
+                        <div class="text-right ">{{element.runningBalance}}</div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table> -->
+
+
+
+    <div class="v-flex h100">
+        <app-table class="h100" [columns]="columns" [columnsName]="columnsName" [dataSource]="soaTrustAndEstateResult"
+            [hideSelectAll]="true" [showPaginator]="false" [hasHeader]="true" columnID="document">
+            <ng-template cellHeaderDef="document">
+                <div class="header-cell-title">Document Date</div>
+                <div class="header-cell-subtitle">Document Name</div>
+            </ng-template>
+            <ng-template cellDef="document" let-element>
+                <div>{{element.documentDate | appDate}}</div>
+                <div>{{element.documentName}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="account">
+                <div class="header-cell-title">Account Number</div>
+                <div class="header-cell-subtitle">Account Name</div>
+            </ng-template>
+            <ng-template cellDef="account" let-element>
+                <div>{{element.accountNumber}}</div>
+                <div>{{element.customerName}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="fileAccType">
+                <div class="header-cell-title">File Type</div>
+                <div class="header-cell-subtitle">Account Type</div>
+            </ng-template>
+            <ng-template cellDef="fileAccType" let-element>
+                <div>{{element.fileType}}</div>
+                <div>{{element.accountType}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="debit">
+                <div class="header-cell-title amount-align">Debit ({{currencyVal}})</div>
+            </ng-template>
+            <ng-template cellDef="debit" let-element>
+                <div class="amount-align">{{element.debit}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="credit">
+                <div class="header-cell-title amount-align">Credit ({{currencyVal}})</div>
+            </ng-template>
+            <ng-template cellDef="credit" let-element>
+                <div class="amount-align">{{element.credit}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="runningBalance">
+                <div class="header-cell-title amount-align">Running Balance ({{currencyVal}})</div>
+            </ng-template>
+            <ng-template cellDef="runningBalance" let-element>
+                <div class="amount-align">{{element.runningBalance}}</div>
+            </ng-template>
+
+            <ng-template #slotLeft>
+                <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="380px"></app-search>
+            </ng-template>
+
+            <ng-template #slotRight>
+                <div>Opening Balance:</div>
+                <div>{{soaTrustAndEstateSearchResult?.openingBalance || '0.00'}} </div>
+            </ng-template>
+        </app-table>
+        @if(closingBal){
+
+            <div class="d-flex justify-content-end gap20">
+                <div>
+              Closing Balance: 
+
+                </div>
+                <div>
+                    {{this.lastEle}}
+                </div>
+                </div>
+        }
+    </div>
+
+
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon name="person-outline"></ion-icon>
+                <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Statement of Accounts - Trust And Estate</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Statement of Accounts - Trust And Estate Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm">
+                        <row>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Fiscal Year" defaultOption="--Select--"
+                                            name="fiscalYearId" key="id" keyName="description"
+                                            [(ngModel)]="searchParams.fiscalYearId"
+                                            [items]="initialData.DDLValues.ConfigFiscalyearlist" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="File Number"
+                                            [(ngModel)]="searchParams.fileNo" name="fileNo" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="File Name"
+                                            [(ngModel)]="searchParams.fileName" name="fileName" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+
+                                </row>
+                            </div>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="File Type" name="fileType"
+                                            [(ngModel)]="searchParams.fileType" defaultOption="--Select--"
+                                            key="constant" keyName="description"
+                                            [items]="initialData.DDLValues.DDLFileType" (onSelect)="
+                          fileData(searchParams.fileType);  searchParams.accountType = '';" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Account Type"
+                                            [(ngModel)]="searchParams.accountType" name="accountType"
+                                            defaultOption="--Select--" key="constant" keyName="description" (onSelect)="
+                          accountNum(searchParams.accountType);" [items]="casAccountType" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Account Number"
+                                            defaultOption="--Select--" [(ngModel)]="searchParams.customerAccountNumber"
+                                            [items]="accountNumber" key="ledgerId" keyName="code"
+                                            name="customerAccountNumber" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-4">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="From Date"
+                                            [(ngModel)]="searchParams.fromDate" name="fromDate"
+                                            [maxDate]="searchParams.toDate" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="To Date" [(ngModel)]="searchParams.toDate"
+                                            name="toDate" [minDate]="searchParams.fromDate" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+
+                                </row>
+                            </div>
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>

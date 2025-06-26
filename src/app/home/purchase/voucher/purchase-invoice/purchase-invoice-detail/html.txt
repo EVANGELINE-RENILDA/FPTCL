@@ -1,0 +1,27 @@
+          <row>
+            <div class="col-md-6 f-second">
+              <div class="d-flex gap16">
+                <div class="mw125p">
+                  <view-label
+                    label="Reporting Currency"
+                    [value]="purchaseInvoice.currencyValue"
+                    class="mb20"
+                  ></view-label>
+                </div>
+                <div class="flex-1">
+                  <table class="app-footer-table">
+                    @for(currency of exchangeRateLst; track $index){
+                      <tr class="app-footer-table-row ">
+                        <td class="app-footer-table-cell footer-header-txt text-end">
+                          {{currency.description}}
+                        </td>
+                        <td class="app-footer-table-cell footer-cnt-txt text-end">
+                          {{currency.reportingCurrencyAmount}}
+                        </td>
+                      </tr>
+                    }
+                  </table>
+                </div>
+              </div>
+            </div>
+          </row>

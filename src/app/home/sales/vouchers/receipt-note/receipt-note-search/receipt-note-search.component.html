@@ -1,0 +1,202 @@
+<div class="content-wrapper" appAccess="CUSTR">
+        <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"      [hideSelectAll]="true"
+            (pageChanged)="pageChanged($event)" columnID="salesReceiptnoteId" (onSelect)="onSelect($event)" class="h100">
+            <ng-template cellDef="action" let-element>
+                <app-icon-button name="open" toolTip="Open" (click)="openReceiptNote(element.salesReceiptnoteId)"></app-icon-button>
+            </ng-template>
+
+            <ng-template cellHeaderDef="docNo">
+                <div class="header-cell-title ">Document No</div>
+                <div class="header-cell-subtitle">Document Name</div>
+            </ng-template>
+            <ng-template cellDef="docNo" let-element>
+                <div>{{element.receiptnoterefno}}</div>
+                <div class="table-cell-subtitle ">{{element.voucherName}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="createdDate">
+                <div class="header-cell-title ">Created Date</div>
+                <div class="header-cell-subtitle">Created By </div>
+            </ng-template>
+            <ng-template cellDef="createdDate" let-element>
+                <div>{{element.enteredDate  | appDate}}</div>
+                <div class="table-cell-subtitle ">{{element.enteredBy}}</div>
+            </ng-template>
+            <ng-template cellDef="cusName" let-element>
+                <div>{{element.voucherName}}</div>
+            </ng-template>
+            <ng-template cellDef="date" let-element>
+                <div>{{element.documentDate | appDate}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="appDate">
+                <div class="header-cell-title ">Approved Date</div>
+                <div class="header-cell-subtitle">Approved By </div>
+            </ng-template>
+            <ng-template cellDef="appDate" let-element>
+                <div>{{element.approvedDate  | appDate}}</div>
+                <div class="table-cell-subtitle ">{{element.approvedBy}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="docAmount">
+                <div class="header-cell-title ">Document Amount</div>
+                <div class="header-cell-subtitle">Currency Name</div>
+            </ng-template>
+            <ng-template cellDef="docAmount" let-element>
+                <div>{{element.receiptamount}}</div>
+                <div class="table-cell-subtitle ">{{element.currencyName}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="repotingAmount">
+                <div class="header-cell-title ">Reporting Amount</div>
+                <div class="header-cell-subtitle">Local Ccy(INR)</div>
+            </ng-template>
+            <ng-template cellDef="repotingAmount" let-element>
+                <div>{{element.reportingAmount}}</div>
+                <div class="table-cell-subtitle ">{{element.currencyValue}}</div>
+            </ng-template>
+            <ng-template cellHeaderDef="action">
+                <app-icon-button name="open" toolTip="Open Selected"></app-icon-button>
+            </ng-template>
+            <ng-template cellDef="statusDescription" let-element>
+                <accouts-status-table [statusDescription]="element.status"></accouts-status-table>
+            </ng-template>
+            <ng-template #slotLeft>
+                <div class="col-md-4">
+                    <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+                </div>
+            </ng-template>
+            <ng-template #slotRight>
+                <form #l="ngForm">
+                    <div class="d-flex align-items-center">
+                      <div class="col-md-10 mt10">
+                        <app-input-control type="select" placeholder="Document Name" [(ngModel)]="voucherConfigId"
+                        name="voucherConfigId" [items]="initialData.DDLValues.DDLVoucherConfig" key="id"
+                        keyName="name" (onSelect)="getVoucherDetail(voucherConfigId)" [errorTrue]="errorTrue"
+                        [required]="true" ></app-input-control>
+                      </div>
+                      <div class="col-md-1">
+                        <app-icon-button name="add" toolTip="Add New" (click)="createNewReceiptNotes()" appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+                      </div>
+                    </div>
+                  </form>
+              </ng-template>
+              <ng-template #slotMiddle>
+                <div class="d-flex">
+                  <div (click)="statusSortSearch('INPRO')"><table-status-sort type="processing"
+                      [processingCount1]="totalInprogressCount"></table-status-sort>
+                  </div>
+                  <div (click)="statusSortSearch('APROV')">
+                    <table-status-sort type="approving" [approvedCount1]="totalApprovedCount"></table-status-sort>
+                  </div>
+                </div>
+              </ng-template>
+        </app-table>
+    <!-- </div> -->
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Receipt Note Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="closeSearch()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+
+                    <row>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12">
+                                    <app-input-control type="text" label="RN Document No" [(ngModel)]="searchParams.strReceiptNoteRefNo" name="strReceiptNoteRefNo"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Created Date From" [(ngModel)]="searchParams.dtmEnteredDatefrom" name="dtmEnteredDatefrom" [maxDate]="searchParams.dtmEnteredDateto"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Approved Date From" [(ngModel)]="searchParams.dtmapproveddatefrom" name="dtmapproveddatefrom" [maxDate]="searchParams.dtmapproveddateto"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Status" [(ngModel)]="searchParams.strstatusValue" name="strstatusValue" [items]="initialData.DDLValues.configReceiptNoteStatusValue" key="constant" keyName="description" defaultOption="--Select--"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <auto-search-customer [isCRMCustomer]="true" [disabled]="isEditAllowed()"
+                                    statusValue="ACTIV"
+                                    [(ngModel)]="searchParams.lngActcustomerId"
+                                    name="lngActcustomerId" valueType="int" [required]="true" [errorTrue]="errorTrue" label="Customer Name" />
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Created Date To" [(ngModel)]="searchParams.dtmEnteredDateto" name="dtmEnteredDateto" [minDate]="searchParams.dtmEnteredDatefrom"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Approved Date To" [(ngModel)]="searchParams.dtmapproveddateto" name="dtmapproveddateto" [minDate]="searchParams.dtmapproveddatefrom"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="number" label="Amount Range From"
+                                         [(ngModel)]="searchParams.dectotalPricefrom" name="dectotalPricefrom" [decimal]="2"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Document Name" [(ngModel)]="searchParams.actVoucherConfigId" name="actVoucherConfigId" [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" defaultOption="--Select--"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Document Date From" [(ngModel)]="searchParams.dtmDocumentDatefrom" name="dtmDocumentDatefrom" [maxDate]="searchParams.dtmDocumentDateto"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Created by" [(ngModel)]="searchParams.strEnteredby" name="strEnteredby" [items]="initialData.DDLValues.DDLUser" key="code" keyName="name" defaultOption="--Select--"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="number" label="Amount Range To" [(ngModel)]="searchParams.dectotalPriceto" name="dectotalPriceto" [decimal]="2"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Customer Currency"
+                                       [(ngModel)]="searchParams.strDocCurrency" name="strDocCurrency" [items]="initialData.DDLValues.configCQCurrencyValue" key="constant" keyName="description" defaultOption="--Select--"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="Document Date To" [(ngModel)]="searchParams.dtmDocumentDateto" name="dtmDocumentDateto" [minDate]="searchParams.dtmDocumentDatefrom"></app-input-control>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Approved By" [(ngModel)]="searchParams.strapprovedby" name="strapprovedby" [items]="initialData.DDLValues.DDLUser" key="code" keyName="name" defaultOption="--Select--"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                    </row>
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <!-- <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div> -->
+                <ion-icon src="assets/icons/sales.svg" ></ion-icon>
+                <div class="screen-text" (click)="navigateToSales()">Sales</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Receipt Note</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

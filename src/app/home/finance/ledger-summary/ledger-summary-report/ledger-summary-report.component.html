@@ -1,0 +1,129 @@
+<div class="content-wrapper">
+  <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+    columnID="customerId" (onSelect)="onSelect($event)" [showPaginator]="false" [hideSelectAll]="true">
+    <ng-template cellDef="action" let-element>
+      <app-icon-button name="open" toolTip="Open" (click)="openDetail(element)"></app-icon-button>
+    </ng-template>
+
+    <ng-template cellDef="openingbalance" let-element>
+      <div class="text-right">
+        {{ element.OPENING_BALANCE }}
+      </div>
+    </ng-template>
+    <ng-template cellHeaderDef="openingbalance">
+      <div class="text-right">Opening Balance</div>
+    </ng-template>
+    <ng-template cellDef="toatdramount" let-element>
+      <div class="text-right">
+        {{ element.TOTAL_DEBIT_AMOUNT }}
+      </div>
+    </ng-template>
+    <ng-template cellHeaderDef="toatdramount">
+      <div class="text-right">Total Dr Amount ({{ currency }})</div>
+    </ng-template>
+    <ng-template cellDef="totalcramount" let-element>
+      <div class="text-right">
+        {{ element.TOTAL_CREDIT_AMOUNT }}
+      </div>
+    </ng-template>
+    <ng-template cellHeaderDef="totalcramount">
+      <div class="text-right">Total Cr Amount ({{ currency }})</div>
+    </ng-template>
+    <ng-template cellDef="nettransaction" let-element>
+      <div class="text-right">
+        {{ element.NET_TRANSACTION }}
+      </div>
+    </ng-template>
+    <ng-template cellHeaderDef="nettransaction">
+      <div class="text-right">Net Transaction ({{ currency }})</div>
+    </ng-template>
+    <ng-template cellDef="closingbalance" let-element>
+      <div class="text-right">
+        {{ element.CLOSING_BALANCE }}
+      </div>
+    </ng-template>
+    <ng-template cellHeaderDef="closingbalance">
+      <div class="text-right">Closing Balance ({{ currency }})</div>
+    </ng-template>
+
+    <ng-template #slotLeft>
+      <div class="col-md-4">
+        <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="200px"></app-search>
+      </div>
+    </ng-template>
+    <ng-template #slotRight>
+      <div class="px10">
+        <div class="d-flex view">
+          <div class="pr">Report Generated Date & Time:</div>
+          <div>{{ repDate | appDate }} {{ repDate | appDate : "hh:mm a" }}</div>
+        </div>
+        <!-- <view-label label="Report Generating Date & Time" value="  "></view-label> -->
+      </div>
+      <app-checkbox color="primary" (change)="excludeZero($event)"
+        [checked]="ledgerSummaryReport.isExcludeZero === 'Y'"></app-checkbox>
+      Exclude Zero
+      <app-icon-button name="download" toolTip="Export To Excel"
+        (click)="generateLedgerSummaryReportAsExcel()"></app-icon-button>
+    </ng-template>
+  </app-table>
+</div>
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Ledger Summary Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #search="ngForm">
+            <row>
+              <div class="col-md-4">
+                <app-input-control label="Fiscal Year" type="select" [(ngModel)]="ledgerSummaryReport.fiscalYearId" (onSelect)="getMinAndMaxDate(ledgerSummaryReport.fiscalYearId)"
+                  name="fiscalYearId" key="id" keyName="description" [items]="initialData.DDLValues.DDLFiscalYear"
+                  defaultOption="--Select--" tabIndex="100" (keyup.enter)="onSearch()" (onSelect)="
+                  changDate();getMinAndMaxDate($event)" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control label="From Date" type="date" [(ngModel)]="ledgerSummaryReport.fromDate"
+                  name="fromDate" [maxDate]="maxDate" [minDate]="minDate" (keyup.enter)="onSearch()" ></app-input-control>  
+              </div>
+  
+              <div class="col-md-4">
+                <app-input-control type="date" label="To Date" [(ngModel)]="ledgerSummaryReport.toDate" name="toDate" [btnClicked]="ledgerSummaryReport.fromDate ===''"
+                  [minDate]="ledgerSummaryReport.fromDate" [maxDate]="maxDate" (keyup.enter)="onSearch()"></app-input-control>
+              </div>
+            </row>
+          </form>
+         
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        @if(regionValue === 'REGIO'){
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+        }
+        @else {
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+        }
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Ledger Summary</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

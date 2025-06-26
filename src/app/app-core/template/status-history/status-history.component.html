@@ -1,0 +1,16 @@
+@if (data.length > 0) {
+<div class="status-history">
+    <ul>
+        @for (x of data; track $index) {
+        <li>
+
+
+            <div class="status-history-title status-{{x.statusValue}}">{{x.statusDescription}}</div>
+
+            <div class="status-history-subtitle">{{x.changedByFullname}} | {{x.changedDate |appDate}} | {{x.changedDate
+                |appDate: 'hh:mm a'}}</div>
+        </li>
+        }
+    </ul>
+</div>
+}

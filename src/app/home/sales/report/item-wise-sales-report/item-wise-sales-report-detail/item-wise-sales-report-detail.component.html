@@ -1,0 +1,91 @@
+<!-- [parentId]="pageId" -->
+<div class="content-wrapper" appAccess="CUSTR">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData" [hideSelectAll]="true"
+        (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)" [showPaginator]="false">
+        <ng-template cellDef="action" let-element >
+            <app-icon-button name="open" toolTip="Open"></app-icon-button>
+        </ng-template>
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected"></app-icon-button>
+        </ng-template>
+
+
+        <ng-template #slotLeft>
+            <div class="col-md-4">
+                <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+            </div>
+            <div class="col-md-5">
+                <row>
+                    <div class="col-md-3">
+                        <view-label label="Customer Name" value="Shamir"></view-label>
+                    </div>
+                    <div class="col-md-5">
+                        <view-label label="Item Name" value="Consulting and Professional Fee"></view-label>
+                    </div>
+                    <div class="col-md-4">
+                        <view-label label="Unit Type" value="Unit Type"></view-label>
+                    </div>
+                </row>
+            </div>
+        </ng-template>
+        <ng-template #slotRight>
+            <app-icon-button name="download" toolTip="Export To Excel"></app-icon-button>
+        </ng-template>
+        <ng-template #slotMiddle>
+          
+        </ng-template>
+
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Items Wise Sales Report Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+
+                    <row>
+                        <div class="col-md-3">
+                            <app-input-control label="Branch" type="select"></app-input-control>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="Fiscal Year" type="select"></app-input-control>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="From Date" type="date"></app-input-control>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="To Date" type="date"></app-input-control>
+                        </div>
+                    </row>
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon src="assets/icons/sales.svg"></ion-icon>
+                <div class="screen-text">Item Wise Sales Report</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Detail</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

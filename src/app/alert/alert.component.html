@@ -1,0 +1,59 @@
+<div class="dialog-container">
+    <div class="dialog-content">
+        @if(dialogData?.type === 'delete'){
+
+        <div class="dialog-content-inner">
+            <div class="notification-header">
+                <div class="notification-icon">
+                    <ion-icon name="trash-outline"></ion-icon>
+                </div>
+                <div class="notification-title">Delete</div>
+            </div>
+            <div class="notification-message">
+                {{dialogData?.msg}}
+            </div>
+            <div class="notification-button">
+                <button class="btn-notification" (click)="yesDelete()">Yes</button>
+                <button class="btn-notification cancel-btn" (click)="close()">No</button>
+            </div>
+        </div>
+        }
+        @if(this.type === 'logout'){
+        <div class="dialog-content-inner">
+            <div class="notification-header">
+                <div class="notification-icon">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </div>
+                <div class="notification-title">Logout</div>
+            </div>
+            <div class="notification-message">
+                Are you sure, you want to <span> Logout?</span>
+            </div>
+            <div class="notification-button">
+                <button class="btn-notification" (click)="logout()">Yes</button>
+                <button class="btn-notification cancel-btn" (click)="close()">No</button>
+            </div>
+        </div>
+        }
+
+        @if(dialogData?.type === 'alert'){
+
+        <div class="dialog-content-inner">
+            <div class="notification-header">
+                <div class="notification-icon">
+                    <ion-icon name="alert-circle-outline"></ion-icon>
+                </div>
+                <div class="notification-title">Alert</div>
+            </div>
+            <div class="notification-message">
+                {{dialogData?.msg}}
+            </div>
+            <div class="notification-button">
+                <button class="btn-notification" (click)="yesDelete()">Yes</button>
+                <button class="btn-notification cancel-btn" (click)="close()">No</button>
+            </div>
+        </div>
+        }
+
+    </div>
+</div>

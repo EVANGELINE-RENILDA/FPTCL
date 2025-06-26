@@ -1,0 +1,83 @@
+.trust-side-oval {
+    width: 12px;
+    height: 8px;
+    border: 1px solid #eee;
+    background-color: #BAE5FF;
+    border-radius: 15px;
+}
+
+.will-side-oval {
+    width: 12px;
+    height: 8px;
+    border: 1px solid #eee;
+    background-color: #0079C4;
+    border-radius: 15px;
+}
+
+.dash-header {
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: underline;
+
+}
+
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.sub-data-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-light-color);
+
+    span {
+        background-color: #BAE5FF;
+        border-radius: 15px;
+        padding: 5px 8px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+}
+
+.chart-size{
+    height: 300px;
+}
+.flow-auto{
+    overflow-y: auto;
+}
+.new-1{
+    scrollbar-width: thin;    
+}
+*::-webkit-scrollbar {
+	width: 12px !important;
+  }
+  .pl32{
+    padding-left: 
+    40px ;
+  }
+  .h80{
+    height: 80%;
+  }
+  .pt8{
+    padding-top: 8px;
+  }
+
+  .ml-32{
+    margin-left: -32px;
+  }
+ 
+  app-line-chart,app-line-chart2,app-line-chart3,app-line-chart4,app-line-chart5{
+   width: 300px;
+    display: flex;
+  }
+  .active{
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(69, 111, 202);
+    background: #fff;
+    text-decoration: underline;
+  }
+  .col-md-21{
+    width: 20%;
+
+  }

@@ -1,0 +1,249 @@
+<div class="v-flex h100" appAccess="EXRSC" [parentId]="pageId">
+  <form #n="ngForm" class="content-header">
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="select" label="Document Currency" [(ngModel)]="exchangeRate.targetCurrencyValue"
+          name="targetCurrencyValue" [items]="initialData.DDLValues.ddlERTargetCurrency" key="constant"
+          keyName="description" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+      </div>
+      <div class="card-content">
+        <!-- <app-input-control type="select" label="Reporting Currency " [(ngModel)]="exchangeRate.baseCurrencyValue"
+          name="baseCurrencyValue" [items]="initialData.DDLValues.ddlERBaseCurrency" key="constant"
+          keyName="description" [btnClicked]="true" [required]="true" [errorTrue]="errorTrue"></app-input-control> -->
+        <view-label label="Reporting Currency " value="{{exchangeRate.baseCurrencyDescription}}"></view-label>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="date" label="Effective Date" [required]="true" [errorTrue]="errorTrue"
+          [(ngModel)]="exchangeRate.effectiveDate" name="effectiveDate"></app-input-control>
+      </div>
+      <div class="card-content">
+        <app-input-control type="number" label="Exchange Rate " [required]="true" [errorTrue]="errorTrue"
+          [(ngModel)]="exchangeRate.conversionRate" name="conversionRate" [min]="0.1" [decimal]="8" [max]="1000"
+          valueType="int"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <view-label label="Created By" value="{{exchangeRate.enteredByUsername}}"></view-label>
+      </div>
+      <div class="card-content">
+        <view-label label="Created Date" value="{{exchangeRate.enteredDate  |appDate}}"></view-label>
+      </div>
+      <!-- <div class="card-content">
+                <app-input-control type="date" [required]="true"
+                    label="Document Date | Effective Date"></app-input-control>
+            </div> -->
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <view-label label="Approved By" value="{{exchangeRate.approvedByUsername}}"></view-label>
+      </div>
+      <div class="card-content">
+        <view-label label="Approved Date" value="{{exchangeRate.approvedDate |appDate}}"></view-label>
+      </div>
+    </div>
+
+    <div class="status-header-box ">
+      <div class="card-box-1">
+        <div class="card-content text">
+
+          <view-label label="Status" status="{{exchangeRate.statusValue}}"
+            statusValue="{{exchangeRate.statusDescription}}"></view-label>
+        </div>
+        <!-- <div class="card-content btn-group">
+                    <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                </div> -->
+        <div class="d-flex align-items-center gap-10">
+          @if(this.exchangeRate.actExchangeRateId>0){
+          @if(exchangeRate.statusValue!=='APROV'){
+          <app-icon-button name="save" toolTip="Update" appButtonAccess="UPDBT"
+            (click)="saveExchangeRate()"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="openExchangeRate(exchangeRate.actExchangeRateId)"
+            appButtonAccess="REFBT"></app-icon-button>
+          <!-- <app-icon-button name="accept" toolTip="Complete"></app-icon-button> -->
+
+          }
+
+          }@else{
+          <app-icon-button name="save" toolTip="Save" (click)="saveExchangeRate()"
+            appButtonAccess="SAVBT"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="createNewExchangeRate()"
+            appButtonAccess="CLEBT"></app-icon-button>
+          <!-- <app-icon-button name="accept" toolTip="Complete"></app-icon-button> -->
+          }
+        </div>
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+
+  @if(this.exchangeRate.actExchangeRateId>0){
+  <div class="h100 content-body flex-1">
+    @if(selectedTab === 0){
+    @if(exchangeRate.actExchangeRateId>0){
+    <app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+      [dataSource]="tableNoteData" [hasIndex]="true">
+
+      <ng-template cellHeaderDef="add">
+    @if(exchangeRate.statusValue!=='APROV'){
+
+      <app-icon-button name="add" toolTip="Add New" (click)="createNewNotes(0)"
+        appButtonAccess="ExchRatNotNewBtn"></app-icon-button>
+    }
+
+      </ng-template>
+
+      <ng-template cellHeaderDef="notes" let-element>
+        <div class="header-cell-title"> Notes</div>
+        <div class="header-cell-subtitle">Created By | Date | Time</div>
+      </ng-template>
+      <ng-template cellDef="notes" let-element>
+        <div class="header-cell-title"> {{element.notesDetail}}</div>
+        <div class="header-cell-subtitle">
+          {{ element.createdFullName }} | {{ element.createdDate | appDate:appSetting.environment.dateViewFormatWithTime}}
+        </div>
+      </ng-template>
+
+    </app-table>
+    }
+    }
+  </div>
+
+  <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div> Notes </div>
+        </div>
+
+      </div>
+      <!-- <div class="open-arrow" id="trigger{{pageId}}">
+            <ion-icon name="chevron-down-outline"></ion-icon>
+          </div>
+        </div>
+        <div class="panel-footer-expand" id="footerpanel{{pageId}}">
+          <row>
+            <div class="col-md-4 footer-textarea">
+                <app-input-control type="textarea" [maxLength]="250" className="notes" label="Notes"></app-input-control>
+              </div>
+          </row>
+        </div> -->
+    </div>
+  </div>
+  }
+
+  <mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+    <div class="status-table-header">
+      <div class="changed-by_label">
+        Changed By | Changed Date
+      </div>
+      <div class="pl14">
+        Status
+      </div>
+    </div>
+    @for(data of exchangeRate.ilistentExchangeRateStatusHistory; track $index){
+    <div class="status-table-content">
+      <div class="changed-by">
+        {{data.changedByUserName}}
+        <div class="changed-by_sub">
+          {{data.effectiveDate| appDate :
+          appSetting.environment.dateViewFormatWithTime}}
+        </div>
+      </div>
+      <div class="status_align pl14">
+        <accouts-status-table [statusDescription]="data.statusDescription"></accouts-status-table>
+      </div>
+    </div>
+    }
+    <!-- <div class="mat-menu-drop"> -->
+    <!-- <app-table
+      [hideSelectAll]="true"
+      [showPaginator]="false"
+      [columns]="statusMenu"
+      [columnsName]="statusMenuName"
+      [dataSource]="tableStatusMenuData"
+    >
+      <ng-template cellHeaderDef="fileName">
+        <div class="header-cell-title">Changed By | Effective Date</div>
+      </ng-template>
+      <ng-template cellDef="fileName" let-element>
+        <div class="header-cell-title">{{element.changedBy}}</div>
+        <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+      </ng-template>
+    </app-table> -->
+    <!-- </div> -->
+
+  </mat-menu>
+
+  <ng-template #breadCrumb>
+    <div class="breadcrumb ">
+      <div class="d-flex justify-content-between">
+        <ul>
+          <li class="screen-name link">
+            <div class="back-btn">
+              <ion-icon src="assets/icons/back.svg" (click)="navigateToSearch()"></ion-icon>
+            </div>
+            <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+            <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+
+          </li>
+          <li class="screen-name link">
+            <div class="screen-text" (click)="navigateToSearch()">Exchange Rate </div>
+
+          </li>
+          <li class="screen-name">
+            <div class="screen-text"> Detail</div>
+
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #notesDialog>
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-title">
+          <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+          Exchange Rate > Details > Add Notes
+        </div>
+        <div class="slot-right">
+          <div class="btn-group">
+            <app-icon-button name="save" toolTip="Save" (click)="saveNotesForExchangeRate()"
+              appButtonAccess="EXNSB"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="clearTaxNote()"
+              appButtonAccess="EXNCB"></app-icon-button>
+            <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-content">
+        <div class="dialog-content-inner h100">
+          <form #x="ngForm">
+            <row>
+              <div class="col-md-6">
+                <app-input-control type="select" label="Status" [errorTrue]="errorTrueNotes" [required]="true"
+                  [(ngModel)]="exchangeNote.statusValue" name="statusvalue" [items]="statusddl" key="constant"
+                  keyName="description" defaultOption="--Select--"></app-input-control>
+              </div>
+              <div class="col-md-12 mb26">
+                <app-input-control type="textarea" className="notes-1" [maxLength]="250" label="Add Notes"
+                  [(ngModel)]="exchangeNote.notesDetail" name="notesDetail"></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>

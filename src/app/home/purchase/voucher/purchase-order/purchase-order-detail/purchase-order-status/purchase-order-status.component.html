@@ -1,0 +1,30 @@
+<!-- [parentId]="pageId" -->
+<div class="content-wrapper spacer16">
+    <app-table tableClass="search-table" [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [hasPagination]="true"
+        [dataSource]="parentData.pentPurchaseOrderVoucherStatusHistorySearchResult.ilstentPurchaseOrderVoucherStatusHistorySearchSet" (pageChanged)="pageChanged($event)" [hideSelectAll]="true">
+
+		<ng-template cellHeaderDef="changedDate">
+            <div class="header-cell-title">Changed Date</div>
+        </ng-template>
+        <ng-template cellDef="changedDate" let-element>
+            <div>{{element.effectiveDate | appDate: appSetting.environment.dateViewFormatWithTime}}</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="status">
+            <div class="header-cell-title">Status</div>
+        </ng-template>
+        <ng-template cellDef="status" let-element>
+            <div>{{element.statusDescription}}</div>
+        </ng-template>
+        <ng-template #slotLeft>
+			<div class="align-center">
+				<app-input-control type="select" label="Status" [(ngModel)]="parentData.voucherStatusValue"
+				name="voucherStatusValue" [items]="initialData.DDLValues.DDLVoucherStatus"
+				key="constant" keyName="description" class="th-mw150"></app-input-control>
+				<app-icon-button name="save" toolTip="Save" (click)="savePurPurchaseOrderVoucherStatus()"></app-icon-button>
+			</div>
+
+        </ng-template>
+    </app-table>
+</div>
+

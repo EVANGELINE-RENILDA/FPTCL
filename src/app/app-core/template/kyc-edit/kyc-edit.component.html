@@ -1,0 +1,56 @@
+@if(__edit === false){
+<row>
+
+        <view-label label="FNPF No" value="{{__ientKyc?.fnpfNo}}" class="pb10 col-md-12"></view-label>
+        <view-label label="Driving License No" value="{{__ientKyc?.driverLicenseNo}}"
+                class="pb10 col-md-12"></view-label>
+        <view-label label="Voter ID" value={{__ientKyc?.voterId}} class="pb10 col-md-12"></view-label>
+        <!-- <view-label label="National ID" value="{{__ientKyc?.nationalityDescription}}"
+                class="pb10 col-md-12"></view-label> -->
+        <view-label label="TIN" value="{{__ientKyc?.tin}}" class="pb10 col-md-12"></view-label>
+        <view-label label="Passport No" value="{{__ientKyc?.passportNo}}" class="pb10 col-md-12"></view-label>
+</row>
+}
+
+@if(__edit === true){
+<row>
+
+        <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                        [errorTrue]="__ientKyc?.passportNo===''&& __ientKyc?.tin===''&& __ientKyc?.nationalId==='' && __ientKyc?.voterId==='' && __ientKyc?.driverLicenseNo==='' && __ientKyc?.birthRegNo==='' && errorTrue "
+                        [required]="__ientKyc?.passportNo===''&& __ientKyc?.tin===''&& __ientKyc?.nationalId==='' && __ientKyc?.voterId==='' && __ientKyc?.driverLicenseNo==='' && __ientKyc?.birthRegNo==='' "
+                        [(ngModel)]="__ientKyc.fnpfNo" [maxLength]="20" name="fnpfNo "></app-input-control>
+        </div>
+        <div class="col-md-12"><app-input-control type="text" label="Driving License No"
+                        [(ngModel)]="__ientKyc.driverLicenseNo" name="driverLicenseNo " [maxLength]="20"
+                        [errorTrue]="__ientKyc?.passportNo===''&& __ientKyc?.tin===''&& __ientKyc?.nationalId==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.birthRegNo==='' && errorTrue "
+                        [required]="__ientKyc?.passportNo===''&& __ientKyc?.tin===''&& __ientKyc?.nationalId==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.birthRegNo==='' "></app-input-control>
+        </div>
+        <div class="col-md-12"><app-input-control type="text" label="Voter ID" [(ngModel)]="__ientKyc.voterId"
+                        name="voterId " [maxLength]="20"
+                        [errorTrue]="__ientKyc?.passportNo===''&& __ientKyc?.tin===''&& __ientKyc?.nationalId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.driverLicenseNo==='' && __ientKyc?.birthRegNo==='' && errorTrue "
+                        [required]="__ientKyc?.passportNo===''&& __ientKyc?.tin===''&& __ientKyc?.nationalId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.driverLicenseNo==='' && __ientKyc?.birthRegNo==='' "></app-input-control>
+        </div>
+        <div class="col-md-12">
+                {{__ientKyc?.nationalId}}<app-input-control type="text" label="National ID"
+                        [(ngModel)]="__ientKyc.nationalId" name="nationalId " [maxLength]="20"
+                        [errorTrue]="__ientKyc?.passportNo===''&& __ientKyc?.tin===''&& __ientKyc?.driverLicenseNo==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.birthRegNo==='' && errorTrue "
+                        [required]="__ientKyc?.passportNo===''&& __ientKyc?.tin===''&& __ientKyc?.driverLicenseNo==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo===''&& __ientKyc?.birthRegNo==='' "></app-input-control>
+        </div>
+        <div class="col-md-12"><app-input-control type="text" label="TIN" [(ngModel)]="__ientKyc.tin" name="tin "
+                        [maxLength]="20"
+                        [errorTrue]="__ientKyc?.passportNo===''&& __ientKyc?.nationalId===''&& __ientKyc?.driverLicenseNo==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.birthRegNo===''&& __ientKyc?.birthRegNo==='' && errorTrue "
+                        [required]="__ientKyc?.passportNo===''&& __ientKyc?.nationalId===''&& __ientKyc?.driverLicenseNo==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.birthRegNo===''&& __ientKyc?.birthRegNo==='' "></app-input-control>
+        </div>
+        <div class="col-md-12"><app-input-control type="text" label="Passport No" [(ngModel)]="__ientKyc.passportNo"
+                        name="passportNo " [maxLength]="20"
+                        [errorTrue]="__ientKyc?.tin===''&& __ientKyc?.nationalId===''&& __ientKyc?.driverLicenseNo==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo===''&& __ientKyc?.birthRegNo===''  && errorTrue "
+                        [required]="__ientKyc?.tin===''&& __ientKyc?.nationalId===''&& __ientKyc?.driverLicenseNo==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.birthRegNo==='' "></app-input-control>
+        </div>
+        <div class="col-md-12"><app-input-control type="text" label="Birth Reg No" [(ngModel)]="__ientKyc.birthRegNo"
+                        name="birthRegNo  " [maxLength]="20"
+                        [errorTrue]="__ientKyc?.tin===''&& __ientKyc?.nationalId===''&& __ientKyc?.driverLicenseNo==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.passportNo==='' && errorTrue "
+                        [required]="__ientKyc?.tin===''&& __ientKyc?.nationalId===''&& __ientKyc?.driverLicenseNo==='' && __ientKyc?.voterId==='' && __ientKyc?.fnpfNo==='' && __ientKyc?.passportNo==='' " />
+        </div>
+
+</row>
+}

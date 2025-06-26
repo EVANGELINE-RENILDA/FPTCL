@@ -1,0 +1,519 @@
+<div class="v-flex h100 ov-hi">
+  <form #a="ngForm">
+  <div class="content-header">
+      <div class="card-box border-right">
+        @if(!edit){
+        <div class="card-content">
+          <label>Customer Name</label>
+          <div class="content">
+            {{
+            creditNote.iActCustomerDetails.customerName
+            }}
+          </div>
+        </div>
+        } @else{
+        <label>Customer Name</label>
+        <app-search-customer name="actCustomerId" [disabled]="hideBtnBasedonStatus()" name="customerName"
+          (onSelect)="doCustomerSelect($event)" [hideNewBtn]="true" [hideStatus]="true" statusValue="ACTIV"
+          [(ngModel)]="creditNote.actCustomerId" name="actCustomerId" valueType="int" [required]="true"
+          [errorTrue]="errorTrue"></app-search-customer>
+        }
+        <div class="card-content">
+          <label>Customer Ledger Name</label>
+          <div class="content">{{creditNote.iActCustomerDetails.ientActLedger.ledgerName ?
+            creditNote.iActCustomerDetails.ientActLedger.ledgerName : '-'}}</div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Document No</label>
+          <div class="content">{{creditNote.creditNoteRefNo ? creditNote.creditNoteRefNo : '-'}}</div>
+        </div>
+        <div class="card-content">
+          <label>Document Name</label>
+          <div class="content">{{creditNote.pientVoucherConfig.voucherName ? creditNote.pientVoucherConfig.voucherName
+            :'-'}}</div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <view-label label="Branch" [value]="branchName"></view-label>
+        </div>
+
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Posting Date</label>
+          <div class="content">{{creditNote.approvedDate | appDate}}</div>
+        </div>
+        <div class="card-content ">
+          <app-input-control type="date" label="Document Date" [required]="true"
+            [errorTrue]="errorTrue" [(ngModel)]="creditNote.documentDate" name="documentDate"
+            [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Created Date</label>
+          <div class="content">{{creditNote.enteredDate | appDate}}</div>
+        </div>
+        <div class="card-content">
+          <label>Created By</label>
+          <div class="content">{{creditNote.enteredByUserName}}</div>
+        </div>
+      </div>
+      <div class="status-header-box ">
+        <div class="card-box-1">
+          <div class="card-content">
+            <div class="content">
+              <view-label class="mb26" label="Status" status="{{creditNote.statusValue}}"
+                statusValue="{{creditNote.statusDescription}}">
+              </view-label>
+            </div>
+          </div>
+          <div class="card-content btn-group">
+            <app-icon-button name="save" toolTip="Save" (click)="saveCreditNote()"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          </div>
+        </div>
+        <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="content-body">
+    @if(selectedTab === 0){
+    <div class="card-1">
+      <div class="end">
+        <div class="col-md-2">
+          <app-auto-get-item
+          [partyId]="creditNote.actCustomerId"
+          [displayText]="autoSearchItems.autoSearchText"
+          [voucherType]="creditNote.pientVoucherConfig.voucherTypeValue"
+          [voucherConfigId]="creditNote.actVoucherConfiId" [documentDate]="creditNote.documentDate"
+          [(ngModel)]="autoSearchItems.autoSearchItemId" name="autoSearchItemId"
+            [regionValue]="!!regionDetailValue?regionDetailValue:creditNote.regionValue"
+            (onSelect)="doGetItemSelect($event)"
+            [btnClicked]="
+            creditNote.documentDate === '' || !__isDisabled()  "
+          ></app-auto-get-item>
+        </div>
+        <app-icon-button name="add" toolTip="Get Item" (click)="getItemCNFromSI()"
+        [__disabled]="hideBtnBasedonStatus()"></app-icon-button>
+      </div>
+    </div>
+
+        <table class="app-table account-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <th class="app-table-header-cell tw50 text-center">#</th>
+              <th class="app-table-header-cell tw100">SI No</th>
+              <th class="app-table-header-cell tw100">
+                <div class="header-cell-title">Item | Service Code</div>
+                <div class="header-cell-subtitle">Name | Description</div>
+              </th>
+              <th class="app-table-header-cell tw100">Item Ledger</th>
+              <th class="app-table-header-cell tw100 text-right">
+                <div class="header-cell-title">Quantity</div>
+                <div class="header-cell-subtitle">Unit</div>
+              </th>
+              <th class="app-table-header-cell tw100 text-right">
+                <div class="header-cell-title">Unit Price</div>
+              </th>
+              <th class="app-table-header-cell tw100 text-right">
+                <div class="header-cell-title">Dis %</div>
+                <div class="header-cell-subtitle">Value</div>
+              </th>
+              <th class="app-table-header-cell tw150 text-right">
+                <div class="header-cell-title">After Discount %</div>
+                <div class="header-cell-subtitle">
+                  Rep CCY ({{ creditNote.currencyValue }})
+                </div>
+              </th>
+              <th class="app-table-header-cell tw100 text-right">
+                <div class="header-cell-title">Tax%</div>
+                <div class="header-cell-subtitle">Value</div>
+              </th>
+              <th class="app-table-header-cell tw100 text-right">
+                <div class="header-cell-title">Total</div>
+                <div class="header-cell-subtitle">
+                  Rep CCY({{ creditNote.currencyValue }})
+                </div>
+              </th>
+              @if(__isDisabled()){
+              <th class="app-table-header-cell tw100">
+                <div class="flex-center">
+                  <!-- <app-icon-button name="doc-delete" toolTip="Delete">
+                  </app-icon-button> -->
+                </div>
+              </th>
+              }
+            </tr>
+          </thead>
+          <tbody class="app-table-body">
+            @for (element of tableItemData; track
+            $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ $index + 1 }}
+              </td>
+              <td class="app-table-cell">
+                {{element.plentSalSalesInvoice.saleInvoiceReferenceNo ? element.plentSalSalesInvoice.saleInvoiceReferenceNo :'-'}}
+              </td>
+              <td class="app-table-cell text-right">
+                <div class="table-cell-header">
+                  {{ element.plentInvItem.itemName }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{element.plentInvItem.itemCode}}
+                </div>
+              </td>
+              <td class="app-table-cell">
+                {{element.plentLedger.ledgerName}}
+              </td>
+              <td class="app-table-cell text-right">
+                <div class="table-cell-header">
+                  {{ element.quantity }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{element.plentInvItem.stockUnitValue}}
+                </div>
+              </td>
+              <td class="app-table-cell text-right">
+                {{element.unitPrice}}
+              </td>
+              <td class="app-table-cell text-right">
+                <div class="table-cell-header">
+                  {{ element.discountPercentage }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{element.discountAmount}}
+                </div>
+              </td>
+              <td class="app-table-cell text-right">
+                <div class="table-cell-header">
+                  {{ element.totalAfterDiscount }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{element.totalAfterDiscountReportingCurrency}}
+                </div>
+              </td>
+              <td class="app-table-cell text-right">
+                <div class="table-cell-header">
+                  {{ element.taxPercentage }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{element.vatAmount}}
+                </div>
+              </td>
+              <td class="app-table-cell text-right">
+                <div class="table-cell-header">
+                  {{ element.totalPrice }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{element.totalPriceReportingCurrency}}
+                </div>
+              </td>
+              <td class="center">
+                <app-icon-button name="doc-delete" toolTip="Delete" (click)="itemsDelete(element,$index)">
+                </app-icon-button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+    } @else if(selectedTab === 1 && creditNote.actCreditNoteId>0){
+    <app-credit-note-detail-notes [parentData]="creditNote"  (notesValue)="getNotesValue($event)"></app-credit-note-detail-notes>
+    } @else if(selectedTab === 2  && creditNote.actCreditNoteId>0){
+    <app-credit-note-detail-attachment [parentData]="creditNote"></app-credit-note-detail-attachment>
+    }@else if(selectedTab === 3  && creditNote.actCreditNoteId>0){
+    <!-- <app-credit-note-detail-preview [parentData]="creditNote"></app-credit-note-detail-preview> -->
+
+
+    <div class="print-wrap">
+      <row>
+        <div class="col-md-4">
+          <div class="ptb14"></div>
+          <app-input-control type="textarea" [maxLength]="250" className="notes-2"
+            label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="creditNote.pientVoucherConfig.pdfOtherComments"
+            name="pdfOtherComments"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" (click)="viewSalCreditNote()"></app-icon-button>
+          </div>
+        </div>
+        <div class="col-md-8">
+            <div class="d-flex gap-5 end">
+              <button type="submit" class="approve-btn" (click)="openEmailHistory()">Send Email</button>
+              <!-- <app-send-email [name]="purchaseOrder.sentActVendor
+              .vendorName" [documentDate]="purchaseOrder.documentDate" [netAmount]="purchaseOrder.netAmount"
+                [refNumber]="purchaseOrder.purchaseQuotationRefNo"
+                [voucherName]="purchaseOrder.sentActVoucherConfig.voucherTypeDescription" [emailId]="purchaseOrder.sentActVendor
+              .emailId" [blob]="blob"></app-send-email> -->
+              <!-- <app-icon-button name="clear" toolTip="Close"></app-icon-button>-->
+               <button type="submit" class="cancel-btn" (click)="closePdf()"> Close </button>
+            </div>
+            <div class="pt8"></div>
+          <div class="pdf-viewer">
+            <div class="ab">
+              <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+
+
+
+
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        <!-- @if(creditNote.actCreditNoteId>0){ -->
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if(creditNote.statusValue === 'APROV'){
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+      }
+      <!-- } -->
+      </div>
+      <row>
+        <div class="px10">
+          <!-- <view-label type="sub" value="Currency(FJD)"></view-label> -->
+          <div class="d-flex">
+            <div class="header ">
+              Currency
+             </div>
+             <div class="value">
+             ( {{creditNote.docCurrencyValue}})
+             </div>
+          </div>
+        </div>
+        <div class="px10">
+          <view-label type="sub" label="Gross Amount" value="{{creditNote.totalAfterDiscount}}"></view-label>
+        </div>
+        <div class="px10">
+          <view-label type="sub" label="Tax Amount" value="{{creditNote.totalTaxAmount}}"></view-label>
+        </div>
+        <div class="px10">
+          <view-label type="sub" label="Net Amount" value="{{creditNote.totalNetAmount}}"></view-label>
+        </div>
+      </row>
+      <div class="open-arrow" id="trigger{{pageId}}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{pageId}}">
+      <row>
+        <div class="col-md-8">
+          <row>
+            <div class="col-md-5 footer-textarea">
+              <app-input-control type="textarea" [maxLength]="250" className="notes"
+                label="Common Narration Text" [(ngModel)]="creditNote.comments" name="comments"  [btnClicked]="__isDisabled()"></app-input-control>
+            </div>
+            <div class="col-md-3">
+              <view-label label="Document Currency" value="{{creditNote.docCurrencyValue}}" class="mb20"></view-label>
+              <form #conversiontab="ngForm">
+                <div class="col-md-10">
+                  <app-input-control type="number" label="Conversion Rate" [required]="true" [(ngModel)]="creditNote.currencyRate" [decimal]="8" [errorTrue]="errorTrue" errorText="Invalid Value" valueType="int"></app-input-control>
+                </div>
+              </form>
+            </div>
+            <table class="app-footer-table">
+              @for(currency of creditNote.plstentCurrencyExchangeRate; track $index){
+              <tr class="app-footer-table-row ">
+                <td class="app-footer-table-cell footer-header-txt text-end">
+                  {{currency.description}}
+                </td>
+                <td class="app-footer-table-cell footer-cnt-txt text-end">
+                  {{currency.documentCurrencyAmount}}
+                </td>
+              </tr>
+              }
+            </table>
+          </row>
+        </div>
+        <div class="col-md-4">
+          <row>
+            <div class="col-md-5">
+              <view-label label="Reporting Currency" value="{{creditNote.currencyValue}}"></view-label>
+            </div>
+            <table class="app-footer-table">
+              @for(currency of creditNote.plstentCurrencyExchangeRate; track $index){
+              <tr class="app-footer-table-row ">
+                <td class="app-footer-table-cell footer-header-txt text-end">
+                  {{currency.description}}
+                </td>
+                <td class="app-footer-table-cell footer-cnt-txt text-end">
+                  {{currency.reportingCurrencyAmount}}
+                </td>
+              </tr>
+              }
+            </table>
+          </row>
+        </div>
+      </row>
+
+
+    </div>
+  </div>
+</div>
+
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn"> <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon></div>
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToSales()">Sales</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Credit Note</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text" >Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+  <div class="status-table-header">
+    <div class="changed-by_label">
+      Changed By | Effective Date
+    </div>
+    <div class="pl14">
+      Status
+    </div>
+  </div>
+  @for (item of creditNote.plstentCreditNoteStatusHistory; track $index) {
+  <div class="status-table-content">
+    <div class="changed-by">
+      <!-- Chief Finance Officer -->
+      {{item.changedByUsername ?
+        item.changedByUsername:"-"}}
+      <div class="changed-by_sub">
+        {{
+          item.effectiveDate ? (item.effectiveDate | appDate : "datetime") : "-"
+          }}
+      </div>
+    </div>
+    <div class="status_align pl14">
+      {{ item.statusDescription ? item.statusDescription : "-" }}
+    </div>
+  </div>
+}
+
+</mat-menu>
+
+
+
+
+<ng-template #mailTemplate>
+  <div class="dialog-box p-3">
+    <!-- <div class=""> -->
+      <div class="label-value-head" >
+        Send Email
+      </div>
+      <div class="ml-auto">
+        <button mat-icon-button (click)="onNoClick()">
+          <!-- <ion-icon name="close-outline" (click)="this.dialog.closeDialog()"></ion-icon> -->
+          <app-icon-button name="close" (click)="dialogService.closeAll()"></app-icon-button>
+        </button>
+      <!-- </div>/ -->
+    </div>
+    <div class="mat-dialog-content" >
+            <scroll>
+            <form class="h100" #l="ngForm">
+           <div class="container-fluid h100">
+             <row>
+               <div class="col-md-12">
+                 <app-input-control type="email" label="To" [(ngModel)]="mailInfo.toMailList" name="toMailList" [required]="true" [errorTrue]="errorTrue" ></app-input-control>
+               </div>
+               <div class="col-md-12">
+                 <app-input-control  type="email" label="CC" [(ngModel)]="mailInfo.ccMailList" name="ccMailList" [multiEmail]="true"></app-input-control>
+               </div>
+               <div class="col-md-12 d-flex align-items-center">
+                 <div class="form-group">
+                   <label class="label-value">From :  </label>
+                   <div class="form-value">
+                     {{appService.userData.firstName}} {{appService.userData.middleName}} {{appService.userData.lastName}}
+                   </div>
+                 </div>
+               </div>
+               <div class="col-md-12 mt10">
+                 <app-input-control label="Subject" [(ngModel)]="fullSubject" name="fullSubject" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+               </div>
+               <div class="col-md-12">
+                 <div class="mail-content mail-box">
+                   <!-- <app-input-control type="textarea" label="Content" [(ngModel)]="fullContent" name="fullContent" [closeBlind]="true" [required]="true" [errorTrue]="errorTrue" [maxlength]="500"></app-input-control> -->
+                   <!-- <label class="label-value"> Content</label> -->
+                  <div class="form-value">
+                    <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                    [required]="true" [(ngModel)]="fullContent" name="fullContent"
+                    label="Content"></app-input-control>
+                  </div>
+                 </div>
+               </div>
+               <div class="col-md-12">
+                 <div class="down-content">
+                   <!-- {{downContent}}
+                     -->
+                     This is an auto-generated email. Please do not reply to this email.
+                     Please find the PDF below :-
+                 </div>
+               </div>
+              <!-- <div class="d-flex"> -->
+                <div class="col-md-6 d-flex gap-10  mt20">
+                  <app-checkbox [checked]="mailInfo.isIncludePdf === 'Y'" (change)="doPdfChange($event)" color="primary"></app-checkbox>Include Invoice
+                </div>
+                <div>
+
+                </div>
+              <!-- </div> -->
+               <div class="col-md-6 d-flex gap-10 mt20">
+                 <app-checkbox [checked]="mailInfo.isIncludeAttachment === 'Y'" (change)="doAttachment($event)" color="primary"></app-checkbox>Additional Attachment
+               </div>
+               <ng-container >
+                @if(mailInfo.isIncludeAttachment === 'Y'){
+
+                  <div class="p-3">
+                    <app-drop-zone type="set" [multiple]="true" (onUpload)="loadAttachment($event)"></app-drop-zone>
+                  </div>
+                }
+               </ng-container>
+              </row>
+              <div mat-dialog-actions class="d-flex align-items-baseline justify-content-end my-1 gap-10 mt30">
+                <button class="approve-btn"  (click)="sendEmailforVoucher(l)" >
+                    Send Mail
+                </button>
+                <button class="complete-btn"  >
+                  Refresh
+              </button>
+            </div>
+           </div>
+         </form>
+         </scroll>
+
+     </div>
+
+  </div>
+</ng-template>

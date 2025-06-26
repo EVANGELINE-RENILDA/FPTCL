@@ -1,0 +1,105 @@
+<button class="btn-icon {{name}}" [matTooltip]="toolTip" [disabled]="__disabled" [matTooltipPosition]="'above'">
+    @switch(name){
+    @case('add'){
+    <ion-icon src="assets/icons/add-new.svg"></ion-icon>
+    }
+    @case('search'){
+    <ion-icon src="assets/icons/search-round.svg"></ion-icon>
+    }
+    @case('save'){
+    <ion-icon src="assets/icons/save.svg"></ion-icon>
+    }
+    @case('clear'){
+    <ion-icon src="assets/icons/clear.svg"></ion-icon>
+    }
+    @case('cancel'){
+    <ion-icon src="assets/icons/cancel.svg"></ion-icon>
+    }
+    @case('close'){
+    <ion-icon src="assets/icons/close.svg"></ion-icon>
+    }
+    @case('self-assign'){
+    <div class="d-flex accept-btn align-items-center">
+        <ion-icon src="assets/icons/self-assign.svg"></ion-icon>
+    </div>
+    }
+    @case('accept'){
+    <div class="d-flex accept-btn align-items-center"> <ion-icon src="assets/icons/accept.svg"></ion-icon></div>
+
+    }
+    @case('down'){
+    <div class="d-flex accept-btn align-items-center"> <ion-icon name="chevron-down-outline"></ion-icon></div>
+    }
+    @case('download'){
+    <div class="d-flex accept-btn align-items-center"> <ion-icon name="cloud-download-outline"></ion-icon></div>
+    }
+    @case('expand'){
+    <div class="d-flex accept-btn align-items-center"> <ion-icon name="expand-outline"></ion-icon>
+    </div>
+    }
+    @case('collapse'){
+    <div class="d-flex accept-btn align-items-center"> <ion-icon name="chevron-collapse-outline" ></ion-icon>
+   </div>
+    }
+    @case('up'){
+    <div class="d-flex accept-btn align-items-center"> <ion-icon name="chevron-up-outline"></ion-icon></div>
+    }
+    @case('doc-close'){
+    <div style="font-size: 14px;">
+        <ion-icon src="assets/icons/doc-close.svg"></ion-icon>
+    </div>
+    }
+    @case('upload'){
+    <ion-icon src="assets/icons/upload.svg"></ion-icon>
+    }
+    @case('open'){
+    <div class="action-btn">
+        <ion-icon src="assets/icons/open.svg"></ion-icon>
+    </div>
+    }
+    @case('edit'){
+    <ion-icon src="assets/icons/edit.svg"></ion-icon>
+    }
+    @case('refresh'){
+    <ion-icon src="assets/icons/refresh.svg"></ion-icon>
+    }
+    @case('reassign'){
+    <ion-icon src="assets/icons/reassign.svg"></ion-icon>
+    }
+    @case('doc-upload'){
+    <ion-icon src="assets/doc_icon/upload_doc.svg"></ion-icon>
+    }
+    @case('doc-download'){
+    <ion-icon src="assets/doc_icon/download_doc.svg"></ion-icon>
+    }
+    @case('doc-view'){
+    <ion-icon src="assets/doc_icon/view_doc.svg"></ion-icon>
+    }
+    @case('doc-download-button'){
+    <div class="download-btn">Download</div>
+    }
+    @case('doc-delete'){
+    <ion-icon src="assets/doc_icon/delete_doc.svg"></ion-icon>
+    }
+    @case('eye'){
+    <ion-icon src="assets/icons/.svg"></ion-icon>
+    }
+    @case('table-add'){
+    <ion-icon name="add-outline"></ion-icon>
+    }
+    @case('swipe-in'){
+    <div class="swipe-btn">
+
+        <ion-icon name="chevron-back-outline"></ion-icon>
+    </div>
+    }
+    @case('swipe-out'){
+    <div class="swipe-btn">
+
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+    }
+
+    }
+
+</button>

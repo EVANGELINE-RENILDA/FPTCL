@@ -1,0 +1,207 @@
+.content-body {
+    height: 100%;
+    background-color: #ffffff;
+    margin: 12px 0;
+
+    app-table {
+        .app-table-header {
+            background-color: #E0E0E0;
+        }
+
+        .app-table-header-cell {
+            border: 1px solid #DBE0E1;
+            border-right-color: transparent;
+            border-left-color: transparent;
+            font-size: 12px;
+            font-weight: 700;
+            padding-left: 8px;
+            padding-right: 8px;
+            color: var(--text-dark-color);
+
+            app-icon-button {
+                .btn-icon {
+                    width: 25px;
+                    height: 25px;
+                    font-size: 25px;
+                    color: #000
+                }
+            }
+        }
+
+        .app-table-cell {
+            padding-right: 8px;
+            padding-left: 8px;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-dark-color);
+            border-bottom: 1px solid #e1dbdb;
+
+            app-icon-button {
+                .btn-icon {
+                    width: 25px;
+                    height: 25px;
+                    font-size: 25px;
+                    color: #000
+                }
+            }
+
+            .table-cell-header {
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .table-cell-subtitle {
+                font-size: 10px;
+            }
+
+
+        }
+
+        // .app-table-cell:first-child {
+        //     padding: 8px;
+        //     position: relative;
+
+        //     &::after {
+        //         content: "";
+        //         position: absolute;
+        //         top: 8px;
+        //         bottom: 0;
+        //         right: 0;
+        //         width: 1px;
+        //         height: 70%;
+        //         background: var(--text-dark-color);
+        //     }
+        // }
+
+        .table-container {
+            border: none;
+
+            .table-container-header {
+                padding-top: 10px;
+            }
+        }
+
+        .app-table-spacer {
+            padding: 0;
+        }
+    }
+}
+.content-body1 {
+    height: 100%;
+    background-color: #ffffff;
+    margin: 12px 0 24px 0;
+
+    app-table {
+        .app-table-header {
+            background-color: #E0E0E0;
+        }
+
+        .app-table-header-cell {
+            border: 1px solid #DBE0E1;
+            border-right-color: transparent;
+            border-left-color: transparent;
+            font-size: 12px;
+            font-weight: 700;
+            padding-left: 8px;
+            padding-right: 8px;
+            color: var(--text-dark-color);
+
+            app-icon-button {
+                .btn-icon {
+                    width: 25px;
+                    height: 25px;
+                    font-size: 25px;
+                    color: #000
+                }
+            }
+        }
+
+        .app-table-cell {
+            padding-right: 8px;
+            padding-left: 8px;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-dark-color);
+            border-bottom: 1px solid #e1dbdb;
+
+            app-icon-button {
+                .btn-icon {
+                    width: 25px;
+                    height: 25px;
+                    font-size: 25px;
+                    color: #000
+                }
+            }
+
+            .table-cell-header {
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .table-cell-subtitle {
+                font-size: 10px;
+            }
+
+
+        }
+
+        // .app-table-cell:first-child {
+        //     padding: 8px;
+        //     position: relative;
+
+        //     &::after {
+        //         content: "";
+        //         position: absolute;
+        //         top: 8px;
+        //         bottom: 0;
+        //         right: 0;
+        //         width: 1px;
+        //         height: 70%;
+        //         background: var(--text-dark-color);
+        //     }
+        // }
+
+        .table-container {
+            border: none;
+
+            .table-container-header {
+                padding-top: 10px;
+            }
+        }
+
+        .app-table-spacer {
+            padding: 0;
+        }
+    }
+}
+
+.search_text {
+    app-input-control {
+        .itg-form-group {
+            width: 221px;
+        }
+    }
+}
+
+.print-wrap {
+    padding: 8px;
+    width: 100%;
+}
+
+.label-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-light-color);
+}
+
+.add-box {
+    padding-bottom: 10px;
+    margin-left: auto;
+    padding-right: 20px;
+
+}
+
+.cell-mw-100p {
+    width: 100px;
+    max-width: 100px;
+}

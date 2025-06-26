@@ -1,0 +1,964 @@
+<div class="content-wrapper">
+  <app-multi-page-url [id]="id" url="/home/trust/trust-withdrawal/detail"></app-multi-page-url>
+  <div class="sticky-card">
+    <row>
+      <div class="col-md-3">
+        <view-label label="Trust App Ref No" value="{{ trustWithdrawal.applicationRefNo }}"></view-label>
+      </div>
+      <div class="col-md-3">
+        <view-label label="Trust Withdrawal Type / Sub Type" value="{{ trustWithdrawal.withdrawalTypeDescription }}/ {{
+            trustWithdrawal.withdrawalSubTypeDescription
+          }}"></view-label>
+      </div>
+
+      <div class="col-md-3">
+        <view-label label="Available Amount / Eligible Amount (FJD)" value="{{ trustWithdrawal.availableAmount }} / {{
+            trustWithdrawal.eligibleAmount
+          }}"></view-label>
+      </div>
+      <div class="col-md-3">
+        <view-label label="Application Stage / Action Status" value="{{ trustWithdrawal.applicationStageDescription }} / {{
+            trustWithdrawal.actionStatusDescription
+          }}"></view-label>
+      </div>
+      <div class="col-md-12 mb20"></div>
+      <div class="col-md-3">
+        <view-label label="Lead Ref No" value="{{ trustWithdrawal.leadRefNo }}"></view-label>
+      </div>
+      <!-- <div class="col-md-3">
+        <view-label label="Requested Amount (FJD)" value="{{ trustWithdrawal.requestedAmount }}"></view-label>
+      </div> -->
+      <!-- <div class="col-md-3">
+        <view-label label="Payment Status"
+          value="{{ trustWithdrawal.ientWithdrawalPayment.paymentStatusValue }}"></view-label>
+      </div> -->
+      <div class="col-md-3">
+        <view-label label="Assigned Officer" value="{{
+            trustWithdrawal.ientTrustWithdrawalApplicationAssignedOfficerHistory
+              .assignedToFullname
+          }}"></view-label>
+      </div>
+    </row>
+  </div>
+  <app-tab-group (tabChange)="onTabChange($event)">
+    <app-tab tabTitle="Application">
+      <accordion>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon name="person-circle-outline"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Trust Withdrawal Information</div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <form #a="ngForm">
+              <row>
+                <div class="col-md-6 border-right">
+                  <div class="view-label-container-title mb26">
+                    <div class="view-label-container-title gap-10 d-flex align-items-center">
+                      <ion-icon name="person-outline" class="pr5"></ion-icon>
+                      Application Information
+                    </div>
+                  </div>
+                  <div class="d-flex gap-10 p10">
+                    <div class="col-md-6">
+                      <view-label [btnClicked]="true" label="Application Ref No" class="pb20"
+                        value="{{ trustWithdrawal.applicationRefNo }}"></view-label>
+                      <view-label [btnClicked]="true" label="Lead Ref No" class="pb20"
+                        value="{{ trustWithdrawal.leadRefNo }}"></view-label>
+                      @if(editTrust && this.trustWithdrawal.applicationStageValue!=='APPWD'){
+                      <app-input-control label="Mode Of Application" type="select"
+                        [(ngModel)]="trustWithdrawal.modeOfApplicationValue" name="modeOfApplicationValue"
+                        [items]="initialData.DDLValues.DDLModeOfApplication" key="constant" keyName="description"
+                        defaultOption="--Select--" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                      <app-input-control label="Withdrawal Type" type="select"
+                        [(ngModel)]="trustWithdrawal.withdrawalTypeValue" name="withdrawalTypeValue" (onSelect)="
+                          getSubTypeByType(trustWithdrawal.withdrawalTypeValue)
+                        " [items]="initialData.DDLValues.DDLWithDrawalType" key="constant" keyName="description"
+                        defaultOption="--Select--" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+
+                      @if(trustWithdrawal.withdrawalTypeValue !==''){
+
+                      <app-input-control label="Withdrawal Sub Type" type="select"
+                        [(ngModel)]="trustWithdrawal.withdrawalSubTypeValue" name="withdrawalSubTypeValue"
+                        [items]="subTypeValue" key="constant" keyName="description" defaultOption="--Select--"
+                        [errorTrue]="
+                          this.trustWithdrawal.withdrawalTypeValue !==
+                            'OTHER' && errorTrue
+                        " [required]="
+                          this.trustWithdrawal.withdrawalTypeValue !== 'OTHER'
+                        "></app-input-control>
+                      }
+
+                      <app-input-control label="Reason For Withdrawal" type="textarea" className="notes"
+                        [(ngModel)]="trustWithdrawal.reasonForWithdrawal" name="reasonForWithdrawal" [errorTrue]="
+                          this.trustWithdrawal.withdrawalTypeValue ===
+                            'OTHER' && errorTrue
+                        " [required]="
+                          this.trustWithdrawal.withdrawalTypeValue === 'OTHER'
+                        " [maxLength]="250"></app-input-control>
+                      } @else {
+
+                      <view-label label="Mode Of Application" class="pb20" value="{{
+                          trustWithdrawal.modeOfApplicationDescription
+                        }}" [errorTrue]="errorTrue" [required]="true"></view-label>
+                      <view-label label="Withdrawal Type" class="pb20"
+                        value="{{ trustWithdrawal.withdrawalTypeDescription }}" [errorTrue]="errorTrue"
+                        [required]="true"></view-label>
+                      <view-label label="Withdrawal Sub Type" class="pb20" value="{{
+                          trustWithdrawal.withdrawalSubTypeDescription
+                        }}" [errorTrue]="errorTrue" [required]="true"></view-label>
+                      <view-label label="Reason For Withdrawal" class="pb20"
+                        value="{{ trustWithdrawal.reasonForWithdrawal }}" [errorTrue]="errorTrue"
+                        [required]="true"></view-label>
+                      }
+                    </div>
+                    <div class="col-md-6">
+                      <!-- <view-label [btnClicked]="true" label="Entered By" class="pb20"
+                                                value="{{trustWithdrawal.enteredByFullname}}"></view-label> -->
+                      <!-- <view-label [btnClicked]="true" label="Entered Date" class="pb20"
+                                            value="{{trustWithdrawal.entredDate | appDate}}"></view-label> -->
+                      <view-label [btnClicked]="true" label="Applied By" class="pb20"
+                        value="{{ trustWithdrawal.appliedByFullname }} "></view-label>
+                      <view-label [btnClicked]="true" label="Applied Date" class="pb20"
+                        value="{{ trustWithdrawal.appliedDate | appDate }}"></view-label>
+                        <view-label label="Applied Branch" class="pb20"
+                        value="{{ trustWithdrawal.appliedBranchDescription }}"></view-label>
+                      @if(editTrust && this.trustWithdrawal.applicationStageValue !== 'APPWD') {
+                      <!-- <app-input-control label="Applied Branch" type="select"
+                        [(ngModel)]="trustWithdrawal.appliedBranchValue" name="appliedBranchValue"
+                        [items]="initialData.DDLValues.DDLBranch" key="constant" keyName="description"
+                        defaultOption="--Select--" [errorTrue]="errorTrue" [required]="true"></app-input-control> -->
+                      <app-input-control label="Inspection Date" type="date"
+                        [(ngModel)]="trustWithdrawal.inspectionDate" name="inspectionDate" [errorTrue]="
+                          trustWithdrawal.withdrawalTypeValue === 'MAINT' &&
+                          errorTrue
+                        " [required]="
+                          trustWithdrawal.withdrawalTypeValue === 'MAINT'
+                        "></app-input-control>
+                      }
+                      @else{
+                      <view-label label="Inspection Date" class="pb20"
+                        value="{{ trustWithdrawal.inspectionDate }}"></view-label>
+                      }
+                      <!-- <view-label label="Assigned Officer" class="pb20"
+                                                value="{{trustWithdrawal.assignedToFullname}}"></view-label> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 border-right">
+                  <div class="view-label-container-title mb26">
+                    <div class="view-label-container-title d-flex align-items-center gap-10">
+                      <ion-icon name="card-outline"></ion-icon>
+                      Payment Information
+                    </div>
+                  </div>
+                  <div class="p10">
+                    @if(editTrust && this.trustWithdrawal.applicationStageValue !== 'APPWD'){
+                    <app-input-control label="Payment Mode" [(ngModel)]="trustWithdrawal.paymentModeValue"
+                      name="paymentModeValue" [items]="initialData.DDLValues.DDLWithDrawalPaymentMode" key="constant"
+                      keyName="description" defaultOption="--Select--" type="select" [errorTrue]="errorTrue"
+                      [required]="true"></app-input-control>
+                    <div class="pb20">
+                      <div class="pb10 checkbox-label">
+                        Withdrawal By Organization
+                      </div>
+                      <div>
+                        <!-- <app-checkbox
+                          (click)="withdrawalByOrg($event)"
+                          [checked]="
+                            trustWithdrawal.withdrawlForOrganization === 'Y'
+                          "
+                        ></app-checkbox> -->
+                      </div>
+                    </div>
+                    <!-- <app-input-control
+                      label="Organization"
+                      [items]="organizationDDl"
+                      [btnClicked]="
+                        trustWithdrawal.withdrawlForOrganization !== 'Y'
+                      "
+                      [errorTrue]="
+                        trustWithdrawal.withdrawlForOrganization === 'Y' &&
+                        errorTrue
+                      "
+                      [required]="
+                        trustWithdrawal.withdrawlForOrganization === 'Y'
+                      "
+                      type="select"
+                      key="id"
+                      keyName="code"
+                      valueType="int"
+                      [(ngModel)]="trustWithdrawal.organizationId"
+                      (onSelect)="getOrgDetails(trustWithdrawal.organizationId)"
+                      defaultOption="--Select--"
+                      name="organizationId"
+                    ></app-input-control> -->
+                    <!-- <app-input-control
+                      defaultOption="--Select--"
+                      label="Bank Name"
+                      type="select"
+                      [(ngModel)]="trustWithdrawal.organizationBankId"
+                      [errorTrue]="
+                        trustWithdrawal.withdrawlForOrganization === 'Y' &&
+                        errorTrue
+                      "
+                      [required]="
+                        trustWithdrawal.withdrawlForOrganization === 'Y'
+                      "
+                      name="organizationBankId"
+                      [items]="orgBankDDL"
+                      key="id"
+                      keyName="code"
+                      (onSelect)="
+                        getAccountNoFromBank(trustWithdrawal.organizationBankId)
+                      "
+                    ></app-input-control> -->
+                    <!-- <view-label
+                      class="pb20"
+                      label="Account No"
+                      value="{{ trustWithdrawal.organizationAccountNo }}"
+                      [btnClicked]="
+                        trustWithdrawal.withdrawlForOrganization !== 'Y'
+                      "
+                    ></view-label> -->
+                    } @else{
+
+                    <view-label label="Payment Mode" value="{{ trustWithdrawal.paymentModeDescription }}"
+                      class="pb20"></view-label>
+                    <!-- @if(trustWithdrawal.withdrawlForOrganization === 'Y'){
+                    <view-label
+                      label="Withdrawal By Organization"
+                      value="Yes"
+                      class="pb20"
+                    ></view-label>
+                    } @else if(trustWithdrawal.withdrawlForOrganization ===
+                    'N'){
+                    <view-label
+                      label="Withdrawal By Organization"
+                      value="No"
+                      class="pb20"
+                    ></view-label>
+                    } -->
+                    <!-- @else{
+                    <view-label
+                      label="Withdrawal By Organization"
+                      value=""
+                      class="pb20"
+                    ></view-label>
+                    } -->
+                    <!-- <view-label
+                      label="Organization Name"
+                      value="{{ trustWithdrawal.organizationName }}"
+                      class="pb20"
+                    ></view-label> -->
+                    <!-- <view-label
+                      label="Bank Name"
+                      value="{{ trustWithdrawal.bankName }}"
+                      class="pb20"
+                    ></view-label> -->
+                    <!-- <view-label
+                      class="pb20"
+                      label="Account No"
+                      value="{{ trustWithdrawal.organizationAccountNo }}"
+                    ></view-label> -->
+                    }
+                    <view-label label="Available Amount (FJD)" value="{{ trustWithdrawal.availableAmount }}"
+                      class="pb20"></view-label>
+                    <view-label label="Eligible Amount (FJD)" value="{{ trustWithdrawal.eligibleAmount }}"
+                      class="pb20"></view-label>
+
+
+                    <view-label label="Requested Amount (FJD)" value="{{ trustWithdrawal.requestedAmount }}"
+                      class="pb20"></view-label>
+                    @if(editTrust&& (this.trustWithdrawal.applicationStageValue === 'APPWD' || this.trustWithdrawal.applicationStageValue === 'APWDA')){
+                    <app-input-control label="Approved Amount (FJD)" [(ngModel)]=" trustWithdrawal.approvedAmount"
+                      name="approvedAmount" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                    }
+                    @else{
+
+                    <view-label label="Approved Amount (FJD)" value="{{ trustWithdrawal.approvedAmount }}"
+                      class="pb20"></view-label>
+                    }
+
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="view-label-container-title mb26">
+                    <div class="view-label-container-title d-flex align-items-center gap-10">
+                      <ion-icon name="person-outline"></ion-icon>
+                      Trust Account Information
+                    </div>
+                  </div>
+                  <div class="v-flex justify-content-between h90">
+                    <div class="p10">
+                      <view-label label="Trust Account No" value="{{ trustWithdrawal.trustAccountNo }}"
+                        class="pb20"></view-label>
+                      <view-label label="Benificiary Name" value="{{ trustWithdrawal.beneficiaryCustomerName }}"
+                        class="pb20"></view-label>
+                      <view-label label="Guardian Name" value="{{ trustWithdrawal.guardianName }}"
+                        class="pb20"></view-label>
+                      <view-label label="Guardian Relationship" value="{{
+                          trustWithdrawal.relationshipTypeDescription
+                        }}" class="pb20"></view-label> 
+                    </div>
+                    <div class="d-flex end gap-10">
+                      @if(editTrust ){
+                      <app-icon-button name="save" toolTip="Save" (click)="saveTrustWithDrawal()"></app-icon-button>
+                      <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="refreshTrustWithdrawal()"></app-icon-button>
+                      } @else {
+                      @if(trustWithdrawal.applicationStatusValue!=='APPRJ' && (trustWithdrawal.applicationStageValue
+                      ==='WDCRT' || trustWithdrawal.applicationStageValue ==='RECSD'||
+                      trustWithdrawal.applicationStageValue ==='APPWD'|| trustWithdrawal.applicationStageValue
+                      ==='APWDA')){
+
+                      <app-icon-button name="edit" toolTip="Edit" (click)="editTrustWithdrawal()"></app-icon-button>
+                      } }
+                    </div>
+                  </div>
+                </div>
+              </row>
+            </form>
+          </accordion-body>
+        </accordion-item>
+        <!-- <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon src="assets/icons/accordian/conduct-i.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Document Summary</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <row>
+                            <div class="outer-content-wrapper w100">
+                                <div class="content-wrapper">
+                                    <div>
+
+                                        <app-table [columns]="clientDocumentColumns"
+                                            [columnsName]="clientDocumentColumnsName" [hideSelectAll]="true"
+                                            [dataSource]="tabledocumentData" [showPaginator]="false"
+                                            columnID="trustApplicationDocumentId">
+                                            <ng-template cellDef="documentTypeDescription" let-element>
+                                                {{element.documentTypeDescription}}
+                                            </ng-template>
+                                            <ng-template cellHeaderDef="fileName">
+                                                <div class="w200px">
+                                                    File Name
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellDef="fileName" let-element>
+                                                <div class="overflow-wrap">
+                                                    {{element.ientFile.fileName}}
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellHeaderDef="documentTypeDescription">
+                                                <div class="w200px">Document Name</div>
+                                            </ng-template>
+                                            <ng-template cellDef="fileExtension" let-element>
+                                                {{element.ientFile.fileExtension}}
+                                            </ng-template>
+                                            <ng-template cellDef="fileSize" let-element>
+                                                {{element.ientFile.fileSize | fileSize}}mb
+                                            </ng-template>
+                                            <ng-template cellHeaderDef="action">
+                                                <div class="text-center">
+                                                    Action
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellDef="action" let-element>
+                                                @if(element.ientFile.fileName!==''){
+
+                                                <div class="d-flex align-items-center">
+                                                    <app-icon-button name="doc-download"
+                                                        (click)="downloadFile(element)">
+
+                                                    </app-icon-button>
+                                                    @if(this.type.isEditable === 'Y'){
+
+                                                    <app-icon-button name="doc-delete"
+                                                        (click)="checkDocumentDelete(element)" />
+                                                    }
+
+
+                                                    <app-icon-button name="doc-view" (click)="viewFile(element)">
+
+                                                    </app-icon-button>
+                                                </div>
+                                                }
+                                            </ng-template>
+                                        </app-table>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </row>
+                    </accordion-body>
+                </accordion-item> -->
+        <accordion-item>
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon name="cash-outline"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Payment Information</div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            @if(showSubtabData === true){
+                  <app-tab-sub-group (tabChange)="onSubTabChange($event)">
+              @if(trustWithdrawal.paymentModeValue === 'BKTRN'){
+                <app-sub-tab tabTitle="Organization">
+                  <div class="outer-content-wrapper">
+                    <div class="content-wrapper mb26">
+                      <app-table [columns]="organizationColumns" [columnsName]="organizationColumnsName"
+                        [dataSource]="tableOrgData" columnID="customerBankId" [pagination]="pagination"
+                        [hasPagination]="true" [hideSelectAll]="true">
+                        <ng-template cellDef="requestedAmount" let-element>
+                          <div class="text-end pr16">{{element.requestedAmount}}</div>
+                        </ng-template>
+                        <ng-template cellHeaderDef="requestedAmount">
+                          <div class="text-end pr16">Requested Amount</div>
+                        </ng-template>
+                        <ng-template cellDef="approvedAmount" let-element>
+                          <div class="text-end pr16">{{element.approvedAmount}}</div>
+                        </ng-template>
+                        <ng-template cellHeaderDef="approvedAmount">
+                          <div class="text-end pr16">Approved Amount</div>
+                        </ng-template>
+                        <ng-template cellDef="action" let-element>
+                          <app-icon-button name="open" toolTip="Open"
+                            (click)="openOrganization(element.trustWithdrawalApplicationOrganizationId)"></app-icon-button>
+                        </ng-template>
+                        <ng-template #slotRight>
+                          <app-icon-button name="add" class="pr5px" toolTip="Add New"
+                            (click)="createOrganization()"></app-icon-button>
+                        </ng-template>
+                      </app-table>
+                    </div>
+                  </div>
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Bank">
+                  <div class="outer-content-wrapper">
+                    <div class="content-wrapper mb26">
+                      <app-table [columns]="bankColumns" [columnsName]="bankColumnsName" columnID="customerBankId"
+                        [dataSource]="tableBankData" [pagination]="pagination" [hasPagination]="true"
+                        [hideSelectAll]="true">
+                        <ng-template cellDef="requestedAmount" let-element>
+                          <div class="text-center pr16">{{element.requestedAmount}}</div>
+                        </ng-template>
+                        <ng-template cellDef="approvedAmount" let-element>
+                          <div class="text-center pr16">{{element.approvedAmount}}</div>
+                        </ng-template>
+                        <ng-template cellDef="action" let-element>
+                          <app-icon-button name="open" toolTip="Open"
+                            (click)="openBank(element.trustWithdrawalApplicationOrganizationId)"></app-icon-button>
+                        </ng-template>
+                        <ng-template #slotRight>
+                          <app-icon-button name="add" class="pr5px" toolTip="Add New"
+                            (click)="createbank()"></app-icon-button>
+                        </ng-template>
+                      </app-table>
+                    </div>
+                  </div>
+                </app-sub-tab>
+              }
+              @else {
+                <app-sub-tab tabTitle="Cheque">
+                <div class="outer-content-wrapper">
+                  <div class="content-wrapper mb26">
+                    <app-table [columns]="chequeColumns" [columnsName]="chequeColumnsName" columnID="customerBankId"
+                      [pagination]="pagination" [dataSource]="tableChequeData" [hasPagination]="true"
+                      [hideSelectAll]="true">
+                      <ng-template cellDef="chequeDate" let-element> {{element.chequeDate | appDate}} </ng-template>
+                      <ng-template cellDef="requestedAmount" let-element>
+                        <div class="text-end pr16">{{element.requestedAmount}}</div>
+                      </ng-template>
+                      <ng-template cellDef="approvedAmount" let-element>
+                        <div class="text-center pr16">{{element.approvedAmount}}</div>
+                      </ng-template>
+                      <ng-template cellDef="action" let-element>
+                        <app-icon-button name="open" toolTip="Open"
+                          (click)="openCheque(element.trustWithdrawalApplicationOrganizationId)"></app-icon-button>
+                      </ng-template>
+                      <ng-template #slotRight>
+                        <app-icon-button name="add" class="pr5px" toolTip="Add New"
+                          (click)="createcheque()"></app-icon-button>
+                      </ng-template>
+                    </app-table>
+                  </div>
+                </div>
+              </app-sub-tab>
+              }
+              
+            </app-tab-sub-group>
+            }
+        
+          </accordion-body>
+        </accordion-item>
+      </accordion>
+    </app-tab>
+    <app-tab tabTitle="Process">
+      @if(processDatas === true){
+      <accordion>
+        @for(type of
+        trustWithdrawal.lstentTrustWithdrawalApplicationProcessHistory; track
+        $index){ @switch (type.trustWithdrawalApplicationStageValue) { @case
+        ('RECSD') {
+        <app-support-document [(application)]="trustWithdrawal" [type]="type"></app-support-document>
+        } @case ('VERDO') {
+        <app-verify-document [(application)]="trustWithdrawal" [type]="type"></app-verify-document>
+        } @case ('DRATN') {
+        <app-determine-threshold [(application)]="trustWithdrawal" [type]="type"></app-determine-threshold>
+        } @case ('INSRV') {
+        <app-inspection [(application)]="trustWithdrawal" [type]="type"></app-inspection>
+        } @case ('APPWD') {
+        <app-below-threshold [(application)]="trustWithdrawal" [type]="type"></app-below-threshold>
+        } @case ('APWDA') {
+        <app-above-threshold [(application)]="trustWithdrawal" [type]="type"></app-above-threshold>
+        } @case ('OBTCO') {
+        <app-court-order [(application)]="trustWithdrawal" [type]="type"></app-court-order>
+      } @case ('MAKPY') {
+        <app-make-payment [(application)]="trustWithdrawal" [type]="type"></app-make-payment>
+      } @case ('PAYVR') {
+        <app-payment-verification [(application)]="trustWithdrawal" [type]="type"></app-payment-verification>
+      } @case ('PAYAP') {
+        <app-payment-approval [(application)]="trustWithdrawal" [type]="type"></app-payment-approval>
+      } @case ('PAYIN') {
+        <app-payment-initiation [(application)]="trustWithdrawal" [type]="type"></app-payment-initiation>
+      } @case ('APPCM') {
+        <app-application-completion [(application)]="trustWithdrawal" [type]="type"></app-application-completion>
+      } 
+      } }
+      </accordion>
+      }
+    </app-tab>
+    <app-tab tabTitle="Payment">
+      <div class="outer-content-wrapper">
+        <div class="content-wrapper pt0">
+          <app-table [columns]="paymentColumns" [columnsName]="paymentColumnName" [hasPagination]="true"
+            [dataSource]="tablePaymentData" [hideSelectAll]="true">
+            <ng-template cellDef="documemtDate" let-ele> {{ele.documemtDate | appDate}} </ng-template>
+            <ng-template cellHeaderDef="moneyIn">
+              <div class="text-end">Money In</div>
+            </ng-template>
+            <ng-template cellDef="moneyIn" let-ele>
+              <div class="text-end">{{ele.moneyIn}}</div>
+            </ng-template>
+            <ng-template cellHeaderDef="moneyOut">
+              <div class="text-end">Money Out</div>
+            </ng-template>
+            <ng-template cellDef="moneyOut" let-ele>
+              <div class="text-end">{{ele.moneyOut}}</div>
+            </ng-template>
+          </app-table>
+        </div>
+      </div>
+    </app-tab>
+    <app-tab tabTitle="History">
+      <accordion>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon name="notifications-outline"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Notes</div>
+                  <div class="accordian-title-count">{{ notesLength }}</div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <div class="p16px pb26 wrap-content">
+                  <!-- <div class="justify-content-end d-flex">
+                                        <app-icon-button name="add" toolTip="Create"
+                                            (click)="createTrustWithdrawalNotes()"></app-icon-button>
+                                    </div> -->
+
+                  @for (item of notesList; track $index) {
+                  <div class="border-bottom notes-list">
+                    <div class="mx10">{{ item.notes }}</div>
+                    <div class="d-flex justify-content-end notes-context">
+                      <div style="padding-right: 5px">
+                        {{ item.enteredByFullname }}
+                      </div>
+                      <div class="notes-border-left">
+                        {{ item.enteredDate }}
+                      </div>
+                      <div style="padding-right: 5px"></div>
+                      <div class=" notes-border-left status-{{
+                          item.actionStatusValue
+                        }}">
+                        {{ item.actionStatusDescription }}
+                      </div>
+                      <div style="padding-right: 5px"></div>
+                      <div class=" notes-border-left status-{{
+                          item.applicationStageValue
+                        }}">
+                        {{ item.applicationStatusDescription }}
+                      </div>
+                      <div class="card-1-header-label px-2"></div>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Assigned Officer</div>
+                  <div class="accordian-title-count">
+                    {{ assignOfficerData.length }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                  [hasPagination]="true" [dataSource]="assignOfficerData" [hideSelectAll]="true">
+                  <ng-template cellDef="statusDescription" let-element>
+                    <div class="status status-{{ element.applicationStatusValue }}">
+                      {{ element.applicationStatusDescription }}
+                    </div>
+                  </ng-template>
+                  <ng-template cellDef="assignedDate" let-element>
+                    {{ element.assignedDate | appDate }}
+                  </ng-template>
+                  <ng-template cellDef="assignedByFullname" let-element>
+                    {{ element.assignedByFullname }}
+                  </ng-template>
+                  <!-- @if(customerUpdate.assignedOfficerFlag === 'True'){ -->
+                  <ng-template #slotRight>
+                    <!-- <div class="d-flex align-items-center">
+
+                                            <form #p="ngForm" class="col-md-10 w250"><app-input-control
+                                                    type="select"></app-input-control></form>
+                                            <div class="col-md-2">
+                                                <div class="col-md-2"><app-icon-button name="reassign"
+                                                        toolTip="Reassign"></app-icon-button></div>
+                                            </div>
+
+                                        </div> -->
+                  </ng-template>
+                  <!-- } -->
+                </app-table>
+              </div>
+            </div>
+          </accordion-body>
+        </accordion-item>
+      </accordion>
+      <div class="bg-white-padd">
+        <app-tab-sub-group>
+          <app-sub-tab tabTitle="Status History">
+            <div class="status-padding">
+              <app-status-history1 [data]="statusHistoryDataSource"></app-status-history1>
+            </div>
+          </app-sub-tab>
+          <app-sub-tab tabTitle="Communication History">
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper">
+                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName" [hasPagination]="true"
+                  [dataSource]="emailHistoryTableData" [hideSelectAll]="true">
+                  <ng-template cellDef="toEmailId" let-element>
+                    {{ element.ientCommunicationTracking.toEmailId }}
+                  </ng-template>
+                  <ng-template cellDef="sentDate" let-element>
+                    {{ element.ientCommunicationTracking.sentDate | appDate }} |
+                    {{
+                    element.ientCommunicationTracking.sentDate
+                    | appDate : "hh:mm a"
+                    }}
+                  </ng-template>
+                  <ng-template cellDef="sentStatusDescription" let-element>
+                    <div class="status-{{
+                        element.ientCommunicationTracking.sentStatusValue
+                      }}">
+                      {{
+                      element.ientCommunicationTracking.sentStatusDescription
+                      }}
+                    </div>
+                  </ng-template>
+
+                  <ng-template cellDef="action" let-element>
+                    <app-icon-button name="open" toolTip="Open" (click)="viewEmailDetail(element)"></app-icon-button>
+                  </ng-template>
+                </app-table>
+              </div>
+            </div>
+          </app-sub-tab>
+        </app-tab-sub-group>
+      </div>
+    </app-tab>
+  </app-tab-group>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/trust.svg"></ion-icon>
+        <div class="screen-text">Trust Withdrawal</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon src="assets/icons/human-icon.svg"></ion-icon>Trust Withdrawal
+        Application > Detail > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveTrustWithdrawalNotes()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="createTrustWithdrawalNotes('clear')"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      @if(data.showErrorMessage){
+      <div class="error-panel">
+        <app-error-message></app-error-message>
+      </div>
+      }
+      <div class="dialog-content-inner h100">
+        <form #notesForm="ngForm">
+          <row>
+            <div class="col-md-4 mb26">
+              <app-input-control type="select" label="Status" [items]="notesddl" key="constant" keyName="description"
+                [(ngModel)]="trustWithdrawalNotes.applicationStatusValue" defaultOption="--Select--" name="statusValue"
+                [errorTrue]="errorTrue" [required]="true"></app-input-control>
+            </div>
+            <div class="col-md-4 mb26">
+              <app-input-control type="select" label="Action Status" [items]="actionStatusDDL" key="constant"
+                keyName="description" [(ngModel)]="trustWithdrawalNotes.actionStatusValue" defaultOption="--Select--"
+                name="actionStatusValue" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+            </div>
+            <div class="col-md-4 mb26">
+              <app-input-control type="select" label="Application Stage" [items]="stageDDL" key="constant"
+                keyName="description" [(ngModel)]="trustWithdrawalNotes.applicationStageValue"
+                defaultOption="--Select--" name="applicationStageValue" [errorTrue]="errorTrue"
+                [required]="true"></app-input-control>
+            </div>
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                [(ngModel)]="trustWithdrawalNotes.notes" name="notes" [maxLength]="250" name="notes" [required]="true"
+                label="Notes"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #organizationInfo>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">@if(trustWithdrawalOrganization.trustWithdrawalApplicationOrganizationId ===
+        0){Add}@else{Edit} Organization</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(trustWithdrawalOrganization.trustWithdrawalApplicationOrganizationId === 0){
+
+          <app-icon-button name="save" toolTip="Save" (click)="saveOrganization()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearOrganization()"></app-icon-button>
+          }
+          @else {
+          <app-icon-button name="save" toolTip="Update" (click)="saveOrganization()"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh"
+            (click)="refreshOrganization(trustWithdrawalOrganization.trustWithdrawalApplicationOrganizationId)"></app-icon-button>
+          }
+          <app-icon-button name="close" toolTip="Close" (click)="closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <div class="dialog-content-inner h100">
+          <form #o="ngForm">
+            <row>
+              <div class="col-md-6 mb26">
+                <app-input-control type="select" label="Organization" [items]="organizationDDl" key="id" keyName="code"
+                  defaultOption="--Select--" valueType="int" [errorTrue]="errorTrue"
+                  (onSelect)="getOrgDetailsSub($event)" [required]="true"
+                  [(ngModel)]="trustWithdrawalOrganization.organizationId" name="organizationId"></app-input-control>
+                <app-input-control type="select" label="Bank Name" [items]="orgBankDDL" key="id" keyName="code"
+                  valueType="int" defaultOption="--Select--" [(ngModel)]="trustWithdrawalOrganization.bankId"
+                  name="bankId" (onSelect)="getAccountNoDDl(trustWithdrawalOrganization.organizationId,$event)"
+                  [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                <app-input-control type="select" label="Account No" [items]="accountNoDDL" key="constant"
+                  keyName="constant" defaultOption="--Select--" [(ngModel)]="trustWithdrawalOrganization.accountNo"
+                  name="accountNo" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+              </div>
+              <div class="col-md-6 mb26">
+                <app-input-control type="number" label="Requested Amount" [errorTrue]="errorTrue"
+                  [(ngModel)]="trustWithdrawalOrganization.requestedAmount" name="requestedAmount" [required]="true"
+                  [min]="0.1" [decimal]="2"></app-input-control>
+                  @if(this.trustWithdrawal.applicationStageValue === 'APPWD' || this.trustWithdrawal.applicationStageValue === 'APWDA'){
+                    <app-input-control type="number" label="Approved Amount"
+                      [(ngModel)]="trustWithdrawalOrganization.approvedAmount" name="approvedAmount"
+                      [decimal]="2"></app-input-control>
+                  }
+                  @else {
+                    <app-input-control type="number" label="Approved Amount" [btnClicked]="true"
+                    [(ngModel)]="trustWithdrawalOrganization.approvedAmount" name="approvedAmount"
+                    [decimal]="2"></app-input-control>
+                  }
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #bankInfo>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">@if(trustWithdrawalOrganization.trustWithdrawalApplicationOrganizationId ===
+        0){Add}@else{Edit} Bank</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(trustWithdrawalOrganization.trustWithdrawalApplicationOrganizationId === 0){
+
+          <app-icon-button name="save" toolTip="Save" (click)="saveBankDetails()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearOrganization()"></app-icon-button>
+          }
+          @else {
+          <app-icon-button name="save" toolTip="Update" (click)="saveBankDetails()"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshBank()"></app-icon-button>
+          }
+          <app-icon-button name="close" toolTip="Close" (click)="closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <div class="dialog-content-inner h100">
+          <form #b="ngForm">
+            <row>
+              <div class="col-md-6 mb26">
+
+                <app-input-control type="select" label="Bank Name" [items]="bankDDLforBank" key="id" keyName="code"
+                  valueType="int" defaultOption="--Select--" [(ngModel)]="trustWithdrawalOrganization.bankId"
+                  name="bankId" (onSelect)="getAccountsDDLforBankTab($event)" [errorTrue]="errorTrue"
+                  [required]="true"></app-input-control>
+                <app-input-control type="select" label="Account No" [items]="accountsDDLForBank" key="constant"
+                  keyName="constant" defaultOption="--Select--" [(ngModel)]="trustWithdrawalOrganization.accountNo"
+                  name="accountNo" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+              </div>
+              <div class="col-md-6 mb26">
+                <app-input-control type="number" label="Requested Amount" [errorTrue]="errorTrue"
+                  [(ngModel)]="trustWithdrawalOrganization.requestedAmount" name="requestedAmount" [required]="true"
+                  [min]="0.1" [decimal]="2"></app-input-control>
+                <app-input-control type="number" label="Approved Amount"
+                  [(ngModel)]="trustWithdrawalOrganization.approvedAmount" name="approvedAmount"
+                  [decimal]="2"></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #chequeInfo>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Add Cheque</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(trustWithdrawalOrganization.trustWithdrawalApplicationOrganizationId === 0){
+
+          <app-icon-button name="save" toolTip="Save" (click)="saveCheckDetails()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearOrganization()"></app-icon-button>
+          }
+          @else {
+          <app-icon-button name="save" toolTip="Update" (click)="saveCheckDetails()"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshBank()"></app-icon-button>
+          }
+          <app-icon-button name="close" toolTip="Close" (click)="closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      @if(data.showErrorMessage){
+      <div class="error-panel">
+        <app-error-message></app-error-message>
+      </div>
+      }
+      <div class="dialog-content-inner h100">
+        <form #c="ngForm">
+          <row>
+            <div class="col-md-6 mb26">
+              <!-- <div class="checkbox-label"></div> -->
+              <!-- <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption">
+                <mat-radio-button value="1">Organization</mat-radio-button>
+                <mat-radio-button value="2">Bank</mat-radio-button>
+              </mat-radio-group> -->
+              <app-input-control type="select" label="Organization" [items]="organizationDDl" key="id" keyName="code"
+                defaultOption="--Select--" [(ngModel)]="trustWithdrawalOrganization.organizationId"
+                name="organizationId" valueType="int" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+              <app-input-control type="number" label="Cheque Amount"
+                [(ngModel)]="trustWithdrawalOrganization.chequeAmount" name="chequeAmount"></app-input-control>
+              <app-input-control type="date" label="Cheque Date" [(ngModel)]="trustWithdrawalOrganization.chequeDate"
+                name="chequeDate"></app-input-control>
+            </div>
+            <div class="col-md-6 mb26">
+              <app-input-control type="number" label="Requested Amount" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="trustWithdrawalOrganization.requestedAmount" name="requestedAmount"></app-input-control>
+              <app-input-control type="number" label="Approved Amount"
+                [(ngModel)]="trustWithdrawalOrganization.approvedAmount" name="approvedAmount"
+                [decimal]="2"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,112 @@
+<div class="content-wrapper" appAccess="CUSTR">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)"  [hideSelectAll]="true">
+      
+
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" ></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="navigateToDetail()"></app-icon-button>
+        </ng-template>
+        <!-- <ng-template cellDef="docNo" let-element>
+            <div class="status status-{{element.docNo}}" (click)="navigateToDetail()">{{element.docNo}}</div> -->
+        <!-- </ng-template> -->
+      
+        <!-- <ng-template cellDef="status" let-element>
+            <div class="text">{{element.status}}</div>
+        </ng-template> -->
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+            <div class="d-flex align-items-center w100">
+                <!-- <div class="col-md-10 mt10">
+                    <app-input-control type="select" placeholder="Document Name"></app-input-control>
+                </div> -->
+                <div class="px10">
+                    <view-label label="Report Generating Date & Time" value="06/04/2024 10:03 AM"></view-label>
+                </div>
+                <div class="col-md-1">
+                    <app-icon-button name="download" toolTip="Export To Excel"
+                    appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+                </div>
+            </div>
+        </ng-template>
+      
+        <!-- <ng-template #slotMiddle>
+            <table-status-sort [approvedCount]="1" [processingCount]="0"></table-status-sort>
+        </ng-template> -->
+    </app-table>
+</div>
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Vendor Wise Purchase Report</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control label="Vendor Name" defaultOption="Select" [search]="true"></app-input-control>
+                                </div>                                                              
+                                <div class="col-md-12 ">
+                                    <app-input-control label="To Date " type="date"></app-input-control>
+                                </div>                                                              
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Branch"
+                                      ></app-input-control>
+                                </div>
+                           </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="select" label="Fiscal Year" ></app-input-control>
+                                </div>
+                                    </row>
+                        </div>
+                        <div class="col-md-3 border-right">
+                            <row>
+                                <div class="col-md-12 ">
+                                    <app-input-control type="date" label="From Date" ></app-input-control>
+                                </div>
+                         </row>
+                        </div>
+                       
+                    </row>
+
+                </div>
+            </scroll>  
+        </div> 
+    </div>
+</ng-template>
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text">Purchase</div>
+
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Vendor Wise Purchase Report
+                </div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

@@ -1,0 +1,41 @@
+.mt20 {
+  margin-top: 20px;
+}
+.pr {
+  padding-right: 10px;
+  font-weight: bold;
+}
+.pb {
+  padding-bottom: 12px;
+}
+.mt10 {
+  margin-top: 10px;
+}
+.container1 {
+  position: relative;
+  // height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  border: 0.5px solid #dbe0e1;
+}
+.padding {
+  padding: 0 20px;
+}
+.font {
+  color: #777;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.space-around {
+  justify-content: space-around;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.pb15 {
+  padding-bottom: 15px;
+}

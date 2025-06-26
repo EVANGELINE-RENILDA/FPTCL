@@ -1,0 +1,204 @@
+<div class="v-flex h100">
+  <div class="center fow-600">Statement of Account - Vendor</div>
+  <div class="d-flex justify-content-end header-bg pr20">
+    <app-icon-button
+      name="download"
+      toolTip="Export To Excel"
+    ></app-icon-button>
+  </div>
+  <table class="w100 p5px pl10">
+    <tr>
+      <td class="w50">
+        <div class="lh-15 mb15">
+          <strong>Vendor Address:</strong><br />
+          ITGalax Solutions Private Limited <br />
+          1st Floor,M-2,Type-II, Thiruvanmiyur,Chennai,Tamilnadu,India.
+        </div>
+        <tr>
+          <td class="pr10 lh-15">
+            Report Generating Date & Time <br />
+            <strong>{{ currentDate }}</strong>
+          </td>
+          <td class="lh-15">
+            Statement Date <br />
+            <strong>{{ currentDate }}</strong>
+          </td>
+        </tr>
+      </td>
+      <td class="w50 v-flex">
+        <div class="lh-15">
+          <strong>Customer Address:</strong><br />
+          SK Enterprises <br />
+          1st Floor,M-2,Type-II, Thiruvanmiyur, Chennai, Tamilnadu,India.
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div class="flex-1 relative">
+    <scroll>
+      <table class="app-table account-table">
+        <thead class="app-table-head">
+          <tr class="app-table-header-row">
+            <th class="app-table-header-cell text-center">Doc Date</th>
+            <th class="app-table-header-cell">Doc No</th>
+            <th class="app-table-header-cell">Voucher Type</th>
+            <th class="app-table-header-cell">Vendor Ref No</th>
+            <th class="app-table-header-cell">Currency</th>
+            <th class="app-table-header-cell">Purchase Value</th>
+            <th class="app-table-header-cell">Payment Value</th>
+            <th class="app-table-header-cell">Balance</th>
+          </tr>
+        </thead>
+        @if( tableData.Table?.length > 0 ) {
+        <ng-container>
+          <tbody class="app-table-body">
+            @for (element of tableData.Table; track element; let i = $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ element.t_document_date | date : dateFormat }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.t_document_no }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.t_voucher_type_desc }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.t_vendor_reference_number }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.t_currency }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.t_sales_value | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.t_receipt_value | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.t_running_balance | appCurrency }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </ng-container>
+        }
+      </table>
+    </scroll>
+  </div>
+
+  <div class="flex-1 relative">
+    <scroll>
+      @if(tableData.Table?.length > 0) {
+      <table class="app-table account-table">
+        <thead class="app-table-head">
+          <tr class="app-table-header-row">
+            <th class="app-table-header-cell text-center">Vendor Code</th>
+            <th class="app-table-header-cell">Vendor Name</th>
+            <th class="app-table-header-cell">Vendor Currency</th>
+            <th class="app-table-header-cell">Total Balance Due</th>
+            <th class="app-table-header-cell">0 - 30 Days Due</th>
+            <th class="app-table-header-cell">31 - 60 Days Due</th>
+            <th class="app-table-header-cell">61 - 90 Days Due</th>
+            <th class="app-table-header-cell">90 Days Due</th>
+          </tr>
+        </thead>
+        <ng-container>
+          <tbody class="app-table-body">
+            <tr class="app-table-row">
+              <td class="app-table-cell">
+                {{ vendorData.VENDOR_CODE }}
+              </td>
+              <td class="app-table-cell">
+                {{ vendorData.VENDOR_NAME }}
+              </td>
+              <td class="app-table-cell">
+                {{ vendorData.CURRENCY_NAME }}
+              </td>
+              <td class="app-table-cell">
+                {{ vendorData.Total_Bal_Amt | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ vendorData.DaysDue0to30 | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ vendorData.DaysDue31to60 | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ vendorData.DaysDue61to90 | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ vendorData.DaysDue90 | appCurrency }}
+              </td>
+            </tr>
+          </tbody>
+        </ng-container>
+      </table>
+      }
+    </scroll>
+  </div>
+</div>
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Summary of Statement Account-Vendor Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+          <app-icon-button
+            name="close"
+            (click)="dialog.closeDialog()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner">
+        <form #l="ngForm">
+          <div class="col-md-3 border-right">
+            <div class="col-md-12 mb26">
+              <app-input-control
+                type="date"
+                label="Statement Date"
+                defaultOption="DD/MM/YYYY"
+                [(ngModel)]="searchParams.toDate"
+                name="toDate"
+              ></app-input-control>
+            </div>
+            <div class="col-md-12 mb26">
+              <app-input-control
+                type="select"
+                label="Currency Value"
+                defaultOption="--Select--"
+                valueType="string"
+                [items]="initialData.DDLValues?.iddlcurrency"
+                [(ngModel)]="searchParams.currencyValue"
+                name="currencyValue"
+                key="constant"
+                keyName="description"
+              ></app-input-control>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text">Purchase</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Summary of Statement Account-Vendor</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Statement of Account - Vendor</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

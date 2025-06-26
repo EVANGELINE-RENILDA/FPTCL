@@ -1,0 +1,264 @@
+<div class=" v-flex content-wrapper">
+  <div class="d-flex space">
+    <div>
+      <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="200px"></app-search>
+    </div>
+    <div class="ml-auto d-flex align-items-center mr-3">
+      <div class="mr-3 d-flex">
+        <app-checkbox color="primary" (change)="ytdValueChanged($event)" [checked]="ytdChecked"
+          class="mr-3"></app-checkbox> YTD
+        Enabled
+
+        <app-checkbox color="primary" [checked]="trialBalanceReport.isExcludeZero === 'Y'"
+          (change)="excludeZero($event)" class="mr-3"></app-checkbox> Exclude
+        Zero
+        <div class="mr-3">
+          <app-icon-button [name]="isToggle ? 'collapse' :'expand'" [toolTip]="isToggle ? 'Collapse All' :'Expand All'"
+            (click)="toggleExpand()"></app-icon-button>
+        </div>
+        <div>
+          <app-icon-button name="download" toolTip="Export To Excel"
+            (click)="loadAndGenerateExcelFileForTrialBalanceReport()"></app-icon-button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="ml-auto d-flex  justify-content-end margin">
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center"><ion-icon name="square" class="parant-color"></ion-icon></div>
+      <div>Parent Group</div>
+    </div>
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center"><ion-icon name="square" class="child-color"></ion-icon></div>
+      <div>Child Group</div>
+    </div>
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center"><ion-icon name="square" class="text-dark"></ion-icon></div>
+      <div>Ledger</div>
+    </div>
+  </div>
+
+  <div class="flex-1 relative h100">
+    <div class="ab pt-2">
+      <div class="rel">
+        <div class="result-panel">
+          <div class="d-flex report-header">
+            <div class="report-header-flex">
+              <div class="report-header-bg">
+                <div class="d-flex align-items-center parant">
+                  <div class="report-header-flex d-flex align-items-center">
+                    <div class="space"></div>
+                    <span>Particular</span>
+                  </div>
+                  <div class="report-header-const  border-left-secondary">
+                    <div class="center ml-210">Closing Balance</div>
+                    <div class="d-flex align-items-center space-around xp-3">
+                      <div class="w100 text-right">
+                        <span>Debit</span>
+                      </div>
+                      <div class="w100 text-right">
+                        <span>Credit</span>
+                      </div>
+                    </div>
+                  </div>
+                  @if(ytdChecked){
+
+                  <div class="report-header-const  border-left-secondary">
+                    <div class="center ml-210">YTD Closing Balance</div>
+                    <div class="d-flex align-items-center space-around xp-3">
+                      <div class="w100 text-right">
+                        <span>YTD Debit</span>
+                      </div>
+                      <div class="w100 text-right">
+                        <span>YTD Credit</span>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex report-parent-body parant">
+
+            @if(allDataList.length !==0){
+            <!-- {{allDataList | json}} -->
+            <div class="w100 report-header-flex">
+
+              @for (ydata of allDataList; track $index) {
+              <!-- {{ydata.closingAllData | json}} -->
+              <app-trial-balance-loop #trialBalanceLoopComponent [closingData]="ydata.closingAllData"
+                [listofData]="ydata.ytdData" [expandAll]="isToggle" [ytdChecked]="ytdChecked" [testList]="testList"
+                class="level-1 border-bottom-secondary ">
+              </app-trial-balance-loop>
+              }
+
+
+            </div>
+            }
+            @if(allDataList.length ===0){
+            <!-- <ng-container *ngIf="allDataList.length ===0 && !data.loadingTrue && !initialLoad"> -->
+            <div class="w100 report-header-flex">
+              <div class="ab pt100">
+                <div class="rel">
+                  <app-empty-state></app-empty-state>
+                </div>
+              </div>
+            </div>
+            <!-- </ng-container> -->
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @if(allDataList.length !== 0){
+  <!-- <ng-container *ngIf="allDataList.length !== 0"> -->
+  <div class="d-flex align-items-center report-body border-top-secondary border-bottom-secondary parant">
+    <div class="report-data-flex">
+      <div class="report-data-flex-child">
+        Profit and Loss Ac
+      </div>
+    </div>
+    @if(ytdChecked){
+    <div class="report-data-const text-center">
+      <div class="report-data-const-child d-flex align-items-center space-around xp-3">
+        <div class="w100 text-right px35">{{ trialBalanceReport.profitandLossDebitTotal}}</div>
+        <div class="w100 text-right px35">{{ trialBalanceReport.profitandLossCreditTotal}}</div>
+      </div>
+    </div>
+    }
+    <div class="report-data-const text-center">
+
+      <div class="report-data-const-child d-flex align-items-center space-around xp-3">
+        <div class="w100 text-right px35">{{ ytd_TrialBalance.profitandLossDebitTotal}}</div>
+        <div class="w100 text-right px35">{{ ytd_TrialBalance.profitandLossCreditTotal}}</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="d-flex align-items-center report-body border-bottom-secondary parant">
+    @if(trialBalanceReport.differenceInLedgerDebitOpeningBalance ||
+    trialBalanceReport.differenceInLedgerCreditOpeningBalance){
+
+    <div class="report-data-flex">
+      <div class="report-data-flex-child">
+        Difference in Opening Balance
+      </div>
+    </div>
+    <div class="report-data-const text-center">
+      @if(ytdChecked){
+      <div class="report-data-const-child d-flex align-items-center space-around xp-3">
+        <div class="w100 text-right px35">{{ trialBalanceReport.differenceInLedgerDebitOpeningBalance }}</div>
+        <div class="w100 text-right px35">{{ trialBalanceReport.differenceInLedgerCreditOpeningBalance }}</div>
+      </div>
+      }
+    </div>
+    <div class="report-data-const text-center">
+
+      <div class="report-data-const-child d-flex align-items-center space-around xp-3">
+        <div class="w100 text-right px35">{{ ytd_TrialBalance.differenceInLedgerDebitOpeningBalance }}</div>
+        <div class="w100 text-right px35">{{ ytd_TrialBalance.differenceInLedgerCreditOpeningBalance }}</div>
+      </div>
+
+    </div>
+    }
+  </div>
+
+  <div class="d-flex align-items-center report-body border-bottom-secondary">
+    <div class="report-data-flex">
+      <div class="report-data-flex-child">
+        Total
+      </div>
+    </div>
+    <div class="report-data-const text-center">
+      <div class="report-data-const-child d-flex align-items-center space-around xp-3">
+        <div class="w100 text-right px35">{{ trialBalanceReport.totalDebit}}</div>
+        <div class="w100 text-right px35">{{ trialBalanceReport.totalCredit }}</div>
+      </div>
+    </div>
+    @if(ytdChecked){
+    <!-- <ng-container *ngIf="ytdChecked"> -->
+    <div class="report-data-const text-center">
+      <div class="report-data-const-child d-flex align-items-center space-around xp-3">
+        <div class="w100 text-right px35">{{ ytd_TrialBalance.totalDebit}}</div>
+        <div class="w100 text-right px35">{{ ytd_TrialBalance.totalCredit }}</div>
+      </div>
+    </div>
+    }
+    <!-- </ng-container> -->
+  </div>
+  }
+  <!-- </ng-container> -->
+</div>
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Trial Balance Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row>
+              <div class="col-md-4">
+                <app-input-control label="Fiscal Year" type="select" [(ngModel)]="trialBalanceReport.fiscalYearId"
+                  name="fiscalYearId" key="id" keyName="description" [items]="initialData.DDLValues.DDLFiscalYear"
+                  defaultOption="--Select--" tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+              </div>
+              <!-- <div class="col-md-3">
+                <app-input-control label="Region" type="select" [(ngModel)]="trialBalanceReport.regionValue"
+                  name="regionValue" [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"
+                  defaultOption="--Select--" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+              </div> -->
+
+
+              <div class="col-md-4">
+                <app-input-control label="From Date" type="date" [(ngModel)]="trialBalanceReport.fromDate"
+                  name="fromDate" [maxDate]="trialBalanceReport.toDate" tabIndex="100"
+                  (keyup.enter)="onSearch()"></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control type="date" label="To Date" [(ngModel)]="trialBalanceReport.toDate" name="toDate"
+                  [minDate]="trialBalanceReport.fromDate" tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+              </div>
+
+            </row>
+          </form>
+
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+
+      <li class="screen-name link">
+        @if(regionValue === 'REGIO'){
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+        }
+        @else {
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+        }
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Trial Balance</div>
+      </li>
+
+    </ul>
+  </div>
+</ng-template>

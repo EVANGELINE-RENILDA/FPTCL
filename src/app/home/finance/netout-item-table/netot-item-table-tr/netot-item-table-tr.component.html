@@ -1,0 +1,107 @@
+
+@if(_voucher === 'SALES'){
+    <td class="mat-cell">
+      {{_index + 1}}
+    </td>
+    <td class="mat-cell min-width-290">
+      @if(_index === 0){
+        <app-input-control [(ngModel)]="_netoutVoucher.ientAdvanceActVoucherConfig.voucherName" name="voucherName{{_index}}" [btnClicked]="true"
+        ></app-input-control>
+      } @else {
+        <app-input-control type="select" [(ngModel)]="_items.actVoucherConfigId" name="actVoucherConfigId{{_index}}"
+        [items]="DDLVouchers" key="id" keyName="code" [required]="true" [errorTrue]="errorTrue"
+        valueType="int" (onSelect)="setDDLVoucherNo()" [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+      }   
+      
+    </td>
+    <td class="mat-cell min-width-290">
+      <app-input-control type="select" [(ngModel)]="_items.actVoucherId" name="actVoucherId{{_index}}"
+        [items]="DDLVoucherNo | appFilter: {'ledgerId': _items.actVoucherConfigId}" key="id" keyName="code"
+        (onSelect)="loadVoucherDetail()" [required]="true" [errorTrue]="errorTrue"
+        valueType="int" [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+    </td>
+    <td class="mat-cell min-width-90">
+      <tr class="mat-sub-row d-flex align-items-center ">
+        <td class="mat-sub-cell mr-05 text-form-right text-right w50" matTooltip="Debit Maximum Amount : {{(_items.debitMaximumQuantity | float) !== 0 ? _items.debitMaximumQuantity:'Disabled'}}">
+          <app-input-control type="number" [(ngModel)]="_items.debitAmountDocCurrency" name="debitAmountDocCurrency{{_index}}"
+            [closeBlind]="true" (onChange)="changeDetected();gainLossForPointZeroOneDifference(_items.debitAmountDocCurrency,_index);" [max]="(_items.debitMaximumQuantity | float) ? (_items.debitMaximumQuantity | float) : -1" [decimal]="2" [btnClicked]="(_items.disableDebit==='Y' ||_items.actVoucherId ===0) || hideBtnBasedonStatus()" ></app-input-control>
+        </td>
+        <td class="mat-sub-cell mr-05 text-form-right text-right w50" matTooltip="Credit Maximum Amount : {{(_items.creditMaximumQuantity | float) !== 0 ? _items.creditMaximumQuantity:'Disabled'}}">
+          <app-input-control type="number" [(ngModel)]="_items.creditAmountDocCurrency" name="creditAmountDocCurrency{{_index}}"
+             [closeBlind]="true" (onChange)="changeDetected();gainLossForPointZeroOneDifference(_items.creditAmountDocCurrency,_index)" [decimal]="2" [max]="(_items.creditMaximumQuantity | float) ?(_items.creditMaximumQuantity | float) : -1" [btnClicked]="_items.disableCredit==='Y' || hideBtnBasedonStatus() ||_items.actVoucherId ===0"></app-input-control>
+        </td>
+      </tr>
+    </td>
+    <td class="mat-cell text-right">
+      {{_items.exchangeRate}}
+    </td>
+    <td class="mat-cell min-width-90">
+      <tr class="mat-sub-row d-flex align-items-center ">
+        <td class="mat-sub-cell w50 text-right">
+          {{_items.debitAmountRepCurrency | appCurrency}}
+        </td>
+        <td class="mat-sub-cell w50 text-right">
+          {{_items.creditAmountRepCurrency | appCurrency}}
+        </td>
+      </tr>
+    </td>
+    <td class="mat-cell text-right">
+      <a mat-icon-button  [hidden]="_index === 0 || hideBtnBasedonStatus() ">
+        <ion-icon name="trash-outline" class="text-danger"></ion-icon>
+      </a>
+    </td>
+}
+
+@if(_voucher === 'PUR'){
+    <td class="mat-cell">
+      {{_index + 1}}
+    </td>
+    <td class="mat-cell min-width-290">
+      @if(_index === 0){
+        <app-input-control [(ngModel)]="_netoutVoucher.ientAdvanceActVoucherConfig.voucherName" name="voucherName{{_index}}" [btnClicked]="true"
+        ></app-input-control>
+      } @else {
+        <app-input-control type="select" [(ngModel)]="_items.actVoucherConfigId" name="actVoucherConfigId{{_index}}"
+        [items]="DDLVouchers" key="id" keyName="code" [required]="true"  [errorTrue]="errorTrue"
+        valueType="int" (onChange)="setDDLVoucherNo()" [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+      }
+  
+    </td>
+    <td class="mat-cell min-width-290">
+      <app-input-control type="select" [(ngModel)]="_items.actVoucherId" name="actVoucherId{{_index}}"
+        [items]="DDLVoucherNo | appFilter: {'ledgerId': _items.actVoucherConfigId}" key="id" keyName="code"
+        (onChange)="loadVoucherDetail()" [required]="true" [errorTrue]="errorTrue"
+        valueType="int" [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+    </td>
+  
+    <td class="mat-cell min-width-90">
+      <tr class="mat-sub-row d-flex align-items-center ">
+        <td class="mat-sub-cell mr-05 text-form-right text-right w50" matTooltip="Debit Maximum Amount : {{(_items.debitMaximumQuantity | float) !== 0 ? _items.debitMaximumQuantity:'Disabled'}}">
+          <app-input-control type="number" [(ngModel)]="_items.debitAmountDocCurrency" name="debitAmountDocCurrency{{_index}}"
+             (onChange)="changeDetected();gainLossForPointZeroOneDifference(_items.debitAmountDocCurrency,_index)" [decimal]="2" [max]="(_items.debitMaximumQuantity | float) ?(_items.debitMaximumQuantity | float) : -1" [btnClicked]="(_items.disableDebit==='Y' ||_items.actVoucherId===0) || hideBtnBasedonStatus()"></app-input-control>
+        </td>
+        <td class="mat-sub-cell mr-05 text-form-right text-right w50" matTooltip="Credit Maximum Amount : {{(_items.creditMaximumQuantity | float) !== 0 ? _items.creditMaximumQuantity:'Disabled'}}">
+          <app-number-control [(ngModel)]="_items.creditAmountDocCurrency" name="creditAmountDocCurrency{{_index}}"
+             (onChange)="changeDetected();gainLossForPointZeroOneDifference(_items.creditAmountDocCurrency,_index)"  [max]="(_items.creditMaximumQuantity | float) ? (_items.creditMaximumQuantity | float) : -1" [decimal]="2" [btnClicked]="(_items.disableCredit==='Y' ||_items.actVoucherId===0) || hideBtnBasedonStatus()"></app-number-control>
+        </td>
+      </tr>
+    </td>
+    <td class="mat-cell text-right">
+      {{_items.exchangeRate}}
+    </td>
+    <td class="mat-cell min-width-90">
+      <tr class="mat-sub-row d-flex align-items-center ">
+        <td class="mat-sub-cell w50 text-right">
+          {{_items.debitAmountRepCurrency | appCurrency}}
+        </td>
+        <td class="mat-sub-cell w50 text-right">
+          {{_items.creditAmountRepCurrency | appCurrency}}
+        </td>
+      </tr>
+    </td>
+    <td class="mat-cell text-right">
+      <a mat-icon-button  [hidden]="_index === 0 || hideBtnBasedonStatus() " >
+        <ion-icon name="trash-outline" class="text-danger"></ion-icon>
+      </a>
+    </td>
+}

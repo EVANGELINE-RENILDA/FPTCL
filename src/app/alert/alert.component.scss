@@ -1,0 +1,15 @@
+.alert-container {
+    .alert-header {
+        height: 50px;
+        padding: 0px 10px;
+        background-color: #fff5f6;
+        font-weight: 700;
+    }
+
+    .alert-content {
+        padding: 8px 24px;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,227 @@
+<!--  -->
+<div class="content-wrapper" [parentId]="pageId" [appAccess]="appAccess">
+
+    @if(type === ''){
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        columnID="customerUpdateid" (pageChanged)="pageChanged($event)" (onSelect)="onSelect($event)"
+        [sortColumnsName]="sortColumnName"  [hideSelectAll]="isHideSelectedAll">
+
+        <ng-template cellHeaderDef="customerName">
+            <div class="header-cell-title miw150">Customer No</div>
+            <div class="header-cell-subtitle">Customer Name</div>
+        </ng-template>
+
+        <ng-template cellHeaderDef="createdDate">
+            <div class="header-cell-title ">Created By</div>
+            <div class="header-cell-subtitle">Created Date</div>
+        </ng-template>
+        <ng-template cellDef="createdDate" let-element>
+            <div>{{element.createdByFullname}}</div>
+            <div class="table-cell-subtitle ">{{element.createdDate | appDate}}</div>
+        </ng-template>
+        <ng-template cellDef="statusDescription" let-element>
+            <div class="status status-{{element.statusValue}}">{{element.statusdescription}}</div>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.customerUpdateid)"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="customerName" let-element>
+            <div>{{element.customerRefNo}}</div>
+            @if(element.customerName.length>25){
+            <div class="ellipse-text">{{element.customerName}}</div>
+            }
+            @else{
+            <div>{{element.customerName}}</div>
+            }
+        </ng-template>
+        <ng-template cellDef="dateOfBrith" let-element>
+            {{element.dateOfBrith | appDate}}
+        </ng-template>
+        <ng-template cellDef="statusdescription" let-element>
+            <div class="status status-{{element.statusValue}}">{{element.statusdescription}}</div>
+        </ng-template>
+        @if(this.customerId === 0){
+        <ng-template cellHeaderDef="action">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+        </ng-template>
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+        </ng-template>
+        }
+        @if(this.customerId!==0 && this.customerUpdateBtn === 'Y' ){
+
+        <ng-template #slotRight>
+            <app-icon-button name="add" [appButtonAccess]="btnAccess" toolTip="Add New"
+                (click)="createCustomerUpdate()"></app-icon-button>
+        </ng-template>
+        }
+    </app-table>
+    }
+    @else{
+    <app-table [pagination]="pagination" [columns]="customerColumns" [columnsName]="customerColumnsName"
+        [dataSource]="tableData" columnID="customerUpdateid" (pageChanged)="pageChanged($event)"
+        (onSelect)="onSelect($event)" [hideSelectAll]="isHideSelectedAll">
+        <ng-template cellDef="statusdescription" let-element>
+            <div class="status status-{{element.statusValue}}">{{element.statusdescription}}</div>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.customerUpdateid)"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="createdDate" let-element>
+            <!-- <div>{{element.createdByFullname}}</div> -->
+            {{element.createdDate | appDate}}
+        </ng-template>
+        @if(this.customerId!==0 && this.customerUpdateBtn === 'Y' ){
+
+        <ng-template #slotRight>
+            <app-icon-button name="add" [appButtonAccess]="btnAccess" toolTip="Add New"
+                (click)="createCustomerUpdate()"></app-icon-button>
+        </ng-template>
+        }
+    </app-table>
+    }
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Customer Update Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"
+                        appButtonAccess="CrmCustUPAppSearchBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" appButtonAccess="CrmCustUpAppClearBtn"
+                        (click)="doClear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="clearSearch()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <div>
+                        <row>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="in4sdfput" label="Customer Update No"
+                                            placeholder="Enter Customer Update No" (onEnter)="onSearch()"
+                                            [(ngModel)]="searchParams.customerUpdateRefNo"
+                                            name="customerUpdateRefNo"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="input" label="Customer No"
+                                            [(ngModel)]="searchParams.customerRefNo" (onEnter)="onSearch()"
+                                            name="customerRefNo"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Customer Update Status"
+                                            defaultOption="--Select--" [(ngModel)]="searchParams.statusValue"
+                                            name="customerStatusValue"
+                                            [items]="initialData.DDLValues.DDLCustomerUpdateStatus" key="constant"
+                                            keyName="description" placeholder="Select Customer Update Status"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="First Name"
+                                            [(ngModel)]="searchParams.firstName" name="firstName"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Middle Name"
+                                            [(ngModel)]="searchParams.middleName" name="middleName"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Last Name"
+                                            [(ngModel)]="searchParams.lastName" name="lastName"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Gender" defaultOption="--Select--"
+                                            [(ngModel)]="searchParams.genderValue" name="genderValue"
+                                            [items]="initialData.DDLValues.DDLGender" key="constant"
+                                            keyName="description" placeholder="Select Gender"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Date of Birth "
+                                            [(ngModel)]="searchParams.dateOfBirth" name="dateOfBirth"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="email" label="Email ID"
+                                            [(ngModel)]="searchParams.emailId" [maxLength]="15" name="emailId"
+                                            placeholder="Enter Email ID" [email]="true" designType=""
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="number" label="Contact No"
+                                            [(ngModel)]="searchParams.contactNo" [minLength]="5" [maxLength]="10"
+                                            name="contactNo" placeholder="Enter Contact No"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-3">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="TIN No" [(ngModel)]="searchParams.tin"
+                                            name="tin" (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="FNPF No" [(ngModel)]="searchParams.pfNo"
+                                            name="pfNo" (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Voter ID"
+                                            [(ngModel)]="searchParams.voterId" name="voterId"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <!-- <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="National ID"
+                                            [(ngModel)]="searchParams.nationalId" name="nationalId"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div> -->
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Driving License No"
+                                            [(ngModel)]="searchParams.drivingLicenseNo" name="drivingLicenseNo"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Passport ID"
+                                            [(ngModel)]="searchParams.passportNo" name="passportNo"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                        </row>
+                    </div>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/accordian/customer-update.svg"></ion-icon>
+                <div class="screen-text">Customer Update</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

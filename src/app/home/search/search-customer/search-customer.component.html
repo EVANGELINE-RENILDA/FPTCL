@@ -1,0 +1,16 @@
+<!-- <app-auto-complete [disabled]="__btnClicked" [displayText]="displayText" [items]="items"
+    (onInput)="getSearchData($event)" keyName="customerName" (onSelect)="valueSelected($event)"
+    [errorTrue]="control?.control?.invalid && __errorTrue" [errorText]="__errorText" [label]="__label"
+    [required]="__required" (onClear)="onAction('clear')" (onSearch)="getCustomerName()" #autoComplete >
+</app-auto-complete> -->
+
+<app-auto-complete [disabled]="__btnClicked" [displayText]="displayText" [items]="items"
+    (onInput)="getSearchData($event)" keyName="customerName" (onSelect)="valueSelected($event)"
+    (onSearch)="getCustomerName()" [errorTrue]="control?.control?.invalid && __errorTrue" [errorText]="__errorText"
+    [label]="__label" [required]="__required" (onClear)="onAction('clear')" [disabled]="__btnClicked" />
+<ng-template #getCustomer>
+    <div class="p-3 h100">
+        <app-customer-search [showBreadCrumb]="false" (dataSelected)="getVendorData($event)" [openStatus]="false"></app-customer-search>
+    </div>
+
+</ng-template>

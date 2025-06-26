@@ -1,0 +1,197 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/conduct-i.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Service In Process</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+
+        <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+                <!-- <app-tab-sub-group (tabChange)="onChange($event)">
+                    <app-sub-tab tabTitle="Detail"> -->
+                        <div class="p16px">
+                        <row>
+                            <div class="col-md-9">
+                                <row>
+                                    <div class="col-md-4"> <view-label label="Assigned Officer"
+                                            value="{{application.ientLegalApplicationAssignedOfficerHistory.assignedToFullname}}"></view-label>
+                                    </div>
+                                    <div class="col-md-4"> <view-label label="Assigned Date"
+                                            value="{{application.ientLegalApplicationAssignedOfficerHistory.assignedDate | appDate}}"></view-label>
+                                    </div>
+                                    <div class="col-md-4"> <view-label label="TAT"
+                                            value="{{application.ientLegalApplicationAssignedOfficerHistory.statusValue}}"></view-label>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex">
+                                    @if(this.type.isEditable === 'Y'){
+                                    @if(this.application.reAssignFlag === 'True'){
+                                    <form #p="ngForm" class="col-md-10 w250">
+                                        <app-input-control type="select" key="constant" keyName="description"
+                                            placeholder="Officer" [items]="assignedOfficerDDL"
+                                            defaultOption="--Select--" [(ngModel)]="legalAssignedOfficer.assignedTo"
+                                            name="assignedTo"></app-input-control>
+
+                                    </form>
+                                    <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                                            toolTip="Reassign"></app-icon-button>
+                                    </div>
+                                    }
+                                    @if(this.application.selfAssignFlag ===' True'){
+                                    <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                                            toolTip="Self Assign"></app-icon-button></div>
+                                    }
+                                    }
+                                </div>
+                            </div>
+                        </row>
+</div>
+
+                        <!-- @if( application.actionStatusValue==='PENAP'){
+                                <form #legalApproveForm="ngForm" class="d-flex align-items-center">
+                                    <div class="col-md-3 pl15">
+                                 
+                                        <app-input-control
+                                            [items]="initialData.DDLValues.DDLLegalServiceOfficer"
+                                            key="constant" type="select" keyName="description"
+                                            defaultOption="--Select--" [errorTrue]="errorTrue"
+                                            [required]="true"
+                                            [(ngModel)]="application.legalServiceOfficerId"
+                                            name="legalServiceOfficerId"
+                                            label="Assigned Legal Officer"></app-input-control>
+                                    </div>
+                                    <div class="col-md-1 ">
+                                        <app-icon-button name="accept"
+                                            toolTip="Accept"></app-icon-button>
+                                    </div>
+                                </form>
+                                } -->
+                        <!-- @if(application.actionStatusValue === 'APROV'){ -->
+
+                        <row>
+                            <div class="col-md-4 ">
+                                <div class="box" style="padding: 8px 16px;">
+                                    <div class="mb20"></div>
+                                    <div class="col-md-12">
+                                        <app-input-control type="select" label="Document Type" [(ngModel)]="docNameType"
+                                            [items]="documentArray" key="code" keyName="fullName"
+                                            [btnClicked]="this.type.isEditable === 'N'" defaultOption="--Select--"
+                                            name="documentTypeValue"
+                                            (onSelect)="documentTypeDatas(docNameType)"></app-input-control>
+                                    </div>
+                                    <app-drop-zone type="1" [fileType]="fileExtension" [accept]="accept"
+                                        [multiple]="false" [btnClicked]="this.type.isEditable === 'N'"
+                                        (onUpload)="uploadClientDocumentAttachment($event)"></app-drop-zone>
+                                </div>
+                                <div class="mb26"></div>
+
+                            </div>
+                            <div class="col-md-8">
+                                <div class="outer-content-wrapper">
+                                    <div class="content-wrapper">
+                                        <div>
+                                            @if (loading) {
+                                            <app-table [columns]="clientDocumentColumns"
+                                                [dataSource]="application.lstentLegalApplicationDocument"
+                                                [columnsName]="clientDocumentColumnsName" [hideSelectAll]="true"
+                                                [showPaginator]="false" columnID="trustApplicationDocumentId">
+                                                <ng-template cellHeaderDef="fileName">
+                                                    <div class="w200px">
+                                                        File Name
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template cellDef="fileName" let-element>
+                                                    <div class="overflow-wrap">
+                                                        {{element.ientFile.fileName}}
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template cellHeaderDef="documentTypeDescription">
+                                                    <div class="w200px">Document Name</div>
+                                                </ng-template>
+                                                <ng-template cellDef="fileExtension" let-element>
+                                                    {{element.ientFile.fileExtension}}
+                                                </ng-template>
+                                                <ng-template cellDef="fileSize" let-element>
+                                                    {{element.ientFile.fileSize | fileSize}}mb
+                                                </ng-template>
+                                                <ng-template cellHeaderDef="action">
+                                                    <div class="text-center">
+                                                        Action
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template cellDef="action" let-element>
+                                                    @if(element.ientFile.fileName!==''){
+
+                                                    <div class="d-flex align-items-center">
+                                                        <app-icon-button name="doc-view" (click)="viewFile(element)"></app-icon-button>
+                                                        <app-icon-button name="doc-download"
+                                                            (click)="downloadFile(element)">
+
+                                                        </app-icon-button>
+                                                        @if(this.type.isEditable === 'Y'){
+
+                                                        <app-icon-button name="doc-delete"
+                                                            (click)="checkDocumentDelete(element)" />
+                                                        }
+
+
+                                                    </div>
+                                                    }
+                                                </ng-template>
+                                            </app-table>
+                                            }
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <app-input-control type="textarea" className="notes" label="Notes"
+                                    [maxLength]="250"></app-input-control>
+                            </div>
+                            <div class="col-md-12 end">
+                                <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                            </div>
+                        </row>
+                        <!-- } -->
+
+
+                    <!-- </app-sub-tab>
+                    <app-sub-tab tabTitle="Linked Document">
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [columns]="linkedColumns" [columnsName]="linkedColumnsName"
+                                    [hideSelectAll]="true" [hasPagination]="true" [dataSource]="tableLinkedData">
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="doc-download"
+                                            (click)="downloadLinkedFile(element)"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                    </app-sub-tab>
+
+                </app-tab-sub-group> -->
+
+                <div class="col-md-12 end">
+                    @if(type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                    <button type="submit" class="approve-btn" (click)="completeApplicationStage()"> Document
+                        Collected</button>
+                    }
+                </div>
+                <div class="pb10"></div>
+
+
+            </div>
+        </div>
+
+    </accordion-body>
+</accordion-item>

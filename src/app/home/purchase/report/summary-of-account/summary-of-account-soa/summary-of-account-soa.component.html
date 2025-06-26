@@ -1,0 +1,113 @@
+<div class="content-wrapper">
+  <h1 class="d-flex align-items-center justify-content-center">Statement of Accounts - Vendor</h1>
+  <div class="flex-between">
+    <div>
+      @if(vendorDetails.length > 0){
+      <div>{{vendorDetails[0].COMPANY_NAME}}</div>
+      <div>{{vendorDetails[0].Company_Address}}</div>
+      }
+      <div class="flex-between">
+        <div>
+          <view-label label="Report Generating Date & Time" value="{{currentDate | appDate}}"></view-label>
+        </div>
+        <div class="px-2">
+          <view-label label="Statement Date" value="{{purchaseReport.toDate | appDate}}"></view-label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div>Customer Address :</div>
+      @if(vendorDetails.length > 0){
+      <div class="v-flex">
+        <div>{{vendorData.VENDOR_NAME}}</div>
+        <div>{{reportResult.Table2[0].Vendor_Address}}</div>
+      </div>
+      }
+    </div>
+  </div>
+  <div class="relative h100">
+    <div class="ab">
+      <div class="rel">
+        <div class="reportTable">
+          <table class="w100">
+            <thead class="h40 thead-th">
+              <tr>
+                <th>Doc Date</th>
+                <th>Doc No</th>
+                <th>Voucher Type</th>
+                <th>Vendor Ref No</th>
+                <th class="text-right">Currency</th>
+                <th class="text-right">Purchase Value</th>
+                <th class="text-right">Payment Value</th>
+                <th class="text-right">Balance</th>
+              </tr>
+            </thead>
+            @if(reportResult.Table?.length > 0){
+            <tbody>
+              @for (element of reportResult.Table; track $index) {
+              <td>{{element.t_document_date | date:dateFormat}}</td>
+              <td>{{element.t_document_no}}</td>
+              <td>{{element.t_voucher_type_desc}}</td>
+              <td>{{element.t_vendor_reference_number}}</td>
+              <td class="text-right">{{element.t_currency}}</td>
+              <td class="text-right">{{element.t_sales_value | appCurrency}}</td>
+              <td class="text-right">{{element.t_receipt_value | appCurrency}}</td>
+              <td class="text-right">{{element.t_running_balance | appCurrency}}</td>
+              }
+
+            </tbody>
+            }
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  @if(reportResult.Table?.length>0){
+    <div class="reportTable">
+      <table class="w100">
+        <thead class="h40 thead-th">
+          <tr>
+            <th>Vendor Code</th>
+            <th>Vendor Name</th>
+            <th>Vendor Currency</th>
+            <th class="text-right">Total Balance Due</th>
+            <th class="text-right">0 - 30 Days Due</th>
+            <th class="text-right">31 - 60 Days Due</th>
+            <th class="text-right">61 - 90 Days Due</th>
+            <th class="text-right">90 Days Due</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="mat-row">
+            <td>{{vendorData.VENDOR_CODE}}</td>
+            <td>{{vendorData.VENDOR_NAME}}</td>
+            <td>{{vendorData.CURRENCY_NAME}}</td>
+            <td class="text-right">{{vendorData.Total_Bal_Amt | appCurrency}}</td>
+            <td class="text-right">{{vendorData.DaysDue0to30 | appCurrency}}</td>
+            <td class="text-right">{{vendorData.DaysDue31to60 | appCurrency}}</td>
+            <td class="text-right">{{vendorData.DaysDue61to90 | appCurrency}}</td>
+            <td class="text-right">{{vendorData.DaysDue90 | appCurrency}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text">Purchase</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Summary of Statement Account - Vendor</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Statement of Accounts - Vendor</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

@@ -1,0 +1,185 @@
+<!-- [parentId]="pageId" -->
+<div class="content-wrapper" [parentId]="pageId" appAccess="CUSTR">
+  <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+    [sortColumnsName]="sortColumnName" (pageChanged)="pageChanged($event)" columnID="customerId"
+    (onSelect)="doSelect($event)" [hideSelectAll]="isSelectOnly">
+    <ng-template cellDef="action" let-element>
+      <app-icon-button name="open" toolTip="Open" (click)="navigateToDetail(element.customerId)">
+      </app-icon-button>
+    </ng-template>
+    <ng-template cellHeaderDef="action">
+      <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+    </ng-template>
+    <ng-template cellDef="dateOfBrith" let-element>{{
+      element.dateOfBrith | appDate
+      }}</ng-template>
+    <ng-template cellDef="statusdescription" let-element>
+      <div class="status status-{{ element.statusValue }}">
+        {{ element.statusdescription }}
+      </div>
+    </ng-template>
+    <ng-template cellDef="customerRefNo" let-element>
+      <div [ngClass]="{'pointer': isSelectOnly}" (click)="selectCustomer(element)">
+        {{ element.customerRefNo }}
+      </div>
+    </ng-template>
+    <ng-template cellDef="customerName" let-element>
+
+      @if(element.customerName.length>25){
+      <div class="ellipse-text" matTooltip="{{ element.customerName }}">
+        {{ element.customerName }}
+      </div>
+      } @else{
+      <div>{{ element.customerName }}</div>
+      }
+
+    </ng-template>
+    <ng-template cellDef="emailId" let-element>
+      @if(element.emailId.length>25){
+      <div class="ellipse-text" matTooltip="{{ element.emailId }}">
+        {{ element.emailId }}
+      </div>
+      } @else{
+      <div>{{ element.emailId }}</div>
+      }
+    </ng-template>
+    <ng-template #slotLeft>
+      <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+    </ng-template>
+    @if(!isSelectOnly){
+    <ng-template #slotRight>
+      <div>
+        <app-icon-button name="add" toolTip="Add New" (click)="createNewCustomer()"
+          appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+      </div>
+    </ng-template>
+    }
+  </app-table>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Customer Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" (click)="appSearch.close();"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm" (submit)="onSearch()">
+            <row>
+              <div class="col-md-3 border-right">
+                <row>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Customer Ref No" [(ngModel)]="searchParams.customerRefNo"
+                      name="customerRefNo" (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="select" label="Customer Status" defaultOption="--Select--"
+                      [(ngModel)]="searchParams.customerStatusValue" name="customerStatusValue"
+                      [items]="initialData.DDLValues.DDLCustomerStatus" key="constant" keyName="description"
+                      (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-3 border-right">
+                <row>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="First Name" [(ngModel)]="searchParams.firstName"
+                      name="firstName" (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Middle Name" [(ngModel)]="searchParams.middleName"
+                      name="middleName" (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Last Name" [(ngModel)]="searchParams.lastName" name="lastName"
+                      (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="select" label="Gender" defaultOption="--Select--"
+                      [(ngModel)]="searchParams.genderValue" name="genderValue"
+                      [items]="initialData.DDLValues.DDLGender" key="constant" keyName="description"
+                      placeholder="Select Gender" (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="date" label="Date of Birth " [maxDate]="currentDate"
+                      [(ngModel)]="searchParams.dateOfBirth" name="dateOfBirth"
+                      (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-3 border-right">
+                <row>
+                  <div class="col-md-12">
+                    <app-input-control type="email" label="Email ID" [(ngModel)]="searchParams.emailId" name="emailId"
+                      (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="number" label="Contact Number" [minLength]="5" [maxLength]="10"
+                      [(ngModel)]="searchParams.contactNo" name="contactNo" (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-3">
+                <row>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="TIN No" [(ngModel)]="searchParams.tin" name="tin"
+                      (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="FNPF No" [(ngModel)]="searchParams.pfNo" name="pfNo"
+                      (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Voter ID" [(ngModel)]="searchParams.voterId" name="voterId"
+                      (onEnter)="onSearch()"></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Driving License No"
+                      [(ngModel)]="searchParams.drivingLicenseNo" name="drivingLicenseNo"
+                      (onEnter)="onSearch()"></app-input-control>
+                  </div>
+
+                  <!-- <div class="col-md-12 ">
+                                        <app-input-control type="text" label="National ID"
+                                            [(ngModel)]="searchParams.nationalId" name="nationalId"
+                                            (onEnter)="onSearch()"></app-input-control>
+                                    </div> -->
+
+                  <div class="col-md-12">
+                    <app-input-control type="text" label="Passport ID" [(ngModel)]="searchParams.passportNo"
+                      name="passportNo" (onEnter)="onSearch()">
+                    </app-input-control>
+                  </div>
+                  <!-- <div class="col-md-12 ">
+                                        <app-input-control type="text" label="BRM "
+                                            [(ngModel)]="searchParams.passportNo" name="passportNo"
+                                            (onEnter)="onSearch()"> </app-input-control>
+                                    </div> -->
+                </row>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon name="person-outline"></ion-icon>
+        <div class="screen-text">Customer</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

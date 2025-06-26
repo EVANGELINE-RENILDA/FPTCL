@@ -1,0 +1,156 @@
+<div class="table-container {{ __panelClass }}">
+  @if(__hasHeader === true){
+  <div class="table-container-header">
+    <ng-container
+      *ngTemplateOutlet="slotLeftTemplate; context: { $implicit: {} }"
+    >
+    </ng-container>
+    <div class="d-flex justify-content-between align-items-center w100">
+      <div class="slot-left view-label-container-title">
+        {{ __tableHeader }}
+      </div>
+      <div class="slot-middle">
+        <ng-container
+          *ngTemplateOutlet="slotMiddleTemplate; context: { $implicit: {} }"
+        >
+        </ng-container>
+      </div>
+      <div class="d-flex align-items-center gap16">
+        @if( __showPaginator=== true){
+
+        <app-paginator
+          [length]="__pagination.totalCount"
+          [pageSize]="__pagination.pageSize"
+          [pageIndex]="__pagination.pageNumber"
+          (page)="onPageChanged($event)"
+        ></app-paginator>
+        }
+        <ng-container
+          *ngTemplateOutlet="slotRightTemplate; context: { $implicit: {} }"
+        >
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  }
+  <div class="table-container-body">
+    <div class="ab">
+      <div class="rel">
+        <div class="app-table-spacer">
+          <table class="app-table {{ __tableClass }}" #tableData>
+            <thead class="app-table-header">
+              <tr class="app-table-header-row">
+                @if (!__hideSelectAll) {
+                <th class="app-table-header-cell header-auto-select">
+                  <div class="checkbox">
+                    <label>
+                      <input
+                        type="checkbox"
+                        (change)="selectedAllClicked($event)"
+                        [checked]="
+                          __selectedData.length === __dataSource.length &&
+                          __dataSource.length > 0
+                        "
+                      />
+                      <ion-icon
+                        name="checkbox-outline"
+                        class="icon-checked"
+                      ></ion-icon>
+                      <ion-icon
+                        name="square-outline"
+                        class="icon-unchecked"
+                      ></ion-icon>
+                    </label>
+                  </div>
+                </th>
+                } @for (columnName of __columnsName; track $index) {
+                <th
+                  class="app-table-header-cell header-cell-{{
+                    __columns[$index]
+                  }}"
+                  [ngClass]="{
+                    pointer: __sortColumnsName.includes(__columns[$index])
+                  }"
+                  (click)="doSort(__columns[$index])"
+                >
+                  <div
+                    class="table-flex d-flex align-items-center gap-10 {{
+                      __tableFlexClass
+                    }}"
+                  >
+                    @if (!cellHeaderTemplates[__columns[$index]]) {
+                    {{ columnName }}
+                    } @else {
+                    <div class="v-flex w100">
+                      <ng-container
+                        *ngTemplateOutlet="
+                          cellHeaderTemplates[__columns[$index]];
+                          context: { $implicit: {} }
+                        "
+                      >
+                      </ng-container>
+                    </div>
+                    } @if(__sortColumnsName.includes(__columns[$index])) {
+                    <div class="  ">
+                      @if (__pagination) {
+                      <img src="assets/img/sort-1.svg" alt="sort-icon" />
+                      }
+                    </div>
+                    }
+                  </div>
+                </th>
+                }
+              </tr>
+            </thead>
+            <!-- {{__dataSource}} -->
+            <tbody class="app-table-body">
+              @for (data of __dataSource | pagination:__hasPagination:
+              __pagination.pageNumber: __pagination.pageSize;track data; let i = $index;) {
+              <tr class="app-table-row">
+                @if (!__hideSelectAll) {
+                <td class="app-table-cell cell-auto-select">
+                  <div class="checkbox">
+                    <label>
+                      <input
+                        type="checkbox"
+                        (change)="selectedSingleClicked($event, data)"
+                        [checked]="hasSelected(data)"
+                      />
+                      <ion-icon
+                        name="checkbox-outline"
+                        class="icon-checked"
+                      ></ion-icon>
+                      <ion-icon
+                        name="square-outline"
+                        class="icon-unchecked"
+                      ></ion-icon>
+                    </label>
+                  </div>
+                </td>
+                } @for (column of __columns; track $index) {
+                <td class="app-table-cell cell-{{ column }}">
+                  @if (!cellTemplates[column]) {
+                  <div class="cell-content">{{ data[column] }}</div>
+                  } @else {
+                  <ng-container
+                    *ngTemplateOutlet="
+                      cellTemplates[column];
+                      context: { $implicit: data, index: i }
+                    "
+                  >
+                  </ng-container>
+                  }
+                </td>
+                }
+              </tr>
+              }
+            </tbody>
+          </table>
+          @if(__dataSource.length === 0) {
+          <app-empty-state></app-empty-state>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

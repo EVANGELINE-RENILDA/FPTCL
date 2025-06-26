@@ -1,0 +1,103 @@
+<!-- [parentId]="pageId" -->
+<div class="content-wrapper" appAccess="CUSTR">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)" [showPaginator]="false">
+        <ng-template cellHeaderDef="date">
+            <div class="header-cell-title ">Doc Date</div>
+            <div class="header-cell-subtitle">Doc No</div>
+        </ng-template>
+        <ng-template cellDef="date" let-element>
+            <div>{{element.DOCUMENT_DATE}}</div>
+            <div class="table-cell-subtitle ">{{element.SAL_SALES_INVOICE_ID}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="voucher">
+            <div class="header-cell-title ">Voucher Type</div>
+            <div class="header-cell-subtitle">Voucher Name</div>
+        </ng-template>
+        <ng-template cellDef="voucher" let-element>
+            <div>{{element.VoucherType}}</div>
+            <div class="table-cell-subtitle ">{{element.VOUCHER_NAME}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="customer">
+            <div class="header-cell-title ">Customer Name</div>
+            <div class="header-cell-subtitle">Customer Ledger</div>
+        </ng-template>
+        <ng-template cellDef="customer" let-element>
+            <div>{{element.CUSTOMER_NAME}}</div>
+            <div class="table-cell-subtitle ">{{element.Customer_Ledger}}</div>
+        </ng-template>
+
+
+        <ng-template #slotLeft>
+            <div class="col-md-4">
+                <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+            </div>
+        </ng-template>
+        <ng-template #slotRight>
+            <div class="px10">
+                <view-label label="Report Generating Date & Time" value="06/04/2024 10:03 AM"></view-label>
+            </div>
+            <app-icon-button name="download" toolTip="Export To Excel"
+                appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+
+        </ng-template>
+
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Sales Register Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+
+                    <row>
+                        <div class="col-md-3">
+                            <app-input-control label="Fiscal Year" type="select" [(ngModel)]="saleReport.fiscalYearId"
+                            name="fiscalYearId" key="id" keyName="description"
+                            [items]="initialData.DDLValues.DDLFiscalYear"></app-input-control>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="Branch" type="select" [(ngModel)]="saleReport.branchname" name="branchname" key="id" keyName="code"
+                            [items]="initialData.DDLValues.DDLBranches"></app-input-control>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="From Date" type="date" [(ngModel)]="saleReport.fromDate"
+                            name="fromDate" ></app-input-control>
+                        </div>
+                        <div class="col-md-3">
+                            <app-input-control label="To Date" type="date" [(ngModel)]="saleReport.toDate"
+                            name="toDate" ></app-input-control>
+                        </div>
+                    </row>
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon src="assets/icons/sales.svg"></ion-icon>
+                <div class="screen-text">Sales Register</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Detail</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

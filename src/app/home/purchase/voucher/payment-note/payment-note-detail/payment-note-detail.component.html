@@ -1,0 +1,645 @@
+<div class="v-flex h100 ov-hi">
+  @if (selectedTab === 0 || selectedTab === 1 ) {
+  @if (paymentNote.statusValue === 'APROV' || paymentNote.statusValue === 'CANCL') {
+  <form #z="ngForm" class="flex-end pr20 header-bg h55">
+    <div class="col-md-3 header-input">
+      <app-input-control type="select" label="Document Name" [(ngModel)]="voucherConfigId" name="voucherConfigId"
+        [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+        [required]="true" (onSelect)="getVoucherDetail(voucherConfigId)" defaultOption="--Select--"></app-input-control>
+    </div>
+    <div class="col-md-1 end d-flex align-items-center">
+      <app-icon-button name="add" toolTip="Add New" (click)="navigateDetail(z)"></app-icon-button>
+    </div>
+  </form>
+  }
+  }
+  <form #l="ngForm"   >
+    <div class="content-header">
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Document No</label>
+          <div class="content">
+            {{
+            paymentNote.paymentNoteRefNo ? paymentNote.paymentNoteRefNo : "-"
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <label>Document Name</label>
+          <div class="content">
+            {{ paymentNote.ibusActVoucherConfig.voucherName?paymentNote.ibusActVoucherConfig.voucherName:'-' }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <view-label label="Branch" [value]="branchName"></view-label>
+        </div>
+        <div class="card-content">
+          <label>Vendor Name</label>
+          <div class="content">
+            {{
+            paymentNote.ibusActVendorDetails.vendorName
+            ? paymentNote.ibusActVendorDetails.vendorName
+            : "-"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Created Date</label>
+          <div class="content">
+            {{
+            paymentNote.enteredDate
+            | appDate : appSetting.environment.dateViewFormatWithTime
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <label>Created By</label>
+          <div class="content">
+            {{ paymentNote.fnEnteredBy ? paymentNote.fnEnteredBy : "-" }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Posting Date</label>
+          <div class="content">
+            {{
+            paymentNote.approvedDate
+            | appDate : appSetting.environment.dateViewFormatWithTime
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <app-input-control
+          type="date"
+          label="Document Date"
+          [(ngModel)]="paymentNote.documentDate"
+          name="documentDate"
+          [required]="true"
+          [errorTrue]="errorTrue"
+          (onChange)="documentDateConversioDate()"
+          [btnClicked]="__isDisabled()"
+        ></app-input-control>
+        </div>
+      </div>
+
+      <div class="status-header-box">
+        <div class="card-box-1 ">
+          <div class="card-content">
+            <view-label
+            label="Status"
+            status="{{ paymentNote.statusValue }}"
+            statusValue="{{ paymentNote.statusDescription }}"
+          ></view-label>
+          </div>
+          <div class="card-content btn-group">
+            @if(paymentNote.statusValue !=='CANCL' && paymentNote.statusValue!=='APROV'){
+            @if(selectedTab === 0 || selectedTab === 1){
+
+            @if (paymentNote.purPaymentNoteId === 0) {
+            <app-icon-button name="save" toolTip="Save" (click)="savePaymentNote(l)"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"></app-icon-button>
+            }@else {
+            <app-icon-button name="save" toolTip="Update" (click)="savePaymentNote(l)"></app-icon-button>
+            <app-icon-button name="refresh" toolTip="Refresh"
+              (click)="openPaymentNote(paymentNote.purPaymentNoteId)"></app-icon-button>
+            @if (paymentNote.statusValue !== 'APROV' && paymentNote.statusValue !== 'CANCL') {
+            <app-icon-button name="accept" toolTip="Complete" (click)="directApproved()"></app-icon-button>
+            }
+            }
+            }
+          }
+          </div>
+        </div>
+        <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="content-body flex-1 relative h100">
+    @if(selectedTab === 0){
+    <div class="ab">
+      <div class="rel">
+        <div class="col-md-12 p10">
+          <row>
+            <div class="col-md-6 border-right">
+              <div class="col-md-3 pt14 vendor-header">Debit Info</div>
+              <form class="h100" #a="ngForm"  >
+                <div class="d-flex">
+                  <div class="col-md-6 pt14">
+                    @if(!__isDisabled() || paymentNote.documentDate ===''){
+                    <app-search-vendor
+                      label="Vendor Name"
+                      [(ngModel)]="paymentNote.actVendorId"
+                      name="actVendorId"
+                      [displayText]="paymentNote.ibusActVendorDetails.vendorName"
+                      (onSelect)="doVendorSelect($event)"
+                      [required]="true"
+                      [errorTrue]="errorTrue"
+                      [btnClicked]="
+                        __isDisabled() || paymentNote.documentDate === ''
+                      " screenType="Payment Note" screenType1="Details" module="Purchase" navigateUrl="/home/purchase/payment-note/search"
+                    ></app-search-vendor>
+                    } @else{
+                      <div class="card-content1">
+                        <label>Vendor Name</label>
+
+                        <div class="content">
+                          {{
+                          paymentNote.ibusActVendorDetails.vendorName
+                          ? paymentNote.ibusActVendorDetails.vendorName
+                          : "-"
+                          }}
+                        </div>
+                      </div>
+
+                    }
+                  </div>
+
+                  <div class="col-md-6 pt14">
+                    <view-label label="Vendor Ledger Name"
+                      [value]="paymentNote.ibusActVendorDetails.ientActLedger.ledgerName"></view-label>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="col-md-6 pt14">
+                    <app-input-control type="select" label="Payment Mode" [(ngModel)]="paymentNote.modeValue"
+                      name="modeValue" [items]="initialData.DDLValues.configPaymentNoteModeValue" key="constant"
+                      keyName="description" [required]="true" [errorTrue]="errorTrue"  [btnClicked]="__isDisabled() || paymentNote.documentDate ===''" defaultOption="--Select--"
+                      ></app-input-control>
+                  </div>
+                  <div class="col-md-6 pt14">
+                    <view-label label="Vendor Payee Name"
+                      [value]="paymentNote.ibusActVendorDetails.chequePaymentName"></view-label>
+                  </div>
+                </div>
+                @if(paymentNote.modeValue !== 'CASH'){
+                <div class="d-flex">
+                  <div class="col-md-6 pt14">
+                    <app-input-control label="Vendor Bank" type="select" name="actVendorBankDetailId"
+                      [(ngModel)]="paymentNote.actVendorBankDetailId" [items]="initialData.DDLValues.DDLVendorBank"
+                      valueType="int" key="actVendorBankDetailId" keyName="bankAccountNo"
+                      (onSelect)="getBankNameBasedOnBankId()"
+                      [btnClicked]="
+                        __isDisabled() || paymentNote.documentDate === ''"></app-input-control>
+                  </div>
+                  <div class="col-md-6 pt14">
+                    <view-label label="Bank Account No" [value]="bankAccountNo"></view-label>
+                  </div>
+                </div>
+              }
+              </form>
+            </div>
+            <div class="col-md-6">
+              <form class="h100" #a="ngForm"  >
+                <div class="col-md-3 pt14 vendor-header">Credit Info</div>
+                @if(paymentNote.modeValue !== 'CASH'){
+                <div class="d-flex">
+                  <div class="col-md-6 pt14">
+                    <app-input-control type="select" label="Company Bank Ac"
+                      [(ngModel)]="paymentNote.actCompanyBranchBankDetailId" name="actCompanyBranchBankDetailId"
+                      valueType="int" [items]="initialData.DDLValues.DDLBankBranch" key="actCompanyBranchBankDetailId" defaultOption="--Select--"
+                      keyName="bankName" (onSelect)="bankBranchAc(paymentNote.actCompanyBranchBankDetailId)"
+                      [required]="true" [errorTrue]="errorTrue" [btnClicked]="__isDisabled() || paymentNote.documentDate ===''"
+                      >
+                    </app-input-control>
+                  </div>
+
+                  <div class="col-md-6 pt14">
+                    <view-label label="Bank Account No" [value]="branchBankAccountNo"></view-label>
+                  </div>
+                </div>
+                <div class="col-md-6 pt14">
+                  @if(paymentNote.modeValue === 'CHEQ'){
+                  <app-input-control label="Cheque No " type="text" [(ngModel)]="paymentNote.chequeNumber"
+                    name="chequeNumber" [required]="true" [errorTrue]="errorTrue"
+                    [btnClicked]="!__isDisabled() || paymentNote.documentDate ===''"></app-input-control>
+                  }
+                  @if(paymentNote.modeValue === 'BKTRS'){
+                  <app-input-control label="Transaction No" [(ngModel)]="paymentNote.chequeNumber" name="chequeNumber"
+                    [required]="true" [errorTrue]="errorTrue"
+                    [btnClicked]="!__isDisabled() || paymentNote.documentDate ===''"></app-input-control>
+                  }
+                </div>
+                <div class="col-md-6 pt14">
+                  @if(paymentNote.modeValue === 'CHEQ'){
+                  <app-input-control type="date" label="Cheque Date" [(ngModel)]="paymentNote.chequeDate"
+                    name="chequeDate" [required]="true" [errorTrue]="errorTrue"
+                    [btnClicked]="!__isDisabled() || paymentNote.documentDate ===''"></app-input-control>
+                  }
+                  @if(paymentNote.modeValue === 'BKTRS'){
+                  <app-input-control type="date" label="Transaction Date" [(ngModel)]="paymentNote.chequeDate"
+                    name="chequeDate" [required]="true" [errorTrue]="errorTrue"
+                    [btnClicked]="!__isDisabled() || paymentNote.documentDate ===''"></app-input-control>
+                  }
+                </div>
+                }
+                @if(paymentNote.modeValue === 'CASH'){
+                <div class="col-md-6 pt14">
+                  <app-search-debit label="Company Casbook Ledger" [(ngModel)]="paymentNote.cashbookLedgerId"
+                    name="cashbookLedgerId" [required]="true" [errorTrue]="errorTrue" valueType="int"
+                    [displayText]="paymentNote.ibusActLedger.ledgerName" [isChecked]="paymentNote.modeValue"
+                    getRegionValue="REGI1" (onSelect)="onLedgerSelect($event)"
+                    [btnClicked]="paymentNote.statusValue === 'APROV' || paymentNote.statusValue === 'CANCL' || paymentNote.documentDate ===''"></app-search-debit>
+                </div>
+                }
+              </form>
+            </div>
+          </row>
+        </div>
+      </div>
+    </div>
+    } @else if(selectedTab === 1){
+
+    <div class="v-flex h100">
+      <div class="end gap-5 p10">
+        <div class="col-md-2 only-input">
+          <app-auto-get-item
+            [partyId]="paymentNote.actVendorId"
+            [displayText]="autoSearchItems.autoSearchText"
+            [voucherType]="
+              paymentNote.ibusActVoucherConfig.voucherTypeValue
+            "
+            [voucherConfigId]="paymentNote.actVoucherConfigId"
+            [documentDate]="paymentNote.documentDate"
+            [(ngModel)]="autoSearchItems.autoSearchItemId"
+            name="autoSearchItemId"
+            [regionValue]="paymentNote.regionValue"
+            (onSelect)="doGetItemSelect($event)"
+            [btnClicked]="
+              paymentNote.documentDate === '' || __isDisabled()
+            "
+          ></app-auto-get-item>
+        </div>
+        <app-icon-button name="add" toolTip="Get Item" (click)="createNewPaymentNoteDetail()" appAccess=""
+          [parentId]="pageId">
+        </app-icon-button>
+      </div>
+      <form #b="ngForm" class="flex-1 relative"   >
+        <scroll>
+          <table class="app-table account-table w100">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell tw50 text-center">#</th>
+                <th class="app-table-header-cell tw50 text-center">
+                  <div class="header-cell-title">PI No</div>
+                  <div class="header-cell-subtitle">Document No</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">PI Amount</div>
+                  <div class="header-cell-subtitle">{{paymentNote.ibusActVendorDetails.currencyValue}}</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  Debit Note
+                </th>
+                <th class="app-table-header-cell  tw100 text-right">
+                  <div class="header-cell-title">Paid Till Date</div>
+                  <div class="header-cell-subtitle">
+                    {{paymentNote.ibusActVendorDetails.currencyValue}}
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Total Balance Amount</div>
+                  <div class="header-cell-subtitle">
+                    {{paymentNote.ibusActVendorDetails.currencyValue}}
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">Paid Amount</div>
+                  <div class="header-cell-subtitle">
+                    {{paymentNote.ibusActVendorDetails.currencyValue}}
+                  </div>
+                </th>
+                <!-- @if(__isDisabled()){ -->
+                <th class="app-table-header-cell tw100"></th>
+                <!-- } -->
+
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @if (paymentNote.ilistbusPurPaymentNoteDetail.length > 0) {
+              @for (items of paymentNote.ilistbusPurPaymentNoteDetail; track
+              $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ $index + 1 }}
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    {{items.ibusPurPurchaseInvoice.invoiceReferenceNo}}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{items.ibusPurPurchaseInvoice?.pActVoucherConfig?.voucherName}}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  {{items.ibusPurPurchaseInvoice.netAmount}}
+                </td>
+                <td class="app-table-cell text-right">
+                  {{items.debitAmount}}
+                </td>
+                <td class="app-table-cell text-right">
+                  {{items.paidTillDate}}
+
+                </td>
+                <td class="app-table-cell text-right">
+                  {{items.balanceAmount}}
+                </td>
+                <td class="app-table-cell text-right">
+                  <app-input-control [(ngModel)]="items.paidAmount" name="paidAmount{{$index}}" [decimal]="2"
+                    [required]="true" [errorTrue]="errorTrue" [max]="items.balanceAmount"
+                    (onBlur)="gainLossForPointZeroOneDifference($event,items,$index)"></app-input-control>
+                </td>
+                <td class="app-table-cell">
+                  <app-icon-button name="doc-delete" toolTip="Delete"
+                    (click)="itemsDelete(items, $index)"></app-icon-button>
+                </td>
+              </tr>
+              }
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </form>
+    </div>
+
+    } @else if(selectedTab === 2){
+    <app-payment-note-notes [parentData]="paymentNote" (notesValue)="getNotesValue($event)"></app-payment-note-notes>
+    } @else if(selectedTab === 3){
+    <app-payment-note-attachment [parentData]="paymentNote"></app-payment-note-attachment>
+    } @else if(selectedTab === 4){
+    <div class="flex-1 relative h100">
+      <div class="ab">
+        <div class="rel">
+          <!-- <app-payment-note-preview  [parentData]="paymentNote"></app-payment-note-preview> -->
+          <div class="print-wrap">
+            <row>
+              <div class="col-md-4">
+                <div class="ptb14"></div>
+                <app-input-control type="textarea" [maxLength]="250" className="notes-2"
+                  label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="paymentNote.ibusActVoucherConfig.pdfOtherComments"
+                  name="pdfOtherComments"></app-input-control>
+                <div class="end">
+                  <app-icon-button name="save" toolTip="Update" (click)="viewPurPaymentNoteReceipt()"></app-icon-button>
+                </div>
+              </div>
+              <div class="col-md-8">
+                  <div class="d-flex gap-5 end">
+                    <button type="submit" class="approve-btn" (click)="openEmailHistory()">Send Email</button>
+                    <!-- <app-send-email [name]="purchaseOrder.sentActVendor
+                    .vendorName" [documentDate]="purchaseOrder.documentDate" [netAmount]="purchaseOrder.netAmount"
+                      [refNumber]="purchaseOrder.purchaseQuotationRefNo"
+                      [voucherName]="purchaseOrder.sentActVoucherConfig.voucherTypeDescription" [emailId]="purchaseOrder.sentActVendor
+                    .emailId" [blob]="blob"></app-send-email> -->
+                    <!-- <app-icon-button name="clear" toolTip="Close"></app-icon-button>-->
+                     <button type="submit" class="cancel-btn" (click)="closePdf()"> Close </button>
+                  </div>
+                  <div class="pt8"></div>
+                <div class="pdf-viewer">
+                  <div class="ab">
+                    <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+                  </div>
+                </div>
+              </div>
+            </row>
+          </div>
+        </div>
+      </div>
+    </div> }
+  </div>
+  <total-payment-note [updateSequence]="internalUpdateSequence" [items]="paymentNote.ilistbusPurPaymentNoteDetail"
+    totalKeyName="paidAmount" [(exchangeRateArray)]="paymentNote.ilistbusActCurrencyExchangeRate"></total-payment-note>
+
+  <div class="card-footer h100" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Vendor</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        @if (paymentNote.purPaymentNoteId !== 0) {
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if (paymentNote.statusValue === 'APROV') {
+        <div class="tabs" (click)="onSelectTab(4)" [ngClass]="{ tabClass: selectedTab === 4 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        }
+        }
+      </div>
+      <div class="open-arrow" id="trigger{{ pageId }}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [maxLength]="250" className="notes" [(ngModel)]="paymentNote.comments"
+            name="comments" label="Notes | Common Narration Text"></app-input-control>
+        </div>
+        <div class="col-md-8 pad-0 d-flex">
+          <div class="d-flex w100 p8">
+            <div class="d-flex justify-content-between w100">
+              <div class="w200">
+                <view-label label="Document Currency" value=" {{paymentNote.ibusActVendorDetails.currencyValue}}"
+                  class="mb20"></view-label>
+                <!-- <app-input-control label="Conversion Rate" type="number" [(ngModel)]="paymentNote.currencyRate"
+                  [btnClicked]="paymentNote.currencyValue === paymentNote.ibusActVendorDetails.currencyValue"
+                  name="currencyRate" [decimal]="8" [errorTrue]="errorTrue" [required]="true"></app-input-control> -->
+
+                  <app-input-control label="Conversion Rate" type="number" [errorTrue]="errorTrue" [required]="true" valueType="int"
+                  [(ngModel)]="paymentNote.currencyRate" name="currencyRate" [decimal]="8"
+                  [btnClicked]="paymentNote.ibusActVendorDetails.currencyValue === paymentNote.currencyValue"></app-input-control>
+              </div>
+              <table class="app-footer-table">
+                @for(currency of paymentNote.ilistbusActCurrencyExchangeRate; track $index){
+                <tr class="app-footer-table-row ">
+                  <td class="app-footer-table-cell footer-header-txt text-end">
+                    {{currency.description}}
+                  </td>
+                  <td class="app-footer-table-cell footer-cnt-txt text-end">
+                    {{currency.documentCurrencyAmount}}
+                  </td>
+                </tr>
+                }
+              </table>
+
+            </div>
+          </div>
+          <div class="d-flex w100 p8 bg-sub-footer p8">
+            <div class="flex-1">
+              <view-label label="Reporting Currency" [value]="paymentNote.currencyValue" class="mb20"></view-label>
+            </div>
+            <table class="app-footer-table">
+              @for(currency of paymentNote.ilistbusActCurrencyExchangeRate; track $index){
+              <tr class="app-footer-table-row ">
+                <td class="app-footer-table-cell footer-header-txt text-end">
+                  {{currency.description}}
+                </td>
+                <td class="app-footer-table-cell footer-cnt-txt text-end">
+                  {{currency.reportingCurrencyAmount}}
+                </td>
+              </tr>
+              }
+            </table>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToPurchase()">Purchase</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Payment Note</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+  <div class="status-table-header">
+    <div class="changed-by_label">
+      Changed By | Changed Date
+    </div>
+    <div class="pl14">
+      Status
+    </div>
+  </div>
+  @for (item of paymentNote.ilistbusPurPaymentNoteStatusHistory; track $index) {
+  <div class="status-table-content">
+    <div class="changed-by">
+      {{item.changedByUsername}}
+      <div class="changed-by_sub">
+        {{item.effectiveDate | appDate:"datetime"}}
+      </div>
+    </div>
+    <div class="status_align pl14">
+      <div class="status-PRSTV">
+        {{item.statusDescription}}
+      </div>
+    </div>
+  </div>
+  }
+</mat-menu>
+
+
+<ng-template #mailTemplate>
+  <div class="dialog-box p-3">
+      <div class="label-value-head" >
+        Send Email
+      </div>
+      <div class="ml-auto">
+        <button mat-icon-button (click)="onNoClick()">
+          <app-icon-button name="close" (click)="dialogService.closeAll()"></app-icon-button>
+        </button>
+      <!-- </div>/ -->
+    </div>
+    <div class="mat-dialog-content" >
+            <scroll>
+            <form class="h100" #l="ngForm">
+           <div class="container-fluid h100">
+             <row>
+               <div class="col-md-12">
+                 <app-input-control type="email" label="To" [(ngModel)]="mailInfo.toMailList" name="toMailList" [required]="true" [errorTrue]="errorTrue" ></app-input-control>
+               </div>
+               <div class="col-md-12">
+                <app-input-control  type="email" label="CC" [(ngModel)]="mailInfo.ccMailList" name="ccMailList" [multiEmail]="true"></app-input-control>
+               </div>
+               <div class="col-md-12 d-flex align-items-center">
+                 <div class="form-group">
+                   <label class="label-value">From :  </label>
+                   <div class="form-value">
+                     {{appService.userData.firstName}} {{appService.userData.middleName}} {{appService.userData.lastName}}
+                   </div>
+                 </div>
+               </div>
+               <div class="col-md-12 mt10">
+                 <app-input-control label="Subject" [(ngModel)]="fullSubject" name="fullSubject" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+               </div>
+               <div class="col-md-12">
+                 <div class="mail-content mail-box">
+                  <div class="form-value">
+                    <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                    [required]="true" [(ngModel)]="fullContent" name="fullContent"
+                    label="Content"></app-input-control>
+                  </div>
+                 </div>
+               </div>
+               <div class="col-md-12">
+                 <div class="down-content">
+                   <!-- {{downContent}}
+                     -->
+                     This is an auto-generated email. Please do not reply to this email.
+                     Please find the PDF below :-
+                 </div>
+               </div>
+              <!-- <div class="d-flex"> -->
+                <div class="col-md-6 d-flex gap-10  mt20">
+                  <app-checkbox [checked]="mailInfo.isIncludePdf === 'Y'" (change)="doPdfChange($event)" color="primary"></app-checkbox>Include Invoice
+                </div>
+                <div>
+
+                </div>
+              <!-- </div> -->
+               <div class="col-md-6 d-flex gap-10 mt20">
+                 <app-checkbox [checked]="mailInfo.isIncludeAttachment === 'Y'" (change)="doAttachment($event)" color="primary"></app-checkbox>Additional Attachment
+               </div>
+               <ng-container >
+                @if(mailInfo.isIncludeAttachment === 'Y'){
+
+                  <div class="p-3">
+                    <app-drop-zone type="set" [multiple]="true" (onUpload)="loadAttachment($event)"></app-drop-zone>
+                  </div>
+                }
+               </ng-container>
+              </row>
+              <div mat-dialog-actions class="d-flex align-items-baseline justify-content-end my-1 gap-10 mt30">
+                <button class="approve-btn"  (click)="sendEmailforVoucher(l)" >
+                    Send Mail
+                </button>
+                <button class="complete-btn"  >
+                  Refresh
+              </button>
+            </div>
+           </div>
+         </form>
+         </scroll>
+
+     </div>
+
+  </div>
+</ng-template>

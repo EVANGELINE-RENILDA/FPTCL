@@ -1,0 +1,298 @@
+<!-- <div class="h100 v-flex p-3">
+  <div class="d-flex align-items-center pt-2">
+    <div>
+      <div class="search-box pb-2">
+        <app-search-box
+          placeholder="Search by Fiscal Year, Branch or other Keywords"
+          #searchbox
+          [searchTemplate]="searchTemplate"
+          searchBoxName="vatpaid_list"
+        ></app-search-box>
+      </div>
+    </div>
+    <div class="ml-auto d-flex align-items-center pt-2">
+      <div class="d-flex align-items-center form-group m-0 p-2">
+        <label class="label-value">Report Generated Date & Time: </label>
+        <div class="ml-2 form-value">
+          {{ currentDate | appDate }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="v-flex h100">
+    <div class="relative h100">
+      <div class="ab">
+        <div class="rel">
+          <div class="reportTable">
+            <table class="table w100">
+              <thead class="h40 thead-th">
+                <tr>
+                  <th>#</th>
+                  <th>Doc Date</th>
+                  <th>Doc Number</th>
+                  <th>Vendor Invoice Number</th>
+                  <th>Vendor Name</th>
+                  <th>Vendor TIN Number</th>
+                  <th class="text-right">Gross Amt</th>
+                  <th class="text-right">Tax Amt</th>
+                </tr>
+              </thead>
+              @if (tableData.Table?.length > 0) {
+              <ng-container>
+                <tbody>
+                  @for( element of tableData.Table; track element.index) {
+                  <tr class="mat-row">
+                    <td>{{ element.SI_NO }}</td>
+                    <td>{{ element.DOCUMENT_DATE | date : dateFormat }}</td>
+                    <td>{{ element.Document_Number }}</td>
+                    <td>{{ element.Vendor_invoice_number }}</td>
+                    <td>{{ element.Vendor_Name }}</td>
+                    <td>{{ element.vendor_Tin_Number }}</td>
+                    <td class="text-right">
+                      {{ element.TADAmount | appCurrency }}
+                    </td>
+                    <td class="text-right">
+                      {{ element.TAXAmount | appCurrency }}
+                    </td>
+                  </tr>
+                  } @for (element of tableData.Table1; track element.index) {
+                  <tr class="tfoot-td">
+                    <td colspan="6" class="text-center"><b>Total</b></td>
+                    <td class="text-right">
+                      <b>{{ element.TOTAL_GROSS | appCurrency }}</b>
+                    </td>
+                    <td class="text-right">
+                      <b>{{ element.TOTAL_Tax_AMOUNT | appCurrency }}</b>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </ng-container>
+              }
+            </table>
+            @if (tableData.Table?.length === 0 ) {
+            <ng-container>
+              <div class="ab">
+                <div class="rel">
+                  <app-empty-state></app-empty-state>
+                </div>
+              </div>
+            </ng-container>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="v-flex h100 p-3">
+  <div class="d-flex align-items-center pt-2">
+    <div>
+      <div class="search-box pb-2">
+        <app-search-box
+          #searchbox
+          [searchTemplate]="searchTemplate"
+        ></app-search-box>
+      </div>
+    </div>
+    <div class="ml-auto d-flex align-items-center pt-2">
+      <div class="d-flex align-items-center form-group m-0 p-2">
+        <label class="label-value">Report Generated Date & Time: </label>
+        <div class="ml-2 form-value">
+          {{ currentDate | appDate }}
+        </div>
+      </div>
+      <div class="col-md-1">
+        <app-icon-button
+          name="download"
+          toolTip="Export To Excel"
+        ></app-icon-button>
+      </div>
+    </div>
+  </div>
+  <scroll>
+    <table class="app-table account-table">
+      <thead class="app-table-head">
+        <tr class="app-table-header-row">
+          <th class="app-table-header-cell text-center">#</th>
+          <th class="app-table-header-cell">Doc Date</th>
+          <th class="app-table-header-cell">Doc No</th>
+          <th class="app-table-header-cell">Vendor Invoice Number</th>
+          <th class="app-table-header-cell">Vendor Name</th>
+          <th class="app-table-header-cell">Vendor TIN Number</th>
+          <th class="app-table-header-cell">Gross Amt</th>
+          <th class="app-table-header-cell">Tax Amt</th>
+        </tr>
+      </thead>
+      <!-- <tbody class="app-table-body">
+        @for (item of searchParams.reportResult; track item; let i = $index) {
+        <tr class="app-table-row">
+          <td class="app-table-cell text-center">{{ i + 1 }}</td>
+          <td class="app-table-cell">
+            {{ item.SI_NO }}
+          </td>
+          <td class="app-table-cell">
+            {{ item.DOCUMENT_DATE | date : dateFormat }}
+          </td>
+          <td class="app-table-cell">
+            {{ item.Document_Number }}
+          </td>
+          <td class="app-table-cell">
+            {{ item.Vendor_invoice_number }}
+          </td>
+          <td class="app-table-cell">
+            {{ item.Vendor_Name }}
+          </td>
+          <td class="app-table-cell">
+            {{ item.vendor_Tin_Number }}
+          </td>
+          <td class="app-table-cell">
+            {{ item.TADAmount | appCurrency }}
+          </td>
+          <td class="app-table-cell">
+            {{ item.TAXAmount | appCurrency }}
+          </td>
+        </tr>
+        }
+      </tbody> -->
+      <!-- <tfoot>
+        @for(item of searchParams.reportResult.Table2; track item) {
+        <tr class="h40">
+          <td class="app-table-footer" colspan="6">
+            <div class="text-center"><b>Total</b></div>
+          </td>
+          <td class="app-table-footer d-flex align-items-center h40">
+            <div class="text-center">
+              <b>{{ searchParams.TOTAL_GROSS | appCurrency }}</b>
+            </div>
+          </td>
+          <td class="app-table-footer d-flex align-items-center h40">
+            <div class="text-center">
+              <b>{{ searchParams.TOTAL_Tax_AMOUNT | appCurrency }}</b>
+            </div>
+          </td>
+        </tr>
+        }
+      </tfoot> -->
+    </table>
+  </scroll>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Vat Paid Detail Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button
+            name="search"
+            toolTip="Search"
+            (click)="generateVatPaidDetailReport()"
+          ></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            (click)="clearReport()"
+          ></app-icon-button>
+          <app-icon-button
+            name="close"
+            (click)="appSearch.close()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row className="row-h100">
+              <div class="col-md-4">
+                <app-input-control
+                  label="Branch"
+                  type="select"
+                  defaultOption="--All--"
+                  valueType="int"
+                  [items]="initialData.DDLValues.DDLBranches"
+                  [(ngModel)]="searchParams.companyBranchId"
+                  name="companyBranchId"
+                  key="id"
+                  keyName="code"
+                ></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control
+                  label="Fiscal Year"
+                  type="select"
+                  defaultOption="--Select--"
+                  valueType="int"
+                  [items]="initialData.DDLValues?.DDLFiscalYear"
+                  [(ngModel)]="searchParams.fiscalYearId"
+                  name="fiscalYearId"
+                  key="id"
+                  keyName="description"
+                  (onChange)="clearDate()"
+                ></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control
+                  label="Region"
+                  type="select"
+                  defaultOption="--Select--"
+                  valueType="int"
+                  [items]="initialData.DDLValues?.DDLRegion"
+                  [(ngModel)]="searchParams.regionValue"
+                  name="regionValue"
+                  key="constant"
+                  keyName="description"
+                ></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control
+                  label="From Date"
+                  type="date"
+                  placeholder="DD/MM/YYY"
+                  [(ngModel)]="searchParams.fromDate"
+                  name="fromDate"
+                  [maxDate]="searchParams.toDate"
+                ></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control
+                  label="To Date"
+                  type="date"
+                  placeholder="DD/MM/YYY"
+                  [(ngModel)]="searchParams.toDate"
+                  name="toDate"
+                  [maxDate]="searchParams.fromDate"
+                ></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn">
+          <ion-icon
+            src="assets/icons/back.svg"
+            (click)="navigateTosummary()"
+          ></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text">Purchase</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">VAT Paid Summary</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

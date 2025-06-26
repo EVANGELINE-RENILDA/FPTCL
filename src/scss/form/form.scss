@@ -1,0 +1,385 @@
+@import "./password-strength.scss";
+
+input[type="password"]::-webkit-input-password,
+input[type="password"]::-ms-reveal {
+  display: none !important;
+}
+
+input {
+  background-color: var(--input-control-background-color);
+}
+
+.itg-form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  padding-bottom: var(--input-group-margin-bottom);
+
+  .label-container {
+    display: flex;
+    width: 100%;
+    padding-bottom: var(--label-bottom-padding);
+
+    &.bottom {
+      position: absolute;
+      bottom: 0;
+    }
+
+    label {
+      font-size: var(--label-font-size);
+      font-weight: var(--label-font-weight);
+      color: var(--label-color);
+    }
+
+    .label-container-right {
+      margin-left: auto;
+
+      .error-text {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: var(--error-text-color);
+        font-size: var(--error-text-font-size);
+        font-weight: var(--error-text-font-weight);
+
+        .error-text-icon {
+          height: 0.875rem;
+          width: 0.875rem;
+          display: flex;
+          align-items: center;
+
+          svg {
+            height: 0.875rem;
+            width: 0.875rem;
+          }
+        }
+      }
+    }
+  }
+
+  .itg-input-group {
+    display: flex;
+    align-items: center;
+    width: var(--input-width);
+    height: var(--input-height);
+    position: relative;
+
+    &.notes {
+      --input-height: 90px;
+
+      .itg-input-control {
+        border: 1px solid var(--input-border-color);
+        border-right: none;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        resize: none;
+        padding-top: 5px;
+
+        & + .itg-input-group-append {
+          min-width: 28px;
+          align-items: start;
+          border: 1px solid var(--input-border-color);
+          border-left: none;
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+      }
+
+      .icon-btn {
+        min-width: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    &.notes-1 {
+      --input-height: 200px;
+
+      .itg-input-control {
+        border: 1px solid var(--input-border-color);
+        border-right: none;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        resize: none;
+
+        & + .itg-input-group-append {
+          min-width: 28px;
+          align-items: start;
+          border: 1px solid var(--input-border-color);
+          border-left: none;
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+      }
+
+      .icon-btn {
+        min-width: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    &.notes-2 {
+      --input-height: 150px;
+
+      .itg-input-control {
+        border: 1px solid var(--input-border-color);
+        border-right: none;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        resize: none;
+
+        & + .itg-input-group-append {
+          min-width: 28px;
+          align-items: start;
+          border: 1px solid var(--input-border-color);
+          border-left: none;
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+      }
+
+      .icon-btn {
+        min-width: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    &.notes-3 {
+      --input-height: 185.5px;
+
+      .itg-input-control {
+        border: 1px solid var(--input-border-color);
+        border-right: none;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        resize: none;
+
+        & + .itg-input-group-append {
+          min-width: 28px;
+          align-items: start;
+          border: 1px solid var(--input-border-color);
+          border-left: none;
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+      }
+
+      .icon-btn {
+        min-width: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .itg-input-control {
+      padding: var(--input-padding);
+      border: none;
+      flex: 1;
+      height: var(--input-height);
+      width: var(--input-width);
+      border-top-left-radius: var(--input-border-radius);
+      border-bottom-left-radius: var(--input-border-radius);
+      font-size: var(--input-font-size);
+      font-weight: var(--input-font-weight);
+      color: var(--input-color);
+      border-bottom: 1px solid var(--input-border-color);
+      border-right-width: 0;
+      background-color: var(--input-background-color);
+      font-family: var(--font-family);
+
+      &::placeholder {
+        font-weight: 400;
+        color: rgba(131, 126, 126, 0.6) !important;
+      }
+
+      & + .itg-input-group-append {
+        border-top-right-radius: var(--input-border-radius);
+        border-bottom-right-radius: var(--input-border-radius);
+        border-bottom: 1px solid var(--input-border-color);
+        border-left-width: 0;
+        height: var(--input-height);
+        background-color: var(--input-background-color);
+      }
+
+      &:hover {
+        & + .itg-input-group-append {
+          .close-btn {
+            display: flex;
+          }
+        }
+      }
+
+      &:focus {
+        outline: 0;
+        border-color: var(--input-border-color-focus);
+        background-color: var(--input-background-color-focus);
+
+        & + .itg-input-group-append {
+          border-color: var(--input-border-color-focus);
+          background-color: var(--input-background-color-focus);
+
+          .close-btn {
+            display: flex;
+          }
+        }
+      }
+
+      &:active {
+        outline: 0;
+        border-color: var(--input-border-color-active);
+        background-color: var(--input-background-color-active);
+
+        & + .itg-input-group-append {
+          border-color: var(--input-border-color-active);
+          background-color: var(--input-background-color-active);
+        }
+      }
+    }
+
+    &.input-error {
+      .itg-input-control,
+      .itg-input-group-append {
+        border-color: var(--input-border-color-error) !important;
+      }
+    }
+
+    &.autocomplete {
+      .itg-input-control {
+        padding-right: calc(28px * 2);
+        padding-left: 0;
+      }
+
+      .itg-input-group-append {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+
+  .itg-input-group-append {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--input-height);
+
+    .close-btn {
+      display: none;
+    }
+
+    &:hover {
+      .close-btn {
+        display: flex;
+      }
+    }
+  }
+}
+
+.icon-btn {
+  border: none;
+  background-color: transparent;
+  align-items: center;
+  min-width: var(--input-height);
+  width: var(--input-height);
+  height: var(--input-height);
+  padding: 0;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  border-radius: 50%;
+  overflow: hidden;
+
+  &:active {
+    background-color: #ced4da;
+  }
+
+  &:focus {
+    outline: 0;
+    border: none;
+  }
+
+  svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    stroke: var(--label-color);
+  }
+}
+
+.itg-input-control {
+  .mat-mdc-select-value {
+    line-height: 1.15;
+  }
+}
+
+.mat-mdc-option {
+  &.sticky-option {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    min-height: 28px;
+    height: 28px;
+    position: relative;
+    pointer-events: auto !important;
+    opacity: 1;
+
+    .mdc-list-item__primary-text {
+      opacity: 1 !important;
+    }
+  }
+
+  .itg-select-search {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 28px;
+    z-index: 10;
+    top: 0;
+    left: 0;
+
+    .icon-btn {
+      width: 28px;
+      height: 28px;
+    }
+
+    .sticky-input {
+      width: 100%;
+      height: 28px;
+      border-color: transparent;
+      padding: 0 16px;
+      font-size: 14px;
+      color: var(--text-dark-color);
+
+      &:hover,
+      &:focus,
+      &:active {
+        border-color: transparent;
+        outline: 0;
+      }
+    }
+  }
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+.old-value {
+  font-size: 10px;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 1px 5px;
+  border-radius: 8px;
+  font-weight: 500;
+  max-width: 150px;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+}
+.error-block .itg-form-group .itg-input-group .itg-input-control,
+.error-block .itg-form-group .itg-input-group .itg-input-group-append {
+  border-color: var(--input-border-color-error) !important;
+}

@@ -1,0 +1,247 @@
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon src="assets/icons/sales.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToSales()">Sales</div>
+            </li>
+            <li class="screen-name link">
+                <div class="screen-text" (click)="navigateToList()">Summary of Statement Account Customer</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<div class="content-wrapper" appAccess="CUSTR">
+    <!-- <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)" [hideSelectAll]="true">
+        <ng-template cellDef="action" let-element>
+        </ng-template>
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+        </ng-template>
+
+        <ng-template #slotRight>
+            <div class="d-flex align-items-center w100">
+                <div class="col-md-1">
+                    <app-icon-button name="download" toolTip="Export To Excel"
+                        appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template #slotRight>
+            <div class="d-flex align-items-center w100">
+
+                <div class="px10">
+                    <view-label label="Report Generating Date & Time" value=""></view-label>
+                </div>
+            </div>
+        </ng-template>
+    </app-table> -->
+
+    <div class="v-flex h100">
+        <div class="between">
+            <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+            <div class="flex-end align-items-center p-2">
+                Report Generating Date & Time : {{ currentDate | appDate }}
+            </div>
+        </div>
+
+        <div class="sub-table">
+            <table class="w100 width">
+                <thead class="h40">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Doc No</th>
+                        <th>Doc Date</th>
+                        <th>Voucher Name</th>
+                        <th>Customer Name</th>
+                        <th>Customer Ref Number</th>
+                        <th>Shipping Address</th>
+                        <th>Invoice Value</th>
+                        <th>Balance Due</th>
+                        <th>0 - 30 Days Due</th>
+                        <th>31 - 60 Days Due</th>
+                        <th>61 - 90 Days Due</th>
+                        <th>90 Days Due</th>
+                    </tr>
+                </thead>
+                @if( reportResult.Table?.length > 0 ) {
+                <ng-container>
+                    <tbody class="app-table-body">
+                        @for (element of reportResult.Table; track element; let i = $index) {
+                        <tr class="app-table-row">
+                            <td class="app-table-cell text-center">{{ i + 1 }}</td>
+                            <td class="app-table-cell">
+                                {{ element.SI_REF_NO }}
+                                <!-- <th>Doc No</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.DOCUMENT_DATE | appDate }}
+                                <!-- <th>Doc Date</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.VOUCHER_NAME }}
+                                <!-- <th>Voucher Name</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.CUSTOMER_NAME }}
+                                <!-- <th>Customer Name</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.CUSTOMER_REF_NO }}
+                                <!-- <th>Customer Ref Number</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.Cust_Address }}
+                                <!-- <th>Shipping Address</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.Actual_Amount | appCurrency }}
+                                <!-- <th>Invoice Value</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.BalanceAmount | appCurrency }}
+                                <!-- <th>Balance Due</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.DaysDue0to30 | appCurrency }}
+                                <!-- <th>0 - 30 Days Due</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.DaysDue31to60 | appCurrency }}
+                                <!-- <th>31 - 60 Days Due</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.DaysDue61to90 | appCurrency }}
+                                <!-- <th>61 - 90 Days Due</th> -->
+                            </td>
+                            <td class="app-table-cell">
+                                {{ element.DaysDue90 | appCurrency }}
+                                <!-- <th>90 Days Due</th> -->
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="h40">
+                            <td class="app-table-footer" colspan="7">
+                                <div class="text-center"><b>Subtotal</b></div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <b>{{
+                                        reportResultAmount[0].Total_Actual_Amount | appCurrency
+                                        }}</b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <b>{{
+                                        reportResultAmount[0].Total_BalanceAmount | appCurrency
+                                        }}</b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <b>{{
+                                        reportResultAmount[0].Total_DaysDue0to30 | appCurrency
+                                        }}</b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <b>{{
+                                        reportResultAmount[0].Total_DaysDue31to60 | appCurrency
+                                        }}</b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <b>{{
+                                        reportResultAmount[0].Total_DaysDue61to90 | appCurrency
+                                        }}</b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <b>{{ reportResultAmount[0].Total_DaysDue90 | appCurrency }}</b>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </ng-container>
+                }
+            </table>
+        </div>
+        <!-- </div> -->
+
+        <ng-template #searchTemplate>
+            <div class="dialog-container">
+                <div class="dialog-header">
+                    <div class="dialog-title">Purchase Order Outstanding Report</div>
+                    <div class="slot-right">
+                        <div class="btn-group">
+                            <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                            <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                            <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="dialog-content">
+                    <scroll>
+                        <div class="dialog-content-inner">
+                            <row>
+                                <div class="col-md-4 border-right">
+                                    <row>
+
+                                        <!-- <app-input-control type="date" label="Statement Date" defaultOption="DD/MM/YYYY"
+                                        [(ngModel)]="searchParams.toDate" name="toDate" tabIndex="100"
+                                        (keyup.enter)="onSearch()"></app-input-control>
+
+                                        <app-input-control type="select" label="Currency Value" defaultOption="--Select--"
+                                        valueType="string" [items]="initialData.DDLValues.ddlCurrecy"
+                                        [(ngModel)]="searchParams.currencyValue" name="currencyValue" key="constant"
+                                        keyName="description" tabIndex="100"
+                                        (keyup.enter)="onSearch()"></app-input-control> -->
+
+                                        <div class="col-md-12 ">
+                                            <!-- <app-search-customer label="Customer Name"
+                                                (onSelect)="doVenorSelect($event)" [errorTrue]="errorTrue"
+                                                valuetype="int" [hideNewBtn]="true" [hideStatus]="true"
+                                                statusValue="ACTIV" [disabled]="screenDisabled()"
+                                                [(ngModel)]="searchParams.customerName" name="customerName"
+                                                [displayText]="searchParams.customerName" [closeOverLay]="false"
+                                                tabIndex="100" (keyup.enter)="onSearch()"></app-search-customer> -->
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-4 border-right">
+                                    <row>
+                                        <div class="col-md-12 ">
+                                            <app-input-control type="date" label="Statement Date"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-4">
+                                    <row>
+                                        <div class="col-md-12 ">
+                                            <app-input-control type="select" label="Currency Value"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+
+                            </row>
+
+                        </div>
+                    </scroll>
+                </div>
+            </div>
+        </ng-template>
+    </div>

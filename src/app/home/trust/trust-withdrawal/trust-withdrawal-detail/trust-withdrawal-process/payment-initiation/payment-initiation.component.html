@@ -1,0 +1,65 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Payment Initiation</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <accordion-body>
+            <row>
+                <div class="col-md-9">
+                    <row>
+                        <div class="col-md-4"> <view-label label="Assigned Officer"
+                                value="{{application.ientTrustWithdrawalApplicationAssignedOfficerHistory.assignedToFullname}}"></view-label>
+                        </div>
+                        <div class="col-md-4"> <view-label label="Assigned Date"
+                                value="{{application.ientTrustWithdrawalApplicationAssignedOfficerHistory.assignedDate | appDate}}"></view-label>
+                        </div>
+                       
+                    </row>
+                </div>
+                <div class="col-md-3">
+                   
+                </div>
+            </row>
+            <div class="mb26"></div>
+            <div class="pl15 mb26 ">
+                <form #notiForm="ngForm">
+                    <row>
+                        <div class="col-md-12">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                                [required]="true" label="Notes" [(ngModel)]="notesMessage"
+                                name="notesMessage"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26 gap-10 end">
+                            @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True' &&
+                            application.applicationStatusValue!=='APPRJ'){
+                            <app-icon-button name="save" toolTip="Save" (click)="saveWithdrawalNotes()"></app-icon-button>
+                            }
+                            <!-- @if(trustWithdrawalNotes.isUpdateButtonShow ==='Y'){
+                        <app-icon-button name="save" toolTip="Update" (click)="saveTrustApplication()"></app-icon-button>
+                        <app-icon-button name="refresh" toolTip="Refresh" (click)=" refeshData()"></app-icon-button>
+                        }
+                        @else {
+        
+                        <app-icon-button name="clear" toolTip="Clear" (click)="clearCourtOrderNotes()"></app-icon-button>
+                        } -->
+                        </div>
+                        <div class=""></div>
+                    </row>
+                </form>
+                <div class="mb26"></div>
+                <div class="col-md-12 end gap-10">
+                    @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                    <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Payment Initiatied</button>
+                    }
+                        </div>
+             </div>
+             </accordion-body>
+        </accordion-body>
+        </accordion-item>

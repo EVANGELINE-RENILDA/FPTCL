@@ -1,0 +1,47 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Open File</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="bg-white-padd">
+            <row>
+                                       
+                <div class="col-md-4"> <view-label label="Assigned Officer"
+                        value="{{application.ientEstateApplicationAssignedOfficerHistory.assignedToFullname}}"></view-label>
+                </div>
+                <div class="col-md-4"> <view-label label="Assigned Date"
+                        value="{{application.ientEstateApplicationAssignedOfficerHistory.assignedDate | appDate}}"></view-label>
+                </div>
+                <!-- <div class="col-md-4"> <view-label label="TAT"
+                        value=" {{application.ientEstateApplicationAssignedOfficerHistory.tatDays}} Days"></view-label>
+                </div> -->
+            </row>
+            <div class="mb26"></div>
+
+            @if(editOpenFile === false){
+                <row>
+                    <div class="col-md-3"> <view-label label=" File No" value=""></view-label> </div>
+                    <div class="col-md-3"> <view-label label=" File Type " value=""></view-label> </div>
+                    <div class="col-md-3"> <view-label label=" File Name" value=""></view-label> </div>
+                    <div class="col-md-3"> <view-label label=" Customer" value=""></view-label> </div>
+                    <div class="col-md-3"> <view-label label="Status" value=""></view-label> </div>
+                    <div class="col-md-3"> <view-label label=" Is Physical" value=""></view-label> </div>
+                </row>
+            }
+            </div>
+
+            <div class="col-md-12 end gap-10">
+                @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                <button type="submit" class="approve-btn" (click)="completeApplicationStage()">File Opened</button>
+                <!-- <button type="submit" class="complete-btn" (click)="cancelProcess()"> Cancel</button> -->
+                }
+            </div>
+            </accordion-body>
+            </accordion-item>

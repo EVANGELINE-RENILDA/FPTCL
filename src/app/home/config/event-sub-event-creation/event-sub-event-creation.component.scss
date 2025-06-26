@@ -1,0 +1,143 @@
+.header {
+  // height: 15px;
+  padding: 6px 17px;
+  // border-bottom: 1px solid #d8d8d8;
+}
+
+.link1 {
+  width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.py-3 {
+  padding: 24px 0px;
+}
+
+.px-2 {
+  padding: 0px 16px;
+}
+
+.pb-3 {
+  padding-bottom: 3px;
+}
+
+::ng-deep app-table.subTable .table-container {
+  border: transparent;
+  border-top: 0px;
+}
+
+.t-header {
+  width: 120px;
+}
+
+.s-header {
+  width: 80px;
+}
+
+.link1 {
+  cursor: pointer;
+  text-decoration: underline;
+  color: dodgerblue;
+  letter-spacing: 0.5px;
+}
+
+.mr20 {
+  margin-right: 20px;
+}
+
+.mb21 {
+  margin-bottom: 21px;
+}
+
+.temp {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 0 !important;
+}
+
+.custom-padding {
+  padding: 0 16px 16px 0 !important;
+}
+
+.scroller {
+  overflow-y: auto;
+  height: 275px;
+}
+
+.scroller1 {
+  overflow-y: none;
+  height: 275px;
+}
+
+.accordion-title-card {
+  margin: 12px 4px;
+  justify-content: center;
+  width: 50%;
+  border: 1px solid #dbe0e1;
+  padding: 10px 0;
+}
+
+.event-title {
+  font-weight: bold;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.event-title2 {
+  font-weight: bold;
+  position: absolute;
+  top: -5;
+  margin-top: -12px;
+}
+
+.detail {
+  margin-top: 13px;
+  min-height: 270px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.content-wrapper {
+  overflow: hidden !important;
+}
+
+.row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.col-md-6,
+.col-md-4 {
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.col-md-6 {
+  flex: 1;
+}
+
+.col-md-4 {
+  flex: 0 0 40%;
+}
+
+.border {
+  border: 1px solid #ccc;
+}
+
+.colorRed {
+  color: red;
+}
+
+.bold {
+  font-weight: bold !important;
+}
+
+.margin-parenteventdesc {
+  margin-top: -18px !important;
+  margin-bottom: 21.8px !important;
+}

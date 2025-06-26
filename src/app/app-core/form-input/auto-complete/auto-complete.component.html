@@ -1,0 +1,60 @@
+<div class="itg-form itg-form-group autocomplete-group">
+    @if(__label !== ''){
+    <div class="label-container">
+        <label>
+            {{__label}}
+            <!-- @if(__label!==''){ -->
+            @if(__required){
+            <span class="text-danger">*</span>
+            }
+            <!-- } -->
+        </label>
+    </div>
+    }
+    <div class="itg-input-group autocomplete" [ngClass]="{'input-error': __errorTrue}">
+        <input type="text" class="itg-input-control date" [placeholder]="placeholder" autocomplete="none"
+            [(ngModel)]="displayText" [matAutocomplete]="auto" (input)="onAction('input')" [name]="name"
+            [disabled]="disabled" />
+        <div class="itg-input-group-append date" [ngClass]="{'p-none':disabled}">
+            <a class="icon-btn close-btn" (click)="onAction('clear');">
+                <ion-icon name="close-outline"></ion-icon>
+            </a>
+            @if(isShowSearch){
+            <a class="icon-btn" (click)="onAction('search')">
+                <ion-icon name="search-outline"></ion-icon>
+            </a>
+            }
+        </div>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn"
+            (optionSelected)="optionSelected($event)">
+            @for (item of __items ; track item) {
+            <mat-option [value]="item">
+                <!-- [disabled]="item === lastSelectedItem" -->
+                @if(option){
+                <ng-container *ngTemplateOutlet="optionTemplate; context: {$implicit: item}"></ng-container>
+                } @else {
+                {{item[keyName]}}
+                @if(item.aliasName){
+                <div class="aliasName">
+                    {{item.aliasName}}
+
+                </div>
+                }
+                }
+            </mat-option>
+            }
+        </mat-autocomplete>
+    </div>
+    <div class="label-container">
+        <div class="label-container-right">
+            @if(__errorTrue){
+            <div class="error-text">
+                <span class="error-text-icon">
+                    <ion-icon name="alert-circle-outline"></ion-icon>
+                </span>
+                {{__errorText}}
+            </div>
+            }
+        </div>
+    </div>
+</div>

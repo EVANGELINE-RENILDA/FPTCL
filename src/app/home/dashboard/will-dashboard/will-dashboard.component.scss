@@ -1,0 +1,68 @@
+.trust-side-oval {
+    width: 12px;
+    height: 8px;
+    border: 1px solid #eee;
+    background-color: #BAE5FF;
+    border-radius: 15px;
+}
+
+.will-side-oval {
+    width: 12px;
+    height: 8px;
+    border: 1px solid #eee;
+    background-color: #0079C4;
+    border-radius: 15px;
+}
+
+.dash-header {
+    font-size: 14px;
+    font-weight: 600;
+
+}
+
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.sub-data-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-light-color);
+
+    span {
+        background-color: #BAE5FF;
+        border-radius: 15px;
+        padding: 5px 8px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+}
+
+.chart-size{
+    height: 300px;
+}
+.flow-auto{
+    overflow-y: auto;
+}
+.new-1{
+    scrollbar-width: thin;    
+}
+*::-webkit-scrollbar {
+	width: 12px !important;
+  }
+  .pl32{
+    padding-left: 32px ;
+  }
+  .h80{
+    height: 80%;
+  }
+  .pt8{
+    padding-top: 8px;
+  }
+
+  .ml-32{
+    margin-left: -32px;
+  }
+  .pl20{
+    padding-left: 20px;
+  }

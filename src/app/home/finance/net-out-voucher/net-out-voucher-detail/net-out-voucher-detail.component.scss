@@ -1,0 +1,108 @@
+::ng-deep.top-spacer{
+	margin-top: -16px;
+}
+
+::ng-deep.textarea-length-1{
+	position: absolute;
+    top: -24px;
+    right: 0;
+	font-size: var(--label-font-size);
+    font-weight: var(--label-font-weight);
+    color: var(--label-color);
+	display: flex;
+	align-items: end;
+}
+
+::ng-deep.text-area-btn{
+
+    border: none;
+    background: var(--app-primary);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    margin-left: 10px;
+
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.input-wd{
+    min-width: 100px;
+    max-width: 80px;
+}
+.margin{
+  margin: 20px;
+}
+.gap{
+  gap: 60px;
+}
+.mr{
+  margin-right: 4.5rem;
+}
+// .mr1{
+//   margin-right: .5rem;
+// }
+.ml{
+  margin-left: 5px;
+}
+.gap1{
+  gap: 10px;
+}
+th.mat-header-cell,
+  td.mat-footer-cell {
+    position: relative;
+    padding: 0.1rem 0.5rem !important;
+    // border-left: 1px solid var(--table-header-border) !important;
+
+    // &:first-child {
+    //   padding-left: 0.75rem;
+    //   border-left: 0px solid transparent !important;
+    // }
+
+    // &:last-child {
+    //   border-right: 0px solid transparent;
+    // }
+  }
+  .h40{
+    height: 45px !important;
+  }
+  .w50 {
+    width: 50%;
+  }
+  .mr-05 {
+    margin-right: 0.5rem;
+  }
+  tr.mat-row {
+    position: relative;
+
+    &.selected  {
+      background: var(--bs-grid-hover) !important;
+    }
+
+    &:after {
+      position: absolute;
+      content: "";
+      width: 100%;
+      border-bottom: 1px solid var(--table-data-border);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: 0.3s all ease-out;
+    }
+
+    &:hover {
+      &:after {
+        width: 96%;
+        border-bottom: 2px solid var(--bs-primary);
+        left: 2%;
+        right: 2%
+      }
+    }
+
+  }
+
+  .ov-hid{
+    overflow: hidden;
+  }

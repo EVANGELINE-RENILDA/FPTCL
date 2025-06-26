@@ -1,0 +1,167 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <div class="dialog-title"><ion-icon class="dialog-header-icon"
+                src="assets/icons/accordian/trust1.svg"></ion-icon>
+            Estate <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+            Add New
+        </div>
+        <div class="slot-right">
+            <div class="btn-group">
+
+                <app-icon-button name="save" toolTip="Save" (click)="saveTrustForm()"
+                    appButtonAccess="CrmCustAppSaveInfoBtn"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clear()"
+                    appButtonAccess="CrmCustAppRefreshInfoBtn"></app-icon-button>
+
+                <app-icon-button name="close" toolTip="Close" appButtonAccess="CrmCustAppCancelBtn"
+                    (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog-content">
+        <div class="dialog-content-inner h100">
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+            <row class="row-h100">
+                <scroll>
+                    <form #l="ngForm" class="dialog-content-inner">
+                        <row>
+                            <div class="col-md-12">
+                                <div class="box h100">
+                                    <div class="box-header "> Application Information</div>
+                                    <div class=" box-pad">
+                                        <row>
+                                            <!-- <app-input-control class="mb20 col-md-4" label="Ref No" type="text"
+                                                [(ngModel)]="trustDetails.trustApplRefNo"
+                                                name="trustApplRefNo"></app-input-control> -->
+                                            <!-- <app-input-control class="mb20 col-md-4" label="Type" type="select"
+                                                [(ngModel)]="trustDetails.trustTypeValue" [errorTrue]="errorTrue"
+                                                [required]="true" [items]="initialData.DDLValues.DDLTrustType"
+                                                key="constant" keyName="description" defaultOption="--Select--"
+                                                name="trustTypeValue"
+                                                (onSelect)="getTrustApplicationBasedOnTrustType(trustDetails)"></app-input-control> -->
+                                            <view-label label="Stage"
+                                                value="{{trustDetails.applicationStageDescription}}"
+                                                class="mb20 col-md-4"></view-label>
+                                            <view-label label="Action Status"
+                                                status="{{trustDetails.actionStatusValue}}"
+                                                statusValue="{{trustDetails.actionStatusDescription}}"
+                                                class="mb20 col-md-4"></view-label>
+                                            <view-label label="Application Status" status="{{trustDetails.statusValue}}"
+                                                statusValue="{{trustDetails.statusDescription}}"
+                                                class="mb20 col-md-4"></view-label>
+                                            <view-label label="Application Date"
+                                                value="{{trustDetails.appliedDate | appDate}}"
+                                                class="mb20 col-md-4"></view-label>
+                                            <view-label label="Applied Branch"
+                                                value="{{trustDetails.appliedBranchDescription}}"
+                                                class="mb20 col-md-4"></view-label>
+
+
+
+
+                                            <!-- <app-input-control class="mb20" label="Lead Ref No" type="text"
+                                            [(ngModel)]="trustDetail" [items]="initialData.DDLValues.DDLCustomer"
+                                            key="id" keyName="code" name="leadRefNo"></app-input-control> -->
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Client Information</div>
+                                    <div class=" box-pad">
+                                        <app-input-control class="mb20" label="Name" type="text"
+                                            [(ngModel)]="trustDetails.ientTrustApplicationClient"
+                                            name="trustName"></app-input-control>
+                                        <app-input-control class="mb20" label="Date Of Birth" type="date"
+                                            [(ngModel)]="trustDetails" name="dateOfTrustDeed"></app-input-control>
+                                        <app-input-control class="mb20" label="Date Of Death (Age)" type="date"
+                                            [(ngModel)]="trustDetails.dateOfTrustDeed"
+                                            name="dateOfTrustDeed"></app-input-control>
+                                        <app-input-control class="mb20" label="BRN" type="text"
+                                            [(ngModel)]="trustDetails.appliedBranchValue"
+                                            name="appliedBranchValue"></app-input-control>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Applicant Information</div>
+                                    <div class=" box-pad">
+                                        <app-input-control class="mb20" label="Name" type="text"
+                                            [(ngModel)]="trustDetails.ientTrustApplicationApplicant.ientCustomer.firstName"
+                                            name="trustName"></app-input-control>
+                                        <app-input-control class="mb20" label="Date Of Birth" type="number"
+                                            [(ngModel)]="trustDetails.ientTrustApplicationApplicant.customerId"
+                                            name="appliedDate"></app-input-control>
+                                        <app-input-control class="mb20" label="Contact No" type="number"
+                                            [maxLength]="20" [(ngModel)]="trustDetails"
+                                            name="trustName"></app-input-control>
+                                        <app-input-control class="mb20" label="Email ID" type="email"
+                                            [(ngModel)]="trustDetails.ientTrustApplicationApplicant"
+                                            name="trustName"></app-input-control>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Benificiary Information</div>
+                                    <div class=" box-pad">
+                                        <app-input-control class="mb20" label="Name" type="text"
+                                            [(ngModel)]="trustDetails.trustName" name="trustName"></app-input-control>
+                                        <app-input-control class="mb20" label="Date Of Birth" type="date"
+                                            [(ngModel)]="trustDetails.dateOfTrustDeed"
+                                            name="dateOfTrustDeed"></app-input-control>
+                                        <app-input-control class="mb20" label="Contact No" type="number"
+                                            [(ngModel)]="trustDetails.dateOfTrustDeed"
+                                            name="dateOfTrustDeed"></app-input-control>
+                                        <app-input-control class="mb20" label="Email ID" type="email"
+                                            [(ngModel)]="trustDetails.ientTrustApplicationApplicant"
+                                            name="trustName"></app-input-control>
+                                        <app-input-control class="mb20" label="Relationship" type="text"
+                                            [(ngModel)]="trustDetails.ientTrustApplicationApplicant"
+                                            name="trustName"></app-input-control>
+                                        <div>
+                                            Nomination
+                                            <div class="status-toggle">
+
+                                                <mat-slide-toggle class="pl10" [checked]="toggleCheck==='Y'"
+                                                    (change)="nominationToggle($event.checked)">{{toggleState}}</mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb20"></div>
+                                <div class="box  h100">
+                                    <div class="box-header "> Trust Information</div>
+                                    <div class=" box-pad">
+                                        <app-input-control class="mb20" label="File No" type="number"
+                                            [(ngModel)]="trustDetails.fileNo" name="fileNo"></app-input-control>
+                                        <app-input-control class="mb20" label="Account No" type="number"
+                                            [(ngModel)]="trustDetails" name="trustName"></app-input-control>
+                                        <app-input-control class="mb20" label="Receipt No" type="number"
+                                            [(ngModel)]="trustDetails.ientTrustApplicationApplicant.ientCustomer.firstName"
+                                            name="trustName"></app-input-control>
+                                        <app-input-control class="mb20" label="Account Status" type="select"
+                                            [(ngModel)]="trustDetails.applicationStageValue" defaultOption="--Select--"
+                                            [items]="initialData.DDLValues.DDLTrustApplicationStage" key="constant"
+                                            keyName="description" name="applicationStageValue"></app-input-control>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                        </row>
+                    </form>
+                </scroll>
+            </row>
+
+        </div>
+
+    </div>

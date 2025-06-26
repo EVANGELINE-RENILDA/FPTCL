@@ -1,0 +1,120 @@
+<div class="v-flex h100 content-wrapper">
+  <div class="h100">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"
+      [sortColumnsName]="sortColumnName" [dataSource]="tableData" [hideSelectAll]="true" [showPaginator]="true"
+      [hasHeader]="true" (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)">
+      <ng-template cellDef="effectiveDate" let-element>
+        {{ element.effectiveDate | appDate }}
+      </ng-template>
+      <ng-template cellHeaderDef="totalReceiptAmount" let-element>
+        <div class="text-center">Total Transaction Amount ({{ currency }})</div>
+      </ng-template>
+      <ng-template cellDef="totalReceiptAmount" let-element>
+        <div class="amount-align">
+          {{ element.totalReceiptAmount }}
+        </div>
+      </ng-template>
+
+      <ng-template cellDef="status" let-element>
+        <accouts-status-table maxHeight="250px" [statusDescription]="element.depositBookstatus"></accouts-status-table>
+      </ng-template>
+
+      <ng-template cellDef="action" let-element>
+        <app-icon-button name="open" toolTip="Open"
+          (click)="depositDetail(element.cashCounterDepositBookId)"></app-icon-button>
+      </ng-template>
+
+      <ng-template #slotLeft>
+        <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="300px"></app-search>
+      </ng-template>
+
+      <ng-template #slotRight>
+        <div class="d-flex align-items-center w100">
+          <div class="col-md-1">
+            <app-icon-button name="add" toolTip="Add New" (click)="addNewDepositBook()"></app-icon-button>
+          </div>
+        </div>
+      </ng-template>
+    </app-table>
+  </div>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Deposit Book Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="searchDepositBook()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearDepositSearch()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row>
+              <div class="col-md-4 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="text" label="Deposit Book No" [(ngModel)]="searchParams.depositBookNo"
+                      name="depositBookNo"></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="number" label=" Cash Counter No" [(ngModel)]="searchParams.cashCounterNo"
+                      name="cashCounterNo"></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-4 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="date" label="Effective Date From"
+                      [(ngModel)]="searchParams.idtmEffectiveDateFrom" [maxDate]="searchParams.idtmEffectiveDateTo"
+                      name="dtmDocumentDateFrom"></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="date" label="Effective Date To"
+                      [(ngModel)]="searchParams.idtmEffectiveDateTo" name="idtmEffectiveDateTo"
+                      [minDate]="searchParams.idtmEffectiveDateFrom"></app-input-control>
+                  </div>
+                </row>
+              </div>
+              <div class="col-md-4 border-right">
+                <row>
+                  <div class="col-md-12 mb26">
+                    <app-input-control label=" Assigned Officer " [(ngModel)]="searchParams.assignedOfficer"
+                      name="assignedOfficer" type="select" [items]="cashCounterDDL" key="id"
+                      keyName="fullName"></app-input-control>
+                  </div>
+
+                  <div class="col-md-12 mb26">
+                    <app-input-control type="select" label=" Status" [(ngModel)]="searchParams.statusValue"
+                      name="statusValue" defaultOption="--Select--" [items]="initialData.DDLValues.DDLDepositbookStatus"
+                      key="constant" keyName="description"></app-input-control>
+                  </div>
+                </row>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon name="person-outline"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Deposit Book</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

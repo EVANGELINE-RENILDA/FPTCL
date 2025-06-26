@@ -1,0 +1,191 @@
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                <div class="screen-text">Budget</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Budget Configuration</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<div class="v-flex h100 content-wrapper" appAccess="FUDTN">
+    <div class="h100">
+        <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+            (pageChanged)="pageChanged($event)" [hideSelectAll]="true">
+            <ng-template cellDef="action" let-element></ng-template>
+
+            <ng-template cellHeaderDef="budgetName">
+                <div class="header-cell-title">Budget Name</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="fiscalYear">
+                <div class="header-cell-title">Fiscal Year</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="budgetType">
+                <div class="header-cell-title">Budget Type</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="addedBy">
+                <div class="header-cell-title">Added By</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="addedDate">
+                <div class="header-cell-title">Added Date</div>
+            </ng-template>
+
+            <ng-template cellDef="action" let-element></ng-template>
+
+            <ng-template cellDef="detail">
+                <app-icon-button name="open" toolTip="Open Selected" (click)="navigateToDetail()"></app-icon-button>
+            </ng-template>
+
+            <ng-template #slotLeft>
+                <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+            </ng-template>
+
+            <ng-template #slotRight>
+                <div class="d-flex align-items-center w100">
+                    <div class="px10">
+                        <view-label label="Report Generating Date & Time" value=""></view-label>
+                    </div>
+
+                    <div class="col-md-1">
+                        <app-icon-button name="add" toolTip="Add New" (click)="openDialog(element)"></app-icon-button>
+                    </div>
+                </div>
+            </ng-template>
+        </app-table>
+    </div>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Budget Configuration Review</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Clear" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form>
+
+                        <row>
+                            <div class="col-md-4 border-right">
+                                <row>
+
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Budget Name"
+                                            placeholder="Enter Budget Name" name=""></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Added By" placeholder="Select Added By"
+                                            defaultOption="--Select--" name=""></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Fiscal Year"
+                                            placeholder="Select Fiscal Year" defaultOption="--Select--"
+                                            name=""></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Added From Date"
+                                            placeholder="Select Added From Date" name=""></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+
+                            <div class="col-md-4">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Budget Type"
+                                            placeholder="Select Budget Type" defaultOption="--Select--" key=""
+                                            keyName=""></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Added To Date"
+                                            placeholder="Select Added To Date" name=""></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                        </row>
+
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #eventCreation>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/budget.svg"></ion-icon>
+                Budget Configuration > Creation > New
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner v-flex h100">
+                    <form #p="ngForm">
+                        <row>
+                            <div class="col-md-12">
+                                <row>
+                                    
+                                    <div class="col-md-4 border-right">
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Budget Name" name=""
+                                                [required]="true"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <view-label label="Added By"></view-label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 border-right">
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" label="Fiscal Year" defaultOption="--Select--"
+                                                [required]="true" name="" key="" keyName=""></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <view-label label="Added Date"></view-label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" label=" Budget Type" defaultOption="--Select--"
+                                                [required]="true" name="" key="" keyName=""></app-input-control>
+                                        </div>
+                                    </div>
+                                </row>
+
+                            </div>
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>

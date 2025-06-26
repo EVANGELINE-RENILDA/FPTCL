@@ -1,0 +1,908 @@
+<div class="content-wrapper">
+    <div class="sticky-card">
+        <row>
+            <div class="col-md-3 mb20"><view-label label="Name" value="{{userRequest.fullName}}"></view-label>
+            </div>
+            <div class="col-md-3 mb20"><view-label label=" Request Ref No"
+                    value="{{userRequest.requestRefNo}}"></view-label>
+            </div>
+            <div class="col-md-3 mb20"><view-label label="Employee Code"
+                    value="{{userRequest.employeeCode}}"></view-label>
+            </div>
+            <div class="col-md-3 mb20"><view-label label="Contact No"
+                    value="{{userRequest.contactNumber}}"></view-label>
+            </div>
+            <div class="col-md-3 mb20"><view-label label="Email ID" value="{{userRequest.emailId}}"></view-label></div>
+            <div class="col-md-3 mb20"><view-label label="Status" status="{{userRequest.requestStatusValue}}"
+                    statusValue="{{userRequest.requestStatusDescription}}"></view-label></div>
+            <div class="col-md-3"></div>
+
+
+        </row>
+    </div>
+    <div class="pos-abs1 d-flex gap-10">
+        @if(userRequest.requestStatusValue === 'PENSU'){
+        @if(userDetailBtns){
+        @if(userRequest.userRequestId === 0){
+
+        <app-input-control label="" [(ngModel)]="employeecode" name="employeecode" [search]="true" class="w180"
+            (onSearch)="check(employeecode)" placeholder="Enter Employee Code" [search]="true"></app-input-control>
+        }
+        @if(editStaffReg === false){
+        <app-icon-button name="edit" toolTip="Edit" (click)="editStaffRegistration()"></app-icon-button>
+        }
+        @if(editStaffReg === true){
+        @if(userRequest.userRequestId === 0){
+
+        <app-icon-button name="save" label="Save" (click)="saveUserRequest()"></app-icon-button>
+        <app-icon-button name="clear" label="Clear" (click)="clearUserReq()"></app-icon-button>
+        }
+        @else {
+        <app-icon-button name="save" label="Update" (click)="updateUserRequest()"></app-icon-button>
+        <app-icon-button name="refresh" label="Refresh" (click)="refreshUserReq()"></app-icon-button>
+        }
+        }
+        }
+        @if(branchBtns){
+
+        <app-icon-button name="save" toolTip="Save" (click)="saveListOfUserRequestBranch()"></app-icon-button>
+        }
+        @if(teamBtns=== true){
+        <app-icon-button name="save" toolTip="Save" (click)="saveListOfUserRequestDepartmentTeam()"></app-icon-button>
+        }
+        @if(groupBtns === true){
+
+
+        <app-icon-button name="save" toolTip="Save" (click)="saveListOfUserRequestGroup()"></app-icon-button>
+        }
+        }
+    </div>
+    <app-tab-group (tabChange)="onTabChange($event)">
+        <app-tab tabTitle="User Details">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="person-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>User Details</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <form #x="ngForm">
+                            <row>
+                                @if(editStaffReg === false){
+                                <div class="col-md-4 border-right">
+                                    <div class="view-label-container-title mb26">
+                                        <div class="view-label-container-title d-flex align-items-center gap-10">
+                                            <ion-icon name="person-outline"></ion-icon>
+                                            User Details
+                                        </div>
+                                    </div>
+                                    <row>
+                                        <div class="col-md-12"><view-label class="pb16" label="User Name"
+                                                [value]="userRequest.userLoginId"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="First Name"
+                                                [value]="userRequest.firstName"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Middle Name"
+                                                [value]="userRequest.middleName"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Last Name"
+                                                [value]="userRequest.lastName"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Gender"
+                                                [value]="userRequest.genderDescription"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Date Of Birth"
+                                                [value]="userRequest.dob | appDate"></view-label></div>
+
+
+                                    </row>
+                                </div>
+                                <div class="col-md-4 border-right">
+                                    <div class="view-label-container-title mb26">
+                                        <div class="view-label-container-title gap-10 d-flex align-items-center">
+                                            <ion-icon name="call-outline" class="pr5"></ion-icon>
+                                            Contact Details
+                                        </div>
+                                    </div>
+                                    <row>
+                                        <div class="col-md-12"><view-label class="pb16" label="Email ID"
+                                                [value]="userRequest.emailId"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Contact No"
+                                         [value]="userRequest.contactNumber"></view-label></div>
+                                    </row>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="view-label-container-title mb26">
+                                        <div class="view-label-container-title d-flex align-items-center gap-10">
+                                            <ion-icon name="people-outline" class="pr5"></ion-icon>
+                                            Family Details
+                                        </div>
+                                    </div>
+                                    <row>
+                                        <div class="col-md-12"><view-label class="pb16" label="Father Name"
+                                                [value]="userRequest.fatherName"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Mother Name"
+                                                [value]="userRequest.motherName"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Marital Status"
+                                                [value]="userRequest.maritalStatusValue"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Spouse Name"
+                                                [value]="userRequest.spouseName"></view-label></div>
+                                        <div class="col-md-12"><view-label class="pb16" label="Spouse Date of Birth"
+                                                [value]="userRequest.spouseDob | appDate"></view-label></div>
+
+
+                                    </row>
+                                </div>
+
+                                }
+                                @if(editStaffReg === true){
+                                <div class="col-md-4 border-right">
+                                    <div class="view-label-container-title mb26">
+                                        <div class="view-label-container-title d-flex align-items-center">
+                                            <ion-icon name="person-outline"></ion-icon>
+                                            User Details
+                                        </div>
+                                    </div>
+                                    <row>
+                                        <app-input-control label="User Name" type="" class="col-md-12"
+                                            [(ngModel)]="userRequest.userLoginId" name="userLoginId"
+                                            [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                        <app-input-control label="First Name" type="" class="col-md-12"
+                                            [(ngModel)]="userRequest.firstName" name="firstName" [errorTrue]="errorTrue"
+                                            [required]="true"></app-input-control>
+                                        <app-input-control label="Middle Name" type="" class="col-md-12"
+                                            [(ngModel)]="userRequest.middleName" name="middleName"></app-input-control>
+                                        <app-input-control label="Last Name" type="" class="col-md-12"
+                                            [(ngModel)]="userRequest.lastName" name="lastName" [errorTrue]="errorTrue"
+                                            [required]="true"></app-input-control>
+                                        <app-input-control label="Gender" type="select" class="col-md-12" [items]="initialData.DDLValues.DDLGender
+                                    " defaultOption="--Select--" key="constant" keyName="description"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            [(ngModel)]="userRequest.genderValue"
+                                            name="genderValue"></app-input-control>
+                                        <app-input-control label="Date Of Birth" type="date" class="col-md-12"
+                                            [(ngModel)]="userRequest.dob" name="dob" [errorTrue]="errorTrue"
+                                            [required]="true" [maxDate]="currentDate"></app-input-control>
+                                    </row>
+                                </div>
+                                <div class="col-md-4  border-right">
+                                    <div class="view-label-container-title mb26">
+                                        <div class="view-label-container-title d-flex align-items-center">
+                                            <ion-icon name="call-outline" class="pr5"></ion-icon>
+                                            Contact Details
+                                        </div>
+                                    </div>
+                                    <row>
+                                        <app-input-control type="email" label="Email ID" class="col-md-12"
+                                            [(ngModel)]="userRequest.emailId" name="emailId" [errorTrue]="errorTrue"
+                                            [required]="true"></app-input-control>
+                                        <app-input-control type="number" label="Contact No" class="col-md-12"
+                                            [(ngModel)]="userRequest.contactNumber" name="contactNo" [maxLength]="10"  
+                                            [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                    </row>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="view-label-container-title mb26">
+                                        <div class="view-label-container-title d-flex align-items-center">
+                                            <ion-icon name="people-outline" class="pr5"></ion-icon>
+                                            Family1 Details
+                                        </div>
+                                    </div>
+                                    <row>
+                                        <app-input-control label="Father Name" [(ngModel)]="userRequest.fatherName"
+                                            name="fatherName" class="col-md-12"></app-input-control>
+                                        <app-input-control label="Mother Name" [(ngModel)]="userRequest.motherName"
+                                            name="motherName" class="col-md-12"></app-input-control>
+                                        <app-input-control label="Marital Status" type="select"
+                                            defaultOption="--Select--" [(ngModel)]="userRequest.maritalStatusValue"
+                                            name="maritalStatusValue" class="col-md-12" key="constant"
+                                            keyName="description"
+                                            [items]="initialData.DDLValues.DDLMarital"></app-input-control>
+                                        <app-input-control label="Spouse Name" [(ngModel)]="userRequest.spouseName"
+                                            name="spouseName" class="col-md-12"></app-input-control>
+                                        <app-input-control label="Spouse Date of Birth" type="date"
+                                            [maxDate]="currentDate" [(ngModel)]="userRequest.spouseDob" name="spouseDob"
+                                            class="col-md-12"></app-input-control>
+                                    </row>
+                                </div>
+                                }
+
+                            </row>
+                        </form>
+
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+        </app-tab>
+        <app-tab tabTitle="Employment Details">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="folder-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Employment Details</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <form #y="ngForm">
+                            <row>
+                                @if(editStaffReg === false){
+                                <div class="col-md-12">
+                                    <div class="view-label-container-title mb26">
+                                        <div class="view-label-container-title d-flex align-items-center gap-10">
+                                            <ion-icon name="folder-outline" class="pr5"></ion-icon>
+                                            Employment Details
+                                        </div>
+                                    </div>
+                                    <row>
+                                        <div class="col-md-4 border-right"><view-label class="pb16"
+                                                label="Employee Code"
+                                                [value]="userRequest.employeeCode"></view-label><view-label class="pb16"
+                                                label="Begin Date"
+                                                [value]="userRequest.beginDate | appDate"></view-label><view-label
+                                                class="pb16" label="End Date"
+                                                [value]="userRequest.endDate | appDate"></view-label><view-label
+                                                class="pb16" label="Designation"
+                                                [value]="userRequest.designationDescription"></view-label></div>
+                                        <div class="col-md-4 border-right"><view-label class="pb16" label="Branch "
+                                                [value]="userRequest.branchDescription"></view-label><view-label
+                                                class="pb16" label="Location "
+                                                [value]="userRequest.locationDescription"></view-label><view-label
+                                                class="pb16" label="Department"
+                                                [value]="userRequest.departmentDescription"></view-label><view-label
+                                                class="pb16" label="Team"
+                                                [value]="userRequest.teamDescription"></view-label></div>
+                                        <div class="col-md-4 ">
+                                            <view-label class="pb16" label="Status"
+                                                [statusValue]="userRequest.statusDescription"
+                                                [status]="userRequest.statusValue"></view-label>
+                                        </div>
+                                    </row>
+                                </div>
+                                }
+                                @if(editStaffReg === true){
+                                <div class="col-md-12">
+                                    <div class="view-label-container-title mb26">
+                                        <div class="view-label-container-title d-flex align-items-center gap-10">
+                                            <ion-icon name="folder-outline" class="pr5"></ion-icon>
+                                            Employment Details
+                                        </div>
+                                    </div>
+                                    <row>
+                                        <div class="col-md-4 border-right"><app-input-control type=""
+                                                label="Employee Code" name="employeeCode" [maxLength]="10"
+                                                [(ngModel)]="userRequest.employeeCode" [errorTrue]="errorTrue"
+                                                [required]="true"></app-input-control>
+                                            <app-input-control type="date" label="Begin Date"
+                                                [(ngModel)]="userRequest.beginDate" name="beginDate"
+                                                [maxDate]="userRequest.endDate" [errorTrue]="errorTrue"
+                                                [required]="true"></app-input-control>
+                                            <app-input-control class="pb16" label="End Date"
+                                                [minDate]="userRequest.beginDate" type="date"
+                                                [(ngModel)]="userRequest.endDate"></app-input-control>
+                                            <app-input-control type="select" label="Designation" name="designationValue"
+                                                [(ngModel)]="userRequest.designationValue" [errorTrue]="errorTrue"
+                                                [required]="true" [items]="initialData.DDLValues.DDLDesignation"
+                                                key="constant" keyName="description"></app-input-control>
+                                        </div>
+                                        <div class="col-md-4 border-right"><app-input-control type="select"
+                                                label="Branch" [(ngModel)]="userRequest.branchValue"
+                                                [errorTrue]="errorTrue" [required]="true" name="branchValue"
+                                                [items]="initialData.DDLValues.DDLBranch" key="constant"
+                                                keyName="description"></app-input-control><app-input-control
+                                                type="select" label="Location" name="locationValue"
+                                                [(ngModel)]="userRequest.locationValue" [errorTrue]="errorTrue"
+                                                [required]="true" [items]="initialData.DDLValues.DDLLocation"
+                                                key="constant"
+                                                keyName="description"></app-input-control><app-input-control
+                                                type="select" label="Department" name="departmentValue"
+                                                [(ngModel)]="userRequest.departmentValue" [errorTrue]="errorTrue"
+                                                [required]="true" [items]="initialData.DDLValues.DDLDepartment"
+                                                key="constant"
+                                                keyName="description"></app-input-control><app-input-control
+                                                type="select" label="Team" name="teamValue"
+                                                [(ngModel)]="userRequest.teamValue" [errorTrue]="errorTrue"
+                                                [required]="true" [items]="initialData.DDLValues.DDLTeam" key="constant"
+                                                defaultOption="--Select--" keyName="description"></app-input-control>
+                                        </div>
+                                        <div class="col-md-4 ">
+                                            <app-input-control type="select" label="Status"
+                                                [(ngModel)]="userRequest.statusValue" name="statusValue"
+                                                [errorTrue]="errorTrue" [required]="true"
+                                                [items]="initialData.DDLValues.DDLActiveAndInActive" key="constant"
+                                                defaultOption="--Select--" keyName="description"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                }
+                            </row>
+                        </form>
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+        </app-tab>
+        <!-- @if(userRequest.userRequestId !== 0){
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>User Group Request</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+
+                            <div class="content-wrapper">
+                                <app-table [pagination]="pagination" [columns]="userGroupColumns"
+                                    [columnsName]="userGroupColumnsName" [dataSource]="userGroupTableData"
+                                    [hasPagination]="true" [hideSelectAll]="true" columnID="userRequestGroupId">
+                                    <ng-template cellDef="beginDate" let-element>{{element.beginDate |
+                                        appDate}}</ng-template>
+                                    <ng-template cellDef="endDate" let-element>{{element.endDate |
+                                        appDate}}</ng-template>
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"
+                                            (click)="openRequestGroup(element.userRequestGroupId)"></app-icon-button>
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <app-icon-button name="add" toolTip="Add New"
+                                            (click)="createUserGroup()"></app-icon-button>
+                                    </ng-template>
+
+                                </app-table>
+                            </div>
+
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                } -->
+
+        @if(userRequest.userRequestId !== 0){
+        <app-tab tabTitle="Branch">
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper acc-back">
+                    <div class="sub-table w100">
+                        <!-- <div class="sub-table-header pb10">
+                                Approvals
+                            </div> -->
+                        <table class="w100">
+                            <tr>
+                                <th>Branch</th>
+                                <th>Begin Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                            </tr>
+                            @for (item of branchResult.plstentUserRequestBranchLink; track $index) {
+                            <tr>
+                                <td>{{item.branchDescription}}</td>
+                                <td>
+                                    <div class="center">
+                                        <div class="date-fix"><app-input-control [(ngModel)]="item.beginDate"
+                                                name="beginDate" type="date"
+                                                [maxDate]="item.endDate"></app-input-control>
+                                        </div>
+                                    </div>
+
+
+                                </td>
+                                <td>
+                                    <div class="center">
+
+                                        <div class="date-fix"><app-input-control [(ngModel)]="item.endDate"
+                                                name="endDate" type="date"
+                                                [minDate]="item.beginDate"></app-input-control></div>
+                                    </div>
+
+
+                                </td>
+                                <td>
+                                    <div class="center gap-10">
+                                        <app-checkbox [checked]="item.statusValue === 'ACTIV'"
+                                            (change)="branchStatusChange($event,item)"></app-checkbox>
+                                        {{item.statusDescription}}
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </app-tab>
+        <app-tab tabTitle="Team">
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper acc-back">
+
+                    <div class="sub-table w100">
+                        <!-- <div class="sub-table-header pb10">
+                                Approvals
+                            </div> -->
+                        <table class="w100">
+                            <tr>
+                                <th>Team</th>
+                                <th>Begin Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                            </tr>
+                            @for (item of teamResult.plstentUserRequestDepartmentTeamLinkList; track $index) {
+                            <tr class="table-sub-header">
+                                <td colspan="4">
+                                    {{item.departmentDescription}}
+                                </td>
+                            </tr>
+                            @for (data of item.plstentUserRequestDepartmentTeamLink; track $index) {
+                            <tr>
+                                <td> {{data.teamDescription}}</td>
+                                <td>
+                                    <div class="center">
+                                        <div class="date-fix"><app-input-control [(ngModel)]="data.beginDate"
+                                                name="beginDate" type="date"
+                                                [maxDate]="data.endDate"></app-input-control>
+                                        </div>
+                                    </div>
+
+
+                                </td>
+                                <td>
+                                    <div class="center">
+
+                                        <div class="date-fix"><app-input-control [(ngModel)]="data.endDate"
+                                                name="endDate" type="date"
+                                                [minDate]="data.beginDate"></app-input-control></div>
+                                    </div>
+
+
+                                </td>
+                                <td>
+                                    <div class="center gap-10">
+                                        <app-checkbox [checked]="data.statusValue === 'ACTIV'"
+                                            (change)="teamStatusChange($event,data)"></app-checkbox>
+                                        {{data.statusDescription}}
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </app-tab>
+        <app-tab tabTitle="Group">
+            <div class="outer-content-wrapper">
+                <div class="content-wrapper acc-back">
+                    <row>
+                        <div class="col-md-9"></div>
+                        <div class="col-md-3">
+                            <app-input-control [(ngModel)]="defLandPage" label="User Default Landing Page"
+                                name="defLandPage" defaultOption="--Select--" type="select" [items]="landingDefaultDDL"
+                                key="constant" keyName="description"></app-input-control>
+                        </div>
+                    </row>
+                    <div class="sub-table w100">
+                        <!-- <div class="sub-table-header pb10">
+                                Approvals
+                            </div> -->
+                        <table class="w100">
+                            <tr>
+                                <th>Group</th>
+                                <th>Begin Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                            </tr>
+                            @for (item of groupResult.plstentUserRequestGroupList; track $index) {
+                            <tr class="table-sub-header">
+                                <td colspan="4">
+                                    {{item.moduleName}}
+                                </td>
+                            </tr>
+                            @for (data of item.plstentUserRequestGroup; track $index) {
+                            <tr>
+                                <td> {{data.groupName}}</td>
+                                <td>
+                                    <div class="center">
+                                        <div class="date-fix"><app-input-control [(ngModel)]="data.beginDate"
+                                                name="beginDate" type="date"
+                                                [maxDate]="data.endDate"></app-input-control>
+                                        </div>
+                                    </div>
+
+
+                                </td>
+                                <td>
+                                    <div class="center">
+
+                                        <div class="date-fix"><app-input-control [(ngModel)]="data.endDate"
+                                                name="endDate" type="date"
+                                                [minDate]="data.beginDate"></app-input-control></div>
+                                    </div>
+
+
+                                </td>
+                                <td>
+                                    <div class="center  gap-10">
+                                        <app-checkbox [checked]="data.statusValue === 'ACTIV'"
+                                            (change)="teamStatusChange($event,data)"></app-checkbox>
+                                        {{data.statusDescription}}
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </app-tab>
+        <app-tab tabTitle="History">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Notes</div>
+                                    <div class="accordian-title-count">{{userRequest.plstentUserRequestNotes.length}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <div class="p16px pb26 wrap-content">
+                                    <div class="justify-content-end d-flex">
+                                        @if(userRequest.requestStatusValue === 'PENSU'){
+                                        <app-icon-button name="add" toolTip="Create"
+                                            (click)="createNewUserRequestNotes()"></app-icon-button>
+                                        }
+                                    </div>
+
+                                    @for (item of userRequest.plstentUserRequestNotes; track $index) {
+                                    <div class="border-bottom  notes-list">
+                                        <div class="mx10">{{item.notes}}</div>
+                                        <div class="d-flex justify-content-end notes-context">
+                                            <div style="padding-right:5px ;">
+                                                {{item.modifiedByFullname}}</div>
+                                            <div class=" notes-border-left">
+                                                {{item.modifiedDate | appDate}}
+                                            </div>
+                                            <div style="padding-right:5px ;"></div>
+                                            <div class=" notes-border-left status-{{item.requestStatusValue}}">
+                                                {{item.requestStatusDescription}}
+                                            </div>
+                                            <div class="card-1-header-label px-2 ">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Assigned Officer</div>
+                                    <div class="accordian-title-count">
+                                        {{userRequest.plstentUserRequestAssignedOfficer.length}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                                    [hasPagination]="true" [dataSource]="userRequest.plstentUserRequestAssignedOfficer"
+                                    [hideSelectAll]="true">
+                                    <ng-template #slotRight>
+                                        @if(userRequest.requestStatusValue === 'PENSU'){
+                                        <row>
+                                            @if(userRequest.reassigened === 'True'){
+                                            <form #p="ngForm" class="col-md-10 w250">
+                                                <app-input-control type="select" key="description" keyName="name"
+                                                    placeholder="Officer" [items]="listOfOfficer"
+                                                    defaultOption="--Select--"
+                                                    [(ngModel)]="userRequestAssignedOfficer.assignedOfficerCode"
+                                                    name="assignedOfficerCode"></app-input-control>
+                                            </form>
+                                            <div class="col-md-2"><app-icon-button name="reassign"
+                                                    (click)="reAssignUserReq()" toolTip="Reassign"></app-icon-button>
+                                            </div>
+                                            }
+                                            @if(userRequest.selfAssingened === 'True'){
+                                            <div class="col-md-2"><app-icon-button name="self-assign"
+                                                    (click)="selfAssignUserReq()"
+                                                    toolTip="Self Assign"></app-icon-button>
+                                            </div>
+                                            }
+                                        </row>
+                                        }
+                                    </ng-template>
+                                    <ng-template cellDef="statusDescription" let-element>
+                                        <div class="status status-{{element.requestStatusValue}}">
+                                            {{element.requestStatusDescription}}
+                                        </div>
+                                    </ng-template>
+                                    <ng-template cellDef="assignedDate" let-element>
+                                        {{element.assignedDate | appDate}}
+                                    </ng-template>
+                                    <ng-template cellDef="assignedByFullname" let-element>
+                                        {{element.assignedByFullName}}
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+            <div class="bg-white-padd">
+
+                <app-tab-sub-group>
+                    <app-sub-tab tabTitle=" Status History">
+                        <div class="status-padding">
+                            @if (userRequest.plstentUserRequestStatusHistory.length > 0) {
+                            <div class="status-history">
+                                <ul>
+                                    @for (x of userRequest.plstentUserRequestStatusHistory; track $index) {
+                                    <li>
+                                        <div>
+                                            <accouts-status-table
+                                                [statusDescription]="x.requestStatusDescription"></accouts-status-table>
+                                        </div>
+                                        <div class="status-history-subtitle">{{x.modifiedByFullname}} | {{x.modifiedDate
+                                            |appDate}} | {{x.modifiedDate
+                                            |appDate: 'hh:mm a'}}</div>
+                                    </li>
+
+                                    }
+                                </ul>
+                            </div>
+                            }
+                        </div>
+                    </app-sub-tab>
+                    <app-sub-tab tabTitle="Communication History">
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName"
+                                    [hasPagination]="true" [dataSource]="userRequest.plstentUserRequestEmailHistory"
+                                    [pagination]="pagination" [hideSelectAll]="true">
+                                    <ng-template cellDef="toEmailId" let-element>
+                                        {{element.pentCommunicationTracking.toEmailId}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentDate" let-element>
+                                        {{element.pentCommunicationTracking.sentDate |
+                                        appDate
+                                        }} |
+                                        {{element.pentCommunicationTracking.sentDate
+                                        | appDate: 'hh:mm a'}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentStatusDescription" let-element>
+                                        <div class="status-{{element.pentCommunicationTracking.sentStatusValue}}">
+                                            {{element.pentCommunicationTracking.sentStatusDescription}}</div>
+                                    </ng-template>
+
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"
+                                            (click)="viewEmailDetail(element)"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                    </app-sub-tab>
+                </app-tab-sub-group>
+            </div>
+
+        </app-tab>
+        }
+    </app-tab-group>
+</div>
+
+<ng-template #userGroupDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title gap-10"><ion-icon src="assets/icons/admin-icon.svg"></ion-icon>
+                @if(userRequestGroup.userRequestGroupId === 0){Add}
+                @else{Edit} User Request Group
+            </div>
+            <div class="slot-right d-flex gap-10">
+                @if(userRequestGroup.userRequestGroupId === 0){
+                <app-icon-button name="save" toolTip="Save" (click)="saveUserGroup()"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clearUserGroup()"></app-icon-button>
+                }
+                @else {
+                <app-icon-button name="save" toolTip="Save" (click)="saveUserGroup()"></app-icon-button>
+                <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshUserGroup()"></app-icon-button>
+                }
+                <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+        <div class="dialog-content">
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+            <div class="dialog-content-inner h100">
+                <form #u="ngForm">
+                    <row>
+                        <div class="col-md-6"><app-input-control label="Group" [(ngModel)]="userRequestGroup.groupId"
+                                [items]="initialData.DDLValues.DDLUserGroup" key="id" keyName="name" [required]="true"
+                                [errorTrue]="errorTrue" valueType="int" defaultOption="--Select--" name="groupId"
+                                type="select"></app-input-control></div>
+                        <div class="col-md-6"><app-input-control label="Status"
+                                [(ngModel)]="userRequestGroup.statusValue" name="statusValue" type="select"
+                                [items]="initialData.DDLValues.DDLUserStatus" key="constant" keyName="description"
+                                defaultOption="--Select--" [errorTrue]="errorTrue"
+                                [required]="true"></app-input-control></div>
+                        <div class="col-md-6"><app-input-control label="Begin Date"
+                                [(ngModel)]="userRequestGroup.beginDate" name="beginDate" type="date"
+                                [maxDate]="userRequestGroup.endDate" [errorTrue]="errorTrue"
+                                [required]="true"></app-input-control></div>
+                        <div class="col-md-6"><app-input-control label="End Date" [(ngModel)]="userRequestGroup.endDate"
+                                name="endDate" type="date" [minDate]="userRequestGroup.beginDate"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+                <div class="mb20"></div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- <ng-template #breadCrumb>
+    <div class="breadcrumb">
+      <ul>
+        <li class="screen-name link" (click)="navigateToList()">
+          <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+          <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+          <div class="screen-text">Customer Service</div>
+        </li>
+        <li class="screen-name">
+          <div class="screen-text">Details</div>
+        </li>
+      </ul>
+    </div>
+  </ng-template> -->
+
+<ng-template #emailDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title gap-8"><ion-icon src="assets/icons/admin-icon.svg"></ion-icon> User Request > View
+                Email History
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <!-- {{xData.email.pentCommunicationTracking.fromEmailId}} -->
+                <scroll>
+                    <row>
+                        <div class="col-md-3 border-right p15">
+                            <view-label label="From " class="mb26"
+                                value="{{emailData.pentCommunicationTracking.fromEmailId}}"></view-label>
+                            <view-label label="To " class="mb26"
+                                value="{{emailData.pentCommunicationTracking.toEmailId}}"></view-label>
+                            <view-label label="Date " class="mb26"
+                                value="{{emailData.pentCommunicationTracking.sentDate | appDate}}"></view-label>
+                        </div>
+                        <div class="col-md-9 d-flex justify-content-between  p15">
+
+
+                            <div class="mail-content">
+
+                                {{emailData.pentCommunicationTracking.mailContent}}
+                            </div>
+                            <div class="end">
+                                <view-label label="Status "
+                                    status="{{emailData.pentCommunicationTracking.sentStatusValue}}"
+                                    statusValue="{{emailData.pentCommunicationTracking.sentStatusDescription}}"></view-label>
+                            </div>
+                        </div>
+                    </row>
+                </scroll>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon src="assets/icons/admin-icon.svg"></ion-icon>
+                <div class="screen-text">User Request</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon src="assets/icons/admin-icon.svg"></ion-icon> User Request > Detail >
+                Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveUserRequestNotes()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearUserNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <form #a="ngForm">
+                    <row>
+                        <div class="col-md-6 pb16"> <app-input-control type="select" label="Status" [items]="notesDDl"
+                                defaultOption="--Select--" key="constant" keyName="description"
+                                [(ngModel)]="userRequestNotes.requestStatusValue" name="requestStatusValue"
+                                [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-12 ">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="userRequestNotes.notes" [maxLength]="250" name="notes" [required]="true"
+                                label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #infoDialog>
+    <div class="dialog-container">
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+                <div class="notification-header">
+                    <div class="notification-icon">
+                        <ion-icon name="alert-circle-outline"></ion-icon>
+                    </div>
+                    <div class="notification-title">Alert</div>
+                </div>
+                <div class="notification-message">
+                    Are you sure want to edit the User Request Details?
+                </div>
+                <div class="notification-button">
+                    <button class="btn-notification" (click)="getUserDetailsByEmployeeCode(employeecode)">Yes</button>
+                    <button class="btn-notification cancel-btn" (click)="dialog.closeAll()">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

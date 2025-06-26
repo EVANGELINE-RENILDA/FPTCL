@@ -1,0 +1,124 @@
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                <div class="screen-text">Budget</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Budget Ceiling</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<div class="v-flex h100 content-wrapper" appAccess="FUDTN">
+    <div class="h100">
+        <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+            (pageChanged)="pageChanged($event)" [hideSelectAll]="true">
+            <ng-template cellDef="action" let-element></ng-template>
+
+            <ng-template cellHeaderDef="fiscalYear">
+                <div class="header-cell-title">Fiscal Year</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="budgetName">
+                <div class="header-cell-title">Budget Name</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="createdDate">
+                <div class="header-cell-title">Created Date</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="createdBy">
+                <div class="header-cell-title">Created By</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="status">
+                <div class="header-cell-title">Status</div>
+            </ng-template>
+
+            <ng-template cellDef="action" let-element></ng-template>
+
+            <ng-template cellDef="detail">
+                <app-icon-button name="open" toolTip="Open Selected" (click)="navigateToDetail()"></app-icon-button>
+            </ng-template>
+
+            <ng-template #slotLeft>
+                <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+            </ng-template>
+
+            
+        </app-table>
+    </div>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Budget Ceiling Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Clear" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form>
+
+                        <row>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Fiscal Year"
+                                            placeholder="Select Fiscal Year" defaultOption="--Select--"
+                                            name=""></app-input-control>
+                                    </div>
+
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Budget Name"
+                                            placeholder="Enter Budget Name" name=""></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-4 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Created Date From"
+                                            placeholder="Select Created Date From" name=""></app-input-control>
+                                    </div>
+
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Created Date To"
+                                            placeholder="Select Created Date To" name=""></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+
+                            <div class="col-md-4">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Created By"
+                                            placeholder="Select Created By" defaultOption="--Select--" key=""
+                                            keyName=""></app-input-control>
+                                    </div>
+
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Status"
+                                            placeholder="Select Status" defaultOption="--Select--" key=""
+                                            keyName=""></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                        </row>
+
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>

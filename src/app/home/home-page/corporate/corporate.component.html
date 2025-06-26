@@ -1,0 +1,30 @@
+<div class="padd-menus" [parentId]="pageId" appAccess="PRTDV">
+    <div class="submenu-container col-md-10">
+        <div class="d-flex w100">
+
+            <div class="col-md-3 ">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_config.svg"></ion-icon> Modules
+                </div>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/corporate/finance-menus">Accounts</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/corporate/purchase-menus">Purchase</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/corporate/sales-menus">Sales</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/corporate/inventory-menus">Inventory</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+
+                <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                <div class="screen-text">Corporate</div>
+            </li>
+
+        </ul>
+    </div>
+</ng-template>

@@ -1,0 +1,226 @@
+<div class="v-flex h100" appAccess="AGRPS" [parentId]="pageId">
+  <div class="justify-end">
+    <div class="col-md-3">
+      <!-- <app-input-control label="Region" [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"
+        [(ngModel)]="regionValueGroup" name="regionValueGroup" (onSelect)="getGroupListBasedOnRegion()" type="select"
+        defaultOption="--Select--"></app-input-control> -->
+    </div>
+  </div>
+  <!-- <row> -->
+  <div class="flex-1 relative">
+    <div class="ab">
+      <div class="rel">
+        <div class="d-flex h100">
+          <div class="col-md-3">
+            <div class="v-flex h100 ">
+              <div class="finance-header-card assets">
+                <div class="finance-header-title">
+                  Assets
+                </div>
+                <div class="ml-auto">
+                  <button mat-icon-button (click)="addGroup('ASSET')" appButtonAccess="GrpAssetsNewBtn">
+                    <ion-icon name="add-outline" class="text-white"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="flex-1 relative h100">
+                <div class="ab">
+                  <div class="rel">
+                    <tree-root [nodeData]="assetNode" key="actGroupId">
+                      <ng-template #nodeContents let-node>
+                        <div class="group-title" (click)="navigateGroupDetail(node)">
+                          {{node.groupName}}
+                        </div>
+                        <div class="slot-end">
+                          @if (node.isDefaultGroup === 'Y') {
+                          <button class="group-icon-button grey">
+                            <ion-icon name="lock-closed" class="lock-primary" (click)="accountLockAlert()"></ion-icon>
+                          </button>
+                          } @else {
+                          <button class="group-icon-button danger" appButtonAccess="GrpAssetsDelBtn">
+                            <ion-icon name="remove-outline" class="text-danger" (click)="groupDelete(node)"></ion-icon>
+                          </button>
+                          }
+                          <button class="group-icon-button success" (click)="addGroup(node)"
+                            appButtonAccess="GrpAssetsNewBtn">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </div>
+                      </ng-template>
+                    </tree-root>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-3">
+            <div class="v-flex h100 t-root">
+              <div class="finance-header-card liability">
+                <div class="finance-header-title">
+                  Liability and Equity
+                </div>
+                <div class="ml-auto">
+                  <button mat-icon-button (click)="addGroup('LIABT')" appButtonAccess="GrpLibEqNewBtn">
+                    <ion-icon name="add-outline" class="text-white"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="flex-1 relative h100">
+                <div class="ab">
+                  <div class="rel">
+                    <tree-root [nodeData]="liablesNode" key="actGroupId">
+                      <ng-template #nodeContents let-node>
+                        <div class="group-title" (click)="navigateGroupDetail(node)">{{node.groupName}}</div>
+                        <div class="slot-end">
+                          @if (node.isDefaultGroup === 'Y') {
+                          <button class="group-icon-button grey">
+                            <ion-icon name="lock-closed" class="lock-primary" (click)="accountLockAlert()"></ion-icon>
+                          </button>
+                          } @else {
+                          <button class="group-icon-button danger" appButtonAccess="GrpLibEqDelBtn">
+                            <ion-icon name="remove-outline" class="text-danger" (click)="groupDelete(node)"></ion-icon>
+                          </button>
+                          }
+                          <button class="group-icon-button success" (click)="addGroup(node)"
+                            appButtonAccess="GrpLibEqNewBtn">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </div>
+                      </ng-template>
+                    </tree-root>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="col-md-3">
+            <div class="v-flex h100 ">
+              <div class="finance-header-card income">
+                <div class="finance-header-title">
+                  Income
+                </div>
+                <div class="ml-auto">
+                  <button mat-icon-button (click)="addGroup('INCME')" appButtonAccess="GrpIncomeNewBtn">
+                    <ion-icon name="add-outline" class="text-white"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="flex-1 relative">
+                <div class="ab">
+                  <div class="rel">
+                    <tree-root [nodeData]="incomeNode" key="actGroupId">
+                      <ng-template #nodeContents let-node>
+                        <div class="group-title" (click)="navigateGroupDetail(node)">{{node.groupName}}</div>
+                        <div class="slot-end">
+                          @if (node.isDefaultGroup === 'Y') {
+                          <button class="group-icon-button grey">
+                            <ion-icon name="lock-closed" class="lock-primary" (click)="accountLockAlert()"></ion-icon>
+                          </button>
+                          } @else {
+                          <button class="group-icon-button danger">
+                            <ion-icon name="remove-outline" class="text-danger" (click)="groupDelete(node)"
+                              appButtonAccess="GrpIncomeDelBtn"></ion-icon>
+                          </button>
+                          }
+                          <button class="group-icon-button success" (click)="addGroup(node)"
+                            appButtonAccess="GrpIncomeNewBtn">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </div>
+                      </ng-template>
+                    </tree-root>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="col-md-3">
+            <div class="v-flex h100 ">
+              <div class="finance-header-card expense">
+                <div class="finance-header-title">
+                  Expense
+                </div>
+                <div class="ml-auto">
+                  <button mat-icon-button (click)="addGroup('EXPNS')" appButtonAccess="GrpExpenseNewBtn">
+                    <ion-icon name="add-outline" class="text-white"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="flex-1 relative">
+                <div class="ab">
+                  <div class="rel">
+                    <tree-root [nodeData]="expensiveNode" key="actGroupId">
+                      <ng-template #nodeContents let-node>
+                        <div class="group-title" (click)="navigateGroupDetail(node)">{{node.groupName}}</div>
+                        <div class="slot-end">
+                          @if (node.isDefaultGroup === 'Y') {
+                          <button class="group-icon-button grey">
+                            <ion-icon name="lock-closed" class="lock-primary" (click)="accountLockAlert()"></ion-icon>
+                          </button>
+                          } @else {
+                          <button class="group-icon-button danger">
+                            <ion-icon name="remove-outline" class="text-danger" (click)="groupDelete(node)"
+                              appButtonAccess="GrpExpenseDelBtn"></ion-icon>
+                          </button>
+                          }
+                          <button class="group-icon-button success" (click)="addGroup(node)"
+                            appButtonAccess="GrpExpenseNewBtn">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </div>
+                      </ng-template>
+                    </tree-root>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- </row> -->
+</div>
+
+
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      @if(regionValueGroup === 'REGIO'){
+      <li class="screen-name link">
+        <!-- <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div> -->
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text">Group</div>
+      </li>
+      }
+
+      @else {
+      <li class="screen-name link">
+        <!-- <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div> -->
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text">Group</div>
+      </li>
+      }
+
+    </ul>
+  </div>
+</ng-template>

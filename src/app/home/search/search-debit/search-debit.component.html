@@ -1,0 +1,17 @@
+<app-auto-complete [disabled]="__btnClicked" [displayText]="displayText" [items]="items"
+    (onInput)="getSearchData($event)" keyName="codeName" (onSelect)="valueSelected($event)"
+    (onSearch)="searchData($event)" [errorTrue]="control?.control?.invalid && __errorTrue" [errorText]="__errorText"
+    [label]="__label" [required]="__required" (onClear)="onAction('clear')" [disabled]="__btnClicked"
+    (onSearch)="openSearch($event)">
+
+</app-auto-complete>
+ 
+<ng-template #LedgerSearchPopupDialog>
+    <app-ledger-search [items]="ledgerSearchList" [debtitName]="__debitName" [getTypeValue1]="_getTypeValue"
+        [displayText]="__fundTrnsferNote.ibusCompanyDebitActLedger?.ledgerName"
+        [regionValue]="!!regionValue?regionValue:__fundTrnsferNote.regionValue" [isModeType]="true"
+        [modeType]="__modeTypeValue" [isNoCashorBank]="_isNoCashorBankVal" [selectedGroupId]="__SelectedGroupId"
+        [isBankorCash]="noCashorBankValue" [isChecked]="__fundTrnsferNote.debitLedgerTypeValue" ></app-ledger-search>
+
+</ng-template>
+<!-- {{items.aliasName}} -->

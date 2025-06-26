@@ -1,0 +1,241 @@
+tbody {
+  background: #fff;
+}
+
+.px-2 {
+  padding: 0px 5px;
+}
+
+.dialog-container .dialog-content .dialog-content-inner {
+  padding: 16px 16px 30px 16px;
+}
+
+.cus-table {
+  .border-none {
+    border: 0px !important;
+  }
+
+  .app-table-header-row {
+    background: #fff !important;
+  }
+
+  .scroll {
+    width: 100%;
+    max-height: 500px;
+    overflow-y: scroll;
+  }
+
+  .app-table-cell {
+    padding: 12px;
+    background: #fff;
+    border-bottom: 1px solid #d8d8d8;
+  }
+
+  .app-table-head {
+    position: sticky;
+    top: 0%;
+    z-index: 1;
+  }
+
+  .app-table-header-cell {
+    height: 40px;
+    text-align: left;
+    padding-right: 16px;
+    // border: transparent !important;
+    border-bottom: 1px solid #d8d8d8;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    border-top: transparent;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark-color);
+
+    // .header-cell-title {
+    padding: 12px !important;
+    // }
+  }
+}
+
+.header-w {
+  width: 270px !important;
+}
+
+.flex-wrap {
+  flex-flow: wrap;
+}
+
+// .voucher-w {
+//     width: 150px;
+// }
+
+::ng-deep app-table.subTable .table-container {
+  // padding: 10px 0px !important;
+  border: transparent;
+  border-top: 0px;
+}
+
+.elipsis {
+  // white-space: nowrap;
+  text-wrap: nowrap;
+  width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.header-w-percentage {
+  width: auto !important;
+}
+
+.p-2 {
+  padding: 5px 15px;
+}
+
+// .py-3 {
+//     padding: 10px 0px !important;
+// }
+
+.border-bottom {
+  border-bottom: 1px solid #d8d8d8;
+  margin: 0;
+  width: 100%;
+}
+
+// .app-table
+
+.dialog-footer {
+  background-color: #fff;
+  display: flex;
+  justify-content: end;
+  column-gap: 10px;
+  padding: 5px 10px;
+  z-index: 1; /* Ensure it stays on top of other content */
+}
+
+.accordion-title-card {
+  margin: 8px 0;
+  justify-content: center;
+  width: 50%;
+  border: 1px solid #dbe0e1;
+  padding: 10px 0;
+}
+
+.align-left {
+  text-align: right;
+}
+
+.border {
+  border: 1px solid #d8d8d8;
+}
+
+.mb10 {
+  margin-bottom: 10px;
+}
+
+.content {
+  max-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-title {
+  font-weight: bold;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.event-title2 {
+  font-weight: bold;
+  position: absolute;
+  top: -5;
+  margin-top: -12px;
+}
+
+.detail {
+  margin-top: 18px;
+  overflow-y: auto;
+  min-height: 273px;
+  box-sizing: border-box;
+}
+
+.content-wrapper {
+  overflow: hidden !important;
+}
+
+.row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.col-md-6,
+.col-md-4 {
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.col-md-6 {
+  flex: 1;
+}
+
+.col-md-4 {
+  flex: 0 0 40%;
+}
+
+.border {
+  border: 1px solid #ccc;
+}
+
+.col-md-8 > .view-label-text {
+  display: block;
+}
+
+.colorRed {
+  color: red;
+}
+
+.temp {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 0 !important;
+}
+
+.custom-padding {
+  padding: 0 16px 16px 0 !important;
+}
+
+.relat {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.scroller {
+  overflow-y: auto;
+  height: 275px;
+}
+
+.scroller1 {
+  overflow-y: none !important;
+  height: 275px;
+}
+
+.scroller-postMatrix {
+  overflow-y: auto;
+  height: 500px;
+}
+
+.scroller-searchparams {
+  overflow-y: auto;
+  height: 400px;
+}
+
+.bold {
+  font-weight: bold !important;
+}
+
+.mb47 {
+  margin-bottom: 47px;
+}

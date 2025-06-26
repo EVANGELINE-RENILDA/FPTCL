@@ -1,0 +1,101 @@
+<div class="content-wrapper">
+
+    <div class="v-flex h100">
+        <app-table [pagination]="pagination" class="h100" [columns]="columns" [columnsName]="columnsName"
+            [dataSource]="tableData" (pageChanged)="pageChanged($event)" [showPaginator]="false"
+            columnID="purchaseRegisterid" [hideSelectAll]="true">
+
+            <ng-template cellHeaderDef="docDate">
+                <div class="header-cell-title ">Doc Date</div>
+                <div class="header-cell-subtitle">Doc No</div>
+            </ng-template>
+            <ng-template cellDef="docDate" let-element>
+                <div>{{element.docDate}}</div>
+                <div class="table-cell-subtitle">{{element.docNo}}</div>
+            </ng-template>
+            <ng-template cellHeaderDef="voucherType">
+                <div class="header-cell-title ">Voucher Type</div>
+                <div class="header-cell-subtitle">Voucher Name</div>
+            </ng-template>
+            <ng-template cellDef="voucherType" let-element>
+                <div>{{element.voucherType}}</div>
+                <div class="table-cell-subtitle">{{element.voucherName}}</div>
+            </ng-template>
+            <ng-template cellHeaderDef="vendorName">
+                <div class="header-cell-title ">Vendor Name</div>
+                <div class="header-cell-subtitle">Voucher Ledger</div>
+            </ng-template>
+            <ng-template cellDef="vendorName" let-element>
+                <div>{{element.vendorName}}</div>
+                <div class="table-cell-subtitle">{{element.vendorLedger}}</div>
+            </ng-template>
+            <ng-template cellDef="grossAmt" let-element>
+                <div class="text-end">{{element.vendorName}}</div>
+            </ng-template>
+            <ng-template #slotLeft>
+                <div class="col-md-4">
+                    <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+                </div>
+            </ng-template>
+            <ng-template #slotRight>
+                <div class="px10">
+                    <view-label label="Report Generating Date & Time" value="06/04/2024 10:03 AM"></view-label>
+                </div>
+                <app-icon-button name="download" toolTip="Export To Excel"
+                    appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+
+            </ng-template>
+
+        </app-table>
+        <div class="card">
+            total
+        </div>
+    </div>
+</div>
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Trust Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createPurchaseRegisterSearch()"></app-icon-button>
+                    <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (ngSubmit)="searchPurchaseRegister()">
+
+                        <row className="row-h100">
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn">
+                    <ion-icon src="assets/icons/back.svg"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text">Purchase</div>
+
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Purchase Register</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Detail</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

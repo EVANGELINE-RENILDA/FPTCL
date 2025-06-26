@@ -1,0 +1,288 @@
+<div class="dialog-container" appAccess="CUSTR" [parentId]="pageId">
+    <div class="dialog-header">
+        <div class="dialog-title"><ion-icon class="dialog-header-icon" src="assets/icons/human-icon.svg"></ion-icon>
+            Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+            @if(this.customerDetails.customerId !==0){
+            Edit
+            }
+            @else {
+            Add New
+            }
+        </div>
+        <div class="slot-right">
+            <div class="btn-group">
+                @if(this.customerDetails.customerId !==0){
+                <app-icon-button name="save" toolTip="Update" (click)="saveCustomerForm()"
+                    appButtonAccess="CrmCustAppSaveInfoBtn"></app-icon-button>
+                <app-icon-button name="refresh" toolTip="Refresh" (click)="openCustomerForm()"
+                    appButtonAccess="CrmCustAppRefreshInfoBtn"></app-icon-button>
+                }
+                @else {
+                <app-icon-button name="save" toolTip="Save" (click)="saveCustomerForm()"
+                    appButtonAccess="CrmCustAppSaveInfoBtn"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clear()"
+                    appButtonAccess="CrmCustAppRefreshInfoBtn"></app-icon-button>
+                }
+                <app-icon-button name="close" toolTip="Close" appButtonAccess="CrmCustAppCancelBtn"
+                    (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <div class="dialog-content-inner h100">
+
+            @if(data.showErrorMessage){
+            <div class="error-panel">
+                <app-error-message></app-error-message>
+            </div>
+            }
+            <row class="row-h100">
+                <div class="col-md-3 center">
+                    <div class="customer-profile center relative">
+                        <div class="p-3 image-upload">
+                            <div class="single-image">
+                                <img
+                                    [src]="customerDetails.ientCustomerPhoto.fileContent?customerDetails.ientCustomerPhoto.fileContent:'assets/img/human-face.svg'">
+                            </div>
+                            <div class="selectButton" (click)="triggerClick()">
+                                <input type="file" class="uploadInput" #fileInput (change)="loadImageFromDevice($event)"
+                                    id="file-input" accept="image/jpg, image/jpeg , image/png">
+
+                                <ion-icon src="assets/icons/upload.svg"></ion-icon>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 ">
+                    <scroll>
+                        <form #l="ngForm">
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Common Information
+                                        </div>
+                                        <div class=" box-pad">
+                                            <row>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="First Name" [maxLength]="250"
+                                                        [(ngModel)]="customerDetails.firstName" [errorTrue]="errorTrue"
+                                                        [required]="true" name="firstName"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Middle Name" [maxLength]="250"
+                                                        [(ngModel)]="customerDetails.middleName"
+                                                        name="middleName"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Last Name" [maxLength]="250"
+                                                        [(ngModel)]="customerDetails.lastName" name="lastName"
+                                                        [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                        <div class="hr"></div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="email" label="Email ID" [maxLength]="250"
+                                                        [(ngModel)]="customerDetails.emailId" [email]="true"
+                                                        [errorTrue]="errorTrue" name="emailId"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="number" label="Contact Number"
+                                                        [(ngModel)]="customerDetails.contactNo" name="contactNo"
+                                                        [minLength]="5" [maxLength]="10" [errorTrue]="errorTrue"
+                                                        [required]="true"> </app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="number" label=" Alternate Contact Number"
+                                                        [(ngModel)]="customerDetails.alternateContactNo"
+                                                        [errorTrue]="errorTrue" [minLength]="5" [maxLength]="10"
+                                                        name="alternateContactNo"></app-input-control>
+                                                </div>
+                                            </row>
+
+                                        </div>
+                                        <div class="hr"></div>
+                                        <div class="box-pad ">
+                                            <row>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="date" label="Date of Birth "
+                                                        [maxDate]="currentDate"
+                                                        [(ngModel)]="customerDetails.dateOfBirth" name="dateOfBirth"
+                                                        [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="select" defaultOption="--Select--"
+                                                        label="Gender" [(ngModel)]="customerDetails.genderValue"
+                                                        name="genderValue" [items]="initialData.DDLValues.DDLGender"
+                                                        key="constant" keyName="description" placeholder="Select Gender"
+                                                        [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="select" defaultOption="--Select--"
+                                                        label="Nationality" [(ngModel)]="customerDetails.nationalityId"
+                                                        name="nationalityId"
+                                                        [items]="initialData.DDLValues.DDLNationality" key="id"
+                                                        keyName="description"
+                                                        placeholder="Select Nationality"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Contact Person Information
+                                        </div>
+                                        <div class=" box-pad">
+                                            <row>
+
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Father Name" [maxLength]="250"
+                                                        [(ngModel)]="customerDetails.fatherName"
+
+                                                        name="fatherName"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Mother Name" [maxLength]="250"
+                                                        [(ngModel)]="customerDetails.motherName"
+
+                                                        name="motherName"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Guardian Name"
+                                                        [maxLength]="250" [(ngModel)]="customerDetails.gaurdianName"
+
+                                                        name="guardianName"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                        <div class="hr"></div>
+                                        <div class="box-pad ">
+                                            <!-- <row>
+                                                <div class="col-md-12 d-flex gap-10">
+                                                    <app-checkbox
+                                                    (change)="checkStudent($event)"></app-checkbox>
+                                                    <div class="checkbox-label">
+                                                        Is Student
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 ">
+                                                    <app-input-control type="text" label="Student Id"
+                                                        [(ngModel)]="customerDetails.studentId" [maxLength]="20"
+                                                        [errorTrue]="this.isStudent === 'Y' && errorTrue"
+                                                        [required]="this.isStudent === 'Y'"
+                                                        name="studentId"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="School Name"
+                                                        [(ngModel)]="customerDetails.schoolName" [maxLength]="500"
+                                                        [errorTrue]="this.isStudent === 'Y' && errorTrue"
+                                                        [required]="this.isStudent === 'Y'"
+                                                        name="schoolName"></app-input-control>
+                                                </div>
+
+                                            </row>  -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Student / Employer Information
+                                        </div>
+                                        <div class=" box-pad">
+                                            <row>
+                                                <mat-radio-group [(ngModel)]="isStudent" name="isStudent" (change)="employeeChange($event)">
+                                                    <mat-radio-button value="S">Student</mat-radio-button>
+                                                    <mat-radio-button value="E">Employee</mat-radio-button>
+                                                    <mat-radio-button value="U">Unemployed</mat-radio-button>
+                                                </mat-radio-group>
+                                            </row>
+                                            @if( this.isStudent === 'S'){
+                                            <row>
+
+                                                <div class="col-md-12 ">
+                                                    <app-input-control type="text" label="Student Id"
+                                                        [(ngModel)]="customerDetails.studentId" [maxLength]="20"
+                                                        [errorTrue]="this.isStudent === 'Y' && errorTrue"
+                                                        [required]="this.isStudent === 'Y'"
+                                                        name="studentId"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="School Name"
+                                                        [(ngModel)]="customerDetails.schoolName" [maxLength]="500"
+                                                        [errorTrue]="this.isStudent === 'Y' && errorTrue"
+                                                        [required]="this.isStudent === 'Y'"
+                                                        name="schoolName"></app-input-control>
+                                                </div>
+
+                                            </row>
+                                            }
+                                            @if( this.isStudent === 'E'){
+                                            <row>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Employer Name"
+                                                        [maxLength]="250" [(ngModel)]="customerDetails.employerName"
+                                                        name="employerName"></app-input-control>
+                                                </div>
+                                                <!-- @if(this.customerDetails.employerName !==''){ -->
+                                                <div class="col-md-12">
+                                                    <app-input-control type="number" label="Net Salary(FJD)"
+                                                        [maxLength]="20" [(ngModel)]="customerDetails.netSalary"
+                                                        name="netSalary"></app-input-control>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <app-input-control type="text" label="Occupation" [maxLength]="250"
+                                                        [(ngModel)]="customerDetails.occupation"
+                                                        name="occupation"></app-input-control>
+                                                </div>
+
+                                                <!-- } -->
+
+                                            </row>
+
+                                            <div class="hr"></div>
+                                            <div class="box-pad">
+                                                <!-- @if(this.customerDetails.employerName !==''){ -->
+                                                <app-address-edit [ientAddress]="customerDetails.iEmployerAddress"
+                                                    [btnClicked]="false" [errorTrue]="errorTrue"
+                                                    type="124"></app-address-edit>
+                                                <!-- } -->
+                                            </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="margin-top: 10px;">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Death Information
+                                        </div>
+                                        <div class=" box-pad">
+                                            <row>
+
+                                                <div class="col-md-12">
+                                                    <app-input-control type="date" label="Date Of Death"
+                                                        [(ngModel)]="customerDetails.dateOfDeath"
+                                                        [maxDate]="currentDate" name="dateOfDeath"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                            </row>
+                        </form>
+                    </scroll>
+                </div>
+            </row>
+
+        </div>
+    </div>
+</div>

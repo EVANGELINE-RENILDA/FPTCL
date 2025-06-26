@@ -1,0 +1,474 @@
+<div class=" v-flex content-wrapper">
+  <div class="d-flex space1">
+    <div>
+      <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="200px"></app-search>
+    </div>
+    <div class="ml-auto d-flex align-items-center mr-3">
+      <div class="mr-3 d-flex">
+        <!-- <app-checkbox color="primary" (change)="ytdValueChanged($event)" class="mr-3"></app-checkbox> YTD
+        Enabled -->
+
+        <app-checkbox color="primary" [checked]="profitandLoss.isExcludeZero === 'Y'" (change)="excludeZero($event)"
+          class="mr-3"></app-checkbox> Exclude
+        Zero
+        <div class="mr-3 ">
+          <app-icon-button [name]="openAlltrue ? 'collapse' :'expand'"
+            [toolTip]="openAlltrue ? 'Collapse All' :'Expand All'" (click)="toggleExpand()"></app-icon-button>
+        </div>
+        <div>
+          <app-icon-button name="download" toolTip="Export To Excel"
+            (click)="loadAndGenerateExcelFileForProfitAndLossReport()"></app-icon-button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="ml-auto d-flex  justify-content-end margin">
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center"><ion-icon name="square" class="parant-color"></ion-icon></div>
+      <div>Parent Group</div>
+    </div>
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center"><ion-icon name="square" class="child-color"></ion-icon></div>
+      <div>Child Group</div>
+    </div>
+    <div class="mr-3 d-flex">
+      <div class="mr-2 d-flex align-items-center"><ion-icon name="square" class="text-dark"></ion-icon></div>
+      <div>Ledger</div>
+    </div>
+  </div>
+
+  <div class="flex-1 relative">
+    <div class="ab pt-2">
+      <div class="rel">
+        <div class="result-panel">
+          <div class="report-header">
+            <div class="report-header-flex">
+              <div class="report-header-bg">
+                <div class="d-flex align-items-center parant ">
+                  <div class="w100 report-header-flex justify-content-center">
+                    <div class="space"></div>
+                    <span class="d-flex justify-content-center"> Particulars</span>
+                  </div>
+                  <div class="w100 report-header-flex justify-content-center border-left-secondary">
+                    <div class="space"></div>
+                    <span class="d-flex justify-content-center">Particulars</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          @if(Expense.length !== 0 || Income.length !== 0 || Expense1.length !== 0 || Income1.length !== 0){}
+          <!-- <ng-container *ngIf="Expense.length !== 0 || Income.length !== 0 || Expense1.length !== 0 || Income1.length !== 0"> -->
+          <div class="report-parent-body">
+            <div class="report-header-flex">
+              <div class="d-flex">
+                <div class="w50">
+                  @for (ydata of Expense; track $index) {
+                  <!-- <ng-container *ngFor="let ydata of Expense"> -->
+                  <app-profit-and-loss-loop [listAllData]="ydata" [closeAllData]="ydata.closeData" class="level-1"
+                    [expandAll]="openAlltrue">
+                  </app-profit-and-loss-loop>
+                  <!-- </ng-container> -->
+                  }
+                </div>
+                <div class="w50">
+                  @for (ydata of Income; track $index) {
+                  <!-- <ng-container *ngFor="let ydata of Income"> -->
+                  <app-profit-and-loss-loop [listAllData]="ydata" [closeAllData]="ydata.closeData" class="level-1"
+                    [expandAll]="openAlltrue">
+                  </app-profit-and-loss-loop>
+                  <!-- </ng-container> -->
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex w100">
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline">Gross Profit C/O</span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss.grossProfitCO }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline">Gross Loss C / O</span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss.grossLossCO }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex w100">
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss. grossTotalExpense }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss.grossTotalIncome }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex w100">
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline">Gross Loss B / F</span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss.grossLossBF }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline">Gross Profit B / F</span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss. grossProfitBF }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="report-parent-body">
+            <div class="report-header-flex">
+              <div class="d-flex align-items-center">
+                <div class="w100">
+                  @for (ydata of Expense1; track $index) {
+                  <!-- <ng-container *ngFor="let ydata of Expense1"> -->
+                  <app-profit-and-loss-loop [listAllData]="ydata" [closeAllData]="ydata.closeData" class="level-1">
+                  </app-profit-and-loss-loop>
+                  <!-- </ng-container> -->
+                  }
+                </div>
+                <div class="w100">
+                  @for (ydata of Income1; track $index) {
+                  <!-- <ng-container *ngFor="let ydata of Income1"> -->
+                  <app-profit-and-loss-loop [listAllData]="ydata" [closeAllData]="ydata.closeData" class="level-1">
+                  </app-profit-and-loss-loop>
+                  <!-- </ng-container> -->
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex w100">
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline">Net Profit</span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss.netProfit }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline">Net Loss</span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss.netLoss }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex w100">
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline">Total</span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss.totalExpense }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="report-body w100">
+              <div class="report-header-flex">
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline">Total</span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span>{{profitandLoss.totalIncome }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="part-1 d-flex align-items-center">
+                    <div class="space"></div>
+                    <span class="underline"></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                  <div class="part-2">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- </ng-container> -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Profit & Loss Statement Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row>
+              <div class="col-md-4">
+                <app-input-control label="Fiscal Year" type="select" [(ngModel)]="profitandLoss.fiscalYearId"
+                  name="fiscalYearId" key="id" keyName="description" [items]="initialData.DDLValues.DDLFiscalYear"
+                  defaultOption="--Select--" (onSelect)="clearDate()" tabIndex="100"
+                  (keyup.enter)="onSearch()"></app-input-control>
+              </div>
+              <!-- <div class="col-md-3">
+                <app-input-control label="Region" type="select" [(ngModel)]="profitandLoss.regionValue"
+                  name="regionValue" [items]="initialData.DDLValues.DDLRegion" key="constant" keyName="description"
+                  defaultOption="--Select--" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+              </div> -->
+              <div class="col-md-4">
+                <app-input-control label="From Date" type="date" [(ngModel)]="profitandLoss.fromDate" name="fromDate"
+                  [maxDate]="profitandLoss.toDate" tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+              </div>
+              <div class="col-md-4">
+                <app-input-control type="date" label="To Date" [(ngModel)]="profitandLoss.toDate" name="toDate"
+                  [minDate]="profitandLoss.fromDate" tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+              </div>
+
+            </row>
+          </form>
+
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        @if(regionValue === 'REGIO'){
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+        }
+        @else {
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+        }
+      </li>
+      <li class="screen-name">
+        <div class="screen-text"> Profit & Loss</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

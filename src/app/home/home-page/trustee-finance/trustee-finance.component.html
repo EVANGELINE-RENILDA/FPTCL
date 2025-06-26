@@ -1,0 +1,121 @@
+<div class="padd-menus" [parentId]="pageId" appAccess="PRTDV">
+  <div class="submenu-container col-md-10">
+    <row className="row-w100">
+      <div class="col-md-3 border-right" [appMenuAccess]="'ConfigurationHeaderSubDiv'">
+        <div class="submenu-header">
+          <ion-icon src="assets/icons/side_config.svg"></ion-icon> Configuration
+        </div>
+
+        <a class="submenu-item" cdkMenuItem routerLink="/home/config/posting-matrix/search"
+          [appMenuAccess]="'PostingMatrixConfigSubDiv'">Posting Matrix Config</a>
+
+        <a class="submenu-item" cdkMenuItem routerLink="/home/config/event-creation"
+          [appMenuAccess]="'EventandSubEventCreationSubDiv'">Event and Sub Event Creation</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/config/event-mapping/search"
+          [appMenuAccess]="'EventMappingOnVouchersSubDiv'">Event Mapping On Vouchers</a>
+      </div>
+
+      <div class="col-md-3 border-right" [appMenuAccess]="'FinanceHeaderSubDiv'">
+        <div class="submenu-header">
+          <ion-icon src="assets/icons/finance.svg"></ion-icon> Finance
+        </div>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/group/list"
+          [appMenuAccess]="'FinanceGroupSubDiv'">Group</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/ledger/list"
+          [appMenuAccess]="'FinanceLedgerSubDiv'">Ledger</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/ledger-transaction-for-trust/search"
+          [appMenuAccess]="'FinanceLedgerTransactionSubDiv'">Ledger Transaction</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/cost-category-and-cost-centre"
+          [appMenuAccess]="'LDTRS'">Cost Category & Cost Centre</a>
+
+        <!-- <a class="submenu-item" cdkMenuItem [routerLink]="'/home/finance/soa-trust-and-estate/report'"
+                    [appMenuAccess]="'MYCOM'">SOA Trust and Estate</a> -->
+      </div>
+
+      <div class="col-md-3 border-right" [appMenuAccess]="'VouchersHeaderSubDiv'">
+        <div class="submenu-header">
+          <ion-icon src="assets/icons/side_voucher.svg"></ion-icon> Vouchers
+        </div>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/payments-trust-and-estate/search"
+          [appMenuAccess]="'PaymentsTrustAndEstateSubDiv'">Payments Trust And Estate
+        </a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/journal-trust-and-estate/search"
+          [appMenuAccess]="'JournalTrustAndEstateSubDiv'">Journal Trust And Estate
+        </a>
+        <a class="submenu-item" cdkMenuItem (click)="getReceipt()"
+          [appMenuAccess]="'ReceiptTrustAndEstateSubDiv'">Receipt
+        </a>
+        <a class="submenu-item" cdkMenuItem (click)="getChangeDetailReceipt()"
+          [appMenuAccess]="'ReceiptTrustAndEstateSubDiv'">Change In Receipt 
+        </a>
+        <a class="submenu-item" cdkMenuItem (click)="getReversalReceipt()"
+          [appMenuAccess]="'ReceiptTrustAndEstateSubDiv'">Change In Reversal
+        </a>
+
+        <!-- <a class="submenu-item" cdkMenuItem routerLink="/home/finance/net-out-voucher/search"
+                    [appMenuAccess]="'MYCOM'">Net Out Voucher
+                </a> -->
+      </div>
+
+      <div class="col-md-3" [appMenuAccess]="'ReportHeaderSubDiv'">
+        <div class="submenu-header">
+          <ion-icon src="assets/icons/side_report.svg"></ion-icon> Report
+        </div>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/trial-balance/trial-balance-report"
+          [appMenuAccess]="'TrialBalanceReportSubDiv'">Trial Balance Report</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/balance-sheet/balance-sheet-report"
+          [appMenuAccess]="'BalanceSheetSubDiv'">Balance Sheet</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/profit-and-loss/profit-and-loss-report"
+          [appMenuAccess]="'P&LStatementSubDiv'">P & L Statement</a>
+        <a class="submenu-item" cdkMenuItem routerLink="" [appMenuAccess]="'TrialBalanceMonthlyReportSubDiv'">Trial
+          Balance Monthly Report</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/report/bank-reconciliation/search"
+          [appMenuAccess]="'BankReconciliationSummarySubDiv'">Bank Reconciliation Summary
+        </a>
+        <a class="submenu-item" cdkMenuItem (click)="navigateToDetail()"
+          [appMenuAccess]="'BankReconciliationDetailSubDiv'">Bank
+          Reconciliation Detail
+        </a>
+        <a class="submenu-item" cdkMenuItem routerLink="" [appMenuAccess]="'BankReconciliationReportSubDiv'">Bank
+          Reconciliation Report</a>
+        <a class="submenu-item" cdkMenuItem routerLink="" [appMenuAccess]="'Profit&LossMonthlyReportSubDiv'">Profit &
+          Loss Monthly Report</a>
+        <a class="submenu-item" cdkMenuItem
+          routerLink="/home/finance/balance-sheet-monthly/balance-sheet-monthly-report"
+          [appMenuAccess]="'BalanceSheetMonthlyReportSubDiv'">Balance Sheet Monthly Report</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/ledger-summary/ledger-summary-report"
+          [appMenuAccess]="'LedgerSummaryReportSubDiv'">Ledger Summary Report</a>
+        <a class="submenu-item" cdkMenuItem (click)="submenuClickNavigate()"
+          [appMenuAccess]="'LedgerDetailReportSubDiv'">Ledger Detail Report</a>
+        <div class="mt10 border-bottom"></div>
+        <a class="submenu-item" cdkMenuItem [routerLink]="'/home/finance/soa-trust-and-estate/report'"
+          [appMenuAccess]="'SOATrustandEstateSubDiv'">SOA Trust and Estate</a>
+      </div>
+
+      <div class="col-md-3 border-right" [appMenuAccess]="'OthersHeaderSubDiv'">
+        <div class="submenu-header">
+          <ion-icon src="assets/icons/side_other.svg"></ion-icon> Others
+        </div>
+        <a class="submenu-item" cdkMenuItem [routerLink]="'/home/finance/cash-counter/search'"
+          [appMenuAccess]="'CashCounterSubDiv'">Cash Counter</a>
+
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/assigned-cashier/search"
+          [appMenuAccess]="'AssignedCashierSubDiv'">Assigned Cashier</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/deposit-book/search"
+          [appMenuAccess]="'DepositBookSubDiv'">Deposit Book</a>
+        <a class="submenu-item" cdkMenuItem routerLink="/home/finance/reconciliation/search"
+          [appMenuAccess]="'BankReconciliationDetailSubDiv'">Reconciliation Book</a>
+      </div>
+    </row>
+  </div>
+</div>
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/trust.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

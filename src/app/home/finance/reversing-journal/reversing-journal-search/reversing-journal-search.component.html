@@ -1,0 +1,217 @@
+<div class="content-wrapper" appAccess="ARJSC" [parentId]="pageId">
+    <div class="v-flex h100">
+        <div class="pb10 h100">
+            <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"
+                [dataSource]="tableData" [hideSelectAll]="true" [showPaginator]="true" [hasHeader]="true"
+                (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)"
+                [sortColumnsName]="sortColumnName">
+
+                <ng-template cellHeaderDef="revjournalDocNo">
+                    <div class="header-cell-title h100">Reversing Journal Document No</div>
+                </ng-template>
+                <ng-template cellDef="revjournalDocNo" let-element>
+                    <div>{{element.actReversingjournalVoucharNo}}</div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="journalDocNo">
+                    <div class="header-cell-title h100">Journal Document No</div>
+                </ng-template>
+                <ng-template cellDef="journalDocNo" let-element>
+                    <div class="pointer hover-underline" (click)="navigateJournalVocNo(element.actReversejournalId)">
+                        {{element.actJournalVoucharNo}}</div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="docDate">
+                    <div class="header-cell-title h100">Document Date</div>
+                </ng-template>
+                <ng-template cellDef="docDate" let-element>
+                    <div>{{element.documentDate | appDate}}</div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="createdDate">
+                    <div class="header-cell-title th-top">Created Date</div>
+                    <div class="header-cell-subtitle">Created By</div>
+                </ng-template>
+                <ng-template cellDef="createdDate" let-element>
+                    <div>{{ element.createdDate | appDate }}</div>
+                    <div class="table-cell-subtitle">{{element.createdBy}}</div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="changedDate">
+                    <div class="header-cell-title th-top">Changed Date</div>
+                    <!-- <div class="header-cell-subtitle">Changed By</div> -->
+                </ng-template>
+                <ng-template cellDef="changedDate" let-element>
+                    <div>{{element.statusChangedDate | appDate }}</div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="debitAmt">
+                    <div class="header-cell-title h100 amount-align">Debit Amount ({{currency}})</div>
+                </ng-template>
+                <ng-template cellDef="debitAmt" let-element>
+                    <div class="amount-align">{{element.debitAmount}}</div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="creditAmt">
+                    <div class="header-cell-title h100 amount-align">Credit Amount ({{currency}})</div>
+                </ng-template>
+                <ng-template cellDef="creditAmt" let-element>
+                    <div class="amount-align">{{element.creditAmount}}</div>
+                </ng-template>
+
+                <ng-template cellDef="status" let-element>
+                    <accouts-status-table [statusDescription]="element.status"></accouts-status-table>
+                </ng-template>
+
+                <ng-template cellDef="action" let-element>
+                    <app-icon-button name="open" toolTip="Open" (click)="navigateToDetail(element)"></app-icon-button>
+                </ng-template>
+
+                <ng-template #slotLeft>
+                    <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="380px"></app-search>
+                </ng-template>
+
+                <ng-template #slotMiddle>
+                    <div class="d-flex">
+                        <div (click)="statusSortSearch('INPRO')"><table-status-sort type="processing"
+                                [processingCount1]="totalInprogressCount"></table-status-sort>
+                        </div>
+                        <div (click)="statusSortSearch('APROV')">
+                            <table-status-sort type="approving"
+                                [approvedCount1]="totalApprovedCount"></table-status-sort>
+                        </div>
+                    </div>
+                </ng-template>
+            </app-table>
+        </div>
+
+    </div>
+
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Reversing Journal Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (submit)="onSearch()">
+                        <row>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Document No"
+                                            [(ngModel)]="searchParams.istrreversingjournalvoucherno"
+                                            name="istrreversingjournalvoucherno" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Document Date From"
+                                            [(ngModel)]="searchParams.dtmDocumentDateFrom"
+                                            [maxDate]="searchParams.dtmdocumentDateTo" name="dtmDocumentDateFrom"
+                                            tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Document Date To"
+                                            [(ngModel)]="searchParams.dtmdocumentDateTo" name="dtmdocumentDateTo"
+                                            [minDate]="searchParams.dtmDocumentDateFrom" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <!-- <div class="col-md-12 mb26">
+                                        <app-input-control type="text" label="Document Name"
+                                            name="lngActVoucherConfigId"
+                                            [(ngModel)]="searchParams.lngActVoucherConfigId"
+                                            [items]="initialData.DDLValues.DDLVoucherConfig" key="id"
+                                            keyName="name"></app-input-control>
+                                    </div> -->
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Status"
+                                            [(ngModel)]="searchParams.statusValue" name="statusValue"
+                                            [items]="initialData.DDLValues.configReversingJournalStatus" key="constant"
+                                            keyName="description" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Created Date From"
+                                            [(ngModel)]="searchParams.dtmEnteredDateFrom"
+                                            [maxDate]="searchParams.dtmEnteredDateTo" name="dtmEnteredDateFrom"
+                                            tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Created Date To"
+                                            [(ngModel)]="searchParams.dtmEnteredDateTo" name="dtmEnteredDateTo"
+                                            [minDate]="searchParams.dtmEnteredDateFrom" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                            <div class="col-md-3 border-right">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Approved Date From"
+                                            [(ngModel)]="searchParams.dtmEnteredDateTo" name="dtmEnteredDateTo"
+                                            [minDate]="searchParams.dtmEnteredDateFrom" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="date" label="Approved Date To"
+                                            [(ngModel)]="searchParams.dtmApprovedDateTo" name="dtmApprovedDateTo"
+                                            [minDate]="searchParams.dtmApprovedDateFrom" tabIndex="100"
+                                            (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+
+                                </row>
+                            </div>
+                            <div class="col-md-3 ">
+                                <row>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Created By"
+                                            [(ngModel)]="searchParams.istrEnterBy" name="istrEnterBy"
+                                            [items]="initialData.DDLValues.DDLUser" key="code" keyName="name"
+                                            tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26">
+                                        <app-input-control type="select" label="Approved By"
+                                            [(ngModel)]="searchParams.istrApprovedBy" name="istrApprovedBy"
+                                            [items]="initialData.DDLValues.DDLUser" key="code" keyName="name"
+                                            tabIndex="100" (keyup.enter)="onSearch()"></app-input-control>
+                                    </div>
+                                </row>
+                            </div>
+                        </row>
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon name="person-outline"></ion-icon>
+                <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+            </li>
+            <li class="screen-name ">
+
+                <div class="screen-text">Reversing Voucher</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

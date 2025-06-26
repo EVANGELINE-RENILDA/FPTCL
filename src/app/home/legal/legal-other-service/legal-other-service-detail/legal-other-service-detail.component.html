@@ -1,0 +1,1408 @@
+<div class="content-wrapper" [parentId]="pageId" appAccess="LEGAL">
+    <div class="sticky-card p15">
+        <row>
+            <div class="col-md-3 mb15">
+                <view-label label="Legal Ref No" value="{{legalApplication.legalApplRefNo}}"></view-label>
+            </div>
+            <div class="col-md-3 mb15">
+                <view-label label="Lead Ref No" value="{{legalApplication.leadRefNo}}"></view-label>
+            </div>
+
+            <div class="col-md-3 mb15">
+                <view-label label="Type" value="{{legalApplication.serviceTypeDescription}}"></view-label>
+            </div>
+            <div class="col-md-3 mb15">
+                <view-label label="Applied Date" value="{{legalApplication.appliedDate | appDate}}"></view-label>
+            </div>
+            <div class="col-md-3 mb15">
+                <view-label label="Entered By" value="{{legalApplication.enteredByFullname}}"></view-label>
+            </div>
+            <div class="col-md-3 mb15"><view-label label="Application Stage"
+                    value="{{legalApplication.applicationStageDescription}}"></view-label></div>
+            <div class="col-md-3 mb15"> <view-label label="Application Status"
+                    value="{{legalApplication.statusDescription}}"></view-label>
+            </div>
+            <div class="col-md-3 mb15"> <view-label label="Action Status"
+                    status="{{legalApplication.actionStatusValue}}"
+                    statusValue="{{legalApplication.actionStatusDescription}}"></view-label></div>
+
+        </row>
+    </div>
+    <app-tab-group (tabChange)="onTabChange($event)">
+        <app-tab tabTitle="Application">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Applicant Details</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <!-- @if(editApplicantData === false){ -->
+
+                                <row>
+                                    <div class="col-md-4">
+                                        <div class="d-flex align-items-center address-header mb26">
+                                            <ion-icon src="assets/icons/customer_info.svg"></ion-icon>
+                                            <view-label value="General Information" class="pl10"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Name"
+                                                value="{{legalServiceAppliant.ientCustomer.firstName}} {{legalServiceAppliant.ientCustomer.middleName}} {{legalServiceAppliant.ientCustomer.lastName}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Date Of Birth"
+                                                value="{{legalServiceAppliant.ientCustomer.dateOfBirth | appDate}}"></view-label>
+                                        </div>
+                                        <!-- <div class="mb20">
+                                            <view-label label="Place Of Birth" value="{{le}}"></view-label>
+                                        </div> -->
+                                        <div class="mb20">
+                                            <view-label label="Gender"
+                                                value="{{legalServiceAppliant.ientCustomer.genderDescription}}"></view-label>
+                                        </div>
+                                        <!-- <div class="mb20">
+                                            <view-label label="Marital Status"
+                                                value="{{legalServiceAppliant.ientCustomer}}"></view-label>
+                                        </div> -->
+                                        <div class="mb20">
+                                            <view-label label="Occupation"
+                                                value="{{legalServiceAppliant.ientCustomer.occupation}}"></view-label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="d-flex align-items-center address-header mb26">
+                                            <ion-icon name="person-outline"></ion-icon>
+                                            <view-label value="Communication" class="pl10"></view-label>
+                                        </div>
+                                        <div class="mb20 pl10">
+                                            <view-label label="Home Contact"
+                                                value="{{legalServiceAppliant.ientCustomer.contactNo}}"></view-label>
+                                        </div>
+                                        <div class="mb20 pl10">
+                                            <view-label label="Office Contact"
+                                                value="{{legalServiceAppliant.ientCustomer.alternateContactNo}}"></view-label>
+                                        </div>
+                                        <div class="mb20 pl10">
+                                            <view-label label="Email"
+                                                value="{{legalServiceAppliant.ientCustomer.emailId}}"></view-label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="v-flex h100 justify-content-between">
+                                            <div class=" ">
+                                                <div class="d-flex align-items-center address-header mb26">
+                                                    <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                                    <view-label value=" Address" class="pl10"></view-label>
+                                                </div>
+                                                <div class="pl10">
+                                                    <view-label
+                                                        value="{{legalServiceAppliant.ientCustomer.iPermanentaddress.line1}} {{legalServiceAppliant.ientCustomer.iPermanentaddress.line2}} {{legalServiceAppliant.ientCustomer.iPermanentaddress.line3}}"></view-label>
+                                                </div>
+                                                <div class="pl10">
+                                                    <view-label
+                                                        value="{{legalServiceAppliant.ientCustomer.iPermanentaddress.provinceDescription}} {{legalServiceAppliant.ientCustomer.iPermanentaddress.islandDescription}} "></view-label>
+                                                </div>
+                                                <div class="mb20 pl10">
+                                                    <view-label
+                                                        value="{{legalServiceAppliant.ientCustomer.iPermanentaddress.tikinaDescription}} {{legalServiceAppliant.ientCustomer.iPermanentaddress.village}} {{legalServiceAppliant.ientCustomer.iPermanentaddress.poBoxNo}}"></view-label>
+                                                </div>
+                                            </div>
+                                            <div class="end">
+                                                <app-icon-button name="edit" toolTip="Edit"
+                                                    (click)="editLegal('applicant')"></app-icon-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </row>
+                                <!-- }
+                                              @else(){ -->
+                                <!-- <row>
+                                                  <div class="col-md-3 mb20"> <app-input-control label="Salutation"
+                                                          value="1"></app-input-control></div>
+                                                  <div class="col-md-3 mb20"> <app-input-control label="First Name"
+                                                          value="1"></app-input-control></div>
+                                                  <div class="col-md-3 mb20"> <app-input-control label="Middle Name"
+                                                          value="1"></app-input-control></div>
+                                                  <div class="col-md-3 mb20"> <app-input-control label="Last Name"
+                                                          value="1"></app-input-control></div>
+                                              </row>
+                                              <row>
+                                                  <div class="col-md-3">
+                                                      <div> <app-input-control label="Date Of Birth" value="1"></app-input-control></div>
+                                                      <div> <app-input-control label="Place Of Birth" value="1"></app-input-control></div>
+                                                      <div> <app-input-control label="Gender" value="1"></app-input-control>
+                                                      </div>
+                                                      <div> <app-input-control label="Marital Status" value="1"></app-input-control></div>
+                                                      <div> <app-input-control label="" value="1"></app-input-control></div>
+                                                  </div>
+
+                                                  <div class="col-md-3  px10">
+                                                      <div class="d-flex align-items-center address-header mb26">
+                                                          <ion-icon name="person-outline"></ion-icon>
+                                                          <view-label value="Communication" class="pl10"></view-label>
+                                                      </div>
+                                                      <div class=" pl10"> <app-input-control label="Home Contact"
+                                                              value="1"></app-input-control></div>
+                                                      <div class=" pl10"> <app-input-control label="Office Contact"
+                                                              value="1"></app-input-control></div>
+                                                      <div class=" pl10"> <app-input-control label="Email" value="1"></app-input-control>
+                                                      </div>
+                                                  </div>
+
+                                                  <div class="col-md-6 pl10">
+                                                      <div class="v-flex h100 justify-content-between">
+                                                          <div class=" mb26">
+                                                              <div class="d-flex align-items-center address-header mb26">
+                                                                  <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                                                  <view-label value="Address" class="pl10"></view-label>
+                                                              </div>
+                                                              <row>
+                                                                  <div class="col-md-6">
+                                                                      <app-input-control label="Line 1"
+                                                                          [(ngModel)]="customerDetails.iEmployerAddress.line1"
+                                                                          [errorTrue]="this.customerDetails.iEmployerAddress.provinceId!=='' && errorTrue"
+                                                                          [required]="this.customerDetails.iEmployerAddress.provinceId!==''"
+                                                                          name="line1"></app-input-control>
+                                                                  </div>
+                                                                  <div class="col-md-6">
+                                                                      <app-input-control label="Province"
+                                                                          [(ngModel)]="customerDetails.iEmployerAddress.provinceId"
+                                                                          [errorTrue]="this.customerDetails.iEmployerAddress.line1!=='' && errorTrue"
+                                                                          [required]="this.customerDetails.iEmployerAddress.line1!==''"
+                                                                          name="provinceId" type="select"
+                                                                          [items]="initialData.DDLValues.DDLProvince" key="constant"
+                                                                          keyName="description"></app-input-control>
+                                                                  </div>
+                                                                  <div class="col-md-6">
+                                                                      <app-input-control label="Line 2"
+                                                                          [(ngModel)]="customerDetails.iEmployerAddress.line2"
+                                                                          name="line2"></app-input-control>
+                                                                  </div>
+                                                                  <div class="col-md-6">
+                                                                      <app-input-control label="Island" [items]="islandDDL" key="constant"
+                                                                          keyName="description" type="select"
+                                                                          [(ngModel)]="customerDetails.iEmployerAddress.islandId"
+                                                                          [errorTrue]="(this.customerDetails.iEmployerAddress.line1!=='' || customerDetails.iEmployerAddress.provinceId!=='' )&& errorTrue"
+                                                                          [required]="this.customerDetails.iEmployerAddress.line1!=='' || customerDetails.iEmployerAddress.provinceId!=='' "
+                                                                          name="islandId"></app-input-control>
+                                                                  </div>
+                                                                  <div class="col-md-6">
+                                                                      <app-input-control label="Line 3"
+                                                                          [(ngModel)]="customerDetails.iEmployerAddress.line3"
+                                                                          name="line3"></app-input-control>
+                                                                  </div>
+                                                                  <div class="col-md-6">
+                                                                      <app-input-control label="Village" [items]="villageDDL" key="constant"
+                                                                          keyName="description" type="select"
+                                                                          [(ngModel)]="customerDetails.iEmployerAddress.village"
+                                                                          [errorTrue]="(this.customerDetails.iEmployerAddress.line1!=='' || customerDetails.iEmployerAddress.provinceId!=='') && errorTrue"
+                                                                          [required]="this.customerDetails.iEmployerAddress.line1!=='' || customerDetails.iEmployerAddress.provinceId!=='' "
+                                                                          name="village"></app-input-control>
+                                                                  </div>
+                                                                  <div class="col-md-6"></div>
+                                                                  <div class="col-md-6">
+                                                                      <app-input-control label="PO Box No" type="number" [maxLength]="20"
+                                                                          [(ngModel)]="customerDetails.iEmployerAddress.poBoxNo"
+                                                                          name="poBoxNo"></app-input-control>
+                                                                  </div>
+                                                              </row>
+                                                          </div>
+                                                          <div class="d-flex gap-10 end">
+                                                              <app-icon-button name="save" toolTip="Save"
+                                                                  (click)="saveApplicant()"></app-icon-button>
+                                                              <app-icon-button name="refresh" toolTip="Refresh"></app-icon-button>
+                                                          </div>
+                                                      </div>
+
+                                                  </div>
+                                              </row>
+                                              } -->
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Members Involved</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [pagination]="pagination" [columns]="memberColumns"
+                                    [columnsName]="memberColumnsName" [dataSource]="memberTableData"
+                                    columnID="customerId" [hasPagination]="true" [hideSelectAll]="true">
+                                    <ng-template cellDef="isPrimaryClient" let-element>
+                                        @if(element.isFptcl === 'Y'){
+                                        Yes
+                                        }
+                                        @if(element.isFptcl==='N'){
+                                        No
+                                        }
+                                    </ng-template>
+                                    <ng-template cellHeaderDef="crm">
+                                        <div class="header-cell-title">Member No</div>
+                                        <div class="header-cell-subtitle">Member Name</div>
+                                    </ng-template>
+
+                                    <ng-template cellDef="crm" let-element>
+                                        <div (click)="openMember(element.legalApplicationClientId)">
+                                            {{element.ientCustomer.customerRefNo}}</div>
+                                        <div class="table-cell-subtitle">{{element.ientCustomer.firstName}}
+                                            {{element.ientCustomer.middleName}} {{element.ientCustomer.lastName}}
+                                        </div>
+                                    </ng-template>
+                                    <ng-template cellDef="bankName" let-element>
+                                        {{element.ientCustomer.genderDescription}}
+                                    </ng-template>
+                                    <ng-template cellDef="bankCode" let-element>
+                                        {{element.ientCustomer.dateOfBirth | appDate}}
+                                    </ng-template>
+                                    <ng-template cellDef="effectiveDate" let-element>
+                                        {{element.typeDescription}}
+                                    </ng-template>
+                                    <ng-template cellDef="contatc" let-element>
+                                        {{element.ientCustomer.contactNo}}
+                                    </ng-template>
+
+
+                                    <ng-template cellDef="action" let-element>
+                                        <div class="d-flex gap-10 ">
+
+                                            <app-icon-button name="open" toolTip="Open"
+                                                (click)="openMember(element.legalApplicationClientId)"></app-icon-button>
+                                            <app-icon-button name="doc-delete"
+                                                (click)="checkDeleteMember(element)"></app-icon-button>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template cellHeaderDef="action">
+                                        Action
+                                    </ng-template>
+                                    <ng-template #slotRight>
+                                        <!-- @if(trustApplication.createButtonHide !=='Y'){ -->
+                                        <app-icon-button name="add" class="pr5px" toolTip="Add New"
+                                            (click)="createMember()"></app-icon-button>
+                                        <!-- } -->
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+        </app-tab>
+        <app-tab tabTitle="Process">
+            <accordion>
+                @for(type of legalApplication.lstentLegalApplicationRejectHistory; track $index){
+                @switch (type.legalApplicationStageValue) {
+                @case ('CROAP') {
+                <app-creation-application [(application)]="legalApplication" [type]="type"></app-creation-application>
+                }
+                @case ('CLDOC') {
+                <app-document-collection [(application)]="legalApplication" [type]="type"></app-document-collection>
+                }
+                @case ('FECOL') {
+                <app-fees-collection [(application)]="legalApplication" [type]="type"></app-fees-collection>
+                }
+                @case ('LONFL') {
+                <app-open-flie [(application)]="legalApplication" [type]="type"></app-open-flie>
+                }
+                @case ('SRIPR') {
+                <app-service-in-process [(application)]="legalApplication" [type]="type"></app-service-in-process>
+                }
+                @case ('SRPRO') {
+                <app-service-in-process1 [(application)]="legalApplication" [type]="type"></app-service-in-process1>
+                }
+                @case ('PREDC') {
+                <app-prepare-documentation [(application)]="legalApplication" [type]="type"></app-prepare-documentation>
+                }
+                @case ('SNDOC') {
+                <app-scan-doc [(application)]="legalApplication" [type]="type"></app-scan-doc>
+                }
+                @case ('VRFPY') {
+                <app-verification-of-fee [(application)]="legalApplication" [type]="type"></app-verification-of-fee>
+                }
+                @case ('PRSOA') {
+                <app-prepare-soa [(application)]="legalApplication" [type]="type"></app-prepare-soa>
+                }
+                @case ('HDODC') {
+                <app-handover-doc [(application)]="legalApplication" [type]="type"></app-handover-doc>
+                }
+
+                }
+                }
+
+
+
+
+
+
+            </accordion>
+        </app-tab>
+        <app-tab tabTitle="History">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Notes</div>
+                                    <div class="accordian-title-count">{{notesList?.length}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <div class="p16px pb26 wrap-content">
+                                    <!-- <div class="justify-content-end d-flex">
+                                        <app-icon-button name="add" toolTip="Create" (click)="createNotes()"
+                                            appButtonAccess="CrmCustAppAddNoteBtn"></app-icon-button>
+                                    </div> -->
+                                    @for (item of notesList; track $index) {
+                                    <div class="border-bottom  notes-list">
+                                        <div class="mx10">{{item.notes}}</div>
+                                        <div class="d-flex justify-content-end notes-context">
+                                            <div style="padding-right:5px ;">
+                                                {{item.enteredByFullname}}</div>
+                                            <div class=" notes-border-left">
+                                                {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm a'}}
+                                            </div>
+                                            <div style="padding-right:5px ;"></div>
+                                            <div class=" notes-border-left status-{{item.customerStatusValue}}">
+                                                {{item.applicationStageDescription}}
+                                            </div>
+                                            <div class="card-1-header-label px-2 ">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Assigned Officer</div>
+                                    <div class="accordian-title-count">{{tableAssignOffice.length}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                                    [hasPagination]="true" [dataSource]="tableAssignOffice" [hideSelectAll]="true">
+                                    <ng-template cellDef="statusDescription" let-element>
+                                        <div class="status status-{{element.statusValue}}">{{element.statusDescription}}
+                                        </div>
+                                    </ng-template>
+                                    <ng-template cellDef="assignedDate" let-element>
+                                        {{element.assignedDate | appDate}}
+                                    </ng-template>
+                                    <!-- @if(customerUpdate.assignedOfficerFlag === 'True'){ -->
+                                    <ng-template #slotRight>
+                                        <div class="d-flex align-items-center">
+
+                                            <!-- @if(this.trustApplication.assignedOfficerFlag === 'True'){
+                                        @if(this.trustApplication.reAssignFlag === 'True'){
+                                        <form #p="ngForm" class="col-md-10 w250">
+                                            <app-input-control type="select" key="constant" keyName="description"
+                                                placeholder="Officer" [items]="assignedOfficerDDL"
+                                                defaultOption="--Select--"
+                                                [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                                                name="assignedTo"></app-input-control>
+                                        </form>
+                                        <div class="col-md-2"><app-icon-button name="reassign"
+                                                (click)="reAssignTrust()" toolTip="Reassign"></app-icon-button>
+                                        </div>
+                                        }
+                                        @if(this.trustApplication.selfAssignFlag ===' True'){
+                                        <div class="col-md-2"><app-icon-button name="add"
+                                                (click)="selfAssignTrust()" toolTip="Self Assign"></app-icon-button>
+                                        </div>
+                                        }
+                                        } -->
+
+                                        </div>
+                                    </ng-template>
+                                    <!-- } -->
+                                </app-table>
+                            </div>
+                        </div>
+
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+            <div class="bg-white-padd">
+                <app-tab-sub-group>
+                    <app-sub-tab tabTitle="Status History">
+                        <div class="status-padding">
+                            <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+                        </div>
+                    </app-sub-tab>
+                    <app-sub-tab tabTitle="Communication History">
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName"
+                                    [hasPagination]="true" [dataSource]="emailHistoryTableData" [hideSelectAll]="true">
+                                    <ng-template cellDef="toEmailId" let-element>
+                                        {{element.ientCommunicationTracking.toEmailId}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentDate" let-element>
+                                        {{element.ientCommunicationTracking.sentDate |
+                                        appDate
+                                        }} |
+                                        {{element.ientCommunicationTracking.sentDate
+                                        | appDate: 'hh:mm a'}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentStatusDescription" let-element>
+                                        <div class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                                            {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+                                    </ng-template>
+
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open"
+                                            (click)="viewEmailDetail(element)"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                    </app-sub-tab>
+                </app-tab-sub-group>
+            </div>
+
+
+        </app-tab>
+    </app-tab-group>
+</div>
+
+<ng-template #applicant>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Applicant Details</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(editData){
+                    @if(legalServiceAppliant.customerDdlFlage === 'Y'){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveApplicant()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearApplicant()"></app-icon-button>
+                    }
+                    @if(legalServiceAppliant.customerDdlFlage === 'N'){
+                    <app-icon-button name="save" toolTip="Save" (click)="saveApplicant()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="refreshCustomerForApplicant(this.legalServiceAppliant.legalApplicationApplicantId)"></app-icon-button>
+                    }
+                    }
+                    @else{
+                    <app-icon-button name="edit" toolTip="Edit" (click)="editApplicant()"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close"
+                        (click)="dialog.closeAll();checkApplicant()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content py10">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="pb10"></div>
+                        <div class="d-flex w100 align-items-center">
+                            @if(legalServiceAppliant.customerDdlFlage ==='Y'){
+                            <div class="col-md-3 pl10">
+                                <app-input-control label="Customer" [(ngModel)]="legalServiceAppliant.customerId"
+                                    name="customerId" [items]="initialData.DDLValues.DDLCustomer" key="id" type="select"
+                                    keyName="fullName"
+                                    (onSelect)="openCustomerForApplicant(legalServiceAppliant.customerId)"></app-input-control>
+                            </div>
+                            <div class="col-md-1">
+                                <app-icon-button name="search" toolTip="Search"
+                                    (click)="customerSearch()"></app-icon-button>
+                            </div>
+                            }
+                        </div>
+                        @if(editData === false){
+                        <div class="d-flex w100 p10">
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Applicant Information</div>
+                                    <div class=" box-pad">
+                                        <view-label class="pb10" label=" CRM No"></view-label>
+
+                                        <!-- <view-label class="pb10" label="Client Name"
+                        value="{{trustApplicationApplicant}}"></view-label> -->
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="First Name"
+                                            [value]="legalServiceAppliant.ientCustomer.firstName"></view-label>
+                                        <view-label class="pb10" label="Middle Name"
+                                            [value]="legalServiceAppliant.ientCustomer.middleName"></view-label>
+                                        <view-label class="pb10" label="Last Name"
+                                            [value]="legalServiceAppliant.ientCustomer.lastName"></view-label>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Date Of Birth"
+                                            [value]="legalServiceAppliant.ientCustomer.dateOfBirth"></view-label>
+                                        <view-label class="pb10" label="Date Of Death"
+                                            [value]="legalServiceAppliant.ientCustomer.dateOfDeath"></view-label>
+
+                                        <view-label class="pb10" label="Gender"
+                                            [value]="legalServiceAppliant.ientCustomer.genderDescription"></view-label>
+                                        <view-label class="pb10" label="Nationality"
+                                            [value]="legalServiceAppliant.ientCustomer.nationalityDescription"></view-label>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Email ID"
+                                            [value]="legalServiceAppliant.ientCustomer.emailId"></view-label>
+                                        <view-label class="pb10" label="Contact No"
+                                            [value]="legalServiceAppliant.ientCustomer.contactNo"></view-label>
+                                        <view-label class="pb10" label="Alternate Contact No"
+                                            [value]="legalServiceAppliant.ientCustomer.alternateContactNo"></view-label>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Father Name"
+                                            [value]="legalServiceAppliant.ientCustomer.fatherName"></view-label>
+                                        <view-label class="pb10" label="Mother Name"
+                                            [value]="legalServiceAppliant.ientCustomer.motherName"></view-label>
+                                        <view-label class="pb10" label="Guardian Name"
+                                            [value]="legalServiceAppliant.ientCustomer.gaurdianName"></view-label>
+                                        <view-label class="pb10" label="Email"
+                                            [value]="legalServiceAppliant.ientCustomer.emailId"></view-label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Address Details</div>
+                                    <div class=" box-pad">
+                                        <view-label label="Line 1" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.iPermanentaddress.line1"></view-label>
+                                        <view-label label="Line 2" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.iPermanentaddress.line2"></view-label>
+                                        <view-label label="Line 3" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.iPermanentaddress.line3"></view-label>
+                                        <view-label label="Province" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.iPermanentaddress.provinceDescription"></view-label>
+                                        <view-label label="Island" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.iPermanentaddress.islandDescription"></view-label>
+                                        <view-label label="Tikina" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.iPermanentaddress.tikinaDescription"></view-label>
+                                        <view-label label="Village" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.iPermanentaddress.village"></view-label>
+                                        <view-label label="Po Box No" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.iPermanentaddress.poBoxNo"></view-label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        KYC Details
+                                    </div>
+                                    <div class=" box-pad">
+                                        <view-label class="pb10" label="Birth Reg No"
+                                            [value]="legalServiceAppliant.ientCustomer.birthRegNo"></view-label>
+                                        <view-label label="TIN" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.tin"></view-label>
+                                        <view-label class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.fnpfNo"></view-label>
+                                        <view-label label="Voter ID" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.voterId"></view-label>
+                                        <view-label label="Driving License No" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.driverLicenseNo"></view-label>
+                                        <!-- <view-label label="National ID" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.nationalId"></view-label> -->
+                                        <view-label label="Passport No" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.passportNo"></view-label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">Social Platform Details</div>
+                                    <div class=" box-pad">
+                                        <view-label label="Facebook ID" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.facebookId"></view-label>
+                                        <view-label label="LinkedIn ID" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.linkedinId"></view-label>
+                                        <view-label label="Whatsapp" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.whatsappNumber"></view-label>
+                                        <view-label label="Viber" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.viberNumber"></view-label>
+                                        <view-label label="Skype ID" class="pb10"
+                                            [value]="legalServiceAppliant.ientCustomer.skypeId"></view-label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @if(editData === true){
+                        <form #p="ngForm" class="d-flex w100 p10">
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Applicant Information</div>
+                                    <div class=" box-pad">
+                                        <app-input-control class="pb10" label="First Name" name="firstName"
+                                            [errorTrue]="errorTrue" [required]="true" [maxLength]="250"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.firstName"
+                                            name="firstName"></app-input-control>
+                                        <app-input-control class="pb10" label="Middle Name" name="middleName"
+                                            [maxLength]="250" [(ngModel)]="legalServiceAppliant.ientCustomer.middleName"
+                                            name="middleName"></app-input-control>
+                                        <app-input-control class="pb10" label="Last Name" [errorTrue]="errorTrue"
+                                            [required]="true" [(ngModel)]="legalServiceAppliant.ientCustomer.lastName"
+                                            name="lastName" [maxLength]="250"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control class="pb10" label="Date Of Birth"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.dateOfBirth"
+                                            name="dateOfBirth" type="date" [errorTrue]="errorTrue" [required]="true"
+                                            [maxDate]="currentDate"></app-input-control>
+                                        <app-input-control class="pb10" label="Date Of Death"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.dateOfDeath"
+                                            name="dateOfDeath" type="date" [maxDate]="currentDate"></app-input-control>
+
+                                        <app-input-control class="pb10" label="Gender" name="genderValue"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            [items]="initialData.DDLValues.DDLGender" key="constant"
+                                            keyName="description" type="select"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.genderValue"
+                                            defaultOption="--Select--"></app-input-control>
+                                        <app-input-control class="pb10" label="Nationality" name="nationalityValue"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            [items]="initialData.DDLValues.DDLNationality" key="constant"
+                                            keyName="description" type="select"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.nationalityValue"
+                                            defaultOption="--Select--"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control class="pb10" label="Email ID" name="emailId"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.emailId"
+                                            type="email"></app-input-control>
+                                        <app-input-control class="pb10" label="Contact No" name="contactNo"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.contactNo" [minLength]="5"
+                                            [maxLength]="10" type="number"></app-input-control>
+                                        <app-input-control class="pb10" label="Alternate Contact No"
+                                            name="alternateContactNo"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.alternateContactNo"
+                                            [minLength]="5" [maxLength]="10" type="number"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control class="pb10" label="Father Name" name="fatherName"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.fatherName"></app-input-control>
+                                        <app-input-control class="pb10" label="Mother Name" name="motherName"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.motherName"></app-input-control>
+                                        <app-input-control class="pb10" label="Guardian Name"
+                                            [(ngModel)]="legalServiceAppliant.ientCustomer.gaurdianName"
+                                            name="gaurdianName"></app-input-control>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Address Details</div>
+                                    <div class=" box-pad">
+                                        <app-address-edit [errorTrue]="errorTrue" type="residential"
+                                            [ientAddress]="legalServiceAppliant.ientCustomer.iPermanentaddress"></app-address-edit>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        KYC Details <span>(Any one field is Mandatory)</span>
+                                    </div>
+                                    <div class=" box-pad">
+                                        <row>
+                                            <div class="col-md-12"><app-input-control type="text" label="Birth Reg No"
+                                                    [(ngModel)]="legalServiceAppliant.ientCustomer.birthRegNo"
+                                                    name="birthRegNo  " [maxLength]="20"
+                                                    [errorTrue]="legalServiceAppliant.ientCustomer?.tin===''&& legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.passportNo==='' && errorTrue "
+                                                    [required]="legalServiceAppliant.ientCustomer?.tin===''&& legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.passportNo==='' " />
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="TIN"
+                                                    [(ngModel)]="legalServiceAppliant.ientCustomer.tin" name="tin "
+                                                    [maxLength]="20"
+                                                    [errorTrue]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo===''&& legalServiceAppliant.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo===''&& legalServiceAppliant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                                                    [errorTrue]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.tin==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.tin==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo==='' "
+                                                    [(ngModel)]="legalServiceAppliant.ientCustomer.fnpfNo"
+                                                    [minLength]="10" [maxLength]="14"
+                                                    name="fnpfNo "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="Voter ID"
+                                                    [(ngModel)]="legalServiceAppliant.ientCustomer.voterId"
+                                                    name="voterId " [maxLength]="20"
+                                                    [errorTrue]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.tin==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.tin==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text"
+                                                    label="Driving License No"
+                                                    [(ngModel)]="legalServiceAppliant.ientCustomer.driverLicenseNo"
+                                                    name="driverLicenseNo " [maxLength]="20"
+                                                    [errorTrue]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.tin==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.tin==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div>
+
+                                            <!-- <div class="col-md-12">
+                          <app-input-control
+                                                    type="text" label="National ID"
+                                                    [(ngModel)]="legalServiceAppliant.ientCustomer.nationalId"
+                                                    name="nationalId " [maxLength]="20"
+                                                    [errorTrue]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.tin===''&& legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="legalServiceAppliant.ientCustomer?.passportNo===''&& legalServiceAppliant.ientCustomer?.tin===''&& legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo===''&& legalServiceAppliant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div> -->
+
+                                            <div class="col-md-12"><app-input-control type="text" label="Passport No"
+                                                    [(ngModel)]="legalServiceAppliant.ientCustomer.passportNo"
+                                                    name="passportNo " [maxLength]="20"
+                                                    [errorTrue]="legalServiceAppliant.ientCustomer?.tin===''&& legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo===''&& legalServiceAppliant.ientCustomer?.birthRegNo===''  && errorTrue "
+                                                    [required]="legalServiceAppliant.ientCustomer?.tin===''&& legalServiceAppliant.ientCustomer?.driverLicenseNo==='' && legalServiceAppliant.ientCustomer?.voterId==='' && legalServiceAppliant.ientCustomer?.fnpfNo==='' && legalServiceAppliant.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div>
+
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">Social Platform Details</div>
+                                    <div class=" box-pad">
+                                        <row>
+                                            <app-input-control label="Facebook ID" name="facebookId"
+                                                class="pb10 col-md-12"></app-input-control>
+                                            <app-input-control label="LinkedIn ID" name="linkedinId"
+                                                class="pb10 col-md-12"></app-input-control>
+                                            <app-input-control label="Whatsapp" name="whatsappNumber"
+                                                class="pb10 col-md-12"></app-input-control>
+                                            <app-input-control label="Viber" name="viberNumber"
+                                                class="pb10 col-md-12"></app-input-control>
+                                            <app-input-control label="Skype ID" name="skypeId"
+                                                class="pb10 col-md-12"></app-input-control>
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        }
+                    </row>
+                </div>
+            </scroll>
+
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #memberDialogBox>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Members Involved Details</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(editData){
+                    @if(memberClient.legalApplicationClientId === 0){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveMember()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearMember()"></app-icon-button>
+                    }
+                    @if(memberClient.legalApplicationClientId !== 0){
+                    <app-icon-button name="save" toolTip="Save" (click)="saveMember()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="refreshCustomerForMember(this.memberClient.legalApplicationClientId)"></app-icon-button>
+                    }
+                    }
+                    @else{
+                    <app-icon-button name="edit" toolTip="Edit" (click)="editMember()"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll(); "></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content py10">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="pb10"></div>
+                        <div class="d-flex w100 align-items-center">
+                            @if(memberClient.legalApplicationClientId ===0){
+                            <div class="col-md-3 pl10">
+                                <app-input-control label="Customer" [(ngModel)]="memberClient.customerId"
+                                    name="customerId" [items]="initialData.DDLValues.DDLCustomer" key="id" type="select"
+                                    keyName="fullName"
+                                    (onSelect)="openCustomerForMember(memberClient.customerId)"></app-input-control>
+                            </div>
+                            <div class="col-md-1">
+                                <app-icon-button name="search" toolTip="Search"
+                                    (click)="customerSearch()"></app-icon-button>
+                            </div>
+                            }
+                        </div>
+                        @if(editData === false){
+                        <div class="d-flex w100 p10">
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Member Information</div>
+                                    <div class=" box-pad">
+                                        <!-- <view-label class="pb10" label=" CRM No"></view-label> -->
+
+                                        <!-- <view-label class="pb10" label="Client Name"
+                        value="{{trustApplicationMember}}"></view-label> -->
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="First Name"
+                                            [value]="memberClient.ientCustomer.firstName"></view-label>
+                                        <view-label class="pb10" label="Middle Name"
+                                            [value]="memberClient.ientCustomer.middleName"></view-label>
+                                        <view-label class="pb10" label="Last Name"
+                                            [value]="memberClient.ientCustomer.lastName"></view-label>
+                                        @if(memberClient.isFptcl === 'Y'){
+                                        <view-label label="Is Fptcl" class="pb10" value="Yes"></view-label>
+                                        }
+                                        @if(memberClient.isFptcl === 'N'){
+                                        <view-label label="Is Fptcl" class="pb10" value="No"></view-label>
+                                        }
+                                        <view-label label="Occupation" class="pb10"
+                                            value="{{memberClient.occupation}}"></view-label>
+                                        <!-- <view-label label="Customer Type" class="pb10" value="{{memberClient.typeDescription}}"></view-label> -->
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Date Of Birth"
+                                            [value]="memberClient.ientCustomer.dateOfBirth"></view-label>
+                                        <view-label class="pb10" label="Date Of Death"
+                                            [value]="memberClient.ientCustomer.dateOfDeath"></view-label>
+
+                                        <view-label class="pb10" label="Gender"
+                                            [value]="memberClient.ientCustomer.genderDescription"></view-label>
+                                        <view-label class="pb10" label="Nationality"
+                                            [value]="memberClient.ientCustomer.nationalityDescription"></view-label>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Email ID"
+                                            [value]="memberClient.ientCustomer.emailId"></view-label>
+                                        <view-label class="pb10" label="Contact No"
+                                            [value]="memberClient.ientCustomer.contactNo"></view-label>
+                                        <view-label class="pb10" label="Alternate Contact No"
+                                            [value]="memberClient.ientCustomer.alternateContactNo"></view-label>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Father Name"
+                                            [value]="memberClient.ientCustomer.fatherName"></view-label>
+                                        <view-label class="pb10" label="Mother Name"
+                                            [value]="memberClient.ientCustomer.motherName"></view-label>
+                                        <view-label class="pb10" label="Guardian Name"
+                                            [value]="memberClient.ientCustomer.gaurdianName"></view-label>
+                                        <view-label class="pb10" label="Email"
+                                            [value]="memberClient.ientCustomer.emailId"></view-label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Address Details</div>
+                                    <div class=" box-pad">
+                                        <view-label label="Line 1" class="pb10"
+                                            [value]="memberClient.ientCustomer.iPermanentaddress.line1"></view-label>
+                                        <view-label label="Line 2" class="pb10"
+                                            [value]="memberClient.ientCustomer.iPermanentaddress.line2"></view-label>
+                                        <view-label label="Line 3" class="pb10"
+                                            [value]="memberClient.ientCustomer.iPermanentaddress.line3"></view-label>
+                                        <view-label label="Province" class="pb10"
+                                            [value]="memberClient.ientCustomer.iPermanentaddress.provinceDescription"></view-label>
+                                        <view-label label="Island" class="pb10"
+                                            [value]="memberClient.ientCustomer.iPermanentaddress.islandDescription"></view-label>
+                                        <view-label label="Tikina" class="pb10"
+                                            [value]="memberClient.ientCustomer.iPermanentaddress.tikinaDescription"></view-label>
+                                        <view-label label="Village" class="pb10"
+                                            [value]="memberClient.ientCustomer.iPermanentaddress.village"></view-label>
+                                        <view-label label="Po Box No" class="pb10"
+                                            [value]="memberClient.ientCustomer.iPermanentaddress.poBoxNo"></view-label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        KYC Details
+                                    </div>
+                                    <div class=" box-pad">
+                                        <view-label class="pb10" label="Birth Reg No"
+                                            [value]="memberClient.ientCustomer.birthRegNo"></view-label>
+                                        <view-label label="TIN" class="pb10"
+                                            [value]="memberClient.ientCustomer.tin"></view-label>
+                                        <view-label class="pb10"
+                                            [value]="memberClient.ientCustomer.fnpfNo"></view-label>
+                                        <view-label label="Voter ID" class="pb10"
+                                            [value]="memberClient.ientCustomer.voterId"></view-label>
+                                        <view-label label="Driving License No" class="pb10"
+                                            [value]="memberClient.ientCustomer.driverLicenseNo"></view-label>
+                                        <!-- <view-label label="National ID" class="pb10"
+                                            [value]="memberClient.ientCustomer.nationalId"></view-label> -->
+                                        <view-label label="Passport No" class="pb10"
+                                            [value]="memberClient.ientCustomer.passportNo"></view-label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">Social Platform Details</div>
+                                    <div class=" box-pad">
+                                        <view-label label="Facebook ID" class="pb10"
+                                            [value]="memberClient.ientCustomer.facebookId"></view-label>
+                                        <view-label label="LinkedIn ID" class="pb10"
+                                            [value]="memberClient.ientCustomer.linkedinId"></view-label>
+                                        <view-label label="Whatsapp" class="pb10"
+                                            [value]="memberClient.ientCustomer.whatsappNumber"></view-label>
+                                        <view-label label="Viber" class="pb10"
+                                            [value]="memberClient.ientCustomer.viberNumber"></view-label>
+                                        <view-label label="Skype ID" class="pb10"
+                                            [value]="memberClient.ientCustomer.skypeId"></view-label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @if(editData === true){
+                        <form #x="ngForm" class="d-flex w100 p10">
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Member Information</div>
+                                    <div class=" box-pad">
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="First Name" name="firstName" [errorTrue]="errorTrue"
+                                            [required]="true" [maxLength]="250"
+                                            [(ngModel)]="memberClient.ientCustomer.firstName"
+                                            name="firstName"></app-input-control>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Middle Name" name="middleName" [maxLength]="250"
+                                            [(ngModel)]="memberClient.ientCustomer.middleName"
+                                            name="middleName"></app-input-control>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Last Name" [errorTrue]="errorTrue" [required]="true"
+                                            [(ngModel)]="memberClient.ientCustomer.lastName" name="lastName"
+                                            [maxLength]="250"></app-input-control>
+                                        <div class="label-data">Is FPTCL</div>
+                                        <div class="status-toggle d-flex align-items-center">
+                                            <mat-slide-toggle class="pb10 pt10" [checked]="memberClient.isFptcl==='Y'"
+                                                (change)="memberIsFptcl($event)" color="primary"></mat-slide-toggle>
+                                            <div>
+                                                @if(memberClient.isFptcl==='Y'){
+                                                Yes
+                                                }
+                                                @if(memberClient.isFptcl==='N'){
+                                                No
+                                                }
+                                            </div>
+                                        </div>
+                                        <app-input-control class="pb10" label="Occupation" [errorTrue]="errorTrue"
+                                            [required]="true" [(ngModel)]="memberClient.occupation" name="occupation"
+                                            [maxLength]="250"></app-input-control>
+                                        <app-input-control class="pb10" label="Customer Type" name="typeValue"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            [items]="initialData.DDLValues.DDLLegalCustomerType" key="constant"
+                                            keyName="description" type="select" [(ngModel)]="memberClient.typeValue"
+                                            defaultOption="--Select--"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Date Of Birth"
+                                            [(ngModel)]="memberClient.ientCustomer.dateOfBirth" name="dateOfBirth"
+                                            type="date" [errorTrue]="errorTrue" [required]="true"
+                                            [maxDate]="currentDate"></app-input-control>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Date Of Death"
+                                            [(ngModel)]="memberClient.ientCustomer.dateOfDeath" name="dateOfDeath"
+                                            type="date" [maxDate]="currentDate"></app-input-control>
+
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Gender" name="genderValue" [errorTrue]="errorTrue"
+                                            [required]="true" [items]="initialData.DDLValues.DDLGender" key="constant"
+                                            keyName="description" type="select"
+                                            [(ngModel)]="memberClient.ientCustomer.genderValue"
+                                            defaultOption="--Select--"></app-input-control>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Nationality" name="nationalityValue"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            [items]="initialData.DDLValues.DDLNationality" key="constant"
+                                            keyName="description" type="select"
+                                            [(ngModel)]="memberClient.ientCustomer.nationalityValue"
+                                            defaultOption="--Select--"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Email ID" name="emailId"
+                                            [(ngModel)]="memberClient.ientCustomer.emailId"
+                                            type="email"></app-input-control>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Contact No" name="contactNo"
+                                            [(ngModel)]="memberClient.ientCustomer.contactNo" [minLength]="5"
+                                            [maxLength]="10" type="number"></app-input-control>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Alternate Contact No" name="alternateContactNo"
+                                            [minLength]="5" [maxLength]="10"
+                                            [(ngModel)]="memberClient.ientCustomer.alternateContactNo"
+                                            type="number"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Father Name" name="fatherName"
+                                            [(ngModel)]="memberClient.ientCustomer.fatherName"></app-input-control>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Mother Name" name="motherName"
+                                            [(ngModel)]="memberClient.ientCustomer.motherName"></app-input-control>
+                                        <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                            class="pb10" label="Guardian Name"
+                                            [(ngModel)]="memberClient.ientCustomer.gaurdianName"
+                                            name="gaurdianName"></app-input-control>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Address Details</div>
+                                    <div class=" box-pad">
+                                        <app-address-edit [errorTrue]="errorTrue" type="residential"
+                                            [ientAddress]="memberClient.ientCustomer.iPermanentaddress"></app-address-edit>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        KYC Details <span>(Any one field is Mandatory)</span>
+                                    </div>
+                                    <div class=" box-pad">
+                                        <row>
+                                            <div class="col-md-12"><app-input-control
+                                                    [btnClicked]="memberClient.ientCustomer.customerId !==0" type="text"
+                                                    label="Birth Reg No"
+                                                    [(ngModel)]="memberClient.ientCustomer.birthRegNo"
+                                                    name="birthRegNo  " [maxLength]="20"
+                                                    [errorTrue]="memberClient.ientCustomer?.tin===''&& memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.passportNo==='' && errorTrue "
+                                                    [required]="memberClient.ientCustomer?.tin===''&& memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.passportNo==='' " />
+                                            </div>
+                                            <div class="col-md-12"><app-input-control
+                                                    [btnClicked]="memberClient.ientCustomer.customerId !==0" type="text"
+                                                    label="TIN" [(ngModel)]="memberClient.ientCustomer.tin" name="tin "
+                                                    [maxLength]="20"
+                                                    [errorTrue]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.birthRegNo===''&& memberClient.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.birthRegNo===''&& memberClient.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control
+                                                    [btnClicked]="memberClient.ientCustomer.customerId !==0" type="text"
+                                                    label="FNPF No"
+                                                    [errorTrue]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.tin==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.tin==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.birthRegNo==='' "
+                                                    [(ngModel)]="memberClient.ientCustomer.fnpfNo" [minLength]="10"
+                                                    [maxLength]="14" name="fnpfNo "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control
+                                                    [btnClicked]="memberClient.ientCustomer.customerId !==0" type="text"
+                                                    label="Voter ID" [(ngModel)]="memberClient.ientCustomer.voterId"
+                                                    name="voterId " [maxLength]="20"
+                                                    [errorTrue]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.tin==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.tin==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control
+                                                    [btnClicked]="memberClient.ientCustomer.customerId !==0" type="text"
+                                                    label="Driving License No"
+                                                    [(ngModel)]="memberClient.ientCustomer.driverLicenseNo"
+                                                    name="driverLicenseNo " [maxLength]="20"
+                                                    [errorTrue]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.tin==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.tin==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div>
+
+                                            <!-- <div class="col-md-12">
+                          <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                                    type="text" label="National ID"
+                                                    [(ngModel)]="memberClient.ientCustomer.nationalId"
+                                                    name="nationalId " [maxLength]="20"
+                                                    [errorTrue]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.tin===''&& memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.birthRegNo==='' && errorTrue "
+                                                    [required]="memberClient.ientCustomer?.passportNo===''&& memberClient.ientCustomer?.tin===''&& memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo===''&& memberClient.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div> -->
+
+                                            <div class="col-md-12"><app-input-control
+                                                    [btnClicked]="memberClient.ientCustomer.customerId !==0" type="text"
+                                                    label="Passport No"
+                                                    [(ngModel)]="memberClient.ientCustomer.passportNo"
+                                                    name="passportNo " [maxLength]="20"
+                                                    [errorTrue]="memberClient.ientCustomer?.tin===''&& memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo===''&& memberClient.ientCustomer?.birthRegNo===''  && errorTrue "
+                                                    [required]="memberClient.ientCustomer?.tin===''&& memberClient.ientCustomer?.driverLicenseNo==='' && memberClient.ientCustomer?.voterId==='' && memberClient.ientCustomer?.fnpfNo==='' && memberClient.ientCustomer?.birthRegNo==='' "></app-input-control>
+                                            </div>
+
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">Social Platform Details</div>
+                                    <div class=" box-pad">
+                                        <row>
+                                            <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                                label="Facebook ID" name="facebookId"
+                                                [(ngModel)]="memberClient.ientCustomer.facebookId"
+                                                class="pb10 col-md-12"></app-input-control>
+                                            <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                                label="LinkedIn ID" name="linkedinId"
+                                                [(ngModel)]="memberClient.ientCustomer.linkedinId"
+                                                class="pb10 col-md-12"></app-input-control>
+                                            <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                                label="Whatsapp" name="whatsappNumber"
+                                                [(ngModel)]="memberClient.ientCustomer.whatsappNumber"
+                                                class="pb10 col-md-12"></app-input-control>
+                                            <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                                label="Viber" name="viberNumber"
+                                                [(ngModel)]="memberClient.ientCustomer.viberNumber"
+                                                class="pb10 col-md-12"></app-input-control>
+                                            <app-input-control [btnClicked]="memberClient.ientCustomer.customerId !==0"
+                                                label="Skype ID" name="skypeId"
+                                                [(ngModel)]="memberClient.ientCustomer.skypeId"
+                                                class="pb10 col-md-12"></app-input-control>
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        }
+                    </row>
+                </div>
+            </scroll>
+
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #customerSearchDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>List
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+
+                    <app-icon-button name="close" (click)="dialogClose()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="mb20"></div>
+        <div class="dialog-content">
+            <div class="content-wrapper">
+                <app-table [pagination]="pagination" [columns]="customerColumns" [columnsName]="customerColumnsName"
+                    (pageChanged)="pageChanged($event)" [dataSource]="customertableData" columnID="customerId"
+                    [hideSelectAll]="true">
+
+
+                    <ng-template cellDef="customerRefNo" let-element>
+                        <div (click)="openCustomerInSearch(element.customerId, this.customerType)"
+                            class="pointer text-underline">
+                            {{element.customerRefNo}}</div>
+                    </ng-template>
+                    <ng-template cellDef="statusdescription" let-element>
+                        <div class="status status-{{element.statusValue}}">{{element.statusdescription}}</div>
+                    </ng-template>
+                    <ng-template cellDef="customerName" let-element>
+                        @if(element.customerName.length>25){
+                        <div class="ellipse-text" matTooltip="{{element.customerName}}">{{element.customerName}}</div>
+                        }
+                        @else{
+                        <div>{{element.customerName}}</div>
+                        }
+                    </ng-template>
+                    <ng-template cellHeaderDef="dateOfBrith">
+                        <div class="w100px">DOB</div>
+                    </ng-template>
+                    <ng-template cellDef="dateOfBrith" let-element>
+                        <div class="w100px">{{element.dateOfBrith | appDate}}</div>
+                    </ng-template>
+
+                    <ng-template cellDef="emailId" let-element>
+                        @if(element.emailId.length>25){
+                        <div class="ellipse-text" matTooltip="{{element.emailId}}">{{element.emailId}}</div>
+                        }
+                        @else{
+                        <div>{{element.emailId}}</div>
+                        }
+                    </ng-template>
+                    <ng-template #slotLeft>
+                        <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+                    </ng-template>
+
+                </app-table>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #searchTemplate>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">Customer Search</div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                        <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <scroll>
+                    <div class="dialog-content-inner">
+                        <form #l="ngForm" (submit)="onSearch()">
+                            <row>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Customer No"
+                                                [(ngModel)]="customer.customerRefNo" name="customerRefNo"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" defaultOption="--Select--"
+                                                label="Customer Status" [(ngModel)]="customer.customerStatusValue"
+                                                name="customerStatusValue"
+                                                [items]="initialData.DDLValues.DDLCustomerStatus" key="constant"
+                                                keyName="description" (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="First Name"
+                                                [(ngModel)]="customer.firstName" name="firstName" [maxLength]="250"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Middle Name"
+                                                [(ngModel)]="customer.middleName" name="middleName" [maxLength]="250"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Last Name" [maxLength]="250"
+                                                [(ngModel)]="customer.lastName" name="lastName"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" defaultOption="--Select--" label="Gender"
+                                                [(ngModel)]="customer.genderValue" name="genderValue"
+                                                [items]="initialData.DDLValues.DDLGender" key="constant"
+                                                keyName="description" placeholder="Select Gender"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="date" label="Date of Birth "
+                                                [(ngModel)]="customer.dateOfBirth" name="dateOfBirth"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="email" label="Email ID"
+                                                [(ngModel)]="customer.emailId" name="emailId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="number" label="Contact Number" [minLength]="5"
+                                                [maxLength]="10" [(ngModel)]="customer.contactNo" name="contactNo"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="FNPF No" [(ngModel)]="customer.pfNo"
+                                                name="pfNo" (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Driving License No"
+                                                [(ngModel)]="customer.drivingLicenseNo"
+                                                name="drivingLicenseNo"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Voter ID"
+                                                [(ngModel)]="customer.voterId" name="voterId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <!-- <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="National ID"
+                                                [(ngModel)]="customer.nationalId" name="nationalId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div> -->
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="TIN No" [(ngModel)]="customer.tin"
+                                                name="tin" (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Passport ID"
+                                                [(ngModel)]="customer.passportNo" name="passportNo"
+                                                (onEnter)="onSearch()"> </app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                            </row>
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+    </ng-template>
+</ng-template>
+
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/legal.svg"></ion-icon>
+                <div class="screen-text">Legal & Other Service</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

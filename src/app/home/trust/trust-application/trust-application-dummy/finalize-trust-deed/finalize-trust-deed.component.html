@@ -1,0 +1,369 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/initial-doc.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Finalize Trust Deed</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="bg-white-padd">
+            <app-tab-sub-group (tabChange)="onChange($event)">
+                <app-sub-tab tabTitle="Detail">
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+                            <row>
+                                <div class="col-md-9">
+                                    <row>
+                                        <div class="col-md-4"> <view-label label="Assigned Officer"
+                                                value="{{application.ientTrustApplicationAssignedOfficer.assignedToFullname}}"></view-label>
+                                        </div>
+                                        <div class="col-md-4"> <view-label label="Assigned Date"
+                                                value="{{application.ientTrustApplicationAssignedOfficer.assignedDate | appDate}}"></view-label>
+                                        </div>
+                                        <div class="col-md-4"> <view-label label="TAT"
+                                                value=" {{application.ientTrustApplicationAssignedOfficer.tatDays}} Days"></view-label>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex">
+                                        @if(this.type.isEditable === 'Y'){
+
+                                        @if(this.application.reAssignFlag === 'True'){
+                                        <form #p="ngForm" class="col-md-10 w250">
+                                            <app-input-control type="select" key="constant" keyName="description"
+                                                placeholder="Officer" [items]="assignedOfficerDDL"
+                                                defaultOption="--Select--"
+                                                [(ngModel)]="trustApplicationAssignedOfficer.assignedTo"
+                                                name="assignedTo"></app-input-control>
+                                        </form>
+                                        <div class="col-md-2"><app-icon-button name="reassign" (click)="reAssignTrust()"
+                                                toolTip="Reassign"></app-icon-button></div>
+
+                                        }
+                                        @if(this.application.selfAssignFlag ===' True'){
+                                        <div class="col-md-2"><app-icon-button name="add" (click)="selfAssignTrust()"
+                                                toolTip="Self Assign"></app-icon-button></div>
+                                        }
+                                        }
+                                    </div>
+                                </div>
+                            </row>
+                            <div class="mb20"></div>
+                            <row>
+                                <div class="col-md-4 ">
+                                    <div class="box" style="padding: 8px 16px;">
+                                        <div class="mb20"></div>
+                                        <div class="col-md-12">
+                                            <app-input-control type="select" label="Document Type"
+                                                [(ngModel)]="docNameType" [items]="documentArray" key="code"
+                                                defaultOption="--Select--" (onSelect)="documentTypeDatas(docNameType)"
+                                                name="documentTypeValue" [btnClicked]="this.type.isEditable === 'N'"
+                                                keyName="fullName"></app-input-control>
+                                        </div>
+                                        <app-drop-zone type="1" [fileType]="fileExtension" [accept]="accept"
+                                            [multiple]="false" [btnClicked]="this.type.isEditable === 'N'"
+                                            (onUpload)="uploadClientDocumentAttachment($event)"></app-drop-zone>
+                                    </div>
+                                    <div class="mb26"></div>
+
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="outer-content-wrapper">
+                                        <div class="content-wrapper">
+                                            <div>
+                                                <!-- @if (loading) { -->
+                                                <app-table [columns]="clientDocumentColumns"
+                                                    [columnsName]="clientDocumentColumnsName" [hideSelectAll]="true"
+                                                    [dataSource]="application.lstentTrustApplicationDocument | trustApplicationPipe: this.type.trustApplicationStageValue: this.type.trustApplicationIdenityNo"
+                                                    [showPaginator]="false" columnID="trustApplicationDocumentId">
+                                                    <ng-template cellHeaderDef="fileName">
+                                                        <div class="w200px">
+                                                            File Name
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template cellDef="fileName" let-element>
+                                                        <div class="overflow-wrap">
+                                                            {{element.ientFile.fileName}}
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template cellHeaderDef="documentTypeDescription">
+                                                        <div class="w200px">Document Name</div>
+                                                    </ng-template>
+                                                    <ng-template cellDef="fileExtension" let-element>
+                                                        {{element.ientFile.fileExtension}}
+                                                    </ng-template>
+                                                    <ng-template cellDef="fileSize" let-element>
+                                                        {{element.ientFile.fileSize | fileSize}}mb
+                                                    </ng-template>
+                                                    <ng-template cellHeaderDef="action">
+                                                        <div class="text-center">
+                                                            Action
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template cellDef="action" let-element>
+                                                        @if(element.ientFile.fileName!==''){
+
+                                                        <div class="d-flex align-items-center">
+                                                            <app-icon-button name="doc-view"
+                                                                (click)="viewFile(element)">
+
+                                                            </app-icon-button>
+                                                            <app-icon-button name="doc-download"
+                                                                (click)="downloadFile(element)">
+
+                                                            </app-icon-button>
+                                                            @if(this.type.isEditable === 'Y' &&
+                                                            application.assignedOfficerFlag === 'True'){
+
+                                                            <app-icon-button name="doc-delete"
+                                                                (click)="checkDocumentDelete(element)" />
+                                                            }
+
+
+                                                            
+                                                        </div>
+                                                        }
+                                                    </ng-template>
+                                                </app-table>
+                                                <!-- } -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </row>
+                            <div class="d-flex">
+
+                                <div class="col-md-8 ">
+                                    <!-- <div class="end gap-10">
+                                    <button type="submit" class="submit-btn">Submit</button>
+                                    <button type="submit" class="approve-btn">Complete</button>
+                                    <button type="submit" class="reject-btn">Reject</button>
+                                    <button type="submit" class="cancel-btn">Cancel</button>
+                                </div> -->
+                                </div>
+                            </div>
+                            <!-- <div class="box h100">
+                            <div class="d-flex bottom-border">
+                                <div (click)="selectedTabChange(1)" [ngClass]="{'hori-active': activeValue1 === true}"
+                                    class="horizontal-tab">
+                                    Linked Document</div>
+                                <div (click)="selectedTabChange(2)" [ngClass]="{'hori-active': activeValue2 === true}"
+                                    class="horizontal-tab">
+                                    Notes</div>
+                                <div (click)="selectedTabChange(3)" [ngClass]="{'hori-active': activeValue3 === true}"
+                                    class="horizontal-tab">
+                                    Assigned Officer
+                                </div>
+                            </div>
+                            @if(selectedTabValue === '1'){
+                            <div class="outer-content-wrapper">
+                                <div class="content-wrapper">
+                                    @if(loading){
+                                    <app-table [pagination]="pagination" [columns]="clientSubDocumentColumns"
+                                        [columnsName]="clientSubDocumentColumnsName" [hideSelectAll]="true"
+                                        [dataSource]="clientSubDocumentTableData" [showPaginator]="false"
+                                        columnID="trustApplicationDocumentId"></app-table>
+                                    }
+                                </div>
+                            </div>
+                            }
+                            @if(selectedTabValue === '2'){
+                            <div class="p10">
+        
+                                <div class="justify-content-end d-flex">
+                                    <app-icon-button name="add" toolTip="Create"
+                                        (click)="createNotesDialog()"></app-icon-button>
+                                </div>
+                                @for (item of notesList; track $index) {
+                                <div class="border-bottom  notes-list">
+                                    <div class="mx10 notes-desc">{{item.notes}}</div>
+                                    <div class="d-flex justify-content-end notes-context">
+                                        <div style="padding-right:5px ;">
+                                            {{item.enteredByFullname}}</div>
+                                        <div class=" notes-border-left">
+                                            {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm a'}}
+                                        </div>
+                                        <div style="padding-right:5px ;"></div>
+                                        <div class=" notes-border-left status-{{item.statusValue}}">
+                                            {{item.statusDescription}}
+                                        </div>
+                                        <div class="card-1-header-label px-2 ">
+        
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+        
+                            }
+                            @if(selectedTabValue === '3'){
+                            <div class="status-padding">
+                                <app-table [pagination]="pagination" [columns]="assignedOfficerColumn"
+                                    [columnsName]="assignedOfficerColumnName" [hideSelectAll]="true"
+                                    [dataSource]="assignedOfficerTableData" [showPaginator]="false"
+                                    columnID="trustApplicationDocumentId">
+                                    <ng-template cellDef="assignedDate" let-element>
+                                        {{element.assignedDate | appDate}}
+                                    </ng-template>
+                                </app-table>
+        
+                            </div>
+                            }
+                        </div> -->
+                            <!-- <div class="col-md-12 end">
+                                @if(this.type.isEditable === 'Y'){
+                                <button type="submit" class="approve-btn"
+                                    (click)="completeApplicationStage()">Complete</button>
+                                }
+                            </div> -->
+                            <div class="pb10"></div>
+
+                            <form #notiForm="ngForm">
+                                <row>
+                                    <div class="col-md-12">
+                                        <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                            [maxLength]="250" [required]="true" label="Notes" [(ngModel)]="notesMessage"
+                                            name="notesMessage"></app-input-control>
+                                    </div>
+                                    <div class="col-md-12 mb26 gap-10 end">
+                                        @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+                                        <app-icon-button name="save" toolTip="Save"
+                                            (click)="saveTrustApplication()"></app-icon-button>
+                                        }
+                                        <!-- @if(trustApplicationNotes.isUpdateButtonShow ==='Y'){
+                                    <app-icon-button name="save" toolTip="Update" (click)="saveTrustApplication()"></app-icon-button>
+                                    <app-icon-button name="refresh" toolTip="Refresh" (click)=" refeshData()"></app-icon-button>
+                                    }
+                                    @else {
+                    
+                                    <app-icon-button name="clear" toolTip="Clear" (click)="clearCourtOrderNotes()"></app-icon-button>
+                                    } -->
+                                    </div>
+                                    <div class=""></div>
+                                </row>
+                            </form>
+                        </div>
+                    </div>
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Linked Document">
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+                            <app-table [columns]="linkedColumns" [columnsName]="linkedColumnsName"
+                                [hideSelectAll]="true" [pagination]="pagination" [hasPagination]="true"
+                                [dataSource]="tableLinkedData">
+                                <ng-template cellDef="action" let-element>
+                                    <app-icon-button name="doc-download-button"
+                                        (click)="downloadLinkedFile(element)"></app-icon-button>
+                                </ng-template>
+                            </app-table>
+                        </div>
+                    </div>
+                </app-sub-tab>
+            </app-tab-sub-group>
+        </div>
+
+
+        <div class="col-md-12 end gap-10">
+            @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True'){
+            <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Document Obtained</button>
+            <!-- <button type="submit" class="complete-btn" (click)="cancelProcess()"> Cancel</button> -->
+            }
+        </div>
+    </accordion-body>
+</accordion-item>
+
+<ng-template #Template>
+    <div class="ab bgc">
+        <div class="rel">
+            <div class="p-fix d-flex end">
+                <div class="download-button">
+                    <button color="primary" (click)="downloadImageFile()">
+                        Download
+                    </button>
+                </div>
+                <div class="close-button">
+                    <button color="danger" (click)="dialog.closeDialog()">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+            <div class="d-flex align-items-center h100 justify-content-center w100">
+                <div class="d-flex align-items-center h100 justify-content-center w100 relative">
+                    <div class="ab">
+                        <div class="rel">
+                            <div class="dis-none wcheck active">
+                                <img [src]="filePath" alt="PreviewImages">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #cancelAlert>
+    <div class="dialog-container">
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+                <div class="notification-header">
+                    <div class="notification-icon">
+                        <ion-icon name="warning-outline"></ion-icon>
+                    </div>
+                    <div class="notification-title">Alert</div>
+                </div>
+                <div class="text-center p10">
+                    Are you sure you want to cancel this process
+                </div>
+                <div class="center">
+                    <div class="notification-button">
+                        <button class="btn-notification" (click)="cancelNotesDialog()">Yes</button>
+                        <button class="btn-notification cancel-btn" (click)="dialog.closeAll()">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #notesCancelDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/trust.svg"></ion-icon>
+                Reason For Cancellation
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="cancelApplicationStage()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearCancelNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #g="ngForm">
+                    <row>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="cancelNotesDescription" name="cancelNotesDescription" [maxLength]="250"
+                                [required]="true" label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

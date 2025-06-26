@@ -1,0 +1,334 @@
+<div class="v-flex h100" appAccess="ATXSC" [parentId]="pageId">
+  <form #x="ngForm" class="content-header">
+    <div class="card-box border-right w100">
+      <div class="card-content">
+        <app-input-control type="select" label="Tax Code" [errorTrue]="errorTrue" [required]="true"
+          [(ngModel)]="companyTax.taxCode" name="taxCode" [items]="initialData.DDLValues.ddlTaxLabel"
+          defaultOption="--Select--" [btnClicked]="companyTax.actCompanyTaxId !== 0" key="constant"
+          (onSelect)="taxCodeChanged(companyTax.taxCode)" keyName="description"></app-input-control>
+      </div>
+      <div class="card-content">
+        <view-label label="Tax Name" value="{{companyTax.taxName}}"></view-label>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <view-label label="Created Date" value="{{companyTax.enteredDate | appDate}}"></view-label>
+      </div>
+      <div class="card-content">
+        <view-label label="Created By" value="{{companyTax.enteredByUsername}}"></view-label>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <view-label label="Approved Date" value="{{companyTax.approvedDate | appDate}}"></view-label>
+      </div>
+      <div class="card-content">
+        <view-label label="Approved By" value="{{companyTax.approvedByUsername}}"></view-label>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <!-- @if(companyTax.taxCode === 'VAT-C'){
+        <view-label label="Percentage" [(ngModel)]="companyTax.currentPercentage" name="currentPercentage"></view-label>
+        }
+        @else{ -->
+@if(companyTax.taxCode === 'VAT-C'){
+
+  <app-input-control type="number" label="Tax %" [errorTrue]="errorTrue" [required]="true"
+    [btnClicked]="companyTax.taxCode === 'VAT-C'" [(ngModel)]="companyTax.currentPercentage"
+    name="currentPercentage" [decimal]="2" [max]="100"></app-input-control>
+}
+@else {
+  <app-input-control type="number" label="Tax %" [errorTrue]="errorTrue" [required]="true"
+  [btnClicked]="companyTax.taxCode === 'VAT-C'" [(ngModel)]="companyTax.currentPercentage"
+  name="currentPercentage" [min]="0.1" [decimal]="2" [max]="100"></app-input-control>
+}
+        <!-- } -->
+      </div>
+      <div class="card-content">
+        <app-input-control type="date" label="Effective Date" [errorTrue]="errorTrue" [required]="true"
+          [(ngModel)]="companyTax.effectiveDate" name="effectiveDate"></app-input-control>
+      </div>
+    </div>
+
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content text">
+          <!-- <view-label  class="text" label="Status" value="{{companyTax.statusDescription}}" ></view-label> -->
+          <view-label label="Status" status="{{companyTax.statusValue}}"
+            statusValue="{{companyTax.statusDescription}}"></view-label>
+        </div>
+        @if(companyTax.actCompanyTaxId>0){
+        @if(this.companyTax.statusValue !== 'PENAP' &&
+        selectedTab === 0){
+        <div class="card-content btn-group">
+          <app-icon-button name="save" toolTip="Update" (click)="saveTax()"
+            appButtonAccess="TaxUpdateBtn"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="openTaxDetail(companyTax.actCompanyTaxId)"
+            appButtonAccess="TaxRefreshBtn"></app-icon-button>
+        </div>
+        }
+        }@else {
+        <div class="card-content btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveTax()" appButtonAccess="CrmCustAppSaveBtn"
+            appButtonAccess="TaxSaveBtn"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="createNewTax()"
+            appButtonAccess="TaxClearBtn"></app-icon-button>
+        </div>
+        }
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <app-table [hasHeader]="false" [columns]="taxHistory" [hideSelectAll]="true" [columnsName]="taxHistoryName"
+      [dataSource]="tableTaxData">
+      <ng-template cellHeaderDef="preparedDate">
+        <div class="header-cell-title">Created Date</div>
+        <div class="header-cell-subtitle">Created By</div>
+      </ng-template>
+      <ng-template cellDef="preparedDate" let-element>
+        <div>{{ element.preparedDate | appDate : appSetting.environment.dateViewFormatWithTime}}</div>
+        <div class="table-cell-subtitle">
+          {{ element.taxPreparedBy ? element.taxPreparedBy : '-' }}
+        </div>
+      </ng-template>
+      <ng-template cellHeaderDef="approvedDate">
+        <div class="header-cell-title">Approved Date</div>
+        <div class="header-cell-subtitle">Approved By</div>
+      </ng-template>
+      <ng-template cellDef="approvedDate" let-element>
+        <div>{{ element.approvedDate | appDate : appSetting.environment.dateViewFormatWithTime}}</div>
+        <div class="table-cell-subtitle">
+          {{ element.taxApprovedBy ? element.taxApprovedBy : '-' }}
+        </div>
+      </ng-template>
+      <ng-template cellHeaderDef="effectiveDate">
+        <div class="header-cell-title">Effective Date</div>
+      </ng-template>
+      <ng-template cellDef="effectiveDate" let-element>{{element.effectiveDate | appDate }}</ng-template>
+      <!-- <ng-template cellDef="taxPercentage" let-element>
+        <div class="pl40">
+          {{element.taxPercentage}}
+        </div>
+      </ng-template> -->
+
+    </app-table>
+    }
+    @if(this.id !== 0){
+    @if(selectedTab === 1){
+    <app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+      [dataSource]="companyTax.ilstentActNotes" [hasIndex]="true">
+      <ng-template cellHeaderDef="add">
+        @if(companyTax.actCompanyTaxId>0){
+        <div class="end">
+          @if(this.companyTax.statusValue !== 'APROV' && this.companyTax.statusValue !== 'CANCL'){
+
+          <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"
+            appButtonAccess="TaxNotNewBtn"></app-icon-button>
+          }
+        </div>
+        }
+      </ng-template>
+      <ng-template cellDef="actCompanyId" let-element>
+        <div>{{element.actCompanyId}}</div>
+
+      </ng-template>
+      <ng-template cellHeaderDef="notes" let-element>
+        <div>
+          <div class="header-cell-title">Notes</div>
+          <div class="header-cell-subtitle">Created By | Date | Time</div>
+        </div>
+      </ng-template>
+      <ng-template cellDef="notes" let-element>
+        <div class="header-cell-title"> {{element.notesDetail}}</div>
+        <div class="header-cell-subtitle">
+          {{ element.createdFullName }} | {{ element.createdDate  | appDate :
+        appSetting.environment.dateViewFormatWithTime }}
+        </div>
+      </ng-template>
+    </app-table>
+    } @else if(selectedTab === 2){
+    <app-tax-attachment [parentData]="companyTax" (attachmentData)="getAttachementData($event)"></app-tax-attachment>
+    <!-- <app-table [hideSelectAll]="true" [showPaginator]="false" [columns]="attachment" [columnsName]="attachmentsName"
+          [dataSource]="tableAttachmentData | filterAndSort: filterFileName:'attachmentFileName':false" [hasIndex]="true">
+          <ng-template cellHeaderDef="fileName">
+            <div class="header-cell-title">File Name</div>
+            <div class="header-cell-subtitle">Created By | Date | Time</div>
+          </ng-template>
+          <ng-template cellDef="fileName" let-element>
+            <div class="header-cell-title">{{ element.attachmentFileName }}</div>
+            <div class="header-cell-subtitle">
+              {{ element.createdBy }} | {{ element.createdDate | appDate }}
+            </div>
+          </ng-template>
+
+          <ng-template cellHeaderDef="action">
+            <div class="flex-center">
+              @if(this.companyTax.statusValue !== 'APROV' && this.companyTax.statusValue !== 'CANCL'){
+
+              <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()" appButtonAccess="TaxAtchNewBtn"></app-icon-button>
+              }
+            </div>
+          </ng-template>
+
+          <ng-template cellDef="action" let-element>
+            <div class="between">
+              <app-icon-button name="download" toolTip="Download"
+                (click)="downloadAttachment(element, 'down')"></app-icon-button>
+              <app-icon-button name="doc-view" toolTip="View"
+                (click)="downloadAttachment(element, 'view')"></app-icon-button>
+              <app-icon-button name="doc-delete" toolTip="Delete"
+                (click)="deleteActAttachmentFile(element)"></app-icon-button>
+            </div>
+          </ng-template>
+
+
+          <ng-template #slotLeft>
+            <div class="search_text">
+              <app-input-control placeholder="Search By Any File Name" type="text" [search]="true"
+                [(ngModel)]="filterFileName"></app-input-control>
+            </div>
+          </ng-template>
+        </app-table> -->
+
+    }
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon name="podium-outline"></ion-icon>
+          <div>Tax History</div>
+        </div>
+        @if(this.id !== 0){
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        }
+      </div>
+      <!-- <div class="open-arrow" id="trigger{{ pageId }}">
+		  <ion-icon name="chevron-down-outline"></ion-icon>
+		</div> -->
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn " (click)="navigateToList()">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+
+        <div class="screen-text" (click)="navigateToList()">Tax</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Tax > Detail > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveAccountsTaxNotes()"
+            appButtonAccess="ATNSB"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="createNewTaxNote(0)"
+            appButtonAccess="ATNCB"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #y="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Status" key="constant" keyName="description"
+                [errorTrue]="errorTrueNotes" [required]="true" [(ngModel)]="companyTax.pentActNotes.statusValue"
+                name="statusValue" [items]="notesStatus" key="constant" keyName="description" defaultOption="--Select--"
+                key="constant" keyName="description"></app-input-control>
+            </div>
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1" [maxLength]="250" label="Notes"
+                [(ngModel)]="companyTax.pentActNotes.notesDetail" name="notesDetail"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Tax > Detail > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <app-drop-zone fileType="pdf" [accept]="accept" [multiple]="true" appButtonAccess="TXAUB"
+          (onUpload)="uploadTaxAttachment($event)"></app-drop-zone>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <div class="status-table-header">
+    <div class="changed-by_label">Changed By | Effective Date</div>
+    <div class="pl14">Status</div>
+  </div>
+  @for(data of companyTax.ilistentCompanyTaxStatusHistory; track $index){
+
+  <div class="status-table-content">
+    <div class="changed-by">
+      {{data.changedByUserName}}
+      <div class="changed-by_sub">{{data.effectiveDate | appDate :
+        appSetting.environment.dateViewFormatWithTime}}</div>
+    </div>
+    <div class="status_align pl14"> <accouts-status-table
+        [statusDescription]="data.statusDescription"></accouts-status-table></div>
+  </div>
+  }
+</mat-menu>
+
+<app-documents #DocumentsComponent class="none"></app-documents>
+
+
+
+<!-- appDate:appSetting.environment.dateViewFormatWithTime -->

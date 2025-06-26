@@ -1,0 +1,389 @@
+<div class="v-flex h100 content-wrapper" appAccess="FUDTN" [parentId]="pageId">
+
+    <ng-template #breadCrumb>
+        <div class="breadcrumb">
+            <ul>
+                <li class="screen-name link">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+                </li>
+                <li class="screen-name">
+
+                    <div class="screen-text">Cost Category And Cost Centre</div>
+                </li>
+            </ul>
+        </div>
+    </ng-template>
+
+    <div class="h100 d-flex gap-4">
+        <div class="col-md-8">
+            <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" indexHeaderName="Sl.No"
+                [dataSource]="tableData" [hideSelectAll]="true" [showPaginator]="true" [hasHeader]="true">
+
+                <ng-template cellHeaderDef="slNo">
+                    <div class="header-cell-title pb-3">Sl.No</div>
+                </ng-template>
+                <ng-template cellDef="slNo" let-element>
+                    <div class="link"></div>
+                    <div class="table-cell-subtitle"></div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="categoryName">
+                    <div class="header-cell-title pb-3">Category Name</div>
+                </ng-template>
+                <ng-template cellDef="categoryName" let-element>
+                    <div></div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="createdBy" class="">
+                    <div class="header-cell-title">Created By</div>
+                    <div class="header-cell-subtitle">Created Date</div>
+                </ng-template>
+                <ng-template cellDef="createdBy" let-element>
+                    <div></div>
+                </ng-template>
+
+                <ng-template cellHeaderDef="status">
+                    <div class="header-cell-title pb-3">Status</div>
+                </ng-template>
+                <ng-template cellDef="status" let-element>
+                </ng-template>
+
+                <ng-template cellHeaderDef="action">
+                    <div class="header-cell-title h100">Action</div>
+                </ng-template>
+                <ng-template cellDef="action" let-element>
+                    <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                </ng-template>
+
+                <ng-template #slotLeft>
+                    <!-- <app-search #appSearch [searchTemplate]="searchTemplate"></app-search> -->
+                </ng-template>
+
+                <ng-template #slotMiddle>
+                    <div class="d-flex">
+                        <div><table-status-sort type="activeCount"></table-status-sort>
+                        </div>
+                        <div>
+                            <table-status-sort type="inactiveCount"></table-status-sort>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <ng-template #slotRight>
+                    <div class="d-flex align-items-center w100">
+
+                        <div class="col-md-1">
+                            <app-icon-button name="add" toolTip="Add New"
+                                (click)="openDialog(element)"></app-icon-button>
+                        </div>
+                    </div>
+                </ng-template>
+            </app-table>
+        </div>
+
+        <div class="col-md- w100">
+            <div class="v-flex h100">
+                <div class="flex-1">
+                    <app-table class="subTable" [hasIndex]="false" indexHeaderName="Sl.No" [columns]="subColumns"
+                        [columnsName]="subColumnsName" [dataSource]="tableData" [hideSelectAll]="true"
+                        [showPaginator]="false" [hasHeader]="true">
+
+                        <ng-template cellHeaderDef="centreName">
+                            <div class="header-cell-title s-header pb-3">Centre Name</div>
+                        </ng-template>
+                        <ng-template cellDef="status" let-element></ng-template>
+
+                        <ng-template cellHeaderDef="createdBy">
+                            <div class="header-cell-title s-header">Created By</div>
+                            <div class="header-cell-subtitle">Created Date</div>
+                        </ng-template>
+                        <ng-template cellDef="status" let-element></ng-template>
+
+                        <ng-template cellHeaderDef="status">
+                            <div class="header-cell-title s-header pb-3">Status</div>
+                        </ng-template>
+                        <ng-template cellDef="status" let-element></ng-template>
+
+                        <ng-template cellHeaderDef="action">
+                            <div class="header-cell-title h100">Action</div>
+                        </ng-template>
+
+                        <ng-template #slotRight>
+                            <div class="d-flex align-items-center w100">
+
+                                <div class="col-md-1">
+                                    <app-icon-button name="add" toolTip="Add New"
+                                        (click)="openSubEventDialog(element)"></app-icon-button>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </app-table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #eventCreation>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">
+                    <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                    Cost Category > Creation > New
+                </div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <scroll>
+                    <div class="dialog-content-inner v-flex justify-content h100">
+
+                        @if(tab===0){
+                        <form #p="ngForm">
+                            <row>
+                                <div class="col-md-12">
+                                    <row>
+
+                                        <div class="col-md-4 border-right">
+                                            <div class="col-md-12 mb26">
+                                                <app-input-control type="text" label="Category Name" name=""
+                                                    [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12 mb26">
+                                                <app-input-control type="select" label="Status"
+                                                    defaultOption="--Select--" [required]="true" name="" key=""
+                                                    keyName=""></app-input-control>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 border-right">
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Added by"></view-label>
+                                            </div>
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Added Date"></view-label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Changed by"></view-label>
+                                            </div>
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Changed Date"></view-label>
+                                            </div>
+                                        </div>
+                                    </row>
+
+                                </div>
+                            </row>
+                        </form>
+
+                        }
+
+                        @else if(tab===1){
+                        <!-- <app-table class="subTable" indexHeaderName="Sl.No" [pagination]="pagination"
+                            [columns]="columnsAddCategory" [columnsName]="columnsAddCategoryName"
+                            [dataSource]="tableAddCategoryData" [hideSelectAll]="true" [showPaginator]="false"
+                            [hasHeader]="false" columnID="">
+                            <ng-template cellHeaderDef="slNo">
+                                <div class="header-cell-title t-header pb-3">Sl.No</div>
+                            </ng-template>
+                            <ng-template cellDef="slNo" let-element></ng-template>
+
+                            <ng-template cellHeaderDef="status">
+                                <div class="header-cell-title t-header pb-3">Status</div>
+                            </ng-template>
+                            <ng-template cellDef="status" let-element></ng-template>
+                            <ng-template cellHeaderDef="changedBy">
+                                <div class="header-cell-title t-header pb-3">Changed by</div>
+                            </ng-template>
+                            <ng-template cellDef="changedBy" let-element></ng-template>
+
+                            <ng-template cellHeaderDef="changedDate">
+                                <div class="header-cell-title t-header pb-3">Changed Date</div>
+                            </ng-template>
+                            <ng-template cellDef="changedDate" let-element></ng-template>
+                        </app-table> -->
+
+                        <div class="content-wrapper">
+                            <div class="sub-table w100">
+                                <table class="w100">
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th>Status</th>
+                                        <th>Created By</th>
+                                        <th>Created Date</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                        }
+
+                        <div class="dialog-footer d-flex">
+                            <div class="accordion-title-card pr10 flex-none pointer"
+                                [ngClass]="{'active-tab': tab === 0}" (click)="openStatusValue(0)">
+                                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Cost Category Details</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card pl10 pointer" (click)="openStatusValue(1)"
+                                [ngClass]="{'active-tab': tab === 1}">
+                                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Status History</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #subEventCreation>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">
+                    <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                    Cost Centre > Creation > New
+                </div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        <app-icon-button name="save" toolTip="Save"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+                        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <scroll>
+                    <div class="dialog-content-inner v-flex justify-content h100">
+
+                        @if(tab===0){
+                        <form #p="ngForm">
+                            <row>
+                                <div class="col-md-12">
+                                    <row>
+                                        <div class="col-md-4 border-right">
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Category Name"></view-label>
+                                            </div>
+                                            <div class="col-md-12 mb26">
+                                                <app-input-control type="text" label="Cost centre Name"
+                                                    [required]="true" name=""></app-input-control>
+                                            </div>
+                                            <div class="col-md-12 mb26">
+                                                <app-input-control type="select" label="Status"
+                                                    defaultOption="--Select--" [required]="true" name="" key=""
+                                                    keyName=""></app-input-control>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 border-right">
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Added by"></view-label>
+                                            </div>
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Added Date"></view-label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Changed by"></view-label>
+                                            </div>
+                                            <div class="col-md-12 mb26">
+                                                <view-label label="Changed Date"></view-label>
+                                            </div>
+                                        </div>
+                                    </row>
+                                </div>
+                            </row>
+                        </form>
+
+                        }
+
+                        @else if(tab===1){
+                        <div class="content-wrapper">
+                            <div class="sub-table w100">
+                                <table class="w100">
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th>Status</th>
+                                        <th>Created By</th>
+                                        <th>Created Date</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                        <!-- <app-table class="subTable" indexHeaderName="Sl.No" [pagination]="pagination"
+                            [columns]="columnsAddCentre" [columnsName]="columnsAddCentreName"
+                            [dataSource]="tableAddCategoryData" [hideSelectAll]="true" [showPaginator]="false"
+                            [hasHeader]="false" columnID="">
+                            <ng-template cellHeaderDef="slNo">
+                                <div class="header-cell-title t-header pb-3">Sl.No</div>
+                            </ng-template>
+                            <ng-template cellDef="slNo" let-element></ng-template>
+
+                            <ng-template cellHeaderDef="status">
+                                <div class="header-cell-title t-header pb-3">Status</div>
+                            </ng-template>
+                            <ng-template cellDef="status" let-element></ng-template>
+                            <ng-template cellHeaderDef="changedBy">
+                                <div class="header-cell-title t-header pb-3">Changed by</div>
+                            </ng-template>
+                            <ng-template cellDef="changedBy" let-element></ng-template>
+
+                            <ng-template cellHeaderDef="changedDate">
+                                <div class="header-cell-title t-header pb-3">Changed Date</div>
+                            </ng-template>
+                            <ng-template cellDef="changedDate" let-element></ng-template>
+                        </app-table> -->
+                        }
+
+                        <div class="d-flex dialog-footer">
+                            <div class="accordion-title-card pr10 flex-none border-right pointer"
+                                [ngClass]="{'active-tab': tab === 0}" (click)="openStatusValue(0)">
+                                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Cost Centre Details</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card pl10 pointer" (click)="openStatusValue(1)"
+                                [ngClass]="{'active-tab': tab === 1}">
+                                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Status History</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+    </ng-template>
+
+
+</div>

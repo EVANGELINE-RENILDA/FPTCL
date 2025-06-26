@@ -1,0 +1,897 @@
+<div class="v-flex h100 content-wrapper" appAccess="FUDTN" [parentId]="pageId">
+
+    <!-- <form #l="ngForm" (ngSubmit)="navigateToDetail(l)" class="flex-end pt8 pr20 header-bg">
+        <div class="col-md-3">
+            <app-input-control type="select" label="Document Name" [(ngModel)]="voucherId" name="voucherId"
+                [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name" [errorTrue]="errorTrue"
+                [required]="true" (onSelect)="getVoucherDetail(voucherId)" type="select"
+                defaultOption="--Select--"></app-input-control>
+        </div>
+        <app-icon-button name="add" toolTip="Add New" appButtonAccess="FunTraNotNewBtn"></app-icon-button>
+    </form> -->
+
+    <div class="h100 d-flex gap-10">
+        <div class="col-md-8">
+            <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [hasIndex]="false"
+                [dataSource]="tableData" [hideSelectAll]="true" [showPaginator]="true" [hasHeader]="true"
+                (pageChanged)="pageChanged($event)" columnID="customerId" (onSelect)="onSelect($event)">
+
+                <ng-template cellHeaderDef="eventName">
+                    <div class="header-cell-title pb-3">Event Name</div>
+                    <div class="header-cell-subtitle">Event Code</div>
+                </ng-template>
+
+                <ng-template cellDef="eventName" let-element>
+                    @if(element.eventName.length>25){
+                    <div class="link1" matTooltip="{{ element.eventName }}"
+                        (click)="openSubEvent(element.eventId, element.eventName)">{{ element.eventName
+                        }}
+                    </div>
+                    } @else {
+                    <div class="link1" (click)="openSubEvent(element.eventId, element.eventName)">{{ element.eventName
+                        }}
+                    </div>
+                    }
+                    <div class="table-cell-subtitle">
+                        {{ element.eventCode }}
+                    </div>
+                </ng-template>
+
+                <ng-template cellDef="effectiveDate" let-element>
+                    <div>{{ element.effectiveDate | appDate }}</div>
+                </ng-template>
+
+                <ng-template cellDef="status" let-element>
+                    <accouts-status-table [statusDescription]="element.statusDescription"></accouts-status-table>
+                </ng-template>
+
+                <ng-template cellDef="action" let-element>
+                    <app-icon-button name="open" toolTip="Open"
+                        (click)="openSubEvent(element.eventId, element.eventName)"
+                        (click)="eventPopUP(element.eventId)"></app-icon-button>
+                </ng-template>
+
+                <ng-template #slotLeft>
+                    <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="305px"></app-search>
+                </ng-template>
+
+                <ng-template #slotRight>
+                    <div class="d-flex align-items-center w100">
+
+                        <div class="col-md-1">
+                            <app-icon-button name="add" toolTip="Add New" (click)="eventPopUP(0)"></app-icon-button>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <!-- <ng-template #slotMiddle>
+                <div class="d-flex">
+                    <div (click)="statusSortSearch('INPRO')"><table-status-sort type="processing"
+                            [processingCount1]="totalInprogressCount"></table-status-sort>
+                    </div>
+                    <div (click)="statusSortSearch('APROV')">
+                        <table-status-sort type="approving" [approvedCount1]="totalApprovedCount"></table-status-sort>
+                    </div>
+                </div>
+            </ng-template> -->
+            </app-table>
+        </div>
+
+        <div class="col-md-4 bg-white border w100">
+            <div class="v-flex h100">
+                <div class="fw-600 header d-flex align-items-center justify-content-between">
+                    <div>
+                        Sub Event Details
+                    </div>
+                    <div>
+
+                        <app-icon-button name="add" toolTip="Add New" (click)="openSubEventPopUp(0)"></app-icon-button>
+                    </div>
+                </div>
+                <div class="flex-1 relative">
+                    <div class="ab">
+                        <div class="rel">
+                            <app-table class="subTable" [hasIndex]="false" indexHeaderName="Sl.No"
+                                [pagination]="pagination" [columns]="subColumns" [columnsName]="subColumnsName"
+                                [dataSource]="subEventTable" [hideSelectAll]="true" [showPaginator]="false"
+                                [hasHeader]="false" (pageChanged)="pageChanged($event)" columnID="customerId"
+                                (onSelect)="onSelect($event)">
+                                <ng-template cellHeaderDef="eventName">
+                                    <div class="header-cell-title t-header pb-3">Sub Event Name</div>
+                                    <div class="header-cell-subtitle">Sub Event Code</div>
+                                </ng-template>
+                                <ng-template cellDef="eventName" let-element>
+                                    <div>{{ element.eventName }}</div>
+                                    <div class="table-cell-subtitle">
+                                        {{ element.eventCode }}
+                                    </div>
+                                </ng-template>
+
+                                <ng-template cellHeaderDef="status">
+                                    <div class="header-cell-title s-header">Status</div>
+                                </ng-template>
+                                <ng-template cellDef="status" let-element>
+
+                                    <div>
+                                        <accouts-status-table
+                                            [statusDescription]="element.statusDescription"></accouts-status-table>
+                                    </div>
+                                </ng-template>
+
+                                <ng-template cellDef="actionsub" let-element>
+                                    <app-icon-button name="open" (click)="openSubEventPopUp(element.eventId)"
+                                        toolTip="Edit Sub Event"></app-icon-button>
+                                </ng-template>
+
+                            </app-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <ng-template #searchTemplate>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">Event Creation Search</div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        <app-icon-button name="search" toolTip="Search"
+                            (click)="isSearchButtonClicked = true; onSearch()"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <scroll>
+                    <div class="dialog-content-inner">
+                        <form #l="ngForm" (submit)="onSearch()">
+                            <row>
+                                <div class="col-md-4 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Event Code"
+                                                [(ngModel)]="searchParams.eventCode" tabIndex="100" [maxLength]="10"
+                                                (keyup.enter)="onSearch()" name="eventCode"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Event Name"
+                                                [(ngModel)]="searchParams.eventName" tabIndex="100" [maxLength]="50"
+                                                (keyup.enter)="onSearch()" name="eventName"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-4 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="date" label="Created Date From"
+                                                [(ngModel)]="searchParams.effectiveDateFrom"
+                                                [maxDate]="searchParams.effectiveDateTo" tabIndex="100"
+                                                (keyup.enter)="onSearch()" name="effectiveDateFrom"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="date" label="Created Date To"
+                                                [(ngModel)]="searchParams.effectiveDateTo" name="effectiveDateTo"
+                                                [minDate]="searchParams.effectiveDateFrom" tabIndex="100"
+                                                (keyup.enter)="onSearch()" (onClear)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-4">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" label="Status"
+                                                [(ngModel)]="searchParams.statusValue" defaultOption="--Select--"
+                                                [items]="initialData.DDLValues.DDLStatus" key="constant"
+                                                keyName="description" tabIndex="100" (keyup.enter)="onSearch()"
+                                                name="statusValue"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                            </row>
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #eventCreation>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">
+                    <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                    Event > Creation > {{eventFlag}}
+                    <!-- @if(lockLedger.actLedgerLockHistoryId === 0){ Ledger > Detail > Add Lock
+          Detail } @else{ Ledger > Detail > Edit Lock Detail } -->
+                </div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        <!-- @if(lockLedger.actLedgerLockHistoryId === 0){ -->
+                        @if(eventFlag === 'New'){
+
+                        <app-icon-button name="save" toolTip="Save" (click)="saveEventCreation()"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="createNewEvent()"></app-icon-button>
+                        } @else if(eventFlag === 'Edit'){
+                        @if(tab !== 1){
+                        <app-icon-button name="save" toolTip="Update" (click)="saveEventCreation()"></app-icon-button>
+                        <app-icon-button name="refresh" toolTip="Refresh"
+                            (click)="openEvent(event.eventId, 'refresh')"></app-icon-button>
+                        }
+                        }
+                        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+
+                <!-- <div class="ab">
+                    <div class="rel"> -->
+
+
+                <scroll>
+
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+
+                    <div class="dialog-content-inner h100 temp">
+
+                        @if(tab===0){
+
+
+                        <div>
+                            <form #x="ngForm" (ngSubmit)="saveEventCreation()">
+                                <row>
+                                    <div class="col-md-6 border-right py-3 px-2">
+                                        <row>
+                                            <div class="col-md-12 ">
+                                                <app-input-control type="text" label="Event Code" [required]="true"
+                                                    [errorTrue]="errorTrue" [(ngModel)]=" event.eventCode"
+                                                    [maxLength]="10" name="eventCode"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <app-input-control type="text" label="Event Name" [maxLength]="50"
+                                                    [(ngModel)]=" event.eventName" name="eventName"></app-input-control>
+                                            </div>
+                                        </row>
+                                    </div>
+                                    <!-- <div class="col-md-12">
+                                <app-input-control type="select" label="Parent Event" defaultOption="--Select--"
+                                    valueType="string"></app-input-control>
+                            </div> -->
+                                    <div class="col-md-6 py-3 px-2">
+                                        <row>
+                                            <div class="col-md-12 mb21">
+                                                <view-label label="Created Date"
+                                                    [value]=" event.effectiveDate | appDate"></view-label>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <app-input-control type="select" label="Status"
+                                                    defaultOption="--Select--" [(ngModel)]=" event.statusValue"
+                                                    name="statusValue" [items]="initialData.DDLValues.DDLStatus"
+                                                    key="constant" keyName="description" valueType="string"
+                                                    [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                                            </div>
+                                        </row>
+                                    </div>
+                                    <div class="col-md-12 py-3 px-2">
+                                        <app-input-control type="textarea" className="notes" [maxLength]="500"
+                                            label="Event Description" [(ngModel)]=" event.eventDescription"
+                                            [required]="true" [errorTrue]="errorTrue"
+                                            name="eventDescription"></app-input-control>
+                                    </div>
+                                </row>
+
+                            </form>
+                        </div>
+                        }
+
+                        @else if(tab===1){
+
+
+                        <div class="outer-content-wrapper">
+                            @if(event.lstentEventUpdatetHistory.length > 0){
+                            <div class="content-wrapper">
+                                <row>
+                                    <div class="col-md-8">
+                                        <div class="event-title">Update History</div>
+
+                                        <div class="scroller mt8">
+                                            <app-table class="subTable" [hasIndex]="false" indexHeaderName="Sl.No"
+                                                [pagination]="pagination" [columns]="eventHistoryColumns"
+                                                [dataSource]="event.lstentEventUpdatetHistory"
+                                                [columnsName]="eventHistoryColumnsName" [hideSelectAll]="true"
+                                                [showPaginator]="false" [hasHeader]="false" columnID="customerId"
+                                                (onSelect)="onSelect($event)">
+
+                                                <ng-template cellHeaderDef="event" (click)="openEventCreationBox()">
+                                                    <div class="header-cell-title t-header pb-3">Event Name
+                                                    </div>
+                                                    <div class="header-cell-subtitle">Event Code</div>
+                                                </ng-template>
+                                                <ng-template cellDef="event" let-element>
+                                                    <div>{{ element.eventName }}</div>
+                                                    <div class="table-cell-subtitle">
+                                                        {{ element.eventCode }}
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template cellHeaderDef="changedDate" let-element>
+                                                    <div class="a">Changed By</div>
+                                                    <div class="a">Changed Date</div>
+                                                </ng-template>
+
+                                                <ng-template cellDef="changedDate" let-element>
+                                                    <div>{{ element.changedByFullname }}</div>
+                                                    <div class="table-cell-subtitle">
+                                                        {{ element.changedDate | appDate }}
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template cellDef="status" let-element>
+
+                                                    <div>
+                                                        <accouts-status-table
+                                                            [statusDescription]="element.statusDescription"></accouts-status-table>
+                                                    </div>
+
+                                                </ng-template>
+
+                                                <ng-template cellDef="actionHis" let-element>
+                                                    <app-icon-button name="open" toolTip="Open"
+                                                        (click)=" getOldValues(element)"
+                                                        tooltip="open"></app-icon-button>
+                                                </ng-template>
+
+                                            </app-table>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="content-wrapper content">
+                                            <div class="event-title2">Event Details with Previous Value
+                                            </div>
+                                            <div class="border detail p10">
+                                                @if(event.lstentEventUpdatetHistory.length > 0){
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Event Name"
+                                                            [value]="eventOldData?.eventName || '-'"></view-label>
+                                                    </div>
+
+                                                    @if(eventOldData?.eventName !==
+                                                    eventInitalOldData?.event_name){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ eventInitalOldData?.event_name || '-' }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Event Code"
+                                                            [value]="eventOldData?.eventCode || '-'"></view-label>
+                                                    </div>
+
+                                                    @if(eventOldData?.eventCode !==
+                                                    eventInitalOldData?.event_code){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ eventInitalOldData?.event_code || '-' }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Created Date"
+                                                            value="{{eventOldData?.effectiveDate | appDate }}"></view-label>
+                                                    </div>
+
+                                                    @if((eventOldData?.effectiveDate | appDate) !==
+                                                    (eventInitalOldData?.effective_date | date
+                                                    :dateFormat) ){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ (eventInitalOldData?.effective_date | date
+                                                            :dateFormat ) ||
+                                                            '-' }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Description"
+                                                            value="{{eventOldData?.eventDescription}}"></view-label>
+                                                    </div>
+
+                                                    @if(eventOldData?.eventDescription !==
+                                                    eventInitalOldData?.event_description){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ (eventInitalOldData?.event_description ) ||
+                                                            '-' }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Status"
+                                                            [value]="eventOldData?.statusDescription || '-'"></view-label>
+                                                    </div>
+
+                                                    @if(eventOldData?.statusDescription !==
+                                                    eventInitalOldData?.status_description){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ eventInitalOldData?.status_description || '-'
+                                                            }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+                                                }
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </row>
+                            </div>
+                            } @else {
+                            <div class="content-wrapper">
+                                <row>
+                                    <div class="col-md-12">
+                                        <div class="event-title">Update History</div>
+
+                                        <div class="scroller1 mt8">
+                                            <app-table class="subTable" indexHeaderName="Sl.No"
+                                                [pagination]="pagination" [columns]="eventHistoryColumns"
+                                                [dataSource]="event.lstentEventUpdatetHistory"
+                                                [columnsName]="eventHistoryColumnsName" [hideSelectAll]="true"
+                                                [showPaginator]="false" [hasHeader]="false" columnID="customerId"
+                                                (onSelect)="onSelect($event)">
+
+                                                <ng-template cellHeaderDef="event" (click)="openEventCreationBox()">
+                                                    <div class="header-cell-title t-header pb-3">Event Name
+                                                    </div>
+                                                    <div class="header-cell-subtitle">Event Code</div>
+                                                </ng-template>
+                                                <ng-template cellDef="event" let-element>
+                                                    <div>{{ element.eventName }}</div>
+                                                    <div class="table-cell-subtitle">
+                                                        {{ element.eventCode }}
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template cellHeaderDef="changedDate" let-element>
+                                                    <div class="a">Changed By</div>
+                                                    <div class="a">Changed Date</div>
+                                                </ng-template>
+
+                                                <ng-template cellDef="changedDate" let-element>
+                                                    <div>{{ element.changedByFullname }}</div>
+                                                    <div class="table-cell-subtitle">
+                                                        {{ element.changedDate | appDate }}
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template cellDef="status" let-element>
+
+                                                    <div>
+                                                        <accouts-status-table
+                                                            [statusDescription]="element.statusDescription"></accouts-status-table>
+                                                    </div>
+
+                                                </ng-template>
+
+                                                <ng-template cellDef="actionHis" let-element>
+                                                    <app-icon-button name="open" toolTip="Open"
+                                                        (click)=" getOldValues(element)"
+                                                        tooltip="open"></app-icon-button>
+                                                </ng-template>
+
+                                            </app-table>
+                                        </div>
+
+                                    </div>
+                                </row>
+                            </div>
+                            }
+                        </div>
+
+                        }
+
+                        @if(eventFlag === 'Edit') {
+                        <div class="d-flex dialog-footer">
+                            <div class="accordion-title-card pr10 flex-none pointer"
+                                [ngClass]="{'active-tab': tab === 0}" (click)="openStatusValue(0)">
+                                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Event Details</div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-title-card pl10 pointer border-left" (click)="openStatusValue(1)"
+                                [ngClass]="{'active-tab': tab === 1}">
+                                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Update History</div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+
+                    </div>
+                </scroll>
+                <!-- </div>
+                </div> -->
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #subEventCreation>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">
+                    <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                    Sub Event > Creation > {{subEventFlag}}
+                </div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        @if(subEventFlag === 'New') {
+                        <app-icon-button name="save" toolTip="Save" (click)="saveSubEventCreation()"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="createNewEvent()"></app-icon-button>
+                        } @else if(subEventFlag === 'Edit'){
+                        @if(tab !== 1){
+                        <app-icon-button name="save" toolTip="Update"
+                            (click)="saveSubEventCreation()"></app-icon-button>
+                        <app-icon-button name="refresh" toolTip="Refresh"
+                            (click)="openEvent(event.eventId, 'refresh')"></app-icon-button>
+                        }
+                        }
+                        <app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+
+                <!-- <div class="ab">
+                    <div class="rel"> -->
+                <scroll>
+
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+
+                    <div class="dialog-content-inner h100 temp">
+
+                        @if(tab === 0) {
+                        <form #y="ngForm">
+                            <row>
+                                <div class="col-md-6 border-right py-3 px-2">
+
+                                    <row>
+                                        <div class="col-md-12 margin-parenteventdesc">
+                                            <view-label label="Parent Event Name" [value]="parentEventDescription"
+                                                name="parentEventDescription"></view-label>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <app-input-control type="text" label="Sub Event Code" [required]="true"
+                                                [errorTrue]="errorTrue" [(ngModel)]="event.eventCode" [maxLength]="10"
+                                                name="eventCode"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <app-input-control type="text" label="Sub Event Name" [maxLength]="50"
+                                                [(ngModel)]="event.eventName" name="eventName"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-6 border-right py-3 px-2">
+
+                                    <row>
+                                        <div class="col-md-12 mb21">
+                                            <view-label label="Created Date"
+                                                [value]="event.effectiveDate | appDate"></view-label>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <app-input-control type="select" label="Status" defaultOption="--Select--"
+                                                valueType="string" [required]="true" [errorTrue]="errorTrue"
+                                                [(ngModel)]=" event.statusValue" name="statusValue"
+                                                [items]="initialData.DDLValues.DDLStatus" key="constant"
+                                                keyName="description"></app-input-control>
+                                        </div>
+                                    </row>
+
+                                </div>
+                                <div class="col-md-12 py-3 px-2">
+                                    <app-input-control type="textarea" className="notes" [maxLength]="500"
+                                        label="Description" [(ngModel)]=" event.eventDescription" [required]="true"
+                                        [errorTrue]="errorTrue" name="eventDescription"></app-input-control>
+                                </div>
+                            </row>
+                        </form>
+                        }
+
+                        @else if(tab === 1){
+                        <div class="outer-content-wrapper">
+                            @if(event.lstentEventUpdatetHistory.length > 0){
+                            <div class="content-wrapper">
+                                <row>
+                                    <div class="col-md-8">
+                                        <div class="event-title">Update History</div>
+
+                                        <div class="scroller mt8">
+                                            <app-table class="subTable" [hasIndex]="false" indexHeaderName="Sl.No"
+                                                [columns]="eventHistoryColumns"
+                                                [dataSource]="event.lstentEventUpdatetHistory"
+                                                [columnsName]="eventHistoryColumnsName" [hideSelectAll]="true"
+                                                [showPaginator]="false" [hasHeader]="false" columnID="customerId"
+                                                (onSelect)="onSelect($event)">
+
+                                                <ng-template cellHeaderDef="event" (click)="openEventCreationBox()">
+                                                    <div class="header-cell-title t-header pb-3">Event Name
+                                                    </div>
+                                                    <div class="header-cell-subtitle">Event Code</div>
+                                                </ng-template>
+                                                <ng-template cellDef="event" let-element>
+                                                    <div>{{ element.eventName }}</div>
+                                                    <div class="table-cell-subtitle">
+                                                        {{ element.eventCode }}
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template cellHeaderDef="changedDate" let-element>
+                                                    <div class="a">Changed By</div>
+                                                    <div class="a">Changed Date</div>
+                                                </ng-template>
+
+                                                <ng-template cellDef="changedDate" let-element>
+                                                    <div>{{ element.changedByFullname }}</div>
+                                                    <div class="table-cell-subtitle">
+                                                        {{ element.changedDate | appDate }}
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template cellDef="status" let-element>
+
+                                                    <div>
+                                                        <accouts-status-table
+                                                            [statusDescription]="element.statusDescription"></accouts-status-table>
+                                                    </div>
+
+                                                </ng-template>
+
+                                                <ng-template cellDef="actionHis" let-element>
+                                                    <app-icon-button name="open" toolTip="Open"
+                                                        (click)=" getOldValues(element)"
+                                                        tooltip="open"></app-icon-button>
+                                                </ng-template>
+
+                                            </app-table>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="content-wrapper content">
+                                            <div class="event-title2">Event Details with Previous Value
+                                            </div>
+
+                                            <div class="border detail p10">
+                                                @if(event.lstentEventUpdatetHistory.length > 0){
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Event Name"
+                                                            [value]="eventOldData?.eventName || '-'"></view-label>
+                                                    </div>
+
+                                                    @if(eventOldData?.eventName !==
+                                                    eventInitalOldData?.event_name){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ eventInitalOldData?.event_name || '-' }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Event Code"
+                                                            [value]="eventOldData?.eventCode || '-'"></view-label>
+                                                    </div>
+
+                                                    @if(eventOldData?.eventCode !==
+                                                    eventInitalOldData?.event_code){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ eventInitalOldData?.event_code || '-' }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Created Date"
+                                                            value="{{eventOldData?.effectiveDate | appDate }}"></view-label>
+                                                    </div>
+
+                                                    @if((eventOldData?.effectiveDate | appDate)!==
+                                                    (eventInitalOldData?.effective_date | date: dateFormat)){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ (eventInitalOldData?.effective_date | date
+                                                            :dateFormat ) ||
+                                                            '-' }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Description"
+                                                            value="{{eventOldData?.eventDescription}}"></view-label>
+                                                    </div>
+
+                                                    @if(eventOldData?.eventDescription !==
+                                                    eventInitalOldData?.event_description){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ (eventInitalOldData?.event_description ) ||
+                                                            '-' }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+
+                                                <row>
+                                                    <div class="col-md-6">
+                                                        <view-label label="Status"
+                                                            [value]="eventOldData?.statusDescription || '-'"></view-label>
+                                                    </div>
+
+                                                    @if(eventOldData?.statusDescription !==
+                                                    eventInitalOldData?.status_description){
+                                                    <div class="col-md-6">
+                                                        <div class="colorRed bold">
+                                                            {{ eventInitalOldData?.status_description || '-'
+                                                            }}
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </row>
+                                                }
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </row>
+                            </div>
+                            } @else {
+                            <div class="content-wrapper">
+                                <row>
+                                    <div class="col-md-12">
+                                        <div class="event-title">Update History</div>
+
+                                        <div class="scroller1 mt8">
+                                            <app-table class="subTable" [hasIndex]="false" indexHeaderName="Sl.No"
+                                                [columns]="eventHistoryColumns"
+                                                [dataSource]="event.lstentEventUpdatetHistory"
+                                                [columnsName]="eventHistoryColumnsName" [hideSelectAll]="true"
+                                                [showPaginator]="false" [hasHeader]="false" columnID="customerId"
+                                                (onSelect)="onSelect($event)">
+
+                                                <ng-template cellHeaderDef="event" (click)="openEventCreationBox()">
+                                                    <div class="header-cell-title t-header pb-3">Event Name
+                                                    </div>
+                                                    <div class="header-cell-subtitle">Event Code</div>
+                                                </ng-template>
+                                                <ng-template cellDef="event" let-element>
+                                                    <div>{{ element.eventName }}</div>
+                                                    <div class="table-cell-subtitle">
+                                                        {{ element.eventCode }}
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template cellHeaderDef="changedDate" let-element>
+                                                    <div class="a">Changed By</div>
+                                                    <div class="a">Changed Date</div>
+                                                </ng-template>
+
+                                                <ng-template cellDef="changedDate" let-element>
+                                                    <div>{{ element.changedByFullname }}</div>
+                                                    <div class="table-cell-subtitle">
+                                                        {{ element.changedDate | appDate }}
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template cellDef="status" let-element>
+
+                                                    <div>
+                                                        <accouts-status-table
+                                                            [statusDescription]="element.statusDescription"></accouts-status-table>
+                                                    </div>
+
+                                                </ng-template>
+
+                                                <ng-template cellDef="actionHis" let-element>
+                                                    <app-icon-button name="open" toolTip="Open"
+                                                        (click)=" getOldValues(element)"
+                                                        tooltip="open"></app-icon-button>
+                                                </ng-template>
+
+                                            </app-table>
+                                        </div>
+
+                                    </div>
+                                </row>
+                            </div>
+                            }
+                        </div>
+                        }
+
+                        @if(subEventFlag === 'Edit') {
+                        <div class="d-flex dialog-footer">
+                            <div class="accordion-title-card pr10 flex-none pointer"
+                                [ngClass]="{'active-tab': tab === 0}" (click)="openStatusValue(0)">
+                                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Sub Event Details</div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-title-card pl10 pointer border-left"
+                                [ngClass]="{'active-tab': tab === 1}" (click)="openStatusValue(1)">
+                                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Update History</div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </scroll>
+                <!-- </div>
+                </div> -->
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #breadCrumb>
+        <div class="breadcrumb">
+            <ul>
+                <!-- <li class="screen-name link">
+                <ion-icon src="assets/icons/customer.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+            </li> -->
+                <li class="screen-name link">
+                    <ion-icon src="assets/icons/customer.svg"></ion-icon>
+
+                    <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+                </li>
+                <li class="screen-name ">
+
+                    <div class="screen-text">Event and Sub Event Creation</div>
+                </li>
+            </ul>
+        </div>
+    </ng-template>

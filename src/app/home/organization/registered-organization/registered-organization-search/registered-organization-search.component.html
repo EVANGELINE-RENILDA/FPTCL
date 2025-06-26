@@ -1,0 +1,108 @@
+<div class="content-wrapper" appAccess="ORGRO">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+      [sortColumnsName]="sortColumns"  (pageChanged)="pageChanged($event)" columnID="organizationRegisteredId" (onSelect)="onSelect($event)">
+        <ng-template cellHeaderDef="action" [hideSelectAll]="true">
+            <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open"
+                (click)="navigateToDetail(element.organizationId)"></app-icon-button>
+        </ng-template>
+        <ng-template cellDef="statusDescription" let-element>
+            <!-- <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div> -->
+            <accouts-status-table [statusDescription]="element.statusDescription"></accouts-status-table>
+        </ng-template>
+        <ng-template cellDef="effectiveDate" let-element>
+            {{element.effectiveDate | appDate}}
+        </ng-template>
+        <ng-template cellDef="orgRefNo" let-element>
+            {{element.orgRefNo }}
+        </ng-template>
+        <ng-template cellDef="organizationName" let-element>
+            {{element.organizationName }}
+        </ng-template>
+        <ng-template cellDef="organizationTypeDescription" let-element>
+            {{element.organizationDescription }}
+        </ng-template>
+
+        <ng-template cellDef="effectiveDate" let-element>
+            {{element.effectiveDate | appDate }}
+        </ng-template>
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+        </ng-template>
+        <!-- <ng-template #slotRight>
+            <app-icon-button name="add" toolTip="Add New" (click)="createNewOrganization()"> </app-icon-button>
+        </ng-template> -->
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Registered Organization Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <row>
+                        <div class="col-md-4"><app-input-control label="Organization Ref No "
+                                [(ngModel)]="searchParams.orgRefNo" name="orgRefNo"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Organization Name"
+                                [(ngModel)]="searchParams.organizationName" name="organizationName"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Organization Type" type="select"
+                                [(ngModel)]="searchParams.organizationTypeValue" name="organizationTypeValue"
+                                [items]="initialData.DDLValues.OrganizationType" key="constant" keyName="description"
+                                defaultOption="--Select--"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Email ID" type="email"
+                                [(ngModel)]="searchParams.emailId" name="emailId" [email]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Contact No" type="number"
+                                [(ngModel)]="searchParams.contactNo" name="contactNo" [minLength]="5"
+                                [maxLength]="15"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Website" type="special"
+                                [(ngModel)]="searchParams.website" name="website"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Effective Date From" type="date"
+                                [(ngModel)]="searchParams.effectiveDateFrom" name="effectiveDateFrom"
+                                [maxDate]="searchParams.effectiveDateTo"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Effective Date To" type="date"
+                                [(ngModel)]="searchParams.effectiveDateTo" name="effectiveDateTo"
+                                [minDate]="searchParams.effectiveDateFrom"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label=" Status" type="select"
+                                [(ngModel)]="searchParams.statusValue" name="statusValue"
+                                [items]="initialData.DDLValues.Status" key="constant" keyName="description"
+                                defaultOption="--Select--"></app-input-control>
+                        </div>
+
+                    </row>
+                </div>
+            </scroll>
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/will.svg"></ion-icon>
+                <div class="screen-text">Registered Organization </div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

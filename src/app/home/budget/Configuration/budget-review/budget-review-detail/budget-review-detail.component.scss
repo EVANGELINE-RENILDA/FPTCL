@@ -1,0 +1,42 @@
+.table-container {
+  padding: 10px;
+  max-height: 205px;
+  overflow: hidden;
+  position: relative;
+}
+
+.table-wrapper {
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+th {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  margin-left: 10%;
+  top: 0;
+  background: #f1f1f1;
+  z-index: 2;
+  font-weight: bold !important;
+  text-align: left !important;
+  padding: 8px 10px !important;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+  text-align: left !important;
+  padding: 8px 10px !important;
+}
+
+.table2 td:nth-last-of-type(1),
+.table2 td:nth-last-of-type(2),
+.table2 td:nth-last-of-type(3),
+.table2 td:nth-last-of-type(4),
+.table2 td:nth-last-of-type(5) {
+  text-align: right !important;
+}

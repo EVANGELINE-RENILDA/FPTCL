@@ -1,0 +1,193 @@
+<div class="v-flex h100">
+  <div class="p-2 header-bg h55 d-flex">
+    <div class="">
+      <app-search #appSearch [searchTemplate]="searchTemplate"></app-search>
+    </div>
+    <div class="ml-auto d-flex">
+      <div class="flex-end align-items-center p-2">
+        Report Date & Time : {{ currentDate | appDate }}
+      </div>
+      <div class="col-md-1">
+        <app-icon-button
+          name="download"
+          toolTip="Export To Excel"
+        ></app-icon-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-1 relative">
+    <scroll>
+      <table class="app-table account-table">
+        <thead class="app-table-head">
+          <tr class="app-table-header-row">
+            <th class="app-table-header-cell text-center">#</th>
+            <th class="app-table-header-cell">Vendor Code</th>
+            <th class="app-table-header-cell">Vendor Name</th>
+            <th class="app-table-header-cell">Total Balance Due</th>
+            <th class="app-table-header-cell">0 - 30 Days Due</th>
+            <th class="app-table-header-cell">31 - 60 Days Due</th>
+            <th class="app-table-header-cell">61 - 90 Days Due</th>
+            <th class="app-table-header-cell">90 Days Due</th>
+            <th class="app-table-header-cell">Open</th>
+            <th class="app-table-header-cell">SOA</th>
+          </tr>
+        </thead>
+        @if( tableData.Table?.length > 0 ) {
+        <ng-container>
+          <tbody class="app-table-body">
+            @for (element of tableData.Table; track element; let i = $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">{{ i + 1 }}</td>
+              <td class="app-table-cell">
+                {{ element.VENDOR_CODE }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.VENDOR_NAME }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.Total_Bal_Amt | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.DaysDue0to30 | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.DaysDue31to60 | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.DaysDue61to90 | appCurrency }}
+              </td>
+              <td class="app-table-cell">
+                {{ element.DaysDue90 | appCurrency }}
+              </td>
+              <td class="app-table-cell" (click)="soaVendorDetail(element)">
+                <ion-icon name="folder-outline" color="primary"></ion-icon>
+              </td>
+              <td class="app-table-cell" (click)="soaDetail(element)">
+                <ion-icon name="folder-outline" color="primary"></ion-icon>
+              </td>
+            </tr>
+            }
+          </tbody>
+          <tfoot>
+            @if (tableData.Table?.length > 0) {
+            <tr class="h40">
+              <td class="app-table-footer" colspan="3">
+                <div class="text-center"><b>Subtotal</b></div>
+              </td>
+              <td class="app-table-footer d-flex align-items-center h40">
+                <div class="text-center">
+                  <b>{{
+                    creditorsAmountSummary[0].Total_Balance_Amount | appCurrency
+                  }}</b>
+                </div>
+              </td>
+              <td class="app-table-footer d-flex align-items-center h40">
+                <div class="text-center">
+                  <b>{{
+                    creditorsAmountSummary[0].Total_DaysDue0to30 | appCurrency
+                  }}</b>
+                </div>
+              </td>
+              <td class="app-table-footer d-flex align-items-center h40">
+                <div class="text-center">
+                  <b>{{
+                    creditorsAmountSummary[0].Total_DaysDue31to60 | appCurrency
+                  }}</b>
+                </div>
+              </td>
+              <td class="app-table-footer d-flex align-items-center h40">
+                <div class="text-center">
+                  <b>{{
+                    creditorsAmountSummary[0].Total_DaysDue61to90 | appDate
+                  }}</b>
+                </div>
+              </td>
+              <td class="app-table-footer d-flex align-items-center h40">
+                <div class="text-center">
+                  <b>{{
+                    creditorsAmountSummary[0].Total_DaysDue90 | appDate
+                  }}</b>
+                </div>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+            }
+          </tfoot>
+        </ng-container>
+        }
+      </table>
+    </scroll>
+  </div>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Summary of Statement Account-Vendor Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button
+            name="search"
+            toolTip="Search"
+            (click)="generateCreditorsSummaryReport()"
+          ></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            (click)="clearReport()"
+          ></app-icon-button>
+          <app-icon-button
+            name="close"
+            (click)="dialog.closeDialog()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner">
+        <form #l="ngForm">
+          <div class="col-md-3 border-right">
+            <div class="col-md-12 mb26">
+              <app-input-control
+                type="date"
+                label="Statement Date"
+                defaultOption="DD/MM/YYYY"
+                [(ngModel)]="searchParams.toDate"
+                name="toDate"
+              ></app-input-control>
+            </div>
+            <div class="col-md-12 mb26">
+              <app-input-control
+                type="select"
+                label="Currency Value"
+                defaultOption="--Select--"
+                valueType="string"
+                [items]="initialData.DDLValues?.iddlcurrency"
+                [(ngModel)]="searchParams.currencyValue"
+                name="currencyValue"
+                key="constant"
+                keyName="description"
+              ></app-input-control>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text">Purchase</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Summary of Statement Account-Vendor</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

@@ -1,0 +1,116 @@
+<div class="content-wrapper" appAccess="ATXSC" [parentId]="pageId">
+  <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [hideSelectAll]="true"
+    [dataSource]="tableData" (pageChanged)="pageChanged($event)" (onSelect)="onSelect($event)">
+
+    <ng-template cellDef="action" let-element>
+      <app-icon-button name="open" toolTip="Open" appButtonAccess="NEWBT"
+        (click)="openTaxDetail(element.actCompanyTaxId)"></app-icon-button>
+    </ng-template>
+    <ng-template cellDef="effectiveDate" let-element>
+      {{element.effectiveDate | appDate}}
+    </ng-template>
+    <ng-template cellDef="currentPercentage" let-element>
+      <div class="text-center">
+        {{element.currentPercentage}}
+      </div>
+    </ng-template>
+    <ng-template cellDef="srtTaxName" let-element>
+      <div class="hover">
+        {{element.srtTaxName}}
+      </div>
+
+    </ng-template>
+    <ng-template cellDef="taxStatusDescription" let-element>
+      <accouts-status-table [statusDescription]="element.taxStatusDescription"></accouts-status-table>
+
+    </ng-template>
+    <ng-template cellDef="statusDescription" let-element>
+      <accouts-status-table [statusDescription]="element.statusDescription"></accouts-status-table>
+    </ng-template>
+    <ng-template cellDef="effectiveDate" let-element>
+      <div>
+        {{element.effectiveDate | appDate}}
+      </div>
+    </ng-template>
+
+    <ng-template #slotLeft>
+      <app-search #appSearch [searchTemplate]="searchTemplate" maxHeight="250px"></app-search>
+    </ng-template>
+    <ng-template #slotMiddle>
+      <div class="d-flex">
+        <div (click)="statusSortSearch('ACTIV')"><table-status-sort type="activeCount"
+            [activeCount1]="totalActiveCount"></table-status-sort>
+        </div>
+        <div (click)="statusSortSearch('INACT')">
+          <table-status-sort type="inactiveCount" [inActiveCount1]="totalInActiveCount"></table-status-sort>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #slotRight>
+      <div>
+        <app-icon-button name="add" toolTip="Add New" (click)="createNewTax(0)"
+          appButtonAccess="TaxNewBtn"></app-icon-button>
+      </div>
+    </ng-template>
+  </app-table>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Tax Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="createNewTaxSearch('clear')"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm" (submit)="onSearch()">
+            <row>
+              <div class="col-md-3">
+                <app-input-control type="select" label="Tax Code" [(ngModel)]="searchParams.strTaxCode"
+                  defaultOption="--Select--" name="strTaxCode" [items]="initialData.DDLValues.ddlTaxLabel"
+                  key="constant" keyName="description"></app-input-control>
+              </div>
+              <div class="col-md-3"> <app-input-control type="text" label="Tax Name"
+                  [(ngModel)]="searchParams.srtTaxName" name="srtTaxName "></app-input-control></div>
+              <div class="col-md-3"><app-input-control type="date" label="Effective Date From"
+                  [maxDate]="searchParams.dtmEffectiveDateTo" [(ngModel)]="searchParams.dtmEffectiveDateFrom"
+                  name="dtmEffectiveDateFrom"></app-input-control></div>
+              <div class="col-md-3"><app-input-control type="date" label="Effective Date To"
+                  [minDate]="searchParams.dtmEffectiveDateFrom" [(ngModel)]="searchParams.dtmEffectiveDateTo"
+                  name="dtmEffectiveDateTo"></app-input-control></div>
+            </row>
+            <row>
+              <div class="col-md-3">
+                <app-input-control type="select" label="Tax Status" [(ngModel)]="searchParams.taxStatus"
+                  name="taxStatus" [items]="initialData.DDLValues.ddlTaxStatus" key="constant" keyName="description"
+                  defaultOption="--Select--"></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon name="person-outline"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()"> Accounts</div>
+      </li>
+      <li class="screen-name">
+
+        <div class="screen-text">Tax</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

@@ -1,0 +1,628 @@
+import { NgClass, SlicePipe } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, TemplateRef, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+
+@Component({
+  selector: 'app-purchase-order-detail',
+  standalone: true,
+  imports: [
+    NgClass,
+    SlicePipe,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  templateUrl: './purchase-order-detail.component.html',
+  styleUrl: './purchase-order-detail.component.scss'
+})
+export class PurchaseOrderDetailComponent {
+
+  updateSequence = 0;
+
+  // color = 'green';
+  regionDetailValue: any = ''
+  voucherId: any = 0;
+  voucherConfigId: any = 0;
+  type: any = '';
+  totalCount = 0;
+  pageIndex = 0;
+  pageSize = 10;
+  parentId: any = 0;
+  vendorIdRAW: any = 0;
+  dateNotEffective = '';
+  filterFileName = '';
+  urlLink: any = '';
+  urlFileName: any = '';
+  blob: any;
+  initialLoad = true;
+  loadingTrue = false;
+  initialRegionValue: any = '';
+  regionValueDDL: any = [];
+  statusSource: any = [];
+  ddlFlowStatus: any = [];
+  purchaseOrder = new entPurPurchaseOrder();
+  searchParams = new entPurchaseOrderVoucherStatusHistorySearch();
+  vendor = new entActVendor();
+  purchaseOrderNotes = new entPurNotes();
+  purchaseOrderAttachments = new entPurAttachments();
+  id = {
+    currentIndex: 0,
+    array: [],
+  };
+
+  isOpen = false;
+  selectedTab = 0;
+  tableItemData = [{
+    'sNo': '', 'pqNo': '', 'ledger': 'High Wheels', 'qty': 10.00, 'unit': 'Each', 'inr': '', 'value': 'INR', 'cyy': '232.22', 'unitPrice': 10.00, 'dis': 11.00, 'afterDis': 97.90, 'tax': 14.00
+    , 'total': 111.61, 'nameDes': 'WH-HW-MG-0001'
+  }];
+
+  errorTrue = false;
+  pageId = 'AJVSC';
+
+  items: any = ['sNo', 'pqNo', 'ledger', 'qty', 'unitPrice', 'dis', 'afterDis', 'tax', 'total', 'add'];
+  itemsName: any = ['#', 'PQ No', '', '', '', '', '', '', '', '',];
+
+  notes: any = ['sno', 'notesDetail', 'createdFullName', 'createdDate', 'add'];
+  notesName: any = ['', 'Notes', 'Created By', 'Date | Time', ''];
+  accordianOpen = true;
+  accordianContent = true;
+  attachment: any = ['sno', 'fileName', 'fileFormat', 'size', 'action'];
+  attachmentsName: any = ['', 'File Name', 'File Format', 'Size', ''];
+
+  poData: any = ['changeBy', 'changedDate', 'status'];
+  poDataName: any = ['Changed By', '	Changed Date', '	Status'];
+
+  @ViewChild('breadCrumb') breadCrumb!: TemplateRef<any>;
+  @ViewChild('notesDialog') notesDialog!: TemplateRef<any>;
+  @ViewChild('attachmentDialog') attachmentDialog!: TemplateRef<any>;
+  @ViewChild(DropZoneComponent) dropzoneComponent!: DropZoneComponent;
+  @ViewChild('l') lfrom!: NgForm;
+  @ViewChild('a') afrom!: NgForm;
+  @ViewChild('b') bfrom!: NgForm;
+  @ViewChild('n') nfrom!: NgForm;
+
+  accept = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, application/pdf, application/msword';
+  accountsOptions = {
+    type: 'accountsPath',
+  };
+  constructor(
+    public route: ActivatedRoute,
+    public data: DataService,
+    public apiService: ApplicationApiService,
+    public accountsService: AccountsApiService,
+    public initialData: InitialDataService,
+    public dialog: CoreService,
+    public url: UrlService,
+    public router: Router,
+    private appService: AppService
+  ) {
+    this.route.paramMap.subscribe((params: any) => {
+      this.init();
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.appService.setBreadCrumb(this.breadCrumb);
+  }
+  async init() {
+    let id = this.route.snapshot.paramMap.get('id');
+    let params: any = await this.url.decode(id);
+    console.log(params);
+    this.parentId = params.data;
+    this.voucherConfigId = params.data1;
+    this.regionDetailValue = params.data2
+    await this.data.checkToken();
+    if (this.parentId === 0) {
+      this.type = 'new';
+      this.createNewPurchaseOrder(this.voucherConfigId, this.regionDetailValue);
+    } else {
+      this.type = 'edit';
+      this.openPurchaseOrder(this.parentId);
+    }
+    await this.initialData.getAcccountsDDL('getPurchaseOrderDetails', this.accountsOptions);
+    this.appService.setBreadCrumb(this.breadCrumb);
+  }
+
+  createNewPurchaseOrder(val: any, val1: any) {
+    const obj = {
+      data: val,
+      data1: val1
+    };
+    this.accountsService
+      .createNewPurchaseOrder(obj, this.accountsOptions)
+      .subscribe((success) => {
+        this.purchaseOrder = success;
+        this.vendorIdRAW = 0;
+        this.voucherId = success.sentActVoucherConfig.actVoucherConfigId;
+        this.dateNotEffective = success.documentDate;
+        // setTimeout(() => {
+        //   this.initialLoad = false;
+        //   this.errorTrue = false;
+        // }, 400);
+        this.createNewPurchaseOrderItem(0);
+      });
+  }
+
+  openPurchaseOrder(val: any) {
+    const obj = {
+      data: val,
+    };
+    this.accountsService
+      .openPurchaseOrder(obj, this.accountsOptions)
+      .subscribe((success) => {
+        this.purchaseOrder = success;
+        this.vendorIdRAW = success.vendorId;
+        this.getVoucherDetail(this.purchaseOrder.voucherConfigId !== 0 ? this.purchaseOrder.voucherConfigId : this.voucherConfigId);
+        this.searchParams.purPurchaseOrderId = success.purPurchaseOrderId;
+        this.totalCount = success.pentPurchaseOrderVoucherStatusHistorySearchResult.totalCount;
+        this.dateNotEffective = success.documentDate;
+        this.voucherConfigId = success.sentActVoucherConfig.actVoucherConfigId;
+        this.voucherId = success.sentActVoucherConfig.actVoucherConfigId;
+        // setTimeout(() => {
+        //   this.totalService.setValue(true);
+        // }, 100);
+        // this.lstentPurPurchaseOrderItemQuantity = JSON.parse(
+        //   JSON.stringify(success.lstentPurPurchaseOrderItem)
+        // );
+        // this.lstentPurPurchaseOrderItem = JSON.parse(
+        //   JSON.stringify(this.purchaseOrder.lstentPurPurchaseOrderItem)
+        // );
+        this.getVendorAllDetails(success.sentActVendor);
+        // this.statusSource = new MatTableDataSource(
+        //   success.lstentPurPurchaseOrderStatusHistory
+        // );
+        if (success.msg.infoMessage.msgDescription) {
+          this.data.successMessage(success.msg.infoMessage.msgDescription);
+        }
+        // setTimeout(() => {
+        //   this.initialLoad = false;
+        // }, 400);
+      });
+  }
+  createNewPurchaseOrderItem(index: any) {
+    this.accountsService
+      .createNewPurchaseOrderItem(this.accountsOptions)
+      .subscribe((success) => {
+        // this.lstentPurPurchaseOrderItemQuantity.push(
+        //   JSON.parse(JSON.stringify(success))
+        // );
+        // this.lstentPurPurchaseOrderItemRAW.push(
+        //   JSON.parse(JSON.stringify(success))
+        // );
+        // this.showItemTable = false;
+        this.purchaseOrder.lstentPurPurchaseOrderItem.push(JSON.parse(JSON.stringify(success)));
+        // setTimeout(() => {
+        //   this.showItemTable = true;
+        // }, 100);
+        // setTimeout(() => {
+        //   this.initialLoad = false;
+        // }, 400);
+      });
+  }
+  getVendorAllDetails(val: any) {
+    this.vendor.actVendorId = val.actVendorId;
+    this.vendor.vendorName = val.vendorName;
+    let obj = {
+      data: val.actVendorId,
+      data1: this.purchaseOrder.regionValue
+    };
+    this.accountsService
+      .getVendorForSearch(obj, this.accountsOptions)
+      .subscribe((success) => {
+        this.purchaseOrder.sentActVendor = success;
+        this.purchaseOrder.vendorId = success.actVendorId;
+        // this.initialData.purchaseOrderInitialData.DDLAddress =
+        //   success.lstAddress;
+        this.purchaseOrder.docCurreny = success.currencyValue;
+        // this.currencyRate = parseFloat(this.purchaseOrder.currencyRate);
+        // if (this.purchaseOrder.currencyValue === success.currencyValue) {
+        //   this.purchaseOrder.currencyRate = '1';
+        //   this.currencyRate = parseFloat(this.purchaseOrder.currencyRate);
+        //   this.currecyDisabled = true;
+        // }
+        // if (this.vendorFlag) {
+        //   this.documentDateConversioDate();
+        // }
+        // setTimeout(() => {
+        //   this.initialLoad = false;
+        // }, 400);
+        // this.vendorFlag = false;
+      });
+  }
+  getVoucherDetail(element: any) {
+    const obj = {
+      data: element,
+    };
+    this.accountsService
+      .getVoucherAccess(obj, this.accountsOptions)
+      .subscribe((success) => {
+        this.voucherConfigId = success.actVoucherConfigId;
+        this.regionValueDDL = success.plstentDDLClass;
+      });
+  }
+  async navigateDetail(l: any) {
+    if (l.valid) {
+      if (this.voucherConfigId !== 0) {
+        const obj = {
+          data: 0,
+          data1: this.voucherConfigId,
+          data2: this.initialRegionValue
+        };
+        let urlJson = await this.url.encode(obj);
+        this.router.navigateByUrl('/home/purchase/purchase-order/detail/' + urlJson);
+      } else {
+        this.data.successMessage('Please Select Document Name');
+      }
+    } else {
+      this.errorTrue = true;
+    }
+  }
+
+  navigateToList() {
+    this.router.navigateByUrl('/home/purchase/purchase-order/search');
+  }
+
+  openAccordian(dujuk: any) {
+    console.log(dujuk);
+    if (dujuk === false) {
+      this.accordianOpen = true;
+      this.accordianContent = true;
+    } else {
+      this.accordianOpen = false;
+      this.accordianContent = false;
+    }
+  }
+
+  onSelectTab(val: any) {
+    this.selectedTab = val;
+    if (this.selectedTab === 3) {
+      this.viewPurchaseOrderReceipt();
+    }
+  }
+
+  //notes
+  async createNewNotes() {
+    this.createNewPaymentNoteNotes();
+    let dialogResponse: any = await this.dialog.openDialog(this.notesDialog, {
+      disableClose: true,
+      height: '400px',
+      width: '900px',
+      maxWidth: '1170px',
+    });
+  }
+
+
+  //attachment
+  async createNewAttachment() {
+
+    let dialogResponse: any = await this.dialog.openDialog(this.attachmentDialog, {
+      disableClose: true,
+      height: '300px',
+      width: '100%',
+      maxWidth: '1170px',
+    })
+
+  }
+  documentDateConversioDate() {
+    // if (
+    //   this.purchaseOrder.documentDate !== '' &&
+    //   this.purchaseOrder.sentActVendor.currencyValue !== ''
+    // ) {
+    //   if (
+    //     this.purchaseOrder.statusValue === 'INPRO' ||
+    //     this.purchaseOrder.statusValue === 'PENAP'
+    //   ) {
+    //     this.checkDocumentDatelist();
+    //     this.documentDataChange();
+    //     this.apiAccountService
+    //       .documentDateConversioDate(this.checkDocumentDate, this.options)
+    //       .subscribe(
+    //         (success) => {
+    //           this.dateNotEffective = this.purchaseOrder.documentDate;
+    //           this.purchaseOrder.dueDate = this.getDate.transform(
+    //             this.purchaseOrder.documentDate,
+    //             this.purchaseOrder.sentActVendor.creditPeriod
+    //           );
+    //           this.purchaseOrder.currencyRate = success.conversionRate;
+    //           if (
+    //             this.purchaseOrder.currencyValue ===
+    //             this.purchaseOrder.sentActVendor.currencyValue
+    //           ) {
+    //             this.purchaseOrder.currencyRate = '1';
+    //             this.currencyRate = parseFloat(this.purchaseOrder.currencyRate);
+    //           } else {
+    //             if (success.conversionRate !== 0) {
+    //               this.purchaseOrder.currencyRate = success.conversionRate;
+    //               this.currencyRate = parseFloat(
+    //                 this.purchaseOrder.currencyRate
+    //               );
+    //             }
+    //           }
+    //           setTimeout(() => {
+    //             this.initialLoad = false;
+    //           }, 400);
+    //         },
+    //         (e) => {
+    //           this.purchaseOrder.documentDate = this.dateNotEffective;
+    //         }
+    //       );
+    //   } else {
+    //   }
+    // } else {
+    // }
+  }
+  screenDisabled() {
+    let screenDisabled = false;
+    if (
+      this.purchaseOrder.statusValue === 'APROV' ||
+      this.purchaseOrder.statusValue === 'CANCL' ||
+      this.purchaseOrder.statusValue === 'PENAP'
+    ) {
+      screenDisabled = true;
+    } else {
+      screenDisabled = false;
+    }
+
+    return screenDisabled;
+  }
+
+  savePurchaseOrder() {
+    if (this.lfrom.valid && this.afrom.valid) {
+      if (this.purchaseOrder.lstentPurPurchaseOrderItem.length !== 0) {
+        this.loadingTrue = true;
+        this.accountsService
+          .savePurchaseOrder(this.purchaseOrder, this.accountsOptions)
+          .subscribe(async (success) => {
+            this.purchaseOrder = success;
+            // this.clearDisplayText();
+            if (success.msg.infoMessage.msgDescription) {
+              this.data.successMessage(success.msg.infoMessage.msgDescription);
+            }
+            setTimeout(() => {
+              // this.totalService.setValue(true);
+            }, 100);
+            if (this.parentId === 0) {
+              const obj = {
+                data: success.purPurchaseOrderId,
+                data1: 0,
+              };
+              // let urlJson = await this.urlService.encode(obj);
+              // this.router.navigateByUrl(
+              //   '/home/purchase/order/detail/' + urlJson
+              // );
+            }
+            setTimeout(() => {
+              this.initialLoad = false;
+            }, 400);
+          });
+      } else {
+        this.errorTrue = true;
+        this.data.successMessage('Please add any items');
+      }
+    } else {
+      this.errorTrue = true;
+      this.data.successMessage('Please fill all mandatory feilds');
+    }
+  }
+  doClear() {
+    this.errorTrue = false;
+    // this.clearDisplayText();
+    this.createNewPurchaseOrder(this.voucherConfigId, this.regionDetailValue);
+  }
+  doRefresh() {
+    this.openPurchaseOrder(this.parentId);
+    // this.clearDisplayText();
+  }
+  addRow(index: any) {
+    this.createNewPurchaseOrderItem(index);
+  }
+
+  createNewPaymentNoteNotes() {
+    this.errorTrue = false;
+    const obj = {
+      data: this.purchaseOrder.voucherConfigId,
+      data1: this.purchaseOrder.statusValue,
+    };
+    this.accountsService
+      .createNewPaymentNoteNotes(obj, this.accountsOptions)
+      .subscribe((success) => {
+        this.purchaseOrderNotes = success;
+        // this.purchaseOrderNotes.temporaryDocumentDate =
+        //   this.purchaseOrder.documentDate;
+
+        this.ddlFlowStatus =
+          success.lstDDLClass;
+        setTimeout(() => {
+          this.initialLoad = false;
+        }, 400);
+      });
+  }
+
+  savePurchaseOrderNote() {
+    if (this.nfrom.valid) {
+      if (this.lfrom.valid && this.afrom.valid) {
+        if (this.purchaseOrder.lstentPurPurchaseOrderItem.length !== 0) {
+          this.purchaseOrderNotes.lstDDLClass = [];
+          this.purchaseOrderNotes.referenceId = this.parentId;
+          this.purchaseOrder.sentPurNotes = this.purchaseOrderNotes;
+          this.loadingTrue = true;
+          this.accountsService
+            .savePurchaseOrderNote(this.purchaseOrder, this.accountsOptions)
+            .subscribe((success) => {
+              this.purchaseOrder = success;
+              setTimeout(() => {
+                // this.totalService.setValue(true);
+              }, 100);
+              // this.statusSource = new MatTableDataSource(
+              //   success.lstentPurPurchaseOrderStatusHistory
+              // );
+              // this.overlayService.detachSearchBox();
+              if (this.purchaseOrder.statusValue === 'APROV') {
+                // this.onTabChange(3);
+              }
+              setTimeout(() => {
+                this.initialLoad = false;
+              }, 400);
+            });
+        } else {
+          this.errorTrue = true;
+          this.data.successMessage('Please add any items');
+        }
+      } else {
+        this.errorTrue = true;
+        this.data.successMessage('Please fill all mandatory feilds');
+      }
+    } else {
+      this.errorTrue = true;
+    }
+  }
+  notesClear() {
+    this.errorTrue = false;
+    this.createNewPaymentNoteNotes();
+  }
+
+  showUpload() {
+    this.dropzoneComponent.triggerClick();
+  }
+  async uploadAttachemnt(event: any) {
+    this.purchaseOrderAttachments.referenceId = this.parentId;
+    let attachmentList: any = [];
+    attachmentList = event;
+    for (let i = 0; i < attachmentList.length; i++) {
+      if (attachmentList.length !== 0) {
+        this.purchaseOrderAttachments.attachmentSize =
+          attachmentList[i].fileSize;
+        this.purchaseOrderAttachments.attachmentFileName =
+          attachmentList[i].fileName;
+        this.purchaseOrderAttachments.istringFileContent =
+          attachmentList[i].content;
+        this.purchaseOrderAttachments.attachementType =
+          attachmentList[i].fileType;
+        let uploadDocument = await this.uploadDocument();
+      }
+    }
+  }
+
+  uploadDocument() {
+    return new Promise((resolve: any) => {
+      this.accountsService
+        .uploadPurchaseOrderAttachment(
+          this.purchaseOrderAttachments,
+          this.accountsOptions
+        )
+        .subscribe((success) => {
+          this.purchaseOrder.ilistbusPurAttachments =
+            success.plstentPurAttachments;
+          setTimeout(() => {
+            this.initialLoad = false;
+          }, 400);
+          // this.dialog.closeDialog();
+          resolve(true);
+        });
+    });
+  }
+  viewPurchaseOrderReceipt() {
+    this.urlLink = '';
+    this.loadingTrue = true;
+    if (this.parentId !== 0) {
+      this.loadingTrue = true;
+      const obj = {
+        data: this.id,
+        data1: this.purchaseOrder.sentActVoucherConfig.pdfOtherComments,
+      };
+      this.data
+        .postPDFData2('Purchase/ViewPurchaseOrderReceipt', obj, this.accountsOptions)
+        .subscribe((success: any) => {
+          let contentDisposition = success.headers.get('content-disposition');
+          let filename = contentDisposition
+            .split(';')[1]
+            .split('filename')[1]
+            .split('=')[1]
+            .trim();
+          // this.blob = success.body;
+          const resp = new Blob([success.body], { type: 'application/pdf' });
+          this.blob = resp;
+          const fileURL = URL.createObjectURL(resp);
+
+          this.urlFileName = filename;
+          this.urlLink = fileURL;
+          this.loadingTrue = false;
+        });
+    }
+  }
+  savePurPurchaseOrderVoucherStatus() {
+    if (
+      this.purchaseOrder.voucherStatusValue !==
+      this.purchaseOrder.preVoucherStatus
+    ) {
+      this.accountsService
+        .savePurPurchaseOrderVoucherStatus(this.purchaseOrder, this.accountsOptions)
+        .subscribe((success) => {
+
+          this.purchaseOrder = success;
+          this.totalCount = success.pentPurchaseOrderVoucherStatusHistorySearchResult.totalCount;
+        });
+    }
+  }
+  pageChanged(event: any) {
+    this.searchParams.pageNumber = event.pageIndex + 1;
+    this.searchParams.pageSize = event.pageSize;
+    this.searchParams.purPurchaseOrderId = this.purchaseOrder.purPurchaseOrderId;
+    this.searchPurchaseOrderVoucherStatusHistory();
+  }
+  searchPurchaseOrderVoucherStatusHistory() {
+    this.accountsService.searchPurchaseOrderVoucherStatusHistory(this.searchParams, this.accountsOptions).subscribe((success) => {
+      this.purchaseOrder.pentPurchaseOrderVoucherStatusHistorySearchResult = success;
+      this.totalCount = success.totalCount;
+    })
+  }
+  purchaseOrderItemCalculation() {
+    const options = {
+      hideErrorMethod: true,
+      hideFullSpinner: true,
+      type: 'accountsPath',
+    };
+    if (this.purchaseOrder.lstentPurPurchaseOrderItem.length !== 0) {
+      this.accountsService
+        .purchaseOrderItemCalculation(this.purchaseOrder, options)
+        .subscribe((success) => {
+          this.purchaseOrder = success;
+          setTimeout(() => {
+            this.initialLoad = false;
+          }, 400);
+        });
+    } else {
+    }
+  }
+}
+
+<!-- <div class="flex-1">
+              <table class="footer-table">
+                @for (currency of purchaseOrder.ilstActCurrencyExchangerate;
+                track $index) {
+                <tr>
+                  <td class="footer-cell-text">
+                    {{ currency.description }}
+                  </td>
+                  <td class="footer-cell">
+                    @if(currency.descriptionConst === 'RDOFF' &&
+                    (purchaseOrder.docCurreny === purchaseOrder.currencyValue)){
+                    <app-input-control
+                      type="number"
+                      [(ngModel)]="currency.documentCurrencyAmount"
+                      [decimal]="2"
+                      name="documentCurrencyAmount"
+                      [negative]="true"
+                      tabindex="-1"
+                      (change)="
+                        internalUpdateSequence = internalUpdateSequence + 1
+                      "
+                    >
+                    </app-input-control>
+                    } @else {
+                    {{ currency.documentCurrencyAmount }}
+                    }
+                  </td>
+                </tr>
+                }
+              </table>
+            </div> -->

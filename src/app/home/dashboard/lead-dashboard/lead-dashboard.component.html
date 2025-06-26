@@ -1,0 +1,92 @@
+<div class="content-wrapper">
+    <div class="d-flex gap-10 h100">
+        <div class="col-md-5 ">
+            <div class="box h100">
+                <div class="box-pad new-1 v-flex h100">
+                    <div class="dash-header">
+                        Leads By Product
+                    </div>
+                    <div class="mb26"></div>
+                    <div class="d-flex justify-content-center mb26">
+                        @if(showPie){
+                            <app-pie-chart [pieData]="pieData" [pieLabel]="pieLabel"></app-pie-chart>
+                        }
+                    </div>
+                   <div class="flex-1 relative ">
+                    <scroll>
+                        @for(item of leadProduct.lstLeadbyProductchild ; track $index){
+                            <div class="d-flex align-items-center gap-10 mb10">
+         
+                                <div class="dash-header">
+                                  {{item.product}}
+                                </div>
+                            </div>
+                            <row>
+                                <div class="col-md-6">
+                                    <view-label label="Pending Leads" value="{{item.pendingLeads}}"></view-label>
+                                </div>
+                                <div class="col-md-6">
+                                    <view-label label="Cancelled Leads" value="{{item.cancelledLeads}}"></view-label>
+                                </div>
+                                <div class="col-md-6">
+                                    <view-label label="Closed Leads" value="{{item.closedLeads}}"></view-label>
+                                </div>
+                                <div class="col-md-6">
+                                    <view-label label="Total Leads" value="{{item.productLeads}}"></view-label>
+                                </div>
+                            </row>
+                            <div class="pb10"></div>
+                            <div class="border-bottom"></div>
+                            <div class="mb26"></div>
+                        }
+                    </scroll>
+                   </div>
+                   
+                 
+                   
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7 box">
+                    
+                        <div class="d-flex space-between align-items-center pt8">
+                          <div></div>
+                            <div class="col-md-5">
+                                <app-input-control label="" type="select" [(ngModel)]="yearData" name="yearData" [items]="initialData.DDLValues.DDLYEAR" key="id" keyName="description" (onSelect)="yearChanged($event)"></app-input-control>
+                            </div>
+                        </div>
+                        <div class="mb26"></div>
+                        <div class="flex-1 relative h80">
+                            <scroll>
+                                <div class="chart-size pl32">
+                                    @if(showChart){
+                                        <div class="dash-header  pb16">
+                                            Lead Source By Year
+                                        </div>
+                                        <app-line-chart [dataset]="this.dataSet1"></app-line-chart>
+                                        <div class="pb16"></div>
+                                        <div class="dash-header pb16 ">
+                                            Lead Product By Year
+                                        </div>
+                                        <app-line-chart2 [dataset]="this.dataSet2"></app-line-chart2>  
+                                  }
+                                    
+                                </div>
+                            </scroll>
+                        </div>
+              
+        </div>
+    </div>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/line-chart.svg"></ion-icon>
+                <div class="screen-text">Lead Dashboard</div>
+            </li>
+
+        </ul>
+    </div>
+</ng-template>

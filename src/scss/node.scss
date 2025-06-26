@@ -1,0 +1,89 @@
+.group-items {
+    .group-parent {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 8px;
+        user-select: none;
+        height: 28px;
+        padding: 20px 10px;
+
+
+        .slot-end {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .group-title {
+            font-size: 14px;
+
+            &:hover{
+                cursor: pointer;
+                // color: #000;
+                // font-weight: 600;
+            }
+
+        }
+
+        .group-icon-button {
+            border: none;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 50%;
+
+            &.open {
+                &.chevron {
+                    transform: rotate(90deg);
+                }
+            }
+
+            &.grey {
+                color: grey;
+                cursor: not-allowed;
+            }
+
+            &.success {
+                color: var(--app-success);
+            }
+
+            &.danger {
+                color: var(--app-danger);
+            }
+
+            &:focus,
+            &:active {
+                outline: 0;
+            }
+
+            &:active {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+        }
+
+    }
+
+
+
+    .group-children {
+        height: 0;
+        overflow: hidden;
+        transition: 0.5s height ease-out;
+
+        .group-items {
+            padding-left: 24px;
+        }
+
+        &.show {
+            height: auto;
+            overflow: visible;
+        }
+    }
+}

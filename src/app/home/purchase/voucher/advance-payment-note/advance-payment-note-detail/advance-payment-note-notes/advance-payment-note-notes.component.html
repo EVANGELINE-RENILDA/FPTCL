@@ -1,0 +1,94 @@
+<div class="flex-1 relative h100">
+  <scroll>
+    <table class="app-table account-table">
+      <thead class="app-table-head">
+        <tr class="app-table-header-row">
+          <th class="app-table-header-cell text-center">
+            <div>#</div>
+          </th>
+          <th class="app-table-header-cell">
+            <div class="header-cell-title">Notes</div>
+            <div class="header-cell-subtitle">Created By | Date | Time</div>
+          </th>
+          <th class="app-table-header-cell">
+            <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"></app-icon-button>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="app-table-body">
+        @for (notes of parentData.ilistbusPurNotes; track notes; let i = $index)
+        {
+        <tr class="app-table-row">
+          <td class="app-table-cell text-center">
+            {{ i + 1 }}
+          </td>
+          <td class="app-table-cell">
+            <div>
+              {{ notes.notesDetail }}
+            </div>
+            <div class="table-cell-subtitle">
+              {{ notes.createdFullName }} |
+              {{
+              notes.createdDate
+              | appDate : appSetting.environment.dateViewFormatWithTime
+              }}
+            </div>
+          </td>
+          <td></td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </scroll>
+</div>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon>
+        Payment Note> Detail > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(advancePaymentNoteNotes.statusValue !== 'CANCL'){
+          <app-icon-button name="save" toolTip="Save" (click)="saveNotesForAdvancePaymentNote(l)"></app-icon-button>
+          }
+          @else{
+          <app-icon-button name="save" toolTip="Save" (click)="changeReversal(l)"></app-icon-button>
+          }
+          @if(parentData.statusValue !== 'CANCL'){
+          <app-icon-button name="clear" toolTip="Clear" (click)="notesClear()"></app-icon-button>
+          }
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #l="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Status" defaultOption="--Select--"
+                [(ngModel)]="advancePaymentNoteNotes.statusValue" name="statusValue" [errorTrue]="errorTrue"
+                [items]="statusddl" key="constant" keyName="description" defaultOption="--Select--"
+                [required]="true"></app-input-control>
+            </div>
+            @if(advancePaymentNote.statusValue === 'CANCL' &&
+            parentData.statusValue ==='APROV'){
+            <div class="col-md-6">
+              <app-date-control label="Reversal Effective Date"
+                [(ngModel)]="advancePaymentNoteNotes.temporaryDocumentDate" name="temporaryDocumentDate"
+                [minDate]="parentData.documentDate" [errorTrue]="errorTrue" [required]="true"></app-date-control>
+            </div>
+            }
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1" [(ngModel)]="advancePaymentNoteNotes.notesDetail"
+                name="notesDetail" [maxLength]="250" label="Notes"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

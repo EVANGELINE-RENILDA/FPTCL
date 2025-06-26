@@ -1,0 +1,147 @@
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/budget.svg"></ion-icon>
+                <div class="screen-text">Budget</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Budget Ceiling</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<div class="content-wrapper">
+    <app-multi-page-url
+        url="/home/budget/configuration/budget-configuration/budget-configuration-detail"></app-multi-page-url>
+    <div class="sticky-card">
+        <row>
+
+            <div class="col-md-3">
+                <view-label label="Budget Name" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Created Date" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Status" value=""></view-label>
+            </div>
+
+            <div class="col-md-12 mb20"></div>
+
+            <div class="col-md-3">
+                <view-label label="Budget Type" value=""></view-label>
+            </div>
+
+            <div class="col-md-3">
+                <view-label label="Created By" value=""></view-label>
+            </div>
+
+        </row>
+    </div>
+
+    <div class="sub-table bg-white-padd w100 mb20">
+        <div class="table-container">
+            <div class="table-wrapper">
+                <table class="w100 table">
+                    <tr>
+                        <th>Year</th>
+                        <th>2021</th>
+                        <th>2021</th>
+                        <th>2021</th>
+                        <th>2022</th>
+                        <th>2022</th>
+                        <th>2022</th>
+                        <th>2023</th>
+                        <th>2023</th>
+                        <th>2023</th>
+                    </tr>
+                    <tr>
+                        <th>Ledger Account</th>
+                        <th>Budget</th>
+                        <th>Act</th>
+                        <th>Vari</th>
+                        <th>Budget</th>
+                        <th>Act</th>
+                        <th>Vari</th>
+                        <th>Bud-Cel</th>
+                        <th>B-Req</th>
+                        <th>Variation</th>
+                    </tr>
+                    <tr>
+                        <td>Ledger</td>
+                        <td>2.00</td>
+                        <td>21.00</td>
+                        <td>4.00</td>
+                        <td>5.00</td>
+                        <td>3.00</td>
+                        <td>6.00</td>
+                        <td>
+                            @if(editable){
+                            <app-input-control class="input-field" type="text" [required]="true"></app-input-control>
+                            }
+                            @else{
+                            <view-label label="" value="40.00"></view-label>
+                            }
+                        </td>
+                        <td>41.00</td>
+                        <td>-1.00</td>
+                    </tr>
+                    <tr>
+                        <td>Ledger</td>
+                        <td>2.00</td>
+                        <td>34.00</td>
+                        <td>5.00</td>
+                        <td>453.00</td>
+                        <td>66.00</td>
+                        <td>77.00</td>
+                        <td>
+                            @if(editable){
+                            <app-input-control class="input-field" type="text" [required]="true"></app-input-control>
+                            }
+                            @else{
+                            <view-label label="" value="32.00"></view-label>
+                            }
+                        </td>
+                        <td>22.00</td>
+                        <td>10.00</td>
+                    </tr>
+                    <tr>
+                        <td><app-trial-balance-loop>as</app-trial-balance-loop></td>
+                        <td>242.00</td>
+                        <td>42.00</td>
+                        <td>78.00</td>
+                        <td>765.00</td>
+                        <td>32.00</td>
+                        <td>2.00</td>
+                        <td>
+                            @if(editable){
+                            <app-input-control class="input-field" type="text" [required]="true"></app-input-control>
+                            }
+                            @else{
+                            <view-label label="" value="40.00"></view-label>
+                            }
+                        </td>
+                        <td>45.00</td>
+                        <td>-24.00</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="btns">
+        @if(editable){
+        <app-icon-button name="save" toolTip="Save"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh"></app-icon-button>
+        }
+        @else {
+        <app-icon-button name="edit" toolTip="Edit" (click)="editBtn()"></app-icon-button>
+        }
+    </div>
+</div>

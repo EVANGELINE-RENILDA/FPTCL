@@ -1,0 +1,547 @@
+<div class="v-flex h100">
+  <form #l="ngForm">
+    <div class="content-header">
+      <div class="card-box border-right">
+        <div class="card-content only-input">
+          <label>Customer Name</label>
+          <app-search-customer [(ngModel)]="salesOrder.actCustomerId" name="actCustomerId"
+            [displayText]="salesOrder.ientActCustomerDetails.customerName"
+            (onSelect)="doCustomerSelect($event)"    [disabled]=" screenDisabled()"></app-search-customer>
+        </div>
+        <div class="card-content">
+          <label>Vendor ID</label>
+          <div class="content">
+            {{
+            salesOrder.ientActCustomerDetails.currencyCodeValue
+            ? salesOrder.ientActCustomerDetails.currencyCodeValue
+            : "-"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Document No</label>
+          <div class="content">
+            {{
+            salesOrder.saleOrderReferenceNo
+            ? salesOrder.saleOrderReferenceNo
+            : "-"
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <label>Document Name</label>
+          <div class="content">
+            {{
+            salesOrder.ientActVoucherConfig.voucherName
+            ? salesOrder.ientActVoucherConfig.voucherName
+            : "-"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Branch Name</label>
+          <div class="content">
+            {{
+            salesOrder.ientActCompanyBranch.branchName
+            ? salesOrder.ientActCompanyBranch.branchName
+            : "-"
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <app-input-control type="date" label="Document Date | Effective Date" [(ngModel)]="salesOrder.documentDate"
+            name="documentDate" (change)="documentDateConversionDate()" [required]="true"
+            [errorTrue]="errorTrue"  [btnClicked]=" screenDisabled()"></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Posting Date</label>
+          <div class="content">
+            {{
+            salesOrder.approvedDate
+            ? (salesOrder.approvedDate | appDate : "datetime")
+            : "-"
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <app-input-control type="date" label="Due Date" [(ngModel)]="salesOrder.dueDate" name="dueDate"
+          [btnClicked]=" screenDisabled()" ></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Created Date</label>
+          <div class="content">
+            {{
+            salesOrder.enteredDate
+            ? (salesOrder.enteredDate | appDate : "datetime")
+            : "-"
+            }}
+          </div>
+        </div>
+        <div class="card-content">
+          <label>Created By</label>
+          <div class="content">
+            {{ salesOrder.enteredBy ? salesOrder.enteredBy : "-" }}
+          </div>
+        </div>
+      </div>
+      <div class="status-header-box">
+        <div class="card-box-1">
+          <div class="card-content">
+            <label>Status</label>
+            <div class="content">
+              {{
+              salesOrder.statusDescription
+              ? salesOrder.statusDescription
+              : "-"
+              }}
+            </div>
+          </div>
+          <div class="card-content btn-group">
+            @if(selectedTab === 0){ @if (salesOrder.salSalesOrderId
+            === 0) {
+            <app-icon-button
+              name="save"
+              toolTip="Save"
+              (click)="saveSalesOrderDetail()" appAccess="SAVBT" [parentId]="pageId"
+            ></app-icon-button>
+            <app-icon-button
+              name="clear"
+              toolTip="Clear"
+              (click)="doClear()" appAccess="CLEBT" [parentId]="pageId"
+            ></app-icon-button>
+            }@else {
+            <app-icon-button
+              name="save"
+              toolTip="Update"
+              (click)="saveSalesOrderDetail()" appAccess="UPDBT" [parentId]="pageId"
+            ></app-icon-button>
+            <app-icon-button
+              name="refresh"
+              toolTip="Refresh"
+              (click)="
+              openSalesOrderDetail(salesOrder.salSalesOrderId)
+              " appAccess="REFSH" [parentId]="pageId"
+            ></app-icon-button>
+            @if (salesOrder.statusValue !== 'APROV' &&
+            salesOrder.statusValue !== 'CANCL') {
+            <app-icon-button
+              name="accept"
+              toolTip="Complete"
+              (click)="directApproved()"
+            ></app-icon-button>
+            } } }
+          </div>
+        </div>
+        <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <div class="v-flex h100">
+      @if(salesOrder.ientActVoucherConfig.needCash === 'N'){
+      <div class="end gap-5 p10">
+        @if(salesOrder.documentDate ==='' && __hideBtn()){
+        <div class="col-md-2 only-input">
+          <app-auto-search-quotation (onSelect)="getPurchaseQuotation($event)"
+            [parentData]="salesOrder" [disabled]="__isDisabled()"></app-auto-search-quotation>
+        </div>
+        } @if(salesOrder.documentDate ==='' && __hideBtn()){
+        <app-icon-button name="add" toolTip="Get Item" (click)="getCustomerQuotationItemDetailByCustomerQuotaionIdForSalesOrder()"
+          appAccess="GETIM" [parentId]="pageId">
+        </app-icon-button>
+        }
+      </div>
+      }
+      <form #a="ngForm" class="flex-1 relative">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell tw50 text-center">#</th>
+                <th class="app-table-header-cell tw100">PQ No</th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">Item | Service Code</div>
+                  <div class="header-cell-subtitle">Name | Description</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Quantity</div>
+                  <div class="header-cell-subtitle">Unit</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Unit Price</div>
+                  <div class="header-cell-subtitle">
+                    {{ salesOrder.ientActCustomerDetails.currencyCodeValue }}
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Dis %</div>
+                  <div class="header-cell-subtitle">Value</div>
+                </th>
+                <th class="app-table-header-cell tw150 text-right">
+                  <div class="header-cell-title">After Discount %</div>
+                  <div class="header-cell-subtitle">
+                    Rep CCY ({{ salesOrder.currencyValue }})
+                  </div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Tax%</div>
+                  <div class="header-cell-subtitle">Value</div>
+                </th>
+                <th class="app-table-header-cell tw100 text-right">
+                  <div class="header-cell-title">Total</div>
+                  <div class="header-cell-subtitle">
+                    Rep CCY({{ salesOrder.currencyValue }})
+                  </div>
+                </th>
+                @if(__isDisabled()){
+
+                <th class="app-table-header-cell tw100">
+                  <div class="flex-center">
+                    <app-icon-button name="add" toolTip="Add New" (click)="
+                        addRow(salesOrder.ilstentSalSalesOrderItem.length)
+                      ">
+                    </app-icon-button>
+                  </div>
+                </th>
+                }
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (element of salesOrder.ilstentSalSalesOrderItem; track
+              $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ $index + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  {{
+                  element.ientSalSalesQuotation.customerQuotationRefNo
+                  ? element.ientSalSalesQuotation.customerQuotationRefNo
+                  : "-"
+                  }}
+                </td>
+                <td class="app-table-cell">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabled() && (salesOrder.actCustomerId !== 0 &&
+                    salesOrder.documentDate !== '')){
+                      <app-search-item
+                      [(ngModel)]="element.ientInvItem.invItemId"
+                      [displayText]="element.ientInvItem.itemName"
+                      [required]="true"
+                      [errorTrue]="errorTrue"
+                      (onSelect)="doItemSelect($event, element, $index)"
+                      name="invItemId{{ $index }}"
+                      valueType="int"
+                      [isInventory]="
+                      salesOrder.ientActVoucherConfig.needInventory
+                      "
+                    ></app-search-item>
+                    } @else{
+                    {{
+                    element.ientInvItem.itemName
+                    ? element.ientInvItem.itemName
+                    : "-"
+                    }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    element.ientInvItem.itemCode
+                    ? element.ientInvItem.itemCode
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabled() && (this.salesOrder.actCustomerId !== 0 &&
+                    this.salesOrder.documentDate !== '')){
+                    <app-input-control type="number" [(ngModel)]="element.quantity" name="quantity{{ $index }}"
+                      [decimal]="2" [required]="true" [errorTrue]="errorTrue"
+                      (onChange)="checkMinMax($event,element)"></app-input-control>
+                    }@else{
+                    {{ element.quantity ? element.quantity : "0" }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    element.ientInvItem.stockUnitValue
+                    ? element.ientInvItem.stockUnitValue
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  @if(__isDisabled() && (this.salesOrder.actCustomerId !== 0 &&
+                  this.salesOrder.documentDate !== '')){
+                  <app-input-control type="number" [(ngModel)]="element.unitPrice" name="unitPrice{{ $index }}"
+                    [decimal]="2" [required]="true" [errorTrue]="errorTrue" valuetype="int">
+                  </app-input-control>
+                  } @else{
+                  {{ element.unitPrice ? element.unitPrice : "0" }}
+                  }
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabled() && (this.salesOrder.actCustomerId !== 0 &&
+                    this.salesOrder.documentDate !== '')){
+                    <app-input-control type="number" [(ngModel)]="element.discountPercentage" [decimal]="2"
+                      type="discountPercentage" name="discountPercentage{{ $index }}"></app-input-control>
+                    }@else{
+                    {{
+                    element.discountPercentage
+                    ? element.discountPercentage
+                    : "0"
+                    }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ element.discountPrice ? element.discountPrice : "-" }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    {{ element.totalAfterDiscount }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    element.totalAfterDiscountReportingCurrency
+                    ? element.totalAfterDiscountReportingCurrency
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header only-input">
+                    @if(__isDisabled() && (this.salesOrder.actCustomerId !== 0 &&
+                    this.salesOrder.documentDate !== '')){
+                    <app-input-control type="number" [(ngModel)]="element.taxPercentage"
+                      name="taxPercentage{{ $index }}" [decimal]="2" [btnClicked]="
+                        __isDisabled() ||
+                        (this.salesOrder.actCustomerId !== 0 &&
+                          this.salesOrder.documentDate !== '') ||
+                        salesOrder.ientActVoucherConfig.isTaxEditable ===
+                          'N' ||
+                        element.ientInvItem.actTaxCodeValue === 'VAT-C'
+                      "></app-input-control>
+                    }@else{
+                    {{ element.taxPercentage }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">{{ element.vatAmount }}</div>
+                </td>
+                <td class="app-table-cell text-right">
+                  <div class="table-cell-header">
+                    @if(__isDisabled()){
+                    <item-value [(item)]="salesOrder.ilstentSalSalesOrderItem[$index]" discountValue="discountPrice" totalAfterDiscount="totalAfterDiscount"
+                      totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency" total="totalPrice"
+                      totalReportingCurrency="totalPriceReportingCurrency" taxAmount="vatAmount"
+                      [unitPrice]="element.unitPrice" [quantity]="element.quantity"
+                      [taxPercentage]="element.taxPercentage" [discountPercentage]="element.discountPercentage"
+                      [(updateSequence)]="internalUpdateSequence" [currencyRate]="salesOrder.currencyRate">
+                      {{ element.totalPrice }}
+                    </item-value>
+                    } @else{
+                    {{ element.totalPrice }}
+                    }
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{
+                    element.totalPriceReportingCurrency
+                    ? element.totalPriceReportingCurrency
+                    : "-"
+                    }}
+                  </div>
+                </td>
+                @if(__isDisabled()){
+                <td class="app-table-cell">
+                  <div class="space-evenly align-items-center">
+                    <app-icon-button name="add" class="table-icon" toolTip="Add" (click)="
+                        addRow(salesOrder.ilstentSalSalesOrderItem.length)
+                      "></app-icon-button>
+                    <app-icon-button name="doc-delete" toolTip="Delete"
+                      (click)="itemsDelete(element, $index)"></app-icon-button>
+                  </div>
+                </td>
+                }
+              </tr>
+              }
+            </tbody>
+          </table>
+          @if(__isDisabled()){
+          <total-value discountValue="discountPrice" totalAfterDiscount="totalAfterDiscount"
+            totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency" total="totalPrice"
+            totalReportingCurrency="totalPriceReportingCurrency" taxAmount="vatAmount"
+            [updateSequence]="internalUpdateSequence" [items]="salesOrder.ilstentSalSalesOrderItem"
+            (onCalculated)="onTotalValue($event)" [currencyRate]="salesOrder.currencyRate"
+            [(exchangeRateArray)]="salesOrder.ientActCurrencyExchangerate" [sameCurrency]="
+              salesOrder.docCurreny === salesOrder.currencyValue
+            "></total-value>
+          }
+        </scroll>
+      </form>
+    </div>
+    } @else if(selectedTab === 1 && salesOrder.salSalesOrderId > 0){
+    <app-sales-order-detail-notes [parentData]="salesOrder"
+      (notesValue)="getNotesValue($event)"></app-sales-order-detail-notes>
+    } @else if(selectedTab === 2 && salesOrder.salSalesOrderId > 0){
+    <app-sales-order-detail-attachment [parentData]="salesOrder"></app-sales-order-detail-attachment>
+    }@else if(selectedTab === 3 && salesOrder.salSalesOrderId > 0){
+    <app-sales-order-detail-preview [parentData]="salesOrder"></app-sales-order-detail-preview>
+    } @else if(selectedTab === 4 && salesOrder.salSalesOrderId > 0){
+    <app-sales-order-status [parentData]="salesOrder"></app-sales-order-status>
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        @if(salesOrder.salSalesOrderId > 0){
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if(salesOrder.statusValue === 'APROV'){
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        <!-- <div class="tabs" (click)="onSelectTab(4)" [ngClass]="{ tabClass: selectedTab === 4 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Status On SO</div>
+        </div> -->
+        } }
+      </div>
+      <div class="slot-end d-flex align-items-center">
+        <div class="tabs">
+          <div>Currency ({{ salesOrder.ientActCustomerDetails.currencyCodeValue }})</div>
+        </div>
+        <div class="tabs">
+          <div>Gross Amount : {{ salesOrder.totalAfterDiscount }}</div>
+        </div>
+        <div class="tabs">
+          <div>Tax Amount : {{ salesOrder.totalTaxAmount }}</div>
+        </div>
+        <div class="tabs">
+          <div>Net Amount : {{ salesOrder.totalNetAmount }}</div>
+        </div>
+
+        <div class="open-arrow" id="trigger{{ pageId }}">
+          <ion-icon name="chevron-down-outline"></ion-icon>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [maxLength]="250" className="notes" [applybtn]="false"
+            label="Common Narration Text" [(ngModel)]="salesOrder.comments" name="comments"></app-input-control>
+        </div>
+        <div class="col-md-8 pad-0 d-flex">
+          <div class="d-flex w100 p8">
+            <div class="d-flex justify-content-between w100">
+              <div class="w200">
+                <view-label label="Document Currency" value="{{ salesOrder.ientActCustomerDetails.currencyCodeValue }}"
+                  class="mb20"></view-label>
+                <app-input-control label="Conversion Rate" type="number" [required]="true"
+                  [(ngModel)]="salesOrder.currencyRate" name="currencyRate" [decimal]="8"></app-input-control>
+              </div>
+              <table class="app-footer-table">
+                @for(currency of salesOrder.ientActCurrencyExchangerate; track $index){
+                <tr class="app-footer-table-row ">
+                  <td class="app-footer-table-cell footer-header-txt text-end">
+                    {{currency.description}}
+                  </td>
+                  <td class="app-footer-table-cell footer-cnt-txt text-end">
+                    {{currency.documentCurrencyAmount}}
+                  </td>
+                </tr>
+                }
+              </table>
+
+            </div>
+          </div>
+          <div class="d-flex w100 p8 bg-sub-footer p8">
+            <div class="flex-1">
+              <view-label label="Reporting Currency" [value]="salesOrder.currencyValue" class="mb20"></view-label>
+            </div>
+            <table class="app-footer-table">
+              @for(currency of salesOrder.ientActCurrencyExchangerate; track $index){
+              <tr class="app-footer-table-row ">
+                <td class="app-footer-table-cell footer-header-txt text-end">
+                  {{currency.description}}
+                </td>
+                <td class="app-footer-table-cell footer-cnt-txt text-end">
+                  {{currency.reportingCurrencyAmount}}
+                </td>
+              </tr>
+              }
+            </table>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navBack()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+        <div class="screen-text">Sales Order</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <div class="status-table-header">
+    <div class="changed-by_label">Changed By | Changed Date</div>
+    <div class="pl14">Status</div>
+  </div>
+  @for (item of salesOrder.ilstentSalSalesOrderStatusHistory; track $index)
+  {
+  <div class="status-table-content">
+    <div class="changed-by">
+      {{ item.changedByUsername ? item.changedByUsername : "-" }}
+      <div class="changed-by_sub">
+        {{
+        item.effectiveDate ? (item.effectiveDate | appDate : "datetime") : "-"
+        }}
+      </div>
+    </div>
+    <div class="status_align pl14">
+      <div class="status-PRSTV">
+        {{ item.statusDescription ? item.statusDescription : "-" }}
+      </div>
+    </div>
+  </div>
+  }
+</mat-menu>

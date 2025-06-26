@@ -1,0 +1,100 @@
+<div class="w100 relative ">
+  <div class="d-flex align-items-center report-body pl5" [ngClass]="{'opened': openedTrue}">
+    <div class="report-data-flex" (click)="openFn()">
+      <div class="report-data-flex-child d-flex align-items-center">
+        @if(_listofData.length !== 0){
+
+        <div class="plus parant">+</div>
+        <div class="minus parant">-</div>
+        }
+
+        @if(_listofData.length === 0){
+        <div class="space1"></div>
+        }
+        <div class="group-color">
+          {{_listofData.groupName}}
+        </div>
+      </div>
+    </div>
+
+    <div class="report-data-const ">
+      <div class="d-flex align-items-center space-around xp-3">
+        <div class="w100">{{_closingData.ledgerDebitValue}}</div>
+        <div class="w100">{{_closingData.ledgerCreditValue}}</div>
+      </div>
+    </div>
+    @if(ytdChecked){
+    <div class="report-data-const">
+      <div class="report-data-const-child d-flex align-items-center">
+        <div class="w100 text-right">{{_listofData.ledgerDebitValue}}</div>
+        <div class="w100 text-right">{{_listofData.ledgerCreditValue}}</div>
+      </div>
+    </div>
+    }
+  </div>
+  <div class="child-container">
+    @for (child of _listofData.ilistOfGroup; track child; let j = $index;) {
+    <div class="child">
+      <app-trial-balance-loop [listofData]="child" [ytdChecked]="ytdChecked"
+        [closingData]="_closingData.ilistOfGroup[j]" class="w100 child-group-list" [expandAll]="openedTrue">
+      </app-trial-balance-loop>
+    </div>
+    }
+  </div>
+  <!--
+    @if(_listofData.ilistentLedger.length !== 0){
+hai1
+      @for (ledger of _listofData.ilistentLedger; track ledger; let j = $index;) {
+          hai
+    }
+
+
+    } -->
+  @if(_listofData.ilistentLedger.length !== 0){
+
+
+  @for (ledger of _listofData.ilistentLedger; track $index) {
+  <div class="child-container report-body" [ngClass]="{'opened': openedTrue}">
+    <div class="child" (click)="openFn()">
+      <div class="w100 relative">
+        <div class="d-flex align-items-center  ">
+          <div class="report-data-flex">
+            <div class="report-data-flex-child">
+              {{ledger.codeName}} - {{ledger.ledgerName}}
+            </div>
+          </div>
+          <div class="report-data-const text-right">
+            <div class="report-data-const-child d-flex align-items-center">
+
+              @if(_closingData.ilistentLedger[$index]?.debitValue !== ''){
+              <div class="w100">{{_closingData.ilistentLedger[$index]?.debitValue | appCurrency}}</div>
+              }
+              @if(_closingData.ilistentLedger[$index]?.creditValue !== ''){
+              <div class="w100">{{_closingData.ilistentLedger[$index]?.creditValue | appCurrency}}</div>
+              }
+
+            </div>
+          </div>
+
+          @if(ytdChecked){
+          <div class="report-data-const text-right">
+            <div class="report-data-const-child d-flex align-items-center">
+
+              <div class="w100">{{ledger.debitValue | appCurrency}}</div>
+              <div class="w100">{{ledger.creditValue |appCurrency}}</div>
+            </div>
+          </div>
+          }
+
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+
+  }
+
+
+
+</div>

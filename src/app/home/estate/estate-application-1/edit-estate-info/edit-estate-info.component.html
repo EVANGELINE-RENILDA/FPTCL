@@ -1,0 +1,604 @@
+<div class="dialog-container">
+	@if(type === 'deceased'){
+	<div class="dialog-header">
+		<div class="dialog-title">Deceased Person Details</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Update"></app-icon-button>
+				<app-icon-button name="refresh" toolTip="Refresh"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper py10">
+		<row>
+			<div class="col-md-6 p20">
+				<div class="box h100">
+					<div class="v-flex h100">
+						<div class="box-header">
+							<ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+							Deseased Person Information
+						</div>
+						<div class="box-pad h100">
+							<div class="relative h100">
+								<scroll>
+									<div class="col-md-12">
+										<app-input-control type="text" label="First Name"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Middle Name"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Last Name"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Father Name"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Mother Name"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Occupation"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="select" label="Employee Name"></app-input-control>
+									</div>
+								</scroll>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 p20">
+				<div class="box h100">
+					<div class="box-header">
+						<ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+						Address
+					</div>
+					<div class="box-pad">
+						<div class="box-pad">
+							<app-address-edit [errorTrue]="errorTrue" type="bank"></app-address-edit>
+						</div>
+					</div>
+				</div>
+			</div>
+		</row>
+	</div>
+	}
+	@if(type === 'marriage'){
+	<div class="dialog-header">
+		<div class="dialog-title">Marriage Details</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Update"></app-icon-button>
+				<app-icon-button name="refresh" toolTip="Refresh"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper py10">
+		<row>
+			<div class="col-md-6"><app-input-control label="Place Of Marriage"></app-input-control>
+			</div>
+			<div class="col-md-6"><app-input-control label=" Married To"></app-input-control> </div>
+			<div class="col-md-6"><app-input-control label="Maiden Name Of Deceased If Any "></app-input-control> </div>
+			<div class="col-md-6 ">
+				<div class="checkbox-label">Is Spouse Still Leaving</div>
+				<div class="d-flex gap-10">
+					<div class="d-flex gap-5">
+						<app-checkbox [checked]="false" [btnClicked]="true"></app-checkbox>Yes
+					</div>
+					<div class="d-flex gap-5">
+						<app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>No
+					</div>
+				</div>
+
+			</div>
+			<div class="col-md-6">
+				<app-input-control label="Place Of Death"></app-input-control>
+			</div>
+			<div class="col-md-6">
+				<app-input-control label="Date Of Death" type="date"></app-input-control>
+			</div>
+			<div class="col-md-6"></div>
+		</row>
+	</div>
+	}
+	@if(type === 'willInfo'){
+	<div class="dialog-header">
+		<div class="dialog-title">Will Info</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Save"></app-icon-button>
+				<app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper py10">
+		<row>
+			<div class="col-md-6"><app-input-control label="Will File No"></app-input-control></div>
+			<div class="col-md-6"><app-input-control label="Start Date" type="date"></app-input-control></div>
+			<div class="col-md-6"><app-input-control label="Testator Marriage Date" type="date"></app-input-control>
+			</div>
+			<div class="col-md-6"><app-input-control label="Will Held By"></app-input-control></div>
+		</row>
+	</div>
+	}
+	@if(type === 'benificiary'){
+	<div class="dialog-header">
+		<div class="dialog-title">Beneficiary Info</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Save"></app-icon-button>
+				<app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper py10">
+		<row>
+			<div class="col-md-8">
+				<div class="box h100">
+					<div class="box-header">
+						<ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+						General Information
+					</div>
+					<div class="box-pad">
+						<row>
+							<div class="col-md-6"><app-input-control label="First Name"></app-input-control></div>
+							<div class="col-md-6"><app-input-control label="Middle Name"></app-input-control></div>
+							<div class="col-md-6"><app-input-control label="Last Name"></app-input-control></div>
+							<!-- <div class="col-md-4"><app-input-control label="Last Name"></app-input-control></div> -->
+							<div class="col-md-6">
+								<div class="checkbox-label">Is Deceased</div>
+								<div class="d-flex gap-10">
+									<div class="d-flex gap-5">
+										<app-checkbox [checked]="false" [btnClicked]="true"></app-checkbox>Yes
+									</div>
+									<div class="d-flex gap-5">
+										<app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>No
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="checkbox-label">Is Female</div>
+								<div class="d-flex gap-10">
+									<div class="d-flex gap-5">
+										<app-checkbox [checked]="false" [btnClicked]="true"></app-checkbox>Yes
+									</div>
+									<div class="d-flex gap-5">
+										<app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>No
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6"><app-input-control label="Date Of Birth"
+									type="date"></app-input-control>
+							</div>
+							<div class="col-md-6"><app-input-control label="Date Of Death"
+									type="date"></app-input-control>
+							</div>
+							<div class="col-md-6"><app-input-control label="Place Of Death"></app-input-control></div>
+							<div class="col-md-6"><app-input-control label="Occupation"></app-input-control></div>
+							<div class="col-md-6"><app-input-control label="Maritial Status"
+									type="select"></app-input-control></div>
+							<div class="col-md-6"><app-input-control label="Relationship To The Deceased"
+									type="select"></app-input-control>
+							</div>
+
+							<div class="col-md-6">
+								<div class="checkbox-label">Mentioned In Will</div>
+								<div class="d-flex gap-10">
+									<div class="d-flex gap-5">
+										<app-checkbox [checked]="false" [btnClicked]="true"></app-checkbox>Yes
+									</div>
+									<div class="d-flex gap-5">
+										<app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>No
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="checkbox-label">Is Resident or Domiciled in Fiji</div>
+								<div class="d-flex gap-10">
+									<div class="d-flex gap-5">
+										<app-checkbox [checked]="false" [btnClicked]="true"></app-checkbox>Yes
+									</div>
+									<div class="d-flex gap-5">
+										<app-checkbox [checked]="true" [btnClicked]="true"></app-checkbox>No
+									</div>
+								</div>
+							</div>
+						</row>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="box h100">
+					<div class="box-header">
+						<ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+						Address
+					</div>
+					<div class="box-pad">
+
+						<app-address-edit [errorTrue]="errorTrue" type="bank"></app-address-edit>
+
+					</div>
+				</div>
+			</div>
+
+		</row>
+
+	</div>
+
+	}
+	@if(type === 'bank'){
+	<div class="dialog-header">
+		<div class="dialog-title">Bank/Credit Union/Other Financial Institution Accounts</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Save"></app-icon-button>
+				<app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper py10">
+		<row>
+			<div class="col-md-6 p20">
+				<div class="box h100">
+					<div class="v-flex h100">
+						<div class="box-header">
+							<ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+							General Information
+						</div>
+						<div class="box-pad h100">
+							<div class="relative h100">
+								<scroll>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Institution"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="select" label="Ac No"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="select" label="BSB"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="select" label="Account Type"></app-input-control>
+									</div>
+								</scroll>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 p20">
+				<div class="box h100">
+					<div class="box-header">
+						<ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+						Address
+					</div>
+					<div class="box-pad">
+						<div class="col-md-12">
+							<app-input-control type="special" label="Line 1"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="special"label="Line 2"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="special" label="Line 3"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Province"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Island"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Village"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Postal Code"></app-input-control>
+						</div>
+					</div>
+				</div>
+			</div>
+		</row>
+	</div>
+	}
+	@if(type === 'shares'){
+	<div class="dialog-header">
+		<div class="dialog-title">Shares/Stocks/Managed Investments</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Save"></app-icon-button>
+				<app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper py10">
+		<row>
+			<div class="col-md-6 p20">
+				<div class="box h100">
+					<div class="v-flex h100">
+						<div class="box-header">
+							<ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+							General Information
+						</div>
+						<div class="box-pad h100">
+							<div class="relative h100">
+								<scroll>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Company"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Shares / Unit No:"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="select" label="Location"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="select" label="Certificate"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="select" label="Account Type"></app-input-control>
+									</div>
+								</scroll>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 p20">
+				<div class="box h100">
+					<div class="box-header">
+						<ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+						Address
+					</div>
+					<div class="box-pad">
+						<div class="col-md-12">
+							<app-input-control type="special" label="Line 1"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="special" label="Line 2"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="special" label="Line 3"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Province"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Island"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Village"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Postal Code"></app-input-control>
+						</div>
+					</div>
+				</div>
+			</div>
+		</row>
+	</div>
+	}
+	@if(type === 'insurance'){
+	<div class="dialog-header">
+		<div class="dialog-title">Insurance Policies</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Save"></app-icon-button>
+				<app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper py10">
+		<row>
+			<div class="col-md-6 p20">
+				<div class="box h100">
+					<div class="v-flex h100">
+						<div class="box-header">
+							<ion-icon src="assets/icons/customer_info.svg" class="pr-4px"></ion-icon>
+							General Information
+						</div>
+						<div class="box-pad h100">
+							<div class="relative h100">
+								<scroll>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Company"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Policy No"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Insured Amount"></app-input-control>
+									</div>
+									<div class="col-md-12">
+										<app-input-control type="text" label="Last Premium Paid"></app-input-control>
+									</div>
+								</scroll>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 p20">
+				<div class="box h100">
+					<div class="box-header">
+						<ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+						Address
+					</div>
+					<div class="box-pad">
+						<div class="col-md-12">
+							<app-input-control type="special" label="Line 1"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="special" label="Line 2"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="special" label="Line 3"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Province"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Island"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Village"></app-input-control>
+						</div>
+						<div class="col-md-12">
+							<app-input-control type="text" label="Postal Code"></app-input-control>
+						</div>
+					</div>
+				</div>
+			</div>
+		</row>
+	</div>
+	}
+	@if(type === 'assets'){
+	<div class="dialog-header">
+		<div class="dialog-title">Assets</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Save"></app-icon-button>
+				<app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper px24 py10">
+		<row>
+			<div class="col-md-6">
+				<app-input-control label="Care Taker Name"></app-input-control>
+			</div>
+			<div class="col-md-6"><app-input-control label="Renumeration"></app-input-control></div>
+			<div class="col-md-6"><app-input-control label="Is Employed"></app-input-control></div>
+			<div class="col-md-6">
+
+				<app-input-control label="Employment Details"></app-input-control>
+			</div>
+
+		</row>
+		<div class="pb10"></div>
+	</div>
+	}
+	@if(type === 'liablity'){
+	<div class="dialog-header">
+		<div class="dialog-title">Assets</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Save"></app-icon-button>
+				<app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper px24 py10">
+		<row>
+			<div class="col-md-6">
+				<app-input-control label="Care Taker Name"></app-input-control>
+			</div>
+			<div class="col-md-6"><app-input-control label="Renumeration"></app-input-control></div>
+			<div class="col-md-6"><app-input-control label="Is Employed"></app-input-control></div>
+			<div class="col-md-6">
+
+				<app-input-control label="Employment Details"></app-input-control>
+			</div>
+
+		</row>
+		<div class="pb10"></div>
+	</div>
+	}
+	@if(type === 'executor'){
+	<div class="dialog-header">
+		<div class="dialog-title">Executor</div>
+		<div class="slot-right">
+			<div class="btn-group">
+				<app-icon-button name="save" toolTip="Save"></app-icon-button>
+				<app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+				<app-icon-button name="close" toolTip="Close" (click)="dialog.closeAll()"></app-icon-button>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper px24 py10">
+		<row>
+			<div class="col-md-8">
+
+				<div class="box h100">
+					<div class="box-header">
+						<ion-icon name="person-outline" class="pr-4px"></ion-icon>
+						General Information
+					</div>
+
+					<div class="box-pad">
+						<row>
+							<div class="col-md-6"><app-input-control label="First Name"
+									class="mb20"></app-input-control>
+								<app-input-control label="Middle Name" class="mb20"></app-input-control>
+								<app-input-control label="Last Name" class="mb20"></app-input-control>
+								<div class="mb20">
+									<div class="checkbox-label">Is Deceased</div>
+									<div class="d-flex gap-5">
+										<input type="radio" id="gender" name="gender" value="male" /> Yes
+
+										<input type="radio" id="gender" name="gender" value="female" /> No
+									</div>
+								</div>
+								<app-input-control label="Date Of Death" type="date" class="mb20"></app-input-control>
+								<app-input-control label="Place Of Death" class="mb20"></app-input-control>
+								<app-input-control label="Occupation" class="mb20"></app-input-control>
+							</div>
+							<div class="col-md-6">
+								<app-input-control label="Relationship To The Deceased"
+									class="mb20"></app-input-control>
+								<app-input-control label="Date Of Birth (Age)" type="date"
+									class="mb20"></app-input-control>
+								<div class="mb20">
+									<div class="checkbox-label">Is Female</div>
+									<div class="d-flex gap-5">
+										<input type="radio" id="gender" name="gender" value="male" /> Yes
+
+										<input type="radio" id="gender" name="gender" value="female" /> No
+									</div>
+								</div>
+								<app-input-control label="Marital Status" type="select"
+									class="mb20"></app-input-control>
+								<div class="mb20">
+									<div class="checkbox-label">Is The Executor Benificiary or Spouse Of
+										Benificary</div>
+									<div class="d-flex gap-5">
+										<input type="radio" id="gender" name="gender" value="male" /> Yes
+
+										<input type="radio" id="gender" name="gender" value="female" /> No
+									</div>
+								</div>
+							</div>
+						</row>
+					</div>
+
+				</div>
+
+			</div>
+			<div class="col-md-4 p20">
+				<div class="box h100">
+					<div class="box-header">
+						<ion-icon src="assets/icons/location.svg" class="pr-4px"></ion-icon>
+						Address
+					</div>
+					<div class="box-pad">
+
+						<app-address-edit [errorTrue]="errorTrue" type="bank"></app-address-edit>
+
+					</div>
+				</div>
+			</div>
+
+		</row>
+		<div class="pb10"></div>
+	</div>
+	}
+</div>

@@ -1,0 +1,1248 @@
+<div class="content-wrapper">
+    <div class="sticky-card">
+        <row>
+            <div class="col-md-3"><view-label label="Trust App Ref No"
+                    value="{{trustSettlement.applicationRefNo}}"></view-label></div>
+            <!-- <div class="col-md-3"><view-label label="Trust Withdrawal Type / Sub Type"
+                    value="Maintainance / Living  Allowance"></view-label></div> -->
+
+            <div class="col-md-3"> <view-label label="Available Amount"
+                    value="{{trustSettlement.availableAmount}}"></view-label>
+            </div>
+            <div class="col-md-3"><view-label label="Lead Ref No" value="{{trustSettlement.leadRefNo}}"></view-label>
+            </div>
+            <div class="col-md-3"> <view-label label="Payment Option"
+                    value="{{trustSettlement.paymentOptionDescription}}"></view-label>
+            </div>
+            <div class="col-md-12 mb20"></div>
+            <div class="col-md-3"> <view-label label="Payment Mode"
+                    value="{{trustSettlement.paymentModeDescription}}"></view-label></div>
+            <div class="col-md-3"> <view-label label="Assigned Officer"
+                    value="{{trustSettlement.assignedToFullname}}"></view-label>
+            </div>
+            <div class="col-md-3"> <view-label label="Application Stage"
+                    value="{{trustSettlement.applicationStageDescription}}"></view-label>
+            </div>
+            <div class="col-md-3"> <view-label label="Application Status / Action Status"
+                    value="{{trustSettlement.statusDescription}} / {{trustSettlement.actionStatusDescription}}"></view-label>
+            </div>
+
+
+        </row>
+    </div>
+    <app-tab-group (tabChange)="onTabChange($event)">
+        <app-tab tabTitle="Application">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div> Trust Settlement Information</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <row>
+                            <div class="col-md-6 border-right">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Application Information
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-10 p10">
+                                    <div class="col-md-6 ">
+                                        <view-label [btnClicked]="true" label="Application Ref No" class="pb20"
+                                            value="{{trustSettlement.applicationRefNo}}"></view-label>
+                                        <view-label [btnClicked]="true" label="Lead Ref No" class="pb20"
+                                            value="{{trustSettlement.leadRefNo}}"></view-label>
+                                        <view-label label="Mode Of Application" class="pb20"
+                                            value="{{trustSettlement.modeOfApplicationDescription}}"></view-label>
+
+                                        <view-label label="Reason" class="pb20"
+                                            value="{{trustSettlement.reason}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label [btnClicked]="true" label="Entered By" class="pb20"
+                                            value="{{trustSettlement.enteredByFullname}}"></view-label>
+                                        <view-label [btnClicked]="true" label="Entered Date" class="pb20"
+                                            value="{{trustSettlement.enteredDate | appDate}}"></view-label>
+                                        <view-label [btnClicked]="true" label="Applied By" class="pb20"
+                                            value="{{trustSettlement.appliedByFullname}}"></view-label>
+                                        <view-label [btnClicked]="true" label="Applied Date" class="pb20"
+                                            value="{{trustSettlement.appliedDate | appDate}}"></view-label>
+                                        <!-- <view-label label="Applied By" class="pb20" value=""></view-label> -->
+                                        <view-label label="Assigned Officer" class="pb20"
+                                            value="{{trustSettlement.assignedOfficer}}"></view-label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 border-right">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Payment Information
+                                    </div>
+                                </div>
+                                <div class="p10">
+                                    <view-label label="Payment Mode" value="{{trustSettlement.paymentModeDescription}}"
+                                        class="pb20"></view-label>
+                                    <view-label label="Payment Option"
+                                        value="{{trustSettlement.paymentOptionDescription}}" class="pb20"></view-label>
+                                    <!-- <view-label label="Withdrawal By Organization" value="{{trustSettlement.wit}}"
+                                        class="pb20"></view-label> -->
+                                    <!-- <view-label label="Organization Name" value="{{trustSettlement.or}}" class="pb20"></view-label> -->
+                                    <!-- <view-label label="Bank Name"
+                                        value="{{trustSettlement.ientTrustSettlementApplicationBankDetail.bankName}}"
+                                        class="pb20"></view-label> -->
+                                    <!-- <view-label label="Available Amount" value="{{trustSettlement.availableAmount}}"
+                                        class="pb20"></view-label> -->
+                                    <!-- <view-label label="Eligible Amount" value="{{trustSettlement}}"
+                                        class="pb20"></view-label>
+                                    <view-label label="Requested Amount" value="{{trustSettlement}}"
+                                        class="pb20"></view-label>
+                                    <view-label label="Approved Amount" value="{{trustSettlement}}"
+                                        class="pb20"></view-label> -->
+                                </div>
+                            </div>
+                            <div class="col-md-3 ">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Trust Account Information
+                                    </div>
+                                </div>
+                                <div class="p10">
+                                    <view-label label="Trust Account No" value="{{trustSettlement.trustAccountNo}}"
+                                        class="pb20"></view-label>
+                                    <view-label label="Benificiary Name"
+                                        value="{{trustSettlement.beneficiaryCustomerName}}" class="pb20"></view-label>
+                                    <view-label label="Guardian Name" value="{{trustSettlement.guardianName}}"
+                                        class="pb20"></view-label>
+                                    <view-label label="Guardian Relationship"
+                                        value="{{trustSettlement.relationshipTypeDescription}}"
+                                        class="pb20"></view-label>
+                                </div>
+                            </div>
+                        </row>
+                    </accordion-body>
+                </accordion-item>
+
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Applicant</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <row>
+                                    <div class="col-md-4">
+                                        <div class="d-flex align-items-center address-header mb26">
+                                            <ion-icon src="assets/icons/customer_info.svg"></ion-icon>
+                                            <view-label value="General Information" class="pl10"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Name"
+                                                value="{{settlementApplicant.ientCustomer.firstName}} {{settlementApplicant.ientCustomer.middleName}} {{settlementApplicant.ientCustomer.lastName}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Date Of Birth"
+                                                [value]="settlementApplicant.ientCustomer.dateOfBirth | appDate"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Gender"
+                                                value="{{settlementApplicant.ientCustomer.genderDescription}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Marital Status"
+                                                value="{{settlementApplicant.maritalStatusDescription}}"></view-label>
+                                        </div>
+                                        <div class="mb20">
+                                            <view-label label="Occupation"
+                                                value="{{settlementApplicant.occupation}}"></view-label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex align-items-center address-header mb26">
+                                            <ion-icon name="person-outline"></ion-icon>
+                                            <view-label value="Communication" class="pl10"></view-label>
+                                        </div>
+                                        <div class="mb20 pl10">
+                                            <view-label label="Home Contact"
+                                                value="{{settlementApplicant.ientCustomer.contactNo}}"></view-label>
+                                        </div>
+                                        <div class="mb20 pl10">
+                                            <view-label label="Office Contact"
+                                                value="{{settlementApplicant.ientCustomer.alternateContactNo}}"></view-label>
+                                        </div>
+                                        <div class="mb20 pl10">
+                                            <view-label label="Email"
+                                                value="{{settlementApplicant.ientCustomer.emailId}}"></view-label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="v-flex h100 justify-content-between">
+                                            <div class=" ">
+                                                <div class="d-flex align-items-center address-header mb26">
+                                                    <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                                    <view-label value=" Address" class="pl10"></view-label>
+                                                </div>
+                                                <div class="pl10">
+                                                    <view-label
+                                                        value="{{settlementApplicant.ientCustomer.iPermanentaddress.line1}} {{settlementApplicant.ientCustomer.iPermanentaddress.line2}} {{settlementApplicant.ientCustomer.iPermanentaddress.line3}}"></view-label>
+                                                </div>
+                                                <div class="pl10">
+                                                    <view-label
+                                                        value="{{settlementApplicant.ientCustomer.iPermanentaddress.provinceDescription}} {{settlementApplicant.ientCustomer.iPermanentaddress.islandDescription}} "></view-label>
+                                                </div>
+                                                <div class="mb20 pl10">
+                                                    <view-label
+                                                        value="{{settlementApplicant.ientCustomer.iPermanentaddress.tikinaDescription}} {{settlementApplicant.ientCustomer.iPermanentaddress.village}} {{settlementApplicant.ientCustomer.iPermanentaddress.poBoxNo}}"></view-label>
+                                                </div>
+                                            </div>
+                                            <div class="end">
+                                                <app-icon-button name="edit" toolTip="Edit"
+                                                    (click)="editApplicant()"></app-icon-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </row>
+                            </div>
+                        </div>
+
+                    </accordion-body>
+                </accordion-item>
+                <!-- @if(trustSettlement.paymentOptionValue ==='OVERS'){
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Overseas Address</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <row>
+                            <div class="col-md-12">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Overseas Address
+                                    </div>
+                                </div>
+                                @if(editOverseasAddress === false){
+                                <row>
+                                    <view-label label="Line 1" [value]="trustSettlement.iOverseasAddress.line1"
+                                        class="pb16 col-md-4"></view-label>
+                                    <view-label label="Line 2" [value]="trustSettlement.iOverseasAddress.line2"
+                                        class="pb16 col-md-4"></view-label>
+                                    <view-label label="Line 3" [value]="trustSettlement.iOverseasAddress.line3"
+                                        class="pb16 col-md-4"></view-label>
+                                    <view-label label="Province"
+                                        [value]="trustSettlement.iOverseasAddress.provinceDescription"
+                                        class="pb16 col-md-4"></view-label>
+                                    <view-label label="Island"
+                                        [value]="trustSettlement.iOverseasAddress.islandDescription"
+                                        class="pb16 col-md-4"></view-label>
+                                    <view-label label="Tikina"
+                                        [value]="trustSettlement.iOverseasAddress.tikinaDescription"
+                                        class="pb16 col-md-4"></view-label>
+                                    <view-label label="Village"
+                                        [value]="trustSettlement.iOverseasAddress.village"
+                                        class="pb16 col-md-4"></view-label>
+                                    <view-label label="Po Box No" [value]="trustSettlement.iOverseasAddress.poBoxNo"
+                                        class="pb16 col-md-4"></view-label>
+                                </row>
+                                <div class="col-md-12 end">
+                                    <app-icon-button name="edit" toolTip="Edit"
+                                        (click)="editOverseasAddressDetails()"></app-icon-button>
+                                </div>
+                                }
+                                @if(editOverseasAddress === true){
+                                <form #g="ngForm">
+                                    <app-address-edit type="bank" [ientAddress]="trustSettlement.iOverseasAddress"
+                                        [errorTrue]="errorTrue"></app-address-edit>
+
+
+                                    <div class="col-md-12 gap-10 end">
+                                        @if(trustSettlement.iOverseasAddress.addressId === 0){
+
+                                        <app-icon-button name="save" toolTip="Save"
+                                            (click)="saveOverseasAddress()"></app-icon-button>
+                                        <app-icon-button name="clear" toolTip="Clear"
+                                            (click)="clearOverseasAddress()"></app-icon-button>
+                                        }
+                                        @else{
+                                        <app-icon-button name="save" toolTip="Update"
+                                            (click)="saveOverseasAddress()"></app-icon-button>
+                                        <app-icon-button name="refresh" toolTip="Refresh"
+                                            (click)="refreshOverseasAddress()"></app-icon-button>
+                                        }
+                                    </div>
+                                </form>
+                                }
+
+                            </div>
+                        </row>
+                    </accordion-body></accordion-item>
+                } -->
+
+                <!-- <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div> Bank Settlement</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <row>
+
+                            @if(editOverseas === false){
+
+                            <div class="col-md-6 border-right">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Overseas Bank Details
+                                    </div>
+                                </div>
+                                <div class="p10">
+                                    <view-label label="Account No" value="{{overseasBank.accountNumber}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Bank Name" value="{{overseasBank.bankName}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Bank Code" value="{{overseasBank.bankCode}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Branch" value="{{overseasBank.bankBranch}}"
+                                        class="pb16"></view-label>
+                                    @if(overseasBank.isOverseasBank === "Y"){
+                                    <view-label label="Is Overseas Bank" value="Yes"></view-label>
+                                    }
+                                    @if(overseasBank.isOverseasBank === "N"){
+                                    <view-label label="Is Overseas Bank" value="No"></view-label>
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 ">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Overseas Bank Address
+                                    </div>
+                                </div>
+                                <div class="p10">
+                                    <view-label label="Line 1" value="{{overseasBank.ibankAddress.line1}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Line 2" value="{{overseasBank.ibankAddress.line2}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Line 3" value="{{overseasBank.ibankAddress.line3}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Province"
+                                        value="{{overseasBank.ibankAddress.provinceDescription}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Island" value="{{overseasBank.ibankAddress.islandDescription}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Tikina" value="{{overseasBank.ibankAddress.tikinaDescription}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Village" value="{{overseasBank.ibankAddress.village}}"
+                                        class="pb16"></view-label>
+                                    <view-label label="Po Box No" value="{{overseasBank.ibankAddress.poBoxNo}}"
+                                        class="pb16"></view-label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 end">
+                                <app-icon-button name="edit" toolTip="Edit"
+                                    (click)="editOverseasData()"></app-icon-button>
+                            </div>
+                            }
+                            @if(editOverseas === true){
+                            <form #b="ngForm" class="col-md-6 border-right">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Overseas Bank Details
+                                    </div>
+                                </div>
+                                <div class="p10">
+                                    <app-input-control label="Account No" [(ngModel)]="overseasBank.accountNumber"
+                                        name="accountNumber" [maxLength]="14" [errorTrue]="errorTrue"
+                                        [required]="true"></app-input-control>
+                                    <app-input-control label="Bank Name" [(ngModel)]="overseasBank.bankName"
+                                        name="bankName" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                    <app-input-control label="Bank Code" [(ngModel)]="overseasBank.bankCode"
+                                        name="bankCode" [errorTrue]="errorTrue" [required]="true"
+                                        [maxLength]="10"></app-input-control>
+                                    <app-input-control label="Branch" [(ngModel)]="overseasBank.bankBranch"
+                                        name="bankBranch" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                                    <div class="sub-data-label">Is Overseas Bank</div>
+                                    <div class="d-flex gap-5">
+
+                                        <app-checkbox [checked]="overseasBank.isOverseasBank === 'Y'"
+                                            (change)="isOverseasBankCheck($event)"></app-checkbox>
+                                        @if( this.overseasBank.isOverseasBank === 'Y'){
+                                        Yes
+                                        }
+                                        @else{
+                                        No
+                                        }
+                                    </div>
+
+                                </div>
+                            </form>
+                            <form #b="ngForm" class="col-md-6 ">
+                                <div class="view-label-container-title mb26">
+                                    <div class="view-label-container-title d-flex align-items-center">
+                                        <ion-icon name="person-outline" class="pr5"></ion-icon>
+                                        Overseas Bank Address
+                                    </div>
+                                </div>
+                                <div class="p10">
+                                    <app-address-edit [ientAddress]="overseasBank.ibankAddress" type="residential"
+                                        [errorTrue]="errorTrue"></app-address-edit>
+                                </div>
+                            </form>
+                            <div class="col-md-12 end gap-10">
+                                @if(overseasBank.trustSettlementApplicationBankDetailId === 0){
+                                <app-icon-button name="clear" toolTip="Clear"
+                                    (click)="clearOverseasData()"></app-icon-button>
+                                <app-icon-button name="save" toolTip="Save"
+                                    (click)="saveOverseasData()"></app-icon-button>
+                                }
+                                @else{
+                                <app-icon-button name="refresh" toolTip="Refresh"
+                                    (click)="refreshOverseasData()"></app-icon-button>
+                                <app-icon-button name="save" toolTip="Update"
+                                    (click)="saveOverseasData()"></app-icon-button>
+                                }
+                            </div>
+                            }
+                        </row>
+                    </accordion-body>
+                </accordion-item> -->
+
+
+
+            </accordion>
+
+        </app-tab>
+        <app-tab tabTitle="Process">
+            <accordion>
+                @if(processDatas === true){
+                @for(type of trustSettlement.lstentTrustSettlementApplicationProcessHistory; track $index){
+                @switch (type.trustSettlementApplicationStageValue) {
+                @case ('RECSD') {
+                <app-support-document [(application)]="trustSettlement" [type]="type"></app-support-document>
+                }
+                @case ('APOST') {
+                <app-approval-of-statement [(application)]="trustSettlement" [type]="type"></app-approval-of-statement>
+                }
+                @case ('EMMOD') {
+                <app-execute-discharge [(application)]="trustSettlement" [type]="type"></app-execute-discharge>
+                }
+                @case ('TCOPY') {
+                <app-tax-clearance [(application)]="trustSettlement" [type]="type"></app-tax-clearance>
+                }
+                @case ('PSTAC') {
+
+                <app-prepare-soa [(application)]="trustSettlement" [type]="type"></app-prepare-soa>
+                }
+                @case ('FCMRC') {
+                <app-require-soa [(application)]="trustSettlement" [type]="type"></app-require-soa>
+
+                }
+                @case ('PAYIN') {
+                    <app-make-payment [(application)]="trustSettlement" [type]="type"></app-make-payment>
+                  } 
+                  @case ('APPCM') {
+                    <app-application-completion [(application)]="trustSettlement" [type]="type"></app-application-completion>
+                  } 
+
+                }
+                }
+                }
+            </accordion>
+        </app-tab>
+        <app-tab tabTitle="Payment">
+            <div class="outer-content-wrapper">
+              <div class="content-wrapper pt0">
+                <app-table [columns]="paymentColumns" [columnsName]="paymentColumnName" [hasPagination]="true"
+                  [dataSource]="tablePaymentData" [hideSelectAll]="true">
+                  <ng-template cellDef="documemtDate" let-ele> {{ele.documemtDate | appDate}} </ng-template>
+                  <ng-template cellHeaderDef="moneyIn">
+                    <div class="text-end">Money In</div>
+                  </ng-template>
+                  <ng-template cellDef="moneyIn" let-ele>
+                    <div class="text-end">{{ele.moneyIn}}</div>
+                  </ng-template>
+                  <ng-template cellHeaderDef="moneyOut">
+                    <div class="text-end">Money Out</div>
+                  </ng-template>
+                  <ng-template cellDef="moneyOut" let-ele>
+                    <div class="text-end">{{ele.moneyOut}}</div>
+                  </ng-template>
+                </app-table>
+              </div>
+            </div>
+          </app-tab>
+        <app-tab tabTitle="History">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Notes</div>
+                                    <div class="accordian-title-count">
+                                        {{trustSettlement.lstentTrustSettlementApplicationNotes.length}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <div class="p16px pb26 wrap-content">
+                                    @for (item of notesList; track $index) {
+                                    <div class="border-bottom  notes-list">
+                                        <div class="mx10">{{item.notes}}</div>
+                                        <div class="d-flex justify-content-end notes-context">
+                                            <div style="padding-right:5px ;">
+                                                {{item.enteredBy}}</div>
+                                            <div class=" notes-border-left">
+                                                {{item.enteredDate}}
+                                            </div>
+                                            <div style="padding-right:5px ;"></div>
+                                            <div class=" notes-border-left status-{{item.actionStatusValue}}">
+                                                {{item.actionStatusDescription}}
+                                            </div>
+                                            <div class="card-1-header-label px-2 ">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Assigned Officer</div>
+                                    <div class="accordian-title-count">
+                                        {{trustSettlement.lstentTrustSettlementAssignedOfficerHistory.length}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                                    [hasPagination]="true" [hideSelectAll]="true"
+                                    [dataSource]="trustSettlement.lstentTrustSettlementAssignedOfficerHistory">
+                                    <ng-template cellDef="statusDescription" let-element>
+                                        <div class="status status-{{element.statusValue}}">{{element.statusDescription}}
+                                        </div>
+                                    </ng-template>
+                                    <ng-template cellDef="assignedDate" let-element>
+                                        {{element.assignedDate}}
+                                    </ng-template>
+                                    <!-- @if(customerUpdate.assignedOfficerFlag === 'True'){ -->
+                                    <!-- <ng-template #slotRight>
+                                        <div class="d-flex align-items-center">
+
+                                            <form #p="ngForm" class="col-md-10 w250"><app-input-control
+                                                    type="select"></app-input-control></form>
+                                            <div class="col-md-2">
+                                                <div class="col-md-2"><app-icon-button name="reassign"
+                                                        toolTip="Reassign"></app-icon-button></div>
+                                            </div>
+
+                                        </div>
+                                    </ng-template> -->
+                                    <!-- } -->
+                                </app-table>
+                            </div>
+                        </div>
+
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+            <div class="bg-white-padd">
+
+                <app-tab-sub-group>
+                    <app-sub-tab tabTitle="Status History">
+                        <div class="status-padding">
+                            <app-status-history
+                                [data]="trustSettlement.lstentTrustSettlementApplicationStatusHistory"></app-status-history>
+                        </div>
+                    </app-sub-tab>
+                    <app-sub-tab tabTitle="Communication History">
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName"
+                                    [hasPagination]="true"
+                                    [dataSource]="trustSettlement.lstentTrustSettlementApplicationEmailHistory"
+                                    [hideSelectAll]="true">
+                                    <ng-template cellDef="toEmailId" let-element>
+                                        {{element.ientCommunicationTracking.toEmailId}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentDate" let-element>
+                                        {{element.ientCommunicationTracking.sentDate |
+                                        appDate
+                                        }} |
+                                        {{element.ientCommunicationTracking.sentDate
+                                        | appDate: 'hh:mm a'}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentStatusDescription" let-element>
+                                        <div class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                                            {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+                                    </ng-template>
+
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open" (click)="viewEmailDetail(element)"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                    </app-sub-tab>
+                </app-tab-sub-group>
+            </div>
+
+        </app-tab>
+      
+
+    </app-tab-group>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon src="assets/icons/trust.svg"></ion-icon>
+                <div class="screen-text">Trust Settlement</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #applicant>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/addinfo.svg"></ion-icon>
+                Trust Settlement <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Applicant
+                Information<ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Detail
+            </div>
+            <div class="slot-right d-flex gap-10">
+                @if(editApplicantBtn === true){
+                <app-icon-button name="edit" toolTip="Edit" (click)="editTrustApplicant()"></app-icon-button>
+                }
+                @else if(editApplicantBtn === false){
+                @if(settlementApplicant.trustSettlementApplicationApplicantId !==0){
+
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Update" (click)="updateApplicant()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openTrustApplicationApplicant(this.settlementApplicant.trustSettlementApplicationApplicantId,'refresh')"></app-icon-button>
+
+                </div>
+                }
+                @if(settlementApplicant.trustSettlementApplicationApplicantId === 0) {
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveApplicant()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearApplicantData()"></app-icon-button>
+
+                </div>
+                }
+                }
+                <app-icon-button name="close" toolTip="Close" (click)="dialogCloseAll()"></app-icon-button>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="mb20"></div>
+            <scroll>
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <div class="content-wrapper">
+                    @if(applicantSearch === true){
+                    <div class="pb10"></div>
+                    <div class="d-flex align-items-center">
+                        <div class="col-md-3 pl15">
+                            <app-input-control label="Customer "
+                                [(ngModel)]="settlementApplicant.ientCustomer.customerId" name="customerId"
+                                [items]="initialData.DDLValues.DDLCustomer" key="id" type="select" keyName="fullName"
+                                valueType="int"
+                                (onSelect)="openCustomerForApplicant(settlementApplicant.ientCustomer.customerId)"></app-input-control>
+                        </div>
+                        <div class="col-md-1">
+                            <app-icon-button name="search" toolTip="Search"
+                                (click)="customerSearch('applicant')"></app-icon-button>
+                        </div>
+                    </div>
+                    }
+                    @if(editApplicantData === true){
+                    <form #applicantForm="ngForm">
+                        <row>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Applicant Information</div>
+                                    <div class=" box-pad">
+                                        <!-- <app-input-control class="pb10" label="Applicant CRM No" name="customerRefNo"
+                                            [btnClicked]="true"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.customerRefNo"></app-input-control> -->
+                                        <!-- <app-input-control class="pb10" label="Client Name" name=""
+                                            [(ngModel)]="trustApplicationClient"></app-input-control> -->
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control class="pb10" label="First Name" name="firstName"
+                                            [errorTrue]="errorTrue" [required]="true" [maxLength]="250"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.firstName"></app-input-control>
+                                        <app-input-control class="pb10" label="Middle Name" name="middleName"
+                                            [maxLength]="250"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.middleName"></app-input-control>
+                                        <app-input-control class="pb10" label="Last Name" name="lastName"
+                                            [maxLength]="250" [errorTrue]="errorTrue" [required]="true"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.lastName"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control class="pb10" label="Date Of Birth" name="dateOfBirth"
+                                            [errorTrue]="errorTrue" [required]="true" type="date"
+                                            [maxDate]="currentDate"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.dateOfBirth "></app-input-control>
+                                        <app-input-control class="pb10" label="Date Of Death" name="dateOfDeath"
+                                            [maxDate]="currentDate" type="date"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.dateOfDeath "></app-input-control>
+
+                                        <app-input-control class="pb10" label="Gender" name="genderValue"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            [items]="initialData.DDLValues.DDLGender" key="constant"
+                                            keyName="description" type="select" defaultOption="--Select--"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.genderValue"></app-input-control>
+                                        <app-input-control class="pb10" label="Nationality" name="nationalityValue"
+                                            [items]="initialData.DDLValues.DDLNationality" key="constant"
+                                            [errorTrue]="errorTrue" [required]="true" keyName="description"
+                                            type="select" defaultOption="--Select--"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.nationalityValue"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control class="pb10" label="Email ID" name="emailId" type="email"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.emailId"></app-input-control>
+                                        <app-input-control class="pb10" label="Contact No" name="contactNo"
+                                            type="number" [errorTrue]="errorTrue" [required]="true" [minLength]="5"
+                                            [maxLength]="10"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.contactNo"></app-input-control>
+                                        <app-input-control class="pb10" label="Alternate Contact No"
+                                            name="alternateContactNo" type="number" [minLength]="5" [maxLength]="10"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.alternateContactNo"></app-input-control>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <app-input-control class="pb10" label="Father Name"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.fatherName"
+                                            name="fatherName"></app-input-control>
+                                        <app-input-control class="pb10" label="Mother Name"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.motherName"
+                                            name="motherName"></app-input-control>
+                                        <app-input-control class="pb10" label="Guardian Name"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.gaurdianName"
+                                            name="gaurdianName"></app-input-control>
+                                        <app-input-control class="pb10" label="Marital Status" [errorTrue]="errorTrue"
+                                            [required]="true" [items]="initialData.DDLValues.DDLMarital" key="constant"
+                                            keyName="description" type="select"
+                                            [(ngModel)]="settlementApplicant.maritalStatusValue"
+                                            name="maritalStatusValue"></app-input-control>
+                                        <app-input-control class="pb10" label="Occupation" [errorTrue]="errorTrue"
+                                            [required]="true" [(ngModel)]="settlementApplicant.occupation"
+                                            name="occupation"></app-input-control>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Address Details</div>
+                                    <div class=" box-pad">
+                                        <app-address-edit
+                                            [ientAddress]="settlementApplicant.ientCustomer.iResidentialaddress"
+                                            [errorTrue]="errorTrue" type="residential"></app-address-edit>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        KYC Details <span>(Any one field is Mandatory)</span>
+                                    </div>
+                                    <div class="box-pad">
+                                        <div class="col-md-12"><app-input-control type="text" label="Birth Reg No"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.birthRegNo"
+                                            name="birthRegNo" [maxLength]="20"
+                                            [errorTrue]="settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId===''&& settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.passportNo==='' && errorTrue "
+                                            [required]="settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId===''&& settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.passportNo==='' " />
+                                    </div>
+                                    <div class="col-md-12"><app-input-control type="text" label="TIN"
+                                        [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                        [(ngModel)]="settlementApplicant.ientCustomer.tin" name="tin"
+                                        [maxLength]="20"
+                                        [errorTrue]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.nationalId===''&& settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.birthRegNo===''&& settlementApplicant.ientCustomer.birthRegNo==='' && errorTrue "
+                                        [required]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.nationalId===''&& settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.birthRegNo===''&& settlementApplicant.ientCustomer.birthRegNo==='' "></app-input-control>
+                                </div>
+                                        <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                                                [errorTrue]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.birthRegNo==='' && errorTrue "
+                                                [required]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.birthRegNo==='' "
+                                                [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                                [(ngModel)]="settlementApplicant.ientCustomer.fnpfNo" [maxLength]="20"
+                                                name="fnpfNo"></app-input-control>
+                                        </div>
+
+                                        <div class="col-md-12"><app-input-control type="text" label="Voter ID"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.voterId" name="voterId"
+                                            [maxLength]="20"
+                                            [errorTrue]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.birthRegNo==='' && errorTrue "
+                                            [required]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.birthRegNo==='' "></app-input-control>
+                                    </div>
+                                        <div class="col-md-12"><app-input-control type="text" label="Driving License No"
+                                                [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                                [(ngModel)]="settlementApplicant.ientCustomer.driverLicenseNo"
+                                                name="driverLicenseNo" [maxLength]="20"
+                                                [errorTrue]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.birthRegNo==='' && errorTrue "
+                                                [required]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.birthRegNo==='' "></app-input-control>
+                                        </div>
+
+                                        <!-- <div class="col-md-12"><app-input-control type="text" label="National ID"
+                                                [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                                [(ngModel)]="settlementApplicant.ientCustomer.nationalId"
+                                                name="nationalId" [maxLength]="20"
+                                                [errorTrue]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.birthRegNo==='' && errorTrue "
+                                                [required]="settlementApplicant.ientCustomer.passportNo===''&& settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo===''&& settlementApplicant.ientCustomer.birthRegNo==='' "></app-input-control>
+                                        </div> -->
+
+                                        <div class="col-md-12"><app-input-control type="text" label="Passport No"
+                                                [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                                [(ngModel)]="settlementApplicant.ientCustomer.passportNo"
+                                                name="passportNo" [maxLength]="20"
+                                                [errorTrue]="settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId===''&& settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo===''&& settlementApplicant.ientCustomer.birthRegNo===''  && errorTrue "
+                                                [required]="settlementApplicant.ientCustomer.tin===''&& settlementApplicant.ientCustomer.nationalId===''&& settlementApplicant.ientCustomer.driverLicenseNo==='' && settlementApplicant.ientCustomer.voterId==='' && settlementApplicant.ientCustomer.fnpfNo==='' && settlementApplicant.ientCustomer.birthRegNo==='' "></app-input-control>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">Social Platform Details</div>
+                                    <div class=" box-pad">
+                                        <app-input-control label="Facebook ID" name="facebookId"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.facebookId"
+                                            class="pb10"></app-input-control>
+                                        <app-input-control label="LinkedIn ID" name="linkedinId"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.linkedinId"
+                                            class="pb10"></app-input-control>
+                                        <app-input-control label="Whatsapp" name="whatsappNumber"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.whatsappNumber"
+                                            class="pb10"></app-input-control>
+                                        <app-input-control label="Viber" name="viberNumber"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.viberNumber"
+                                            class="pb10"></app-input-control>
+                                        <app-input-control label="Skype ID" name="skypeId"
+                                            [btnClicked]="settlementApplicant.ientCustomer.customerId !== 0"
+                                            [(ngModel)]="settlementApplicant.ientCustomer.skypeId"
+                                            class="pb10"></app-input-control>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+                    </form>
+                    }
+                    @if(editApplicantData === false){
+                    <form #applicantForm="ngForm">
+                        <row>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Applicant Information</div>
+                                    <div class=" box-pad">
+                                        <view-label class="pb10" label="Applicant CRM No"
+                                            value="{{settlementApplicant.ientCustomer.customerRefNo}}"></view-label>
+
+                                        <!-- <view-label class="pb10" label="Client Name"
+                                        value="{{settlementApplicant}}"></view-label> -->
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="First Name"
+                                            value="{{settlementApplicant.ientCustomer.firstName}}"></view-label>
+                                        <view-label class="pb10" label="Middle Name"
+                                            value="{{settlementApplicant.ientCustomer.middleName}}"></view-label>
+                                        <view-label class="pb10" label="Last Name"
+                                            value="{{settlementApplicant.ientCustomer.lastName}}"></view-label>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Date Of Birth"
+                                            value="{{settlementApplicant.ientCustomer.dateOfBirth | appDate}}"></view-label>
+                                        <view-label class="pb10" label="Date Of Death"
+                                            value="{{settlementApplicant.ientCustomer.dateOfDeath |appDate}}"></view-label>
+
+                                        <view-label class="pb10" label="Gender"
+                                            value="{{settlementApplicant.ientCustomer.genderDescription}}"></view-label>
+                                        <view-label class="pb10" label="Nationality"
+                                            value="{{settlementApplicant.ientCustomer.nationalityDescription}}"></view-label>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Email ID"
+                                            value="{{settlementApplicant.ientCustomer.emailId}}"></view-label>
+                                        <view-label class="pb10" label="Contact No"
+                                            value="{{settlementApplicant.ientCustomer.contactNo}}"></view-label>
+                                        <view-label class="pb10" label="Alternate Contact No"
+                                            value="{{settlementApplicant.ientCustomer.alternateContactNo}}"></view-label>
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        @if(editApplicantBtn === true){
+                                        <view-label label="Marital Status"
+                                            value="{{settlementApplicant.maritalStatusDescription}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Occupation" value="{{settlementApplicant.occupation}}"
+                                            class="pb10"></view-label>
+                                        }
+                                        @if(editApplicantBtn === false){
+                                        <app-input-control label="Marital Status" [errorTrue]="errorTrue"
+                                            [required]="true" [items]="initialData.DDLValues.DDLMarital" key="constant"
+                                            keyName="description" type="select"
+                                            [(ngModel)]="settlementApplicant.maritalStatusValue"
+                                            name="maritalStatusValue"></app-input-control>
+                                        <app-input-control label="Occupation" [errorTrue]="errorTrue" [required]="true"
+                                            [(ngModel)]="settlementApplicant.occupation"
+                                            name="occupation"></app-input-control>
+                                        }
+                                        <div class="bottom-border"></div>
+                                        <div class="pb10"></div>
+                                        <view-label class="pb10" label="Father Name"
+                                            value="{{settlementApplicant.ientCustomer.fatherName}}"></view-label>
+                                        <view-label class="pb10" label="Mother Name"
+                                            value="{{settlementApplicant.ientCustomer.motherName}}"></view-label>
+                                        <view-label class="pb10" label="Guardian Name"
+                                            value="{{settlementApplicant.ientCustomer.gaurdianName}}"></view-label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> Address Details</div>
+                                    <div class=" box-pad">
+                                        <view-label label="Line 1"
+                                            value="{{settlementApplicant.ientCustomer.iResidentialaddress.line1}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Line 2"
+                                            value="{{settlementApplicant.ientCustomer.iResidentialaddress.line2}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Line 3"
+                                            value="{{settlementApplicant.ientCustomer.iResidentialaddress.line3}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Province"
+                                            value="{{settlementApplicant.ientCustomer.iResidentialaddress.provinceDescription}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Island"
+                                            value="{{settlementApplicant.ientCustomer.iResidentialaddress.islandDescription}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Tikina"
+                                            value="{{settlementApplicant.ientCustomer.iResidentialaddress.tikinaDescription}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Village"
+                                            value="{{settlementApplicant.ientCustomer.iResidentialaddress.village}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Po Box No"
+                                            value="{{settlementApplicant.ientCustomer.iResidentialaddress.poBoxNo}}"
+                                            class="pb10"></view-label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header "> KYC Details</div>
+                                    <div class=" box-pad">
+                                        <view-label label="TIN" value="{{settlementApplicant.ientCustomer.tin}}"
+                                        class="pb10"></view-label>
+                                        <view-label label="FNPF No" value="{{settlementApplicant.ientCustomer.fnpfNo}}"
+                                            class="pb10"></view-label>
+                                            <view-label label="Voter ID" value={{settlementApplicant.ientCustomer.voterId}}
+                                            class="pb10"></view-label>
+                                        <view-label label="Driving License No"
+                                            value="{{settlementApplicant.ientCustomer.driverLicenseNo}}"
+                                            class="pb10"></view-label>
+
+                                        <!-- <view-label label="National ID"
+                                            value="{{settlementApplicant.ientCustomer.nationalityDescription}}"
+                                            class="pb10"></view-label> -->
+
+                                        <view-label label="Passport No"
+                                            value="{{settlementApplicant.ientCustomer.passportNo}}"
+                                            class="pb10"></view-label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">Social Platform Details</div>
+                                    <div class=" box-pad">
+                                        <view-label label="Facebook ID"
+                                            value="{{settlementApplicant.ientCustomer.facebookId}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="LinkedIn ID"
+                                            value="{{settlementApplicant.ientCustomer.linkedinId}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Whatsapp"
+                                            value="{{settlementApplicant.ientCustomer.whatsappNumber}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Viber"
+                                            value="{{settlementApplicant.ientCustomer.viberNumber}}"
+                                            class="pb10"></view-label>
+                                        <view-label label="Skype ID"
+                                            value="{{settlementApplicant.ientCustomer.skypeId}}"
+                                            class="pb10"></view-label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+                    </form>
+                    }
+
+
+
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #customerSearchDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>List
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+
+                    <app-icon-button name="close" (click)="dialogClose('customerList')"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="mb20"></div>
+        <div class="dialog-content">
+            <div class="content-wrapper">
+                <app-table [pagination]="pagination" [columns]="customerColumns" [columnsName]="customerColumnsName"
+                    (pageChanged)="pageChanged($event)" [dataSource]="customertableData" columnID="customerId"
+                    [hideSelectAll]="true">
+
+
+                    <ng-template cellDef="customerRefNo" let-element>
+                        <div (click)="getRefNo(element.customerId)" class="pointer text-underline">
+                            {{element.customerRefNo}}</div>
+                    </ng-template>
+                    <ng-template cellDef="statusdescription" let-element>
+                        <div class="status status-{{element.statusValue}}">{{element.statusdescription}}</div>
+                    </ng-template>
+                    <ng-template cellDef="customerName" let-element>
+                        @if(element.customerName.length>25){
+                        <div class="ellipse-text" matTooltip="{{element.customerName}}">{{element.customerName}}</div>
+                        }
+                        @else{
+                        <div>{{element.customerName}}</div>
+                        }
+                    </ng-template>
+                    <ng-template cellHeaderDef="dateOfBrith">
+                        <div class="w100px">DOB</div>
+                    </ng-template>
+                    <ng-template cellDef="dateOfBrith" let-element>
+                        <div class="w100px">{{element.dateOfBrith | appDate}}</div>
+                    </ng-template>
+
+                    <ng-template cellDef="emailId" let-element>
+                        @if(element.emailId.length>25){
+                        <div class="ellipse-text" matTooltip="{{element.emailId}}">{{element.emailId}}</div>
+                        }
+                        @else{
+                        <div>{{element.emailId}}</div>
+                        }
+                    </ng-template>
+                    <ng-template #slotLeft>
+                        <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+                    </ng-template>
+
+                </app-table>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #searchTemplate>
+        <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="dialog-title">Customer Search</div>
+                <div class="slot-right">
+                    <div class="btn-group">
+                        <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+                        <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <scroll>
+                    <div class="dialog-content-inner">
+                        <form #l="ngForm" (submit)="onSearch()">
+                            <row>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Customer No"
+                                                [(ngModel)]="customer.customerRefNo" name="customerRefNo"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" defaultOption="--Select--"
+                                                label="Customer Status" [(ngModel)]="customer.customerStatusValue"
+                                                name="customerStatusValue"
+                                                [items]="initialData.DDLValues.DDLCustomerStatus" key="constant"
+                                                keyName="description" (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="First Name"
+                                                [(ngModel)]="customer.firstName" name="firstName" [maxLength]="250"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Middle Name"
+                                                [(ngModel)]="customer.middleName" name="middleName" [maxLength]="250"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Last Name" [maxLength]="250"
+                                                [(ngModel)]="customer.lastName" name="lastName"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="select" defaultOption="--Select--" label="Gender"
+                                                [(ngModel)]="customer.genderValue" name="genderValue"
+                                                [items]="initialData.DDLValues.DDLGender" key="constant"
+                                                keyName="description" placeholder="Select Gender"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="date" label="Date of Birth "
+                                                [(ngModel)]="customer.dateOfBirth" name="dateOfBirth"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3 border-right">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="email" label="Email ID"
+                                                [(ngModel)]="customer.emailId" name="emailId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="number" label="Contact Number"  [minLength]="5" [maxLength]="15" [(ngModel)]="customer.contactNo" name="contactNo"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                                <div class="col-md-3">
+                                    <row>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="FNPF No" [(ngModel)]="customer.pfNo"
+                                                name="pfNo" (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Driving License No"
+                                                [(ngModel)]="customer.drivingLicenseNo"
+                                                name="drivingLicenseNo"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Voter ID"
+                                                [(ngModel)]="customer.voterId" name="voterId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <!-- <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="National ID"
+                                                [(ngModel)]="customer.nationalId" name="nationalId"
+                                                (onEnter)="onSearch()"></app-input-control>
+                                        </div> -->
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="TIN No" [(ngModel)]="customer.tin"
+                                                name="tin" (onEnter)="onSearch()"></app-input-control>
+                                        </div>
+                                        <div class="col-md-12 mb26">
+                                            <app-input-control type="text" label="Passport ID"
+                                                [(ngModel)]="customer.passportNo" name="passportNo"
+                                                (onEnter)="onSearch()"> </app-input-control>
+                                        </div>
+                                    </row>
+                                </div>
+                            </row>
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+    </ng-template>
+</ng-template>

@@ -1,0 +1,25 @@
+@if(__edit === false){
+<row>
+    <view-label label="Facebook ID" value="{{__ientSocialPlatform.facebookId}}" class="pb10 col-md-12"></view-label>
+    <view-label label="LinkedIn ID" value="{{__ientSocialPlatform.linkedinId}}" class="pb10 col-md-12"></view-label>
+    <view-label label="Whatsapp" value="{{__ientSocialPlatform.whatsappNumber}}" class="pb10 col-md-12"></view-label>
+    <view-label label="Viber" value="{{__ientSocialPlatform.viberNumber}}" class="pb10 col-md-12"></view-label>
+    <view-label label="Skype ID" value="{{__ientSocialPlatform.skypeId}}" class="pb10 col-md-12"></view-label>
+
+</row>
+}
+@else{
+<row>
+    <app-input-control label="Facebook ID" name="facebookId" [(ngModel)]="__ientSocialPlatform.facebookId"
+        class="pb10 col-md-12"></app-input-control>
+    <app-input-control label="LinkedIn ID" name="linkedinId" [(ngModel)]="__ientSocialPlatform.linkedinId"
+        class="pb10 col-md-12"></app-input-control>
+    <app-input-control label="Whatsapp" name="whatsappNumber" [(ngModel)]="__ientSocialPlatform.whatsappNumber"
+        class="pb10 col-md-12"></app-input-control>
+    <app-input-control label="Viber" name="viberNumber" [(ngModel)]="__ientSocialPlatform.viberNumber"
+        class="pb10 col-md-12"></app-input-control>
+    <app-input-control label="Skype ID" name="skypeId" [(ngModel)]="__ientSocialPlatform.skypeId"
+        class="pb10 col-md-12"></app-input-control>
+
+</row>
+}

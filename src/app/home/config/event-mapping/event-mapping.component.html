@@ -1,0 +1,724 @@
+<div class="content-wrapper">
+  <div class="sticky-card">
+    @if (type==='new') {
+    <row>
+      <div class="col-md-3 pb10">
+        <view-label label="Event Type" value="{{ eventMapping.eventName }}"></view-label>
+      </div>
+      <div class="col-md-3">
+        <view-label label="File Type" value="{{ eventMapping.fileTypeDescription }}"></view-label>
+      </div>
+      <div class="col-md-3 pb10">
+        <view-label label="Voucher Type" value="{{ eventMapping.voucherTypeDescription }}"></view-label>
+      </div>
+      <div class="col-md-3 pb10">
+        <view-label label="Transaction Code" value="{{ eventMapping.transactionCodeDescription }}"></view-label>
+      </div>
+      <div class="col-md-3 pb10">
+        <view-label label="Sub Event Type" value="{{ eventMapping.subEventName }}"></view-label>
+      </div>
+
+      <div class="col-md-3">
+        <view-label label="Account Type" value="{{ eventMapping.accountTypeDescription }}"></view-label>
+      </div>
+
+      <div class="col-md-3 pb10">
+        <view-label label="Posting Matrix" value="{{ eventMapping.postingMatrix }}"></view-label>
+      </div>
+
+
+      <div class="col-md-3">
+        <view-label label="Bank Fee" value="{{ bankFee }}"></view-label>
+      </div>
+    </row>
+    }
+  </div>
+  <app-tab-group (tabChange)="onTabChange($event)">
+    <app-tab tabTitle="Event Mapping">
+      <accordion>
+        <accordion-item [isOpen]="true">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon src="assets/icons/trust.svg"></ion-icon>
+                <div class="">Event Information</div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="accordian-content">
+              @if (type1==='new') {
+              <row>
+                <div class="col-md-3 border-right">
+                  <view-label label="Event Type" value="{{eventMapping.eventName}}" class="pb26"></view-label>
+                  <view-label label="Sub Event Type" value="{{eventMapping.subEventName}}" class="pb26"></view-label>
+                  <view-label label="Voucher Type" value="{{eventMapping.voucherTypeDescription}}"
+                    class="pb26"></view-label>
+                </div>
+                <div class="col-md-3 border-right">
+                  <view-label label="File Type" value="{{eventMapping.fileTypeDescription}}" class="pb26"></view-label>
+                  <view-label label="Account Type" value="{{eventMapping.accountTypeDescription}}"
+                    class="pb26"></view-label>
+                  <view-label label="posting Matrix" value="{{eventMapping.postingMatrix}}" class="pb26"></view-label>
+                  <view-label label="Transaction Code" value="{{eventMapping.transactionCodeDescription}}"
+                    class="pb26"></view-label>
+                </div>
+                <div class="col-md-3 border-right">
+                  <view-label label="Bank Fee" value="{{ bankFee }}" class="pb26"></view-label>
+                  @if(eventMapping.isBankFee === 'Y'){
+                  <view-label [label]="'Bank Fee Value ('+companySymbolValue +')'" value="{{eventMapping.bankFeeValue}}"
+                    class="pb26"></view-label>
+                  }
+                </div>
+                <div class="col-md-3 border-right">
+                  <div class="col-md-12 mb26">
+                    <view-label label="Created By" value="{{ eventMapping.addedByFullName }}">
+                    </view-label>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <view-label label="Created Date" value="{{ eventMapping.addedDate | appDate }}">
+                    </view-label>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <view-label label="Changed By" value="{{ eventMapping.changedByFullName }}">
+                    </view-label>
+                  </div>
+                  <div class="col-md-12 mb26">
+                    <view-label label="Changed Date" value="{{ eventMapping.changedDate | appDate }}">
+                    </view-label>
+                  </div>
+                </div>
+              </row>
+              <div class="col-md-12 d-flex end">
+                <app-icon-button name="edit" toolTip="Edit" (click)="onEdit()"></app-icon-button>
+              </div>
+              } @if (type1==='edit') {
+              <form #p="ngForm">
+                <row class="row-w100">
+                  <div class="col-md-3 border-right">
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Event Type" placeholder="Select Event"
+                        defaultOption="--Select--" [(ngModel)]="eventMapping.eventId" name="eventId" [items]="DDLEvent"
+                        key="id" keyName="name" [required]="true" [errorTrue]="errorTrue"
+                        (onSelect)="getListOfSubEventByEventId(eventMapping.eventId,false)"
+                        valueType="int"></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Sub Event Type" placeholder="Select Sub Event"
+                        defaultOption="--Select--" [(ngModel)]="eventMapping.subEventId" name="subEventId"
+                        [required]="true" [errorTrue]="errorTrue" [items]="subEventDDL" key="id" keyName="name"
+                        valueType="int"></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" defaultOption="--Select--" label="Voucher Type"
+                        [(ngModel)]="eventMapping.voucherTypeValue" name="voucherTypeValue"
+                        [items]="initialData.DDLValues.DDLVoucherType" [required]="true" [errorTrue]="errorTrue"
+                        key="constant" keyName="description" (onSelect)="
+                        getListOfPostingMatrixByVoucherType(
+                          eventMapping.voucherTypeValue,
+                          true
+                        )
+                      "></app-input-control>
+                    </div>
+                  </div>
+                  <div class="col-md-3 border-right">
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="File Type" placeholder="Select File Type"
+                        defaultOption="--Select--" [(ngModel)]="eventMapping.fileTypeValue" name="fileTypeValue"
+                        [required]="true" [errorTrue]="errorTrue" [items]="initialData.DDLValues.DDLFileType"
+                        (onSelect)="getAccountType(eventMapping.fileTypeValue,true)" key="constant"
+                        keyName="description"></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Account Type" placeholder="Select Account Type"
+                        defaultOption="--Select--" [(ngModel)]="eventMapping.accountTypeValue" name="accountTypeValue"
+                        [items]="casAccountType" key="constant" [required]="true" [errorTrue]="errorTrue"
+                        keyName="description"></app-input-control>
+                    </div>
+
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Posting Matrix Type" defaultOption="--Select--"
+                        [(ngModel)]="eventMapping.postingMatrixConfigurationId" name="postingMatrixConfigurationId"
+                        [required]="true" [errorTrue]="errorTrue" valueType="int" [items]="postMatrixDDl" key="id"
+                        keyName="description"></app-input-control>
+                    </div>
+                    <div class="col-md-12">
+                      <app-input-control type="input" label="Transaction Code" [required]="true" [errorTrue]="errorTrue"
+                        [maxLength]="20" [(ngModel)]="eventMapping.transactionCodeDescription"
+                        name="transactionCodeDescription"></app-input-control>
+                    </div>
+                  </div>
+                  <div class="col-md-3 border-right">
+                    <div class="col-md-12 d-flex align-items-center p-2">
+                      <div class="cus-check-box checkbox-p">
+                        Bank Fee
+                        @if(showCheck){
+                        <app-checkbox color="primary" [checked]="eventMapping.isBankFee === 'Y'"
+                          (change)="isChecked($event,true)" class="pb26"></app-checkbox>
+                        }
+                      </div>
+                    </div>
+                    @if(eventMapping.isBankFee === 'Y'){
+                    <div class="col-md-12">
+                      <app-input-control type="number" [label]="'Bank Fee Value ('+companySymbolValue +')'"
+                        [required]="true" [decimal]="2" [errorTrue]="errorTrue" [(ngModel)]="eventMapping.bankFeeValue"
+                        [maxLength]="10" name="bankFeeValue"></app-input-control>
+                    </div>
+                    }
+                  </div>
+                  <div class="col-md-3 border-right">
+                    <div class="col-md-12 mb26">
+                      <view-label label="Created By" value="{{ eventMapping.addedByFullName }}">
+                      </view-label>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <view-label label="Created Date" value="{{ eventMapping.addedDate | appDate }}">
+                      </view-label>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <view-label label="Changed By" value="{{ eventMapping.changedByFullName }}">
+                      </view-label>
+                    </div>
+                    <div class="col-md-12 mb26">
+                      <view-label label="Changed Date" value="{{ eventMapping.changedDate | appDate }}">
+                      </view-label>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="d-flex align-items-center end gap-20">
+                      @if(type1==='edit'){
+                      <div class="">
+                        <app-icon-button name="save" toolTip="Save" (click)="saveEventMapping()"></app-icon-button>
+                      </div>
+                      <div class="">
+                        <app-icon-button name="refresh" toolTip="Refresh" (click)="
+                            openEventMapping(this.eventMapping.eventMappingId)
+                          "></app-icon-button>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                  <!-- </div> -->
+                </row>
+              </form>
+              }
+
+            </div>
+          </accordion-body>
+        </accordion-item>
+        <div class="mb20"></div>
+      </accordion>
+    </app-tab>
+
+
+    <app-tab tabTitle="Account Mapping">
+      <accordion>
+        <accordion-item [isOpen]="false">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/initial-doc.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Auto Posting</div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="d-flex end align-items-center pb15 gap-20">
+              <app-icon-button name="refresh" toolTip="Refresh" (click)="
+                openEventMapping(this.eventMapping.eventMappingId)
+              "></app-icon-button>
+              <app-icon-button name="save" toolTip="Save" (click)="saveEventMappingList()"></app-icon-button>
+            </div>
+            <div class="bg-white-padd">
+              @if(loading1){
+              <app-tab-sub-group (tabChange)="onChange($event)">
+                <app-sub-tab tabTitle="Trust and Estate">
+                  <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                      <form #a="ngForm" autocomplete="off">
+                        <table class="app-table account-table">
+                          <thead class="app-table-head">
+                            <tr>
+                              <th class="app-table-header-cell">
+                                <div class="header-cell-title">
+                                  Group Name
+                                </div>
+                              </th>
+                              <th class="app-table-header-cell">
+                                <div class="header-cell-title">Ledger Code</div>
+                                <div class="header-cell-subtitle">Name </div>
+                              </th>
+                              <th class="app-table-header-cell">
+                                <div class="header-cell-title">
+                                  Posting Nature
+                                </div>
+                              </th>
+                              <th class="app-table-header-cell">
+                                <div class="header-cell-title">
+                                  Customer GL
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody class="app-table-body">
+                            @for (itemTrust of lstTrustEstate; track $index) {
+                            <tr class="app-table-row">
+                              <td class="app-table-cell only-input">
+                                <app-search-group [(ngModel)]="lstTrustEstate[$index].groupId" key="id"
+                                  [groupItems]="grouplist" name="lstTrustEstate{{$index}}"
+                                  [displayText]="lstTrustEstate[$index].groupName"
+                                  (getGroupId)="getLedgerBasedOnGroupId($event, 'lstTrustEstate', $index)"
+                                  (onSelect)="getLedgerBasedOnGroupId($event, 'lstTrustEstate', $index)"
+                                  dataValue="REGIO" (onClear)="(group)" [required]="itemTrust.isCustomerGl ==='N'"
+                                  [errorTrue]="errorTrue" [btnClicked]="legderDisabled"
+                                  valueType="int"></app-search-group>
+                              </td>
+                              <td class="app-table-cell only-input pt-2">
+                                <app-search-debit [(ngModel)]="lstTrustEstate[$index].ledgerId"
+                                  name="ledgerId{{ $index }}" regionValue="REGIO"
+                                  [displayText]="lstTrustEstate[$index].ledgerCode"
+                                  [SelectedGroupId]="lstTrustEstate[$index].groupId"
+                                  (onSelect)="onLedgerSelect($event, itemTrust)" valueType="int"
+                                  [required]="itemTrust.isCustomerGl ==='N'" [errorTrue]="errorTrue">
+                                </app-search-debit>
+                                <label class="default-label">
+                                  @if(lstTrustEstate[$index].ledgerId !== 0){
+                                  {{
+                                  itemTrust.ledgerName
+                                  ? itemTrust.ledgerName
+                                  : "-"
+                                  }}
+                                  } @else{
+                                  -
+                                  }
+                                </label>
+                                <!-- } -->
+                              </td>
+                              <td class="app-table-cell">
+                                {{itemTrust.postingNatureDescription}}
+                              </td>
+                              <td class="app-table-cell">
+                                @if(isReloadCheckox){
+                                <mat-checkbox color="primary" [checked]="lstTrustEstate[$index].isCustomerGl ==='Y'"
+                                  (change)="isCheckedLedger($event,$index,lstTrustEstate[$index])"></mat-checkbox>
+                                }
+                              </td>
+                            </tr>
+                            }
+                          </tbody>
+                        </table>
+
+                      </form>
+                    </div>
+                  </div>
+                </app-sub-tab>
+
+                @if(eventMapping.isBankFee === 'Y'){
+                <app-sub-tab tabTitle="Bank">
+                  <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                      <form #c="ngForm" autocomplete="off">
+                        <div class="sub-table w100">
+                          <table class="app-table account-table">
+                            <thead class="app-table-head">
+                              <tr>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">
+                                    Group Name
+                                  </div>
+                                </th>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">Ledger Code</div>
+                                  <div class="header-cell-subtitle">Name</div>
+                                </th>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">
+                                    Posting Nature
+                                  </div>
+                                </th>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">
+                                    Customer GL
+                                  </div>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody class="app-table-body">
+                              @for (itemTrustBnk of lstTrustBank; track $index) {
+                              <tr class="app-table-row">
+                                <td class="app-table-cell only-input">
+                                  <app-search-group [(ngModel)]="lstTrustBank[$index].groupId" key="id"
+                                    [groupItems]="grouplist" name="lstTrustBank{{$index}}"
+                                    [displayText]="lstTrustBank[$index].groupName"
+                                    (getGroupId)="getLedgerBasedOnGroupId($event, 'lstTrustBank', $index)"
+                                    (onSelect)="getLedgerBasedOnGroupId($event, 'lstTrustBank', $index)"
+                                    dataValue="REGIO" data1Value="BANK" (onClear)="(group)"
+                                    [required]="itemTrustBnk.isCustomerGl ==='N'" [errorTrue]="errorTrue"
+                                    [btnClicked]="legderDisabled" valueType="int"></app-search-group>
+                                </td>
+                                <td class="app-table-cell only-input pt-2">
+                                  <app-search-debit [(ngModel)]="lstTrustBank[$index].ledgerId"
+                                    name="ledgerId{{ $index }}" regionValue="REGIO" getTypeValue="BANK" modeType="BANK"
+                                    [displayText]="lstTrustBank[$index].ledgerCode"
+                                    [SelectedGroupId]="lstTrustBank[$index].groupId"
+                                    (onSelect)="onLedgerSelect($event, itemTrustBnk)" valueType="int"
+                                    [required]="itemTrustBnk.isCustomerGl ==='N'" [errorTrue]="errorTrue">
+                                  </app-search-debit>
+                                  <label class="default-label">
+                                    @if(lstTrustBank[$index].ledgerId !==0){
+                                    {{
+                                    itemTrustBnk.ledgerName
+                                    ? itemTrustBnk.ledgerName
+                                    : "-"
+                                    }}
+                                    } @else{
+                                    -
+                                    }
+                                  </label>
+                                  <!-- <event-mapping-ledger key="id" [(ngModel)]="lstTrustBank[$index].ledgerId" name="ledgerId{{$index}}"
+                                    (onClear)="clearLedger()"
+                                   [btnClicked]="legderDisabled" valueType="int"
+                                   [required]="itemTrustBnk.isCustomerGl ==='N'" [errorTrue]="errorTrue" [groupId]="lstTrustBank[$index].groupId"></event-mapping-ledger> -->
+                                </td>
+                                <td class="app-table-cell">
+                                  {{itemTrustBnk.postingNatureDescription}}
+                                </td>
+                                <td class="app-table-cell">
+                                  @if(isReloadCheckox){
+                                  <mat-checkbox color="primary" [checked]="lstTrustBank[$index].isCustomerGl ==='Y'"
+                                    (change)="isCheckedLedger($event,$index,lstTrustBank[$index])"></mat-checkbox>
+                                  }
+                                </td>
+                              </tr>
+                              }
+                            </tbody>
+                          </table>
+                          @if(lstTrustBank.length ===0){
+                          <app-empty-state></app-empty-state>
+                          }
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </app-sub-tab>
+                }
+              </app-tab-sub-group>
+
+              <app-tab-sub-group (tabChange)="onChange($event)">
+                <app-sub-tab tabTitle="Corporate">
+                  <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                      <form #d="ngForm" autocomplete="off">
+                        <div class="sub-table w100">
+                          <table class="app-table account-table">
+                            <thead class="app-table-head">
+                              <tr>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">
+                                    Group Name
+                                  </div>
+                                </th>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">Ledger Code</div>
+                                  <div class="header-cell-subtitle">Name </div>
+                                </th>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">
+                                    Posting Nature
+                                  </div>
+                                </th>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">
+                                    Vat Option
+                                  </div>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody class="app-table-body">
+                              @for (itemCorporate of lstCorporate; track $index) {
+                              <tr class="app-table-row">
+                                <td class="app-table-cell only-input">
+                                  <app-search-group [(ngModel)]="lstCorporate[$index].groupId" key="id"
+                                    [groupItems]="grouplist" name="lstCorporate{{$index}}"
+                                    [displayText]="lstCorporate[$index].groupName"
+                                    (getGroupId)="getLedgerBasedOnGroupId($event, 'lstCorporate', $index)"
+                                    (onSelect)="getLedgerBasedOnGroupId($event, 'lstCorporate', $index)"
+                                    dataValue="REGI1" [data1Value]="itemCorporate.isVatOption === 'Y' ? 'TAX' : ''"
+                                    (onClear)="(group)" [required]="itemCorporate.isCustomerGl ==='N'"
+                                    [errorTrue]="errorTrue" [btnClicked]="legderDisabled"
+                                    valueType="int"></app-search-group>
+                                </td>
+                                <td class="app-table-cell only-input pt-2">
+                                  <app-search-debit [(ngModel)]="lstCorporate[$index].ledgerId"
+                                    name="ledgerId{{ $index }}" regionValue="REGI1"
+                                    [SelectedGroupId]="lstCorporate[$index].groupId"
+                                    [displayText]="lstCorporate[$index].ledgerCode"
+                                    (onSelect)="onLedgerSelect($event, itemCorporate)" valueType="int"
+                                    [modeType]="itemCorporate.isVatOption === 'Y' ? 'TAX' : ''"
+                                    [getTypeValue]="itemCorporate.isVatOption === 'Y' ? 'TAX' : ''"
+                                    [required]="itemCorporate.isCustomerGl ==='N'" [errorTrue]="errorTrue">
+                                  </app-search-debit>
+                                  <label class="default-label">
+                                    @if(lstCorporate[$index].ledgerId !==0){
+                                    {{
+                                    itemCorporate.ledgerName
+                                    ? itemCorporate.ledgerName
+                                    : "-"
+                                    }}
+                                    } @else {
+                                    -
+                                    }
+                                  </label>
+                                  <!-- <event-mapping-ledger key="id" [(ngModel)]="lstCorporate[$index].ledgerId" name="ledgerId{{$index}}"
+                                (onClear)="clearLedger()" [btnClicked]="legderDisabled" valueType="int"
+                               [required]="true" [errorTrue]="errorTrue" [groupId]="lstCorporate[$index].groupId"></event-mapping-ledger> -->
+                                </td>
+                                <td class="app-table-cell only-input">
+                                  {{itemCorporate.postingNatureDescription}}
+                                </td>
+                                <td class="app-table-cell only-input">
+                                  @if(itemCorporate.isVatOption === 'Y'){
+                                  Yes
+                                  } @else {
+                                  No
+                                  }
+                                </td>
+                              </tr>
+                              }
+                            </tbody>
+                          </table>
+                          @if(lstCorporate.length === 0){
+                          <app-empty-state></app-empty-state>
+                          }
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </app-sub-tab>
+
+                @if(eventMapping.isBankFee === 'Y'){
+                <app-sub-tab tabTitle="Bank">
+                  <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                      <form #f="ngForm" autocomplete="off">
+                        <div class="sub-table w100">
+                          <table class="app-table account-table">
+                            <thead class="app-table-head">
+                              <tr>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">
+                                    Group Name
+                                  </div>
+                                </th>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">Ledger Code</div>
+                                  <div class="header-cell-subtitle">Name </div>
+                                </th>
+                                <th class="app-table-header-cell">
+                                  <div class="header-cell-title">
+                                    Posting Nature
+                                  </div>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody class="app-table-body">
+                              @for (itemCorporateBank of lstCorporateBank; track $index) {
+                              <tr class="app-table-row">
+                                <td class="app-table-cell only-input">
+                                  <app-search-group [(ngModel)]="lstCorporateBank[$index].groupId" key="id"
+                                    [groupItems]="grouplist" name="lstCorporateBank{{$index}}"
+                                    [displayText]="lstCorporateBank[$index].groupName"
+                                    (getGroupId)="getLedgerBasedOnGroupId($event, 'lstCorporateBank', $index)"
+                                    (onSelect)="getLedgerBasedOnGroupId($event, 'lstCorporateBank', $index)"
+                                    dataValue="REGI1" data1Value="BANK" (onClear)="(group)"
+                                    [required]="itemCorporateBank.isCustomerGl ==='N'" [errorTrue]="errorTrue"
+                                    [btnClicked]="legderDisabled" valueType="int"></app-search-group>
+                                </td>
+                                <td class="app-table-cell only-input pt-2">
+                                  <app-search-debit [(ngModel)]="lstCorporateBank[$index].ledgerId"
+                                    name="ledgerId{{ $index }}" regionValue="REGI1" getTypeValue="BANK" modeType="BANK"
+                                    [SelectedGroupId]="lstCorporateBank[$index].groupId"
+                                    [displayText]="lstCorporateBank[$index].ledgerCode"
+                                    (onSelect)="onLedgerSelect($event, itemCorporateBank)" valueType="int"
+                                    [required]="itemCorporateBank.isCustomerGl ==='N'" [errorTrue]="errorTrue">
+                                  </app-search-debit>
+                                  <label class="default-label">
+                                    @if(lstCorporateBank[$index].ledgerId !==0){
+                                    {{
+                                    itemCorporateBank.ledgerName
+                                    ? itemCorporateBank.ledgerName
+                                    : "-"
+                                    }}
+                                    } @else{
+                                    -
+                                    }
+                                  </label>
+                                  <!-- <event-mapping-ledger key="id" [(ngModel)]="lstCorporateBank[$index].ledgerId" name="ledgerId{{$index}}"
+                                  (onClear)="clearLedger()"
+                                 [btnClicked]="legderDisabled"valueType="int"
+                                 [required]="itemCorporateBank.isCustomerGl ==='N'" [errorTrue]="errorTrue"[groupId]="lstCorporateBank[$index].groupId"></event-mapping-ledger> -->
+                                </td>
+                                <td class="app-table-cell only-input">
+                                  {{itemCorporateBank.postingNatureDescription}}
+                                </td>
+                              </tr>
+                              }
+                            </tbody>
+                          </table>
+                          @if(lstCorporateBank.length === 0){
+                          <app-empty-state></app-empty-state>
+                          }
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </app-sub-tab>
+                }
+
+              </app-tab-sub-group>
+              }
+            </div>
+
+
+          </accordion-body>
+        </accordion-item>
+
+        @if(eventMapping.voucherTypeValue !=='JURNL'){
+        <accordion-item [isOpen]="false">
+          <accordion-header>
+            <div class="accordion-header-content">
+              <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/initial-doc.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Primary Posting</div>
+                </div>
+              </div>
+            </div>
+          </accordion-header>
+          <accordion-body>
+            <div class="d-flex end align-items-center pb15 gap-20">
+              <app-icon-button name="refresh" toolTip="Refresh" (click)="
+                  openEventMapping(this.eventMapping.eventMappingId)
+                "></app-icon-button>
+              <app-icon-button name="save" toolTip="Save" (click)="saveEventMappingListPrimary()"></app-icon-button>
+            </div>
+            <div class="bg-white-padd">
+              <app-tab-sub-group (tabChange)="onChange($event)">
+                <app-sub-tab tabTitle="Trust and Estate ">
+                  <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                      <form #b="ngForm" autocomplete="off">
+                        <!-- <div class="sub-table"> -->
+                        <table class="app-table account-table">
+                          <thead class="app-table-head">
+                            <tr>
+                              <th class="app-table-header-cell">
+                                <div class="header-cell-title">
+                                  Group Name
+                                </div>
+                              </th>
+                              <th class="app-table-header-cell">
+                                <div class="header-cell-title">Ledger Code</div>
+                                <div class="header-cell-subtitle">Name</div>
+                              </th>
+                              <th class="app-table-header-cell">
+                                <div class="header-cell-title">
+                                  Posting Nature
+                                </div>
+                              </th>
+                              <th class="app-table-header-cell">
+                                <div class="header-cell-title">
+                                  Customer GL
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody class="app-table-body">
+                            @for (itemPosting of lstPosting; track $index) {
+                            <tr class="app-table-row">
+                              <td class="app-table-cell only-input">
+                                <!-- <app-search-group [(ngModel)]="lstPosting[$index].groupId" key="id" [groupItems]="grouplist" name="lstPosting{{$index}}"
+                                [displayText]="itemPosting.groupName" (getGroupId)="getLedgerBasedOnGroupId($event, 'lstPosting', $index)"
+                                (onSelect)="getLedgerBasedOnGroupId($event, 'lstPosting',$index)" dataValue="REGIO"
+                                (onClear)="(group); ledgers = []; ledger.description = ''" valueType="int"
+                                [required]="true" [errorTrue]="errorTrue1"[btnClicked]="legderDisabled"></app-search-group> -->
+
+                                <app-search-group [(ngModel)]="lstPosting[$index].groupId" key="id"
+                                  [groupItems]="grouplist" name="lstPosting{{$index}}"
+                                  [displayText]="lstPosting[$index].groupName"
+                                  (getGroupId)="getLedgerBasedOnGroupId($event, 'lstPosting', $index)"
+                                  (onSelect)="getLedgerBasedOnGroupId($event, 'lstPosting', $index)" dataValue="REGIO"
+                                  data1Value="" (onClear)="(group)" [required]="itemPosting.isCustomerGl ==='N'"
+                                  [errorTrue]="errorTrue1" [btnClicked]="legderDisabled"
+                                  valueType="int"></app-search-group>
+                              </td>
+                              <td class="app-table-cell only-input pt-2">
+                                <app-search-debit [(ngModel)]="lstPosting[$index].ledgerId" name="ledgerId{{ $index }}"
+                                  regionValue="REGIO" [displayText]="lstPosting[$index].ledgerCode"
+                                  [SelectedGroupId]="lstPosting[$index].groupId"
+                                  (onSelect)="onLedgerSelect($event, itemPosting)" valueType="int"
+                                  [required]="itemPosting.isCustomerGl ==='N'" [errorTrue]="errorTrue1">
+                                </app-search-debit>
+                                <label class="default-label">
+                                  @if(lstPosting[$index].ledgerId !==0){
+                                  {{
+                                  itemPosting.ledgerName
+                                  ? itemPosting.ledgerName
+                                  : "-"
+                                  }}
+                                  } @else{
+                                  -
+                                  }
+                                </label>
+                                <!-- <event-mapping-ledger key="id" [(ngModel)]="itemPostingitemPostingitemPosting[$index].ledgerId" name="ledgerId{{$index}}"
+                                 (onClear)="clearLedger()" [btnClicked]="legderDisabled" valueType="int"
+                                [required]="true" [errorTrue]="errorTrue1" [groupId]="lstPosting[$index].groupId"></event-mapping-ledger> -->
+                              </td>
+                              <td class="app-table-cell only-input">
+                                {{itemPosting.postingNatureDescription}}
+                              </td>
+                              <td class="app-table-cell only-input">
+                                @if(isReloadCheckox){
+                                <mat-checkbox color="primary" [checked]="lstPosting[$index].isCustomerGl ==='Y'"
+                                  (change)="isCheckedLedger($event,$index,lstPosting[$index])"></mat-checkbox>
+                                }
+                              </td>
+                            </tr>
+                            }
+                          </tbody>
+                        </table>
+                        <!-- </div> -->
+                      </form>
+                    </div>
+                  </div>
+                </app-sub-tab>
+              </app-tab-sub-group>
+            </div>
+          </accordion-body>
+        </accordion-item>
+        }
+      </accordion>
+    </app-tab>
+  </app-tab-group>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name link">
+
+        <div class="screen-text" (click)="navigateToList()">Event Mapping On Vouchers</div>
+      </li>
+      <li class="screen-name">
+
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

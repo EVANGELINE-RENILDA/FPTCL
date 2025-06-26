@@ -1,0 +1,596 @@
+<accordion-item [isOpen]="true">
+  <accordion-header>
+    <div class="accordion-header-content">
+      <div class="accordion-title">
+        <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+        <div class="accordion-title-content">
+          <div>Obtain Signature from the Testator / Testatrix</div>
+        </div>
+      </div>
+    </div>
+  </accordion-header>
+  <accordion-body>
+    <div class="bg-white-padd">
+      <div class="outer-content-wrapper">
+        <div class="content-wrapper">
+          <row>
+            <div class="col-md-9">
+              <row>
+                <div class="col-md-4">
+                  <view-label
+                    label="Assigned Officer"
+                    value="{{
+                      application.ientWillApplicationAssignedOfficerHistory
+                        .assignedToFullname
+                    }}"
+                  ></view-label>
+                </div>
+                <div class="col-md-4">
+                  <view-label
+                    label="Assigned Date"
+                    value="{{
+                      application.ientWillApplicationAssignedOfficerHistory
+                        .assignedDate | appDate
+                    }}"
+                  ></view-label>
+                </div>
+                <div class="col-md-4">
+                  <!-- <view-label label="TAT"
+                                                value=" {{application.ientWillApplicationAssignedOfficerHistory.tatDays}} Days"></view-label> -->
+                </div>
+              </row>
+            </div>
+            <div class="col-md-3">
+              <div class="d-flex">
+                @if(this.type.isEditable === 'Y'){
+                @if(this.application.reAssignFlag === 'True'){
+                <form #p="ngForm" class="col-md-10 w250">
+                  <app-input-control
+                    type="select"
+                    key="constant"
+                    keyName="description"
+                    placeholder="Officer"
+                    [items]="assignedOfficerDDL"
+                    defaultOption="--Select--"
+                    [(ngModel)]="willApplicationAssignedOfficer.assignedTo"
+                    name="assignedTo"
+                  ></app-input-control>
+                </form>
+                <div class="col-md-2">
+                  <app-icon-button
+                    name="reassign"
+                    (click)="reAssignWill()"
+                    toolTip="Reassign"
+                  ></app-icon-button>
+                </div>
+                } @if(this.application.selfAssignFlag ===' True'){
+                <div class="col-md-2">
+                  <app-icon-button
+                    name="add"
+                    (click)="selfAssignWill()"
+                    toolTip="Self Assign"
+                  ></app-icon-button>
+                </div>
+                } }
+              </div>
+            </div>
+          </row>
+          <div class="mb20"></div>
+          <div class="outer-content-wrapper">
+            <div class="content-wrapper">
+              <app-table
+                [columns]="witnessColumns"
+                [columnsName]="witnessColumnsName"
+                [tableHeader]="'Witness'"
+                [dataSource]="application.lstentWillApplicationWitness"
+                [hideSelectAll]="true"
+                [showPaginator]="false"
+                columnID="trustApplicationDocumentId"
+              >
+                <ng-template cellDef="name" let-element>{{
+                  element.witnessName
+                }}</ng-template>
+                <ng-template cellDef="dob" let-element>{{
+                  element.witnessDob | appDate
+                }}</ng-template>
+                <ng-template cellDef="occupation" let-element>{{
+                  element.occupation
+                }}</ng-template>
+                <ng-template cellDef="action" let-element>
+                  @if(this.type.isEditable === 'Y' &&
+                  application.assignedOfficerFlag === 'True' &&
+                  application.statusValue!=='WCNLD'){
+                  <app-icon-button
+                    name="open"
+                    toolTip="Open"
+                    (click)="
+                      openWitness(
+                        element
+                          .willApplicationWitnessId
+                      )
+                    "
+                  ></app-icon-button>
+                  }
+                </ng-template>
+                <ng-template #slotRight>
+                  @if(this.type.isEditable === 'Y' &&
+                  application.assignedOfficerFlag === 'True' &&
+                  application.statusValue!=='WCNLD'){
+                  <app-icon-button
+                    name="add"
+                    toolTip="Add New"
+                    (click)="createWitness()"
+                  ></app-icon-button>
+                  }
+                </ng-template>
+              </app-table>
+            </div>
+          </div>
+          <div class="mb20"></div>
+
+          <!-- @if( application.actionStatusValue==='PENAP'){
+                            <form #legalApproveForm="ngForm" class="d-flex align-items-center">
+                                <div class="col-md-3 pl15">
+
+                                    <app-input-control [items]="initialData.DDLValues.DDLLegalServiceOfficer"
+                                        key="constant" type="select" keyName="description" defaultOption="--Select--"
+                                        [errorTrue]="errorTrue" [required]="true"
+                                        [(ngModel)]="application.legalServiceOfficerId" name="legalServiceOfficerId"
+                                        label="Assigned Legal Officer"></app-input-control>
+                                </div>
+                             <div class="col-md-1 ">
+                                    <app-icon-button name="accept" toolTip="Accept"
+                                        (click)="courtOrderLegalApprove()"></app-icon-button>
+                                </div
+                            </form>
+                            } -->
+          <!-- @if(application.actionStatusValue === 'APROV'){ -->
+
+          <row>
+            <div class="col-md-6 mb20">
+              <div class="box" style="padding: 8px 16px">
+                <div class="mb20"></div>
+                <app-drop-zone
+                  type="1"
+                  [fileType]="fileExtension"
+                  [accept]="accept"
+                  [btnClicked]="this.type.isEditable === 'N'"
+                  [multiple]="false"
+                  (onUpload)="uploadCourtDocumentAttachment($event)"
+                ></app-drop-zone>
+              </div>
+              <div class="single-document">
+                <div class="title">Uploaded Document</div>
+
+                @for (item of application.lstentWillApplicationDocument |
+                willApplicationPipe: 'SIGTS': this.type.identityNo ;track
+                $index) {
+
+                <row>
+                  <div class="col-md-6 pl8 mb20">
+                    <view-label
+                      label="File Name"
+                      value="{{ item?.ientFile?.fileName }}"
+                    ></view-label>
+                  </div>
+                  <div class="col-md-6 pl8 mb20">
+                    <view-label
+                      label="File Size"
+                      value="{{ item?.ientFile?.fileSize | fileSize }} MB"
+                    ></view-label>
+                  </div>
+                  <div class="col-md-6 pl8 mb20">
+                    <view-label
+                      label="Format"
+                      value="{{ item?.ientFile?.fileExtension }}"
+                    ></view-label>
+                  </div>
+                  @if(item?.ientFile?.fileName !==''){
+                  <div class="col-md-4 d-flex">
+                    <app-icon-button
+                      name="doc-view"
+                      toolTip="View"
+                      (click)="viewFile(item)"
+                    >
+                      <!--   -->
+                    </app-icon-button>
+                    <app-icon-button
+                      name="doc-download"
+                      toolTip="Download"
+                      (click)="downloadFile(item)"
+                    >
+                      <!--  (click)="downloadFile(this.application.lstentTrustSettlementApplicationDocument[0])" -->
+                    </app-icon-button>
+                    @if(this.type.isEditable === 'Y'){
+                    <app-icon-button
+                      name="doc-delete"
+                      toolTip="Delete"
+                      (click)="checkDocumentDelete(item)"
+                    >
+                      <!-- (click)="checkDocumentDelete(this.application.lstentTrustSettlementApplicationDocument[0])" -->
+                    </app-icon-button>
+                    }
+                  </div>
+                  }
+                </row>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <form #notiForm="ngForm">
+                <row>
+                  <div class="col-md-12">
+                    <app-input-control
+                      type="textarea"
+                      className="notes-1"
+                      [errorTrue]="errorTrue"
+                      [maxLength]="250"
+                      [required]="true"
+                      label="Notes"
+                      [(ngModel)]="notesMessage"
+                      name="notesMessage"
+                    ></app-input-control>
+                  </div>
+                  <div class="col-md-12 mb26 gap-10 end">
+                    @if(this.type.isEditable === 'Y' &&
+                    application.assignedOfficerFlag === 'True' &&
+                    application.statusValue!=='WCNLD'){
+                    <app-icon-button
+                      name="save"
+                      toolTip="Save"
+                      (click)="saveNotes()"
+                    ></app-icon-button>
+                    }
+                    <!-- @if(trustSettlementNotes.isUpdateButtonShow ==='Y'){
+                                            <app-icon-button name="save" toolTip="Update" (click)="saveTrustApplication()"></app-icon-button>
+                                            <app-icon-button name="refresh" toolTip="Refresh" (click)=" refeshData()"></app-icon-button>
+                                            }
+                                            @else {
+
+                                            <app-icon-button name="clear" toolTip="Clear" (click)="clearCourtOrderNotes()"></app-icon-button>
+                                            } -->
+                  </div>
+                  <div class=""></div>
+                </row>
+              </form>
+            </div>
+
+            <!-- <div class="col-md-7">
+                                    <form #notiForm="ngForm">
+                                        <app-input-control type="textarea" className="notes-1" [errorTrue]="errorTrue"
+                                            [(ngModel)]="notesMessage" name="notesMessage" [maxLength]="250"
+                                            [required]="true" label="Notes"></app-input-control>
+                                    </form>
+                                    <div class="end gap-10 mb26">
+                                        @if(this.type.isEditable === 'Y'){
+                                        <app-icon-button name="save" toolTip="Save"
+                                            (click)="saveTrustApplicationNotes()"></app-icon-button>
+                                        }
+
+                                    </div>
+                                     <app-table [pagination]="pagination" [columns]="clientDocumentColumns"
+                                        [columnsName]="clientDocumentColumnsName" [hideSelectAll]="true"
+                                        [dataSource]="application.lstentTrustSettlementApplicationDocument" [showPaginator]="false"
+                                        columnID="trustApplicationDocumentId">
+                                        <ng-template cellDef="fileName" let-element>
+                                            {{element.ientFile.fileName}}
+                                        </ng-template>
+                                        <ng-template cellDef="fileExtension" let-element>
+                                            {{element.ientFile.fileExtension}}
+                                        </ng-template>
+                                        <ng-template cellDef="fileSize" let-element>
+                                            {{element.ientFile.fileSize | fileSize}}mb
+                                        </ng-template>
+                                        <ng-template cellDef="action" let-element>
+                                            @if(element.ientFile.fileName!==''){
+
+                                            <div class="d-flex align-items-center">
+                                                <app-icon-button name="doc-download"
+                                                    (click)="downloadFile(element)"></app-icon-button>
+                                                <app-icon-button name="doc-delete"
+                                                    (click)="checkDocumentDelete(element)"></app-icon-button>
+                                            </div>
+                                            }
+                                        </ng-template>
+                                    </app-table>
+
+                                </div>
+                                <div class="pb10"></div>
+
+                               <div class="horizontal-tab hori-active w100px">Notes</div>
+                                <div class="border p10">
+
+                                    <div class="justify-content-end d-flex">
+                                        <app-icon-button name="add" toolTip="Create"
+                                            (click)="createNotesDialog()"></app-icon-button>
+                                    </div>
+                                    <div class="p16px"></div>
+                                    <div class="notes-list">
+                                        @for (item of notesList; track $index) {
+                                        <div class="border-bottom notes-list">
+                                            <div class="mx10 notes-desc">{{item.notes}}</div>
+                                            <div class="d-flex justify-content-end notes-context">
+                                                <div style="padding-right:5px ;">
+                                                    {{item.enteredByFullname}}</div>
+                                                <div class=" notes-border-left">
+                                                    {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm
+                                                    a'}}
+                                                </div>
+                                                <div style="padding-right:5px ;"></div>
+                                                <div class=" notes-border-left status-{{item.statusValue}}">
+                                                    {{item.statusDescription}}
+                                                </div>
+                                                <div class="card-1-header-label px-2 ">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+                                </div> -->
+          </row>
+          <!-- } -->
+        </div>
+      </div>
+
+      <div class="col-md-12 end gap-10">
+        @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag ===
+        'True' && application.statusValue!=='WCNLD'){
+        <button type="submit" class="complete-btn" (click)="cancelProcess()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="approve-btn"
+          (click)="completeApplicationStage()"
+        >
+          Signature Obtained
+        </button>
+        }
+      </div>
+    </div>
+  </accordion-body>
+</accordion-item>
+
+<ng-template #Template>
+  <div class="ab bgc">
+    <div class="rel">
+      <div class="p-fix d-flex">
+        <div class="download-button">
+          <button color="primary" (click)="downloadImageFile()">
+            Download
+          </button>
+        </div>
+        <div class="close-button">
+          <button color="danger" (click)="dialog.closeDialog()">Close</button>
+        </div>
+      </div>
+      <div class="d-flex align-items-center h100 justify-content-center w100">
+        <div
+          class="d-flex align-items-center h100 justify-content-center w100 relative"
+        >
+          <div class="ab">
+            <div class="rel">
+              <div class="dis-none wcheck active">
+                <img [src]="filePath" alt="PreviewImages" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #notesCancelDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/trust.svg"></ion-icon>
+        Reason For Cancellation
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button
+            name="save"
+            toolTip="Save"
+            (click)="cancelApplicationStage()"
+          ></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            (click)="clearCancelNotes()"
+          ></app-icon-button>
+          <app-icon-button
+            name="close"
+            toolTip="Close"
+            (click)="dialogClose()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <form #x="ngForm">
+          <row>
+            <div class="col-md-12 mb26">
+              <app-input-control
+                type="textarea"
+                className="notes"
+                [errorTrue]="errorTrue"
+                [(ngModel)]="cancelNotesDescription"
+                name="cancelNotesDescription"
+                [maxLength]="250"
+                [required]="true"
+                label="Notes"
+              ></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cancelAlert>
+  <div class="dialog-container">
+    <div class="dialog-content">
+      <div class="dialog-content-inner">
+        <div class="notification-header">
+          <div class="notification-icon">
+            <ion-icon name="warning-outline"></ion-icon>
+          </div>
+          <div class="notification-title">Alert</div>
+        </div>
+        <div class="text-center p10">
+          Are you sure you want to cancel this process
+        </div>
+        <div class="center">
+          <div class="notification-button">
+            <button class="btn-notification" (click)="cancelNotesDialog()">
+              Yes
+            </button>
+            <button
+              class="btn-notification cancel-btn"
+              (click)="dialog.closeAll()"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #witnessBox>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/will.svg"></ion-icon>
+        Will Application > @if(witnessData.willApplicationWitnessId === 0){
+        Create New } @else { Edit } > Witness
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          @if(witnessData.willApplicationWitnessId === 0){
+
+          <app-icon-button
+            name="save"
+            toolTip="Save"
+            (click)="saveWitness()"
+          ></app-icon-button>
+          <app-icon-button
+            name="clear"
+            toolTip="Clear"
+            (click)="clearWitness()"
+          ></app-icon-button>
+          } @else {
+          <app-icon-button
+            name="save"
+            toolTip="Update"
+            (click)="saveWitness()"
+          ></app-icon-button>
+          <app-icon-button
+            name="refresh"
+            toolTip="Refresh"
+            (click)="refreshWitness()"
+          ></app-icon-button>
+          }
+          <app-icon-button
+            name="close"
+            toolTip="Close"
+            (click)="dialogClose()"
+          ></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+
+        <form #p="ngForm">
+          <row>
+            <div class="col-md-6">
+              <div class="box h100">
+                <div class="box-header">Applicant Information</div>
+                <div class="box-pad">
+                  <div class="col-md-12">
+                    <app-input-control
+                      label="Witness Name"
+                      type=""
+                      [errorTrue]="errorTrue"
+                      [required]="true"
+                      [maxLength]="100"
+                      [(ngModel)]="witnessData.witnessName"
+                      name="witnessName"
+                    ></app-input-control>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control
+                      label="Witness DOB"
+                      type="date"
+                      [errorTrue]="errorTrue"
+                      [required]="true"
+                      [maxDate]="currentDate"
+                      [(ngModel)]="witnessData.witnessDob"
+                      name="witnessDob"
+                    ></app-input-control>
+                  </div>
+                  <div class="d-flex align-items-center col-md-12">
+                    <div class="col-md-6 d-flex gap-10 align-items-center mb16">
+                      <app-checkbox
+                        [checked]="witnessData.isFptcl === 'Y'"
+                        (change)="isFptclCheck($event)"
+                      ></app-checkbox>
+                      <div class="checkbox-label">Is FPTCL</div>
+                    </div>
+                    <div class="col-md-6 d-flex gap-10 align-items-center mb16">
+                      <app-checkbox
+                        [checked]="witnessData.isBeneficiarySpouse === 'Y'"
+                        (change)="isBeneficiarySpouseCheck($event)"
+                      ></app-checkbox>
+                      <div class="checkbox-label">Is Beneficiary Spouse</div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <app-input-control
+                      label="Occupation"
+                      type=""
+                      [errorTrue]="errorTrue"
+                      [required]="true"
+                      [(ngModel)]="witnessData.occupation"
+                      name="occupation"
+                    ></app-input-control>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="box h100">
+                <div class="box-header">Address Information</div>
+                <div class="box-pad">
+                  <app-address-edit
+                    [ientAddress]="witnessData.ientAddress"
+                    [errorTrue]="errorTrue"
+                    [required]="true"
+                    type="residential"
+                  ></app-address-edit>
+                </div>
+              </div>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

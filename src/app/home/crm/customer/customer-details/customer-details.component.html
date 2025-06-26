@@ -1,0 +1,1660 @@
+<div class="content-wrapper" appAccess="CUSTR" [parentId]="pageId">
+    <app-multi-page-url [id]="id" url="/home/crm/customer/detail"></app-multi-page-url>
+
+    <accordion>
+        <!-- Customer Information -->
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title open-visible">
+                        <ion-icon src="assets/icons/customer_info.svg"></ion-icon>
+                        <div class="">Customer Information</div>
+                    </div>
+                    <div class="accordion-title open-hide">
+                        <row class="row-w100">
+                            <div class="col-md-2"> <view-label label="Name" [ellipse]="true" value="{{customerDetails.firstName}}
+                                {{customerDetails.middleName}} {{customerDetails.lastName}}"></view-label></div>
+                            <div class="col-md-2"><view-label label="Customer No"
+                                    value="{{customerDetails.customerRefNo}}"></view-label></div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <view-label src="assets/icons/mobile.svg" [flex]="true" [ellipse]="true"
+                                    value="{{customerDetails.contactNo}}"></view-label>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <view-label src="assets/icons/dob.svg" [flex]="true"
+                                    value="{{customerDetails.dateOfBirth | appDate}}"></view-label>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <view-label src="assets/icons/email.svg" [ellipse]="true" [flex]="true"
+                                    value="{{customerDetails.emailId}}"></view-label>
+                            </div>
+                            <div class="col-md-2">
+                                <view-label label="Status" class="status-{{customerDetails.customerStatusValue}}"
+                                    value="{{customerDetails.customerStatusDescription}}"></view-label>
+                            </div>
+                        </row>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="box-container">
+                    <row>
+                        <div class="col-md-9 border-right">
+                            @if(this.customerInfoEdit === false){
+                            <row>
+                                <div class="col-md-3 customer-profile-box">
+                                    <div class="v-flex align-items-center justify-content-center ">
+                                        <div class="customer-profile-img center">
+                                            <img
+                                                [src]="customerDetails.ientCustomerPhoto.fileContent?customerDetails.ientCustomerPhoto.fileContent:'assets/img/human-face.svg'">
+                                        </div>
+                                        <div class="status-content center">
+                                            <div class="customer-profile-title center">
+                                                <app-tooltip value="{{customerDetails.firstName}}
+                            {{customerDetails.middleName}} {{customerDetails.lastName}}"></app-tooltip>
+                                            </div>
+                                            <div
+                                                class="customer-profile-subtitle status-{{customerDetails.customerStatusValue}}">
+                                                {{customerDetails.customerStatusDescription}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <view-label class="mb26" label="Customer No"
+                                        value="{{customerDetails.customerRefNo}}"></view-label>
+                                    <view-label class="mb26" label="Date of Birth"
+                                        value="{{customerDetails.dateOfBirth | appDate}}"></view-label>
+                                    <view-label class="mb26" label="Gender"
+                                        value="{{customerDetails.genderDescription}}"></view-label>
+                                    <view-label class="mb26" label="Nationality"
+                                        value="{{customerDetails.nationalityDescription}}"></view-label>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <view-label class="mb26" label="Contact No"
+                                        value="{{customerDetails.contactNo}}"  ></view-label>
+                                    <view-label class="mb26" label="Alternate Contact No"
+                                        value="{{customerDetails.alternateContactNo}}"  ></view-label>
+                                    <view-label class="mb26" label="Email ID"
+                                        value="{{customerDetails.emailId}}"></view-label>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <view-label class="mb26" label="Father Name"
+                                        value="{{customerDetails.fatherName}}"></view-label>
+                                    <view-label class="mb26" label="Mother Name"
+                                        value="{{customerDetails.motherName}}"></view-label> <view-label class="mb26"
+                                        label="Guardian Name" value="{{customerDetails.gaurdianName}}"></view-label>
+                                    <div class="end">
+                                        @if(infoEditBtn===true){
+                                        <app-icon-button name="edit" toolTip="Edit" (click)="editCustomer()"
+                                            appButtonAccess="CrmCustAppEditBtn"></app-icon-button>
+                                        }
+                                    </div>
+                                </div>
+                            </row>
+                            }
+                            @if(this.customerInfoEdit === true){
+                            <form #i="ngForm">
+                                <row>
+                                    <div class="col-md-3">
+                                        <div class="customer-profile relative">
+                                            <div class="p-3 image-upload">
+                                                <div class="single-image">
+                                                    <img
+                                                        [src]="customerDetails.ientCustomerPhoto.fileContent?customerDetails.ientCustomerPhoto.fileContent:'assets/img/human-face.svg'">
+                                                </div>
+                                                <div class="selectButton" (click)="triggerClick()">
+                                                    <input type="file" class="uploadInput" #fileInput
+                                                        (change)="loadImageFromDevice($event)" id="file-input"
+                                                        accept="image/jpg, image/jpeg , image/png">
+
+                                                    <ion-icon src="assets/icons/upload.svg"></ion-icon>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <row>
+                                            <div class="col-md-4 mb20">
+                                                <view-label class="" label="Customer No"
+                                                    value="{{customerDetails.customerRefNo}}"></view-label>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="number" label="Contact Number"  
+                                                    [(ngModel)]="customerDetails.contactNo" name="contactNo"
+                                                    [minLength]="5" [maxLength]="10" [errorTrue]="errorTrue"
+                                                    [required]="true"  ></app-input-control>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="text" label="Father Name" [maxLength]="250"
+                                                    [(ngModel)]="customerDetails.fatherName"
+
+                                                    name="fatherName"></app-input-control>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="date" label="Date of Birth "
+                                                    [maxDate]="currentDate" [(ngModel)]="customerDetails.dateOfBirth"
+                                                    name="dateOfBirth" [errorTrue]="errorTrue"
+                                                    [required]="true"></app-input-control>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="number" label=" Alternate Contact Number"
+                                                    [(ngModel)]="customerDetails.alternateContactNo"
+                                                    [errorTrue]="errorTrue" [minLength]="5" [maxLength]="15"
+                                                    name="alternateContactNo"></app-input-control>
+                                            </div>
+                                            <div class="col-md-4 mb20">
+                                                <app-input-control type="text" label="Mother Name" [maxLength]="250"
+                                                    [(ngModel)]="customerDetails.motherName"
+
+                                                    name="motherName"></app-input-control>
+                                            </div>
+                                        </row>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-3 mb20"> <app-input-control type="text" label="First Name"
+                                            [maxLength]="250" [(ngModel)]="customerDetails.firstName"
+                                            [errorTrue]="errorTrue" [required]="true"
+                                            name="firstName"></app-input-control>
+                                    </div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="select" label="Gender"
+                                            [(ngModel)]="customerDetails.genderValue" name="genderValue"
+                                            [items]="initialData.DDLValues.DDLGender" key="constant"
+                                            keyName="description" placeholder="Select Gender" [errorTrue]="errorTrue"
+                                            [required]="true"></app-input-control></div>
+                                    <div class="col-md-3 mb20"><app-input-control type="email" label="Email ID"
+                                            [maxLength]="250" [(ngModel)]="customerDetails.emailId" [email]="true"
+                                            [errorTrue]="errorTrue" name="emailId"></app-input-control>
+                                    </div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="text" label="Guardian Name"
+                                            [maxLength]="250" [(ngModel)]="customerDetails.gaurdianName"
+                                            name="guardianName"></app-input-control></div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="text" label="Middle Name"
+                                            [maxLength]="250" [(ngModel)]="customerDetails.middleName"
+                                            name="middleName"></app-input-control></div>
+                                    <div class="col-md-3 mb20"> <app-input-control type="select" label="Nationality"
+                                            [(ngModel)]="customerDetails.nationalityId" name="nationalityId"
+                                            [items]="initialData.DDLValues.DDLNationality" key="id"
+                                            keyName="description" placeholder="Select Nationality"></app-input-control>
+                                    </div>
+                                    <div class="col-md-3 mb20"></div>
+                                    <div class="col-md-3 mb20"></div>
+                                    <div class="col-md-3"><app-input-control type="text" label="Last Name"
+                                            [maxLength]="250" [(ngModel)]="customerDetails.lastName" name="lastName"
+                                            [errorTrue]="errorTrue" [required]="true"></app-input-control></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3 d-flex gap-10 end"> <app-icon-button name="save"
+                                            toolTip="Update" appButtonAccess="CrmCustAppSaveInfoBtn"
+                                            (click)="saveCustomerInfo()"></app-icon-button>
+                                        <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshCustomer()"
+                                            appButtonAccess="CrmCustAppRefreshInfoBtn"></app-icon-button>
+                                    </div>
+                                </row>
+                            </form>
+                            }
+                            <div class="border mb26"></div>
+                            <div class="view-label-container-title mb26"> Student / Employer Information</div>
+                            @if(employerInfoEdit === false){
+
+                            <row>
+                                <div class="col-md-3">
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="School Name"
+                                            value="{{customerDetails.schoolName}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="Student ID"
+                                            value="{{customerDetails.studentId}}"></view-label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="col-md-12"> <view-label class="mb26" label="Employer Name"
+                                            value="{{customerDetails.employerName}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Occupation"
+                                            value="{{customerDetails.occupation}}"></view-label></div>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Net Salary(FJD)"
+                                            value="{{customerDetails.netSalary}}"></view-label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class=" mb26">
+                                        <div class="d-flex align-items-center address-header">
+                                            <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                            <view-label value="Employer Address" class="pl10"></view-label>
+                                        </div>
+                                        <div class="address-content">
+                                            {{customerDetails.iEmployerAddress.line1}}&nbsp;
+                                            {{customerDetails.iEmployerAddress.line2?customerDetails.iEmployerAddress.line2:''}}&nbsp;
+                                            {{customerDetails.iEmployerAddress.line3?customerDetails.iEmployerAddress.line3:''}}&nbsp;
+                                            {{customerDetails.iEmployerAddress.village}}&nbsp;
+                                            {{customerDetails.iEmployerAddress.tikinaDescription}}&nbsp;
+                                            {{customerDetails.iEmployerAddress.islandDescription}}&nbsp;
+                                            {{customerDetails.iEmployerAddress.provinceDescription}}&nbsp;
+                                            -
+                                            {{customerDetails.iEmployerAddress.poBoxNo?customerDetails.iEmployerAddress.poBoxNo:''}}.&nbsp;
+                                        </div>
+                                    </div>
+
+                                    <view-label label="Date Of Death" value="{{customerDetails.dateOfDeath}}"
+                                        class="pl10"></view-label>
+                                </div>
+                                <div class="col-md-2 align-items-end end">
+                                    @if(employerEditBtn === true){
+                                    <app-icon-button name="edit" toolTip="Edit" (click)="customerEmployerEdit()"
+                                        appButtonAccess="CrmCustAppEditBtn"></app-icon-button>
+                                    }
+                                </div>
+                            </row>
+                            }
+                            @if(employerInfoEdit === true){
+                            <form #g="ngForm">
+                                <row>
+                                    <div class="col-md-3">
+                                        <div> <app-input-control type="text" label="Employer Name" [maxLength]="250"
+                                                [(ngModel)]="customerDetails.employerName"
+                                                name="employerName"></app-input-control></div>
+                                        <div> <app-input-control type="text" label="Occupation" [maxLength]="250"
+                                                [(ngModel)]="customerDetails.occupation"
+                                                name="occupation"></app-input-control> </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div>
+                                            <app-input-control type="number" label="Net Salary(FJD)" [maxLength]="20"
+                                                [(ngModel)]="customerDetails.netSalary" [decimal]="2"
+                                                name="netSalary"></app-input-control>
+                                        </div>
+                                        <div>
+                                            <app-input-control type="text" label="Student Id"
+                                                [(ngModel)]="customerDetails.studentId" [maxLength]="20"
+                                                [errorTrue]="customerDetails.schoolName !=='' && errorTrue"
+                                                [required]="customerDetails.schoolName !==''"
+                                                name="studentId"></app-input-control>
+                                        </div>
+                                        <div>
+                                            <app-input-control type="text" label="School Name"
+                                                [(ngModel)]="customerDetails.schoolName" [maxLength]="500"
+                                                [errorTrue]="customerDetails.studentId !=='' && errorTrue"
+                                                [required]="customerDetails.studentId !==''"
+                                                name="schoolName"></app-input-control>
+                                        </div>
+                                        <div>
+                                            <app-input-control type="date" label="Date Of Death"
+                                                [(ngModel)]="customerDetails.dateOfDeath"
+                                                name="dateOfDeath"></app-input-control>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <row>
+                                            <div class="col-md-6">
+                                                <app-input-control label="Line 1" type="special"
+                                                    [(ngModel)]="customerDetails.iEmployerAddress.line1"
+                                                    [errorTrue]="this.customerDetails.iEmployerAddress.provinceId!==0 && errorTrue"
+                                                    [required]="this.customerDetails.iEmployerAddress.provinceId!==0"
+                                                    name="line1"></app-input-control>
+                                            </div>
+                                            <div class="col-md-6">
+                                              <app-input-control label="Island" [items]="islandDDL" key="islandId"
+                                              keyName="islandName" type="select" defaultOption="--Select--"
+                                              (onChange)="getTikinaDDLFromIslandandProvince(customerDetails.iEmployerAddress.provinceId,customerDetails.iEmployerAddress.islandId)"
+                                              [(ngModel)]="customerDetails.iEmployerAddress.islandId"
+                                              [errorTrue]="(this.customerDetails.iEmployerAddress.line1!=='' || customerDetails.iEmployerAddress.provinceId!==0 )&& errorTrue"
+                                              [required]="this.customerDetails.iEmployerAddress.line1!=='' || customerDetails.iEmployerAddress.provinceId!==0 "
+                                              name="islandId"></app-input-control>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <app-input-control label="Line 2" type="special"
+                                                    [(ngModel)]="customerDetails.iEmployerAddress.line2"
+                                                    name="line2"></app-input-control>
+                                            </div>
+                                            <div class="col-md-6">
+                                               <app-input-control label="Tikina"
+
+                                                    [(ngModel)]="customerDetails.iEmployerAddress.tikinaId"
+                                                    [errorTrue]="this.customerDetails.iEmployerAddress.line1!=='' && errorTrue"
+                                                    [required]="this.customerDetails.iEmployerAddress.line1!==''"
+                                                    name="tikinaId" type="select" defaultOption="--Select--"
+                                                    [items]="TikinaDDL" key="tikinaId"  keyName="tikinaName" valueType="int"
+                                                    keyName="tikinaName"></app-input-control>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <app-input-control label="Line 3" type="special"
+                                                    [(ngModel)]="customerDetails.iEmployerAddress.line3"
+                                                    name="line3"></app-input-control>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <app-input-control label="Village" [items]="villageDDL" key="constant"
+                                                    keyName="description" type="text"
+                                                    [(ngModel)]="customerDetails.iEmployerAddress.village"
+                                                    [errorTrue]="(this.customerDetails.iEmployerAddress.line1!=='' || customerDetails.iEmployerAddress.provinceId!==0) && errorTrue"
+                                                    [required]="this.customerDetails.iEmployerAddress.line1!=='' || customerDetails.iEmployerAddress.provinceId!==0 "
+                                                    name="village"></app-input-control>
+                                            </div>
+                                            <div class="col-md-6">
+                                              <app-input-control label="Province"
+                                                   (onChange)="getIslandFromProvince(customerDetails.iEmployerAddress.provinceId)"
+                                                  [(ngModel)]="customerDetails.iEmployerAddress.provinceId"
+                                                  [errorTrue]="this.customerDetails.iEmployerAddress.line1!=='' && errorTrue"
+                                                  [required]="this.customerDetails.iEmployerAddress.line1!==''"
+                                                  name="provinceId" type="select" defaultOption="--Select--"
+                                                  [items]="initialData.DDLValues.DDLProvince" key="id" valueType="int"
+                                                  keyName="description"></app-input-control>
+                                          </div>
+                                            <div class="col-md-6">
+                                                <app-input-control label="PO Box No" type="number" [maxLength]="10"
+                                                    [(ngModel)]="customerDetails.iEmployerAddress.poBoxNo"
+                                                    name="poBoxNo"></app-input-control>
+                                            </div>
+                                        </row>
+                                    </div>
+                                </row>
+                            </form>
+                            <div class="col-md-12 end d-flex gap-10">
+                                <app-icon-button name="save" toolTip="Update" appButtonAccess="CrmCustAppSaveInfoBtn"
+                                    (click)="saveCustomerEmployer()"></app-icon-button>
+                                <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshCustomer()"
+                                    appButtonAccess="CrmCustAppRefreshInfoBtn"></app-icon-button>
+                            </div>
+                            }
+                        </div>
+                        <div class="col-md-3">
+                            <div class="view-label-container-title mb26">Service Rendered</div>
+                            <div class="between mb26">
+                                <view-label value="Trust"></view-label>
+                                <div>0</div>
+                            </div>
+                            <div class="between mb26">
+                                <view-label value="Will"></view-label>
+                                <div>0</div>
+                            </div>
+                            <div class="between mb26">
+                                <view-label value="Estate"></view-label>
+                                <div>0</div>
+                            </div>
+                            <div class="between mb26">
+                                <view-label value="Legal Service"></view-label>
+                                <div>0</div>
+                            </div>
+                            <div class="between mb26">
+                                <div class="sub-content">
+                                    <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                    <div class="sub-content-title between pl10">
+                                        <view-label value="Customer Service"></view-label>
+                                    </div>
+
+                                </div>
+                                <div class="sub-content-count">{{customerDetails.customerServiceCount}}
+                                </div>
+                            </div>
+                            <div class="between mb26">
+                                <div class="sub-content">
+                                    <ion-icon src="assets/icons/accordian/lead.svg"></ion-icon>
+                                    <div class="sub-content-title between pl10">
+                                        <view-label value="Lead"></view-label>
+                                    </div>
+
+                                </div>
+                                <div class="sub-content-count">{{customerDetails.leadCount}}
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </row>
+                </div>
+
+                <!-- <div class="box-container">
+                    <row>
+                        <div class="col-md-4">
+                            <div class="border-right h100">
+                                <div class="customer-profile-box">
+                                    <div class="d-flex">
+                                        <div class="customer-profile-img center">
+                                            <img
+                                                [src]="customerDetails.ientCustomerPhoto.fileContent?customerDetails.ientCustomerPhoto.fileContent:'assets/img/human-face.svg'">
+                                        </div>
+                                        <div class="status-content">
+                                            <div class="customer-profile-title">
+                                                <app-tooltip
+                                                    value="{{customerDetails.firstName}}
+                                                {{customerDetails.middleName}} {{customerDetails.lastName}}"></app-tooltip>
+                                            </div>
+                                            <div
+                                                class="customer-profile-subtitle status-{{customerDetails.customerStatusValue}}">
+                                                {{customerDetails.customerStatusDescription}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="center pb15">
+                                        <app-icon-button name="edit" toolTip="Edit" (click)="editCustomer()"
+                                            appButtonAccess="CrmCustAppEditBtn"></app-icon-button>
+                                    </div>
+
+                                </div>
+                                <row>
+                                    <div class="col-md-6"> <div class="col-md-6"> <view-label class="mb26" label="Customer No"
+                                            value="{{customerDetails.customerRefNo}}"></view-label>
+
+                                    </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Gender"
+                                            value="{{customerDetails.genderDescription}}"></view-label>
+                                    </div>
+
+                                    <div class="col-md-6"> <view-label class="mb26" label="Email ID"
+                                            value="{{customerDetails.emailId}}"></view-label></div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Nationality"
+                                            value="{{customerDetails.nationalityDescription}}"></view-label>
+                                    </div>
+
+                                    <div class="col-md-6"> <view-label class="mb26" label="Contact No"
+                                            value="{{customerDetails.contactNo}}"></view-label></div>
+                                    <div class="col-md-6"> <view-label class="mb26" label="Father Name"
+                                            value="{{customerDetails.fatherName}}"></view-label></div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Alternate Contact No"
+                                            value="{{customerDetails.alternateContactNo}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Mother Name"
+                                            value="{{customerDetails.motherName}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Date of Birth"
+                                            value="{{customerDetails.dateOfBirth | appDate}}"></view-label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <view-label class="mb26" label="Guardian Name"
+                                            value="{{customerDetails.gaurdianName}}"></view-label>
+                                    </div>
+                                </row>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ">
+                            <div class="border-right h100">
+                                <div class="view-label-container-title mb26">Employer Information</div>
+                                <row>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Employer Name"
+                                            value="{{customerDetails.employerName}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Net Salary(FJD)"
+                                            value="{{customerDetails.netSalary}}"></view-label>
+                                    </div>
+                                    <div class="col-md-12"> <view-label class="mb26" label="Occupation"
+                                            value="{{customerDetails.occupation}}"></view-label></div>
+                                </row>
+                                <div class="view-label-container mb26">
+                                    <div class="d-flex align-items-center address-header">
+                                        <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                        <view-label value="Employer Address" class="pl10"></view-label>
+                                    </div>
+                                    <div class="address-content">
+                                        {{customerDetails.iEmployerAddress.line1}}&nbsp;
+                                        {{customerDetails.iEmployerAddress.line2?customerDetails.iEmployerAddress.line2:''}}&nbsp;
+                                        {{customerDetails.iEmployerAddress.line3?customerDetails.iEmployerAddress.line3:''}}&nbsp;
+                                        {{customerDetails.iEmployerAddress.village}}&nbsp;
+                                        {{customerDetails.iEmployerAddress.islandDescription}}&nbsp;
+                                        {{customerDetails.iEmployerAddress.provinceDescription}}&nbsp;
+                                        -
+                                        {{customerDetails.iEmployerAddress.poBoxNo?customerDetails.iEmployerAddress.poBoxNo:''}}.&nbsp;
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 ">
+                            <div class=" h100">
+                                <div class="view-label-container-title mb26">Student Information</div>
+                                <row>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="School Name"
+                                            value="{{customerDetails.schoolName}}"></view-label>
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="Student ID"
+                                            value="{{customerDetails.studentId}}"></view-label>
+                                    </div>
+                                    <div class=" col-md-12 mb26 hr"></div>
+                                    <div class="view-label-container-title mb26">Death Information</div>
+                                    <div class="col-md-12">
+                                        <view-label class="mb26" label="Date of Death"
+                                            value="{{customerDetails.dateOfDeath | appDate}}"></view-label>
+                                    </div>
+                                </row>
+                            </div>
+                        </div>
+
+                    </row>
+                </div> -->
+
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Additional Information -->
+        <accordion-item [isOpen]="true">
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title open-visible justify-content-between">
+                        <div class="d-flex gap-8">
+                            <ion-icon src="assets/icons/accordian/addinfo.svg"></ion-icon>
+                            <div class="">Additional Information</div>
+                        </div>
+                        <!-- <div class="d-flex">
+                            @for(customerType of benifitTypeData.lstentCustomerType; track $index ){
+
+                            <div class="chip-data">{{customerType.customerTypeDescription}}</div>
+                            }
+                        </div> -->
+                    </div>
+                    <div class="accordion-title open-hide">
+                        <ion-icon src="assets/icons/accordian/addinfo.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Additional Information</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="content-wrapper">
+                    <row>
+                        <div class="col-md-3 v-flex justify-content-between p10 ">
+                            <div>
+                                <div class=" mb26">
+                                    <div class="d-flex align-items-center address-header">
+                                        <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                        <view-label class="pl10" value="Residential Address"></view-label>
+                                    </div>
+                                    <div class="address-content">
+                                        {{customerDetails.iResidentialaddress.line1}} <br>
+                                        {{customerDetails.iResidentialaddress.line2?customerDetails.iResidentialaddress.line2:''}}
+                                        @if(customerDetails.iResidentialaddress.line2 !==''){
+                                        <br>
+                                        }
+                                        {{customerDetails.iResidentialaddress.line3?customerDetails.iResidentialaddress.line3:''}}
+                                        @if(customerDetails.iResidentialaddress.line3 !==''){
+                                        <br>
+                                        }
+                                        {{customerDetails.iResidentialaddress.village}}&nbsp;
+                                        {{customerDetails.iResidentialaddress.tikinaDescription}}&nbsp;
+                                        {{customerDetails.iResidentialaddress.islandDescription}}&nbsp; <br>
+                                        {{customerDetails.iResidentialaddress.provinceDescription}}&nbsp;
+
+                                        {{-
+                                        customerDetails.iResidentialaddress.poBoxNo?customerDetails.iResidentialaddress.poBoxNo:''}}&nbsp;
+                                    </div>
+                                </div>
+                                <div class="mb26"></div>
+                                <div class="">
+                                    <div class="d-flex align-items-center address-header">
+                                        <ion-icon src="assets/icons/location.svg"></ion-icon>
+                                        <view-label class="pl10" value="Permanent Address"></view-label>
+                                    </div>
+                                    <div class="address-content">
+                                        {{customerDetails.iPermanentaddress.line1}} <br>
+                                        {{customerDetails.iPermanentaddress.line2?customerDetails.iPermanentaddress.line2:''}}
+                                        @if(customerDetails.iPermanentaddress.line2 !==''){
+
+                                        <br>
+                                        }
+                                        {{customerDetails.iPermanentaddress.line3?customerDetails.iPermanentaddress.line3:''}}
+                                        @if(customerDetails.iPermanentaddress.line3 !==''){
+
+                                        <br>
+                                        }
+                                        {{customerDetails.iPermanentaddress.village}}&nbsp;
+                                        {{customerDetails.iPermanentaddress.tikinaDescription}}&nbsp;
+                                        {{customerDetails.iPermanentaddress.islandDescription}} <br>
+                                        {{customerDetails.iPermanentaddress.provinceDescription}}&nbsp;
+                                        {{-
+                                        customerDetails.iPermanentaddress.poBoxNo?customerDetails.iPermanentaddress.poBoxNo:''}}&nbsp;
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <app-icon-button name="edit" toolTip="Edit" (click)="addInfoDialog()"
+                                    appButtonAccess="CrmCustAppEditBtn"></app-icon-button>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3 border-left">
+                            <div class="view-label-container">
+                                <div class="d-flex align-items-center address-header">
+                                    <ion-icon src="assets/icons/kyc.svg"></ion-icon>
+                                    <view-label class="pl10" value="KYC Details"></view-label>
+                                </div>
+                            </div>
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="kyc-details">Birth Reg No</div>
+                                    <div class="kyc-details">TIN</div>
+                                    <div class="kyc-details">FNPF No</div>
+                                    <div class="kyc-details">Voter ID</div>
+                                    <div class="kyc-details">Driv Lic No</div>
+                                    <!-- <div class="kyc-details">National ID</div> -->
+                                    <div class="kyc-details">Passport No</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="kyc-data"> <app-tooltip
+                                            [value]="customerDetails.birthRegNo"></app-tooltip></div>
+                                    <div class="kyc-data"> <app-tooltip [value]="customerDetails.tin"></app-tooltip>
+                                    </div>
+                                    <div class="kyc-data"><app-tooltip [value]="customerDetails.fnpfNo"></app-tooltip>
+                                    </div>
+                                    <div class="kyc-data"> <app-tooltip [value]="customerDetails.voterId"></app-tooltip>
+                                    </div>
+                                    <div class="kyc-data"><app-tooltip
+                                            [value]="customerDetails.driverLicenseNo"></app-tooltip></div>
+                                    <!-- <div class="kyc-data"> <app-tooltip
+                                            [value]="customerDetails.nationalId"></app-tooltip></div> -->
+                                    <div class="kyc-data"> <app-tooltip
+                                            [value]="customerDetails.passportNo"></app-tooltip></div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div>
+                                    <!-- <div class="end kyc-logo"> <ion-icon src="assets/icons/page.svg"></ion-icon></div> -->
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-left">
+                            <div class="view-label-container">
+                                <div class="d-flex align-items-center address-header">
+                                    <ion-icon src="assets/icons/social.svg"></ion-icon>
+                                    <view-label class="pl10" value="Social Platform Details"></view-label>
+                                </div>
+                            </div>
+                            <row>
+                                <div class="col-md-12 ">
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo"> <ion-icon src="assets/icons/facebook.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details ">
+
+                                            <div class="sub-value">
+
+                                                <app-tooltip [value]="customerDetails.facebookId"></app-tooltip>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo"> <ion-icon src="assets/icons/linkedIn.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details ">
+                                            <div class="sub-value"> <app-tooltip
+                                                    [value]="customerDetails.linkedinId"></app-tooltip></div>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo "> <ion-icon src="assets/icons/whatsapp.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details">
+                                            <div class="sub-value">
+
+                                                <app-tooltip [value]=" customerDetails.whatsappNumber"></app-tooltip>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 ">
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo"> <ion-icon src="assets/icons/viber.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details ">
+                                            <div class="sub-value">
+                                                <app-tooltip [value]="customerDetails.viberNumber"></app-tooltip>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="social-logo "> <ion-icon src="assets/icons/skype.svg"></ion-icon>
+                                        </div>
+                                        <div class="kyc-details">
+                                            <div class="sub-value"> <app-tooltip
+                                                    [value]="customerDetails.skypeId"></app-tooltip></div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="d-flex justify-content-end">
+                                        <app-icon-button name="edit" toolTip="Edit" (click)="addInfoDialog()"
+                                            appButtonAccess="CrmCustAppEditBtn"></app-icon-button>
+                                    </div> -->
+                                </div>
+                            </row>
+                        </div>
+                        <div class="col-md-3 border-left">
+                            <div class="view-label-container">
+                                <div class="d-flex align-items-center address-header">
+                                    <ion-icon name="person-outline"></ion-icon>
+                                    <view-label value="Customer Type" class="pl10"></view-label>
+                                </div>
+                            </div>
+                            <row>
+                                @for (checkData of benifitTypeData.lstentCustomerType; track $index) {
+                                <div class="d-flex col-md-6 mb20 gap-5">
+                                    <app-checkbox [checked]="checkData.isChecked==='Y'"
+                                        [btnClicked]="true"></app-checkbox>
+                                    <div>{{checkData.customerTypeDescription}}</div>
+                                </div>
+
+                                }
+
+
+
+                            </row>
+                        </div>
+
+                    </row>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Customer Service -->
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Customer Service</div>
+                            <div class="accordian-title-count">{{customerDetails.customerServiceCount}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    @if (customerDetails.customerId) {
+                    <app-customer-service-list [customerId]="customerDetails.customerId" [isHideSelectedAll]="true"
+                        [accessApp]="'CUSTR'" [buttonAccess]="'hello'" [type]="'12345'"
+                        (dataSelected)="detailsFetched($event)"></app-customer-service-list>
+                    }
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Customer Update -->
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/customer-update.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Customer Update</div>
+                            <div class="accordian-title-count">{{customerDetails.customerUpdateCount}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    @if(customerDetails.customerRefNo !== ''){
+
+                    <app-customer-update-list [customerId]="customerDetails.customerRefNo" [isHideSelectedAll]="true"
+                        [customerUpdateBtn]="customerDetails.isCustomerUpdateNewFlge" [accessApp]="'2'" [type]="'1'"
+                        [buttonAccess]="'1'" (dataSelected)="detailsFetched($event)"></app-customer-update-list>
+                    }
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Trust -->
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="../../../../../assets/icons/accordian/trust1.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Trust</div>
+                            <div class="accordian-title-count">{{customerDetails.customerUpdateCount}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Estate -->
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/estate.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Estate</div>
+                            <div class="accordian-title-count">{{customerDetails.customerUpdateCount}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Legal Service -->
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/trust.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Legal Service</div>
+                            <div class="accordian-title-count">{{customerDetails.customerUpdateCount}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Lead -->
+        <!--        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/lead.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Lead</div>
+                            <div class="accordian-title-count">{{customerDetails.leadCount}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="outer-content-wrapper">
+                    @if (customerDetails.customerId) {
+                    <app-lead-list [customerId]="customerDetails.customerId" [serviceStatus]="'OPEN'"
+                        [accessInBtns]="'CrmCustAppCustLeadAddInfoBtn'" [accessInApp]="'CUSTR'"
+                        [serviceId]="customerDetails.ientCustomerService.customerServiceId" [serviceFlag]="'Y'"
+                        [customerRef]="customerDetails.customerRefNo" (dataSelected)="detailsFetched($event)"
+                        [isHideSelectedAll]="true"></app-lead-list>
+                    }
+                </div>
+            </accordion-body>
+        </accordion-item> -->
+
+        <!-- Bank -->
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/bank.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Bank Information</div>
+                            <div class="accordian-title-count">{{tableBankData.length}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+
+                <div class="outer-content-wrapper">
+                    <div class="content-wrapper">
+                        <app-table [columns]="bankColums" [columnsName]="bankColumnsName" columnID="customerBankId"
+                            (onSelect)="onSelect($event)" [dataSource]="tableBankData" [pagination]="pagination"
+                            [hasPagination]="true" [hideSelectAll]="true" (pageChanged)="bankPageChanged($event)">
+                            <ng-template cellDef="customerRefNo" let-element>
+                                <a href="">{{element.customerRefNo}}</a>
+                            </ng-template>
+                            <ng-template cellDef="bankName" let-element>
+                                {{element.ientBank.bankName}}
+                            </ng-template>
+                            <ng-template cellDef="bankCode" let-element>
+                                {{element.ientBank.bankCode}}
+                            </ng-template>
+                            <ng-template cellDef="effectiveDate" let-element>
+                                {{element.effectiveDate | appDate}}
+                            </ng-template>
+                            <ng-template cellDef="ifscCode" let-element>
+                                {{element.ientBank.ifscCode}}
+                            </ng-template>
+                            <ng-template cellDef="statusDescription" let-element>
+                                <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+                            </ng-template>
+                            <ng-template cellDef="action" let-element>
+                                <app-icon-button name="open" toolTip="Open"
+                                    (click)="viewBankDetail(element.customerBankId)"></app-icon-button>
+                            </ng-template>
+                            <ng-template #slotRight>
+                                <app-icon-button name="add" toolTip="Add New" appButtonAccess="CrmCustAppEditBtn"
+                                    (click)="createBankDetail()"></app-icon-button>
+                            </ng-template>
+
+                        </app-table>
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Document -->
+        <accordion-item>
+            <accordion-header>
+                <div class="accordion-header-content">
+                    <div class="accordion-title">
+                        <ion-icon src="assets/icons/accordian/document.svg"></ion-icon>
+                        <div class="accordion-title-content">
+                            <div>Document</div>
+                            <div class="accordian-title-count">{{customerDocumentList.length}}</div>
+                        </div>
+                    </div>
+                </div>
+            </accordion-header>
+            <accordion-body>
+                <div class="document-pad">
+                    <div class="doc-header">
+                        <row class="row-w100">
+
+                            <div class="col-md-3">Document Name</div>
+                            <div class="col-md-2">File Name</div>
+                            <div class="col-md-2">File Type</div>
+                            <div class="col-md-2">Uploaded Date</div>
+                            <div class="col-md-2"></div>
+                        </row>
+                    </div>
+
+
+                    <div style="padding: 10px 20px;">
+                        @for (document of customerDocumentList; track $index) {
+
+                        <app-documents [document]="document" (onUpload)="onUpload($event, document)"
+                            [docViewAccess]="'CustUpAppViewDocBtn'" [docDeleteAccess]="'CrmCustAppCleaDocBtn'"
+                            [docDownloadAccess]="'CustUpAppDownDocBtn'" [docUploadAccess]="'CrmCustAppUpldDocBtn'"
+                            [pageAccess]="'CUSTR'" [btnCondition]="true"
+                            (onDelete)="checkDocumentDelete(document)"></app-documents>
+                        {{document.fileName}}
+
+                        }
+
+                    </div>
+                </div>
+            </accordion-body>
+        </accordion-item>
+
+        <!-- Notes & Status History -->
+        <div class="card-accordian w100">
+            <div class="card-header">
+                <div class="d-flex w100">
+                    <div class="col-md-4 pl8px">
+
+                        <div class="d-flex">
+                            <div class="accordion-title-card pr10 flex-none border-right pointer"
+                                [ngClass]="{'active-tab': showNotesDatas === true}" (click)="openStatusValue(1)">
+                                <ion-icon src="assets/icons/accordian/notes.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Notes</div>
+                                    <div class="accordian-title-count">{{notesList.lstentCustomerNotes.length}}</div>
+                                </div>
+                            </div>
+                            <div class="accordion-title-card pl10 pointer" (click)="openStatusValue(2)"
+                                [ngClass]="{'active-tab': showStatusHistory === true}">
+                                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Status History</div>
+                                    <div class="accordian-title-count">{{statusHistoryDataSource.length}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8" (click)="openAccordian(this.accordianOpen)">
+
+                        <div class="end btn-accordian">
+                            @if(this.accordianOpen === true){
+
+                            <div class="rotate">
+                                <ion-icon src="assets/icons/down.svg"></ion-icon>
+                            </div>
+                            }
+                            @else{
+                            <!-- <div class="rotate-180"> -->
+                            <ion-icon src="assets/icons/down.svg"></ion-icon>
+                            <!-- </div> -->
+                            }
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            @if(this.accordianOpen === true){
+            @if(this.showNotesDatas === true){
+            <!-- <div class="acc-card-content"> -->
+            <div class="p16px pb26 wrap-content">
+                <div class="justify-content-end d-flex">
+                    <app-icon-button name="add" toolTip="Create" (click)="createNotes()"
+                        appButtonAccess="CrmCustAppAddNoteBtn"></app-icon-button>
+                </div>
+                @for (item of notesList.lstentCustomerNotes; track $index) {
+                <div class="border-bottom  notes-list">
+                    <div class="mx10">{{item.notes}}</div>
+                    <div class="d-flex justify-content-end notes-context">
+                        <div style="padding-right:5px ;">
+                            {{item.enteredByFullName}}</div>
+                        <div class=" notes-border-left">
+                            {{item.enteredDate |appDate}} {{item.enteredDate |appDate: 'hh:mm a'}}
+                        </div>
+                        <div style="padding-right:5px ;"></div>
+                        <div class=" notes-border-left status-{{item.customerStatusValue}}">
+                            {{item.customerStatusDescription}}
+                        </div>
+                        <div class="card-1-header-label px-2 ">
+
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+            <!-- </div> -->
+            }
+            @else if(this.showStatusHistory === true){
+            <div class="status-padding">
+                <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+
+            </div>
+            }
+            }
+
+        </div>
+        <div class="p10"></div>
+    </accordion>
+</div>
+
+<ng-template #bankDialog>
+
+    <div class="dialog-container">
+        @if(this.viewBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                View
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="edit" toolTip="Edit" (click)="editBankDetails()"
+                        appButtonAccess="CrmCustAppEditBtn"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+                        appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    <div class="p10">
+                        <row>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header">
+                                        Bank Information
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Bank Name" class="mb26"
+                                                    value="{{customerBank.ientBank.bankName}}"></view-label></div>
+                                            <div class="col-md-12"><view-label label="Bank Code" class="mb26"
+                                                    value="{{customerBank.ientBank.bankCode}}"></view-label></div>
+                                            <div class="col-md-12"><view-label label="Branch " class="mb26"
+                                                    value="{{customerBank.ientBank.branchTypeDescription}}"></view-label>
+                                            </div>
+
+                                            <div class="col-md-12"><view-label label="Swift Code" class="mb26"
+                                                    value="{{customerBank.ientBank.swiftCode}}"></view-label></div>
+                                            <!-- <div class="col-md-12"><view-label label="IFSC Code" class="mb26"
+                                                    value="{{customerBank.ientBank.ifscCode}}"></view-label></div> -->
+                                            @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                                            <div class="col-md-12"><view-label label="Head Office Bank"
+                                                    value="{{customerBank.headOfficeBank}}" class="mb26"></view-label>
+                                            </div>
+                                            }
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Additional Information
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Account No" class="mb26"
+                                                    value="{{customerBank.accountNo}}"></view-label></div>
+                                            <div class="col-md-12"><view-label label="Effective Date " class="mb26"
+                                                    value="{{customerBank.effectiveDate  | appDate}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Account Status  "
+                                                    class="mb26 status-{{customerBank.statusValue}}"
+                                                    value="{{customerBank.statusDescription}}"></view-label></div>
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Bank Address
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><view-label label="Line 1" class="mb26"
+                                                    value="{{customerBank.ientBank.ientAddress.line1}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Line 2" class="mb26"
+                                                    value="{{customerBank.ientBank.ientAddress.line2}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Line 3 " class="mb26"
+                                                    value="{{customerBank.ientBank.ientAddress.line3}}"></view-label>
+                                            </div>
+
+                                            <div class="col-md-12"><view-label label="Province" class="mb26"
+                                                    value="{{customerBank.ientBank.ientAddress.provinceDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Island" class="mb26"
+                                                    value="{{customerBank.ientBank.ientAddress.islandDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Tikina" class="mb26"
+                                                    value="{{customerBank.ientBank.ientAddress.tikinaDescription}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="Village" class="mb26"
+                                                    value="{{customerBank.ientBank.ientAddress.village}}"></view-label>
+                                            </div>
+                                            <div class="col-md-12"><view-label label="PO Box No" class="mb26"
+                                                    value="{{customerBank.ientBank.ientAddress.poBoxNo}}"></view-label>
+                                            </div>
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+
+
+
+                    </div>
+                </scroll>
+
+            </div>
+        </div>
+
+        }
+        @if(this.createBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Create
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="saveBankDetails()"
+                        appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearBankDetails()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+                        appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="p10">
+                        <div class="view-label-container-title mb26">Enter Bank Code and to continue</div>
+                        <form #q="ngForm">
+                            <row>
+                                <div class="col-md-8">
+                                    <form #x="ngForm" class="d-flex align-items-center"
+                                        (ngSubmit)="viewBankDetailsBasedOnBankCode(x)">
+
+                                        <div class="col-md-6"> <app-input-control label="Bank Code"
+                                                [errorTrue]="errorTrue" [required]="true" [(ngModel)]="bankCodeValue"
+                                                [maxLength]="20" name="bankCodeValue"></app-input-control></div>
+                                        <div class="col-md-6"> <button type="submit" class="info-btn">Get Info<ion-icon
+                                                    class="pl10px" name="information-outline"></ion-icon></button></div>
+
+
+
+                                    </form>
+                                </div>
+                            </row>
+                            @if(createNewBankInfoValues){
+
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Bank Name" [(ngModel)]="customerBank.ientBank.bankName"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="50"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="bankName"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        [errorTrue]="errorTrue" [required]="true" label="Bank Code"
+                                                        [(ngModel)]="customerBank.ientBank.bankCode" [btnClicked]="true"
+                                                        [maxLength]="20" name="bankCode"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="select"
+                                                        label="Branch" [items]="initialData.DDLValues.DDLBankBranch"
+                                                        key="constant" keyName="description" [errorTrue]="errorTrue"
+                                                        [required]="true"
+                                                        [(ngModel)]="customerBank.ientBank.branchTypeValue"
+                                                        name="branchTypeValue" (onChange)="clearHeadOffice()"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="branchValue"></app-input-control></div>
+
+                                                <!-- <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="IFSC Code" [(ngModel)]="customerBank.ientBank.ifscCode"
+                                                        [maxLength]="20" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="ifscCode"></app-input-control></div> -->
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Swift Code" [(ngModel)]="customerBank.ientBank.swiftCode"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="20"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="swiftCode"></app-input-control></div>
+                                                <div class="col-md-12 mb26">
+                                                    @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                                                    <app-input-control type="select" label="Head Office Bank"
+                                                        [items]="initialData.getHeadOfficeBankDDL.DDLBank" key="id"
+                                                        keyName="code" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        [(ngModel)]="customerBank.ientBank.headOfficeBankId"
+                                                        name="headOfficeBankId"></app-input-control>
+                                                    }
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Additional Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26"><app-input-control type="number"
+                                                        label="Account No" [(ngModel)]="customerBank.accountNo"
+                                                        name="accountNo" [errorTrue]="errorTrue" [required]="true"
+                                                        [maxLength]="20"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="date"
+                                                        label="Effective Date" [(ngModel)]="customerBank.effectiveDate"
+                                                        name="effectiveDate"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="select"
+                                                        label="Account Status" [(ngModel)]="customerBank.statusValue"
+                                                        name="statusValue" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="true"
+                                                        [items]="initialData.DDLValues.DDLActiveAndInActive"
+                                                        key="constant" keyName="description"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Address
+                                        </div>
+                                        <div class="box-pad">
+                                            <app-address-edit [ientAddress]="customerBank.ientBank.ientAddress"
+                                                [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                [errorTrue]="errorTrue" type="bank"></app-address-edit>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </row>
+                            }
+                        </form>
+
+                    </div>
+                </scroll>
+            </div>
+        </div>
+        }
+
+        @if(this.editBank){
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Edit
+                Bank
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Update" (click)="saveEditBankDetails()"
+                        appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh" (click)="openBankDetails()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"
+                        appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="p10">
+                        <form #q="ngForm">
+                            <row>
+                                <div class="col-md-4">
+                                    <div class="box h100">
+                                        <div class="box-header ">
+                                            Bank Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Bank Name" [(ngModel)]="customerBank.ientBank.bankName"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="50"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="bankName"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Bank Code" [(ngModel)]="customerBank.ientBank.bankCode"
+                                                        [btnClicked]="true" [maxLength]="20"
+                                                        name="bankCode"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="select"
+                                                        label="Branch" (onChange)="clearHeadOffice()"
+                                                        [items]="initialData.DDLValues.DDLBankBranch" key="constant"
+                                                        keyName="description" [errorTrue]="errorTrue" [required]="true"
+                                                        [(ngModel)]="customerBank.ientBank.branchTypeValue"
+                                                        name="branchTypeValue"
+                                                        [btnClicked]="this.customerBank. editableFlag ==='N'"
+                                                        name="branchValue"></app-input-control>
+                                                </div>
+
+                                                <!-- <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="IFSC Code" [(ngModel)]="customerBank.ientBank.ifscCode"
+                                                        [maxLength]="20" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="ifscCode"></app-input-control></div> -->
+                                                <div class="col-md-12 mb26"><app-input-control type="text"
+                                                        label="Swift Code" [(ngModel)]="customerBank.ientBank.swiftCode"
+                                                        [errorTrue]="errorTrue" [required]="true" [maxLength]="20"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        name="swiftCode"></app-input-control></div>
+
+                                                <div class="col-md-12 mb26">
+                                                    @if(this.customerBank.ientBank.branchTypeValue === 'BRNOF'){
+                                                    <app-input-control type="select" label="Head Office Bank"
+                                                        [items]="initialData.getHeadOfficeBankDDL.DDLBank" key="id"
+                                                        keyName="code" [errorTrue]="errorTrue" [required]="true"
+                                                        [btnClicked]="this.customerBank.editableFlag ==='N'"
+                                                        [(ngModel)]="customerBank.ientBank.headOfficeBankId"
+                                                        name="headOfficeBankId"></app-input-control>
+                                                    }
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box">
+                                        <div class="box-header ">
+                                            Additional Information
+                                        </div>
+                                        <div class="box-pad">
+                                            <row>
+                                                <div class="col-md-12 mb26"><app-input-control type="number"
+                                                        label="Account No" [(ngModel)]="customerBank.accountNo"
+                                                        name="accountNo" [errorTrue]="errorTrue" [required]="true"
+                                                        [maxLength]="20"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="date"
+                                                        label="Effective Date" [(ngModel)]="customerBank.effectiveDate"
+                                                        name="effectiveDate"></app-input-control></div>
+                                                <div class="col-md-12 mb26"><app-input-control type="select"
+                                                        label="Account Status" [(ngModel)]="customerBank.statusValue"
+                                                        name="statusValue" [errorTrue]="errorTrue" [required]="true"
+                                                        [items]="initialData.DDLValues.DDLActiveAndInActive"
+                                                        key="constant" keyName="description"></app-input-control>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="box">
+                                        <div class="box-header ">
+                                            Bank Address
+                                        </div>
+                                        <div class="box-pad">
+                                            <app-address-edit [ientAddress]="customerBank.ientBank.ientAddress"
+                                                [btnClicked]="this.customerBank.editableFlag ==='N' "
+                                                [errorTrue]="errorTrue" type="bank"></app-address-edit>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </row>
+                        </form>
+                    </div>
+                </scroll>
+            </div>
+        </div>
+        }
+    </div>
+
+</ng-template>
+
+
+<ng-template #addnInfo>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon"
+                    src="assets/icons/accordian/addinfo.svg"></ion-icon>
+                Customer <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>Details<ion-icon
+                    class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                Additional Information
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(this.customerDetails.isAddInfoSaveOrUpdate ==="N"){
+                    <app-icon-button name="save" toolTip="Update" (click)="saveCustomer()"
+                        appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshCustomer()"></app-icon-button>
+                    }
+                    @else {
+                    <app-icon-button name="save" toolTip="Save" (click)="saveCustomer()"
+                        appButtonAccess="CrmCustAppSaveBtn"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearCustomer()"></app-icon-button>
+                    }
+
+                    <app-icon-button name="close" toolTip="Close" (click)="doAddInfoClose()"
+                        appButtonAccess="CrmCustAppCancelBtn"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="mb26"></div>
+                    <form #b="ngForm" class="pb10">
+                        <row>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Residential Address
+                                    </div>
+                                    <div class="box-pad">
+                                        <app-address-edit [ientAddress]="customerDetails.iResidentialaddress"
+                                            [errorTrue]="errorTrue" type="residential"
+                                            (onUpdate)="checkAddressUpdate($event)"></app-address-edit>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        <div class="d-flex justify-content-between w100">
+                                            <div>Permanent Address</div>
+                                            <div class="d-flex toggle-title status-toggle">Same As <br> Residential
+                                                Address<mat-slide-toggle class="pl10"
+                                                    [checked]="customerDetails.isResidential === 'Y'"
+                                                    (change)="doSameAsResidential($event.checked)"></mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-pad">
+                                        @if(customerDetails.isResidential === 'Y'){
+                                        <app-address-edit [ientAddress]="customerDetails.iResidentialaddress"
+                                            [errorTrue]="errorTrue" type="residential" [view]="true"
+                                            [btnClicked]="true"></app-address-edit>
+                                        } @else {
+
+                                        <app-address-edit [ientAddress]="customerDetails.iPermanentaddress"
+                                            [errorTrue]="errorTrue" type="permanent"
+                                            [btnClicked]="customerDetails.isResidential === 'Y'"></app-address-edit>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        KYC Details <span>(Any one field is Mandatory)</span>
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><app-input-control type="special"
+                                                    label="Birth Reg No" [(ngModel)]="customerDetails.birthRegNo"
+                                                    name="birthRegNo" [maxLength]="15"
+                                                    [errorTrue]="customerDetails.tin===''&&customerDetails.driverLicenseNo==='' && customerDetails.voterId==='' && customerDetails.fnpfNo==='' && customerDetails.passportNo==='' && errorTrue "
+                                                    [required]="customerDetails.tin===''&& customerDetails.driverLicenseNo==='' && customerDetails.voterId==='' && customerDetails.fnpfNo==='' && customerDetails.passportNo==='' " />
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="TIN"
+                                                    [(ngModel)]="customerDetails.tin" name="tin" [maxLength]="15"
+                                                    [errorTrue]="customerDetails.passportNo===''&&  customerDetails.driverLicenseNo==='' && customerDetails.voterId==='' && customerDetails.fnpfNo==='' && customerDetails.birthRegNo===''&& customerDetails.birthRegNo==='' && errorTrue "
+                                                    [required]="customerDetails.passportNo===''&&  customerDetails.driverLicenseNo==='' && customerDetails.voterId==='' && customerDetails.fnpfNo==='' && customerDetails.birthRegNo===''&& customerDetails.birthRegNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="FNPF No"
+                                                    [errorTrue]="errorTrue"
+                                                    [required]="customerDetails.passportNo===''&& customerDetails.tin==='' && customerDetails.voterId==='' && customerDetails.driverLicenseNo==='' && customerDetails.birthRegNo==='' "
+                                                    [(ngModel)]="customerDetails.fnpfNo" [minLength]="10"
+                                                    [maxLength]="10" name="fnpfNo"></app-input-control>
+
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="Voter ID"
+                                                    [(ngModel)]="customerDetails.voterId" name="voterId"
+                                                    [maxLength]="15"
+                                                    [errorTrue]="customerDetails.passportNo===''&& customerDetails.tin===''&& customerDetails.fnpfNo==='' && customerDetails.driverLicenseNo==='' && customerDetails.birthRegNo==='' && errorTrue "
+                                                    [required]="customerDetails.passportNo===''&& customerDetails.tin==='' && customerDetails.fnpfNo==='' && customerDetails.driverLicenseNo==='' && customerDetails.birthRegNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text"
+                                                    label="Driving License No"
+                                                    [(ngModel)]="customerDetails.driverLicenseNo" name="driverLicenseNo"
+                                                    [maxLength]="15"
+                                                    [errorTrue]="customerDetails.passportNo===''&& customerDetails.tin==='' && customerDetails.voterId==='' && customerDetails.fnpfNo==='' && customerDetails.birthRegNo==='' && errorTrue "
+                                                    [required]="customerDetails.passportNo===''&& customerDetails.tin==='' && customerDetails.voterId==='' && customerDetails.fnpfNo==='' && customerDetails.birthRegNo==='' "></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="text" label="Passport No"
+                                                    [(ngModel)]="customerDetails.passportNo" name="passportNo"
+                                                    [maxLength]="18"
+                                                    [errorTrue]="customerDetails.tin===''&& customerDetails.driverLicenseNo==='' && customerDetails.voterId==='' && customerDetails.fnpfNo===''&& customerDetails.birthRegNo===''  && errorTrue "
+                                                    [required]="customerDetails.tin===''&& customerDetails.driverLicenseNo==='' && customerDetails.voterId==='' && customerDetails.fnpfNo==='' && customerDetails.birthRegNo==='' "></app-input-control>
+                                            </div>
+
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box h100">
+                                    <div class="box-header ">
+                                        Social Platform Details
+                                    </div>
+                                    <div class="box-pad">
+                                        <row>
+                                            <div class="col-md-12"><app-input-control type="special" label="Facebook ID"
+                                                    [maxLength]="500" [(ngModel)]="customerDetails.facebookId"
+                                                    name="facebookId"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="special" label="LinkedIn ID"
+                                                    [maxLength]="500" [(ngModel)]="customerDetails.linkedinId"
+                                                    name="linkedinId"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="number" label="Whatsapp No"
+                                                    [maxLength]="20" [(ngModel)]="customerDetails.whatsappNumber"
+                                                    name="whatsappNumber"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="number" label="Viber"
+                                                    [maxLength]="20" [(ngModel)]="customerDetails.viberNumber"
+                                                    name="viberNumber"></app-input-control>
+                                            </div>
+                                            <div class="col-md-12"><app-input-control type="special" label="Skype ID"
+                                                    [maxLength]="500" [(ngModel)]="customerDetails.skypeId"
+                                                    name="skypeId"></app-input-control>
+                                            </div>
+
+                                        </row>
+                                    </div>
+                                </div>
+                            </div>
+                        </row>
+                    </form>
+                </scroll>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+                <ion-icon name="person-outline"></ion-icon>
+                <div class="screen-text">Customer</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

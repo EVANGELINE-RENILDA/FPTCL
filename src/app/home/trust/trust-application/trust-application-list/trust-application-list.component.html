@@ -1,0 +1,232 @@
+<div class="content-wrapper" appAccess="TAPSR" [parentId]="pageId">
+    <div class="v-flex h100">
+        <!-- <div class="lead-card">
+            
+        </div> -->
+        <app-table class="h100" [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"
+            [dataSource]="tableData" (pageChanged)="pageChanged($event)" columnID="trustApplicationId"
+            (onSelect)="onSelect($event)" [sortColumnsName]="sortColumns">
+            <ng-template cellDef="action" let-element>
+                <app-icon-button name="open" toolTip="Open"
+                    (click)="navigateToDetail(element.trustApplicationId)"></app-icon-button>
+            </ng-template>
+
+            <ng-template cellHeaderDef="trustApplRefNo">
+                <div class="header-cell-title">Trust App Ref No</div>
+                <div class="header-cell-subtitle">Trust Type</div>
+            </ng-template>
+            <ng-template cellDef="trustApplRefNo" let-element>
+                <div>{{element.trustApplRefNo}}</div>
+                <div class="table-cell-subtitle">{{element.trustTypeDescription}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="fileNo">
+                <div class="header-cell-title">Trust Acc No</div>
+                <div class="header-cell-subtitle">File Number</div>
+            </ng-template>
+            <ng-template cellDef="fileNo" let-element>
+                <div>{{element.trustAccountNo}}</div>
+                <div class="table-cell-subtitle">{{element.fileNo}}</div>
+            </ng-template>
+            <ng-template cellDef="trusDeedDate" let-element>
+                <div>{{element.trusDeedDate | appDate}}</div>
+
+            </ng-template>
+
+            <ng-template cellHeaderDef="applicantName">
+                <div class="header-cell-title">Applicant Name</div>
+                <div class="header-cell-subtitle">Applicant CRM No</div>
+            </ng-template>
+            <ng-template cellDef="applicantName" let-element>
+                <div>{{element.applicantName}}</div>
+                <div class="table-cell-subtitle">{{element.applicantCrmNo}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="branchDescription">
+                <div class="header-cell-title">Applied Branch</div>
+                <div class="header-cell-subtitle">Applied Date</div>
+            </ng-template>
+            <ng-template cellDef="branchDescription" let-element>
+                <div>{{element.branchDescription}}</div>
+                <div class="table-cell-subtitle">{{element.appliedDate | appDate}}</div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="stageDescription" class="">
+                <div class="header-cell-title w250">Application Status</div>
+                <div class="header-cell-subtitle">Application Stage</div>
+            </ng-template>
+            <ng-template cellDef="stageDescription" let-element>
+                <div>{{element.statusDescription}}</div>
+                <div class="table-cell-subtitle">{{element.stageDescription}}</div>
+            </ng-template>
+            <ng-template cellDef="assignedOfficer" let-element>
+                <div class="status status-{{element.actionStatus}}">{{element.actionStatusDescription}}</div>
+                <div class="table-cell-subtitle">{{element.assignedOfficer}}</div>
+            </ng-template>
+            <ng-template cellDef="settledAmount" let-element>
+                <div class="text-right">
+                    {{element.settledAmount}}
+                </div>
+            </ng-template>
+            <ng-template cellHeaderDef="settledAmount" >
+                <div class="text-right">
+                    Settled Amount
+                </div>
+            </ng-template>
+
+            <ng-template cellHeaderDef="assignedOfficer">
+                <div class="header-cell-title">Action Status</div>
+                <div class="header-cell-subtitle">Assigned Officer</div>
+            </ng-template>
+            <ng-template cellDef="customerName" let-element>
+                <div class="status status-{{element.actionStatusValue}}">{{element.actionStatusDescription}}</div>
+                <div class="table-cell-subtitle">{{element.eneredByFullname}}</div>
+            </ng-template>
+
+
+            <ng-template cellHeaderDef="action">
+                <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+            </ng-template>
+            <ng-template cellDef="statusdescription" let-element>
+                <div class="status status-{{element.value}}">{{element.statusdescription}}</div>
+            </ng-template>
+            <ng-template #slotLeft>
+                <app-search #appSearch [searchTemplate]=" searchTemplate"></app-search>
+            </ng-template>
+            <ng-template #slotRight>
+                <form #l="ngForm">
+                    <div class="d-flex justify-content-end align-items-center">
+
+                        <div class="col-md-12 mt10 w200">
+                            <app-input-control type="select" placeholder="Select Lead No" [(ngModel)]="trustLeadId"
+                                name="voucherConfigId" [items]="initialData.DDLValues.DDLLead" key="id" keyName="code"
+                                [errorTrue]="errorTrue" [required]="true" valueType="int"></app-input-control>
+                        </div>
+                        <div>
+                            <app-icon-button name="add" toolTip="Add New" (click)="createNewTrustApplication()"
+                                appButtonAccess="CrmCustAppAddBtn"></app-icon-button>
+                        </div>
+                    </div>
+                </form>
+            </ng-template>
+        </app-table>
+
+    </div>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Trust Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createTrustApplicationSearch()"></app-icon-button>
+                    <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <div class="dialog-content-inner">
+                    <form #l="ngForm" (ngSubmit)="searchTrustApplication()">
+
+                        <row className="row-h100">
+                            <div class="col-md-3">
+                                <div class="border-right h100 box-pad">
+                                    <app-input-control label="Trust Application Ref No" type="text"
+                                        [(ngModel)]="searchParams.trustApplRefNo"
+                                        name="trustApplRefNo"></app-input-control>
+                                    <app-input-control label="Trust Account Number" type="text"
+                                        [(ngModel)]="searchParams.trustAccountNo"
+                                        name="trustAccountNo"></app-input-control>
+                                    <app-input-control label="Trust Type" type="select"
+                                        [items]="initialData.DDLValues.DDLTrustType" key="constant"
+                                        keyName="description" [(ngModel)]="searchParams.trustTypeValue"
+                                        defaultOption="All" name="trustTypeValue"></app-input-control>
+                                    <app-input-control label="File No" type="text" [(ngModel)]="searchParams.fileNo"
+                                        name="fileNo"></app-input-control>
+                                    <!-- <app-input-control label="Receipt No" type="text" [(ngModel)]="searchParams"
+                                        name="receiptNo"></app-input-control> -->
+                                    <app-input-control label="Assigned Officer" type="select"
+                                        [items]="initialData.DDLValues.Assigned_Officer_DDl" defaultOption="All"
+                                        key="constant" keyName="description" [(ngModel)]="searchParams.assignedOfficer"
+                                        name="assignedOfficer"></app-input-control>
+                                </div>
+                            </div>
+                            <div class="col-md-3 ">
+                                <div class="h100 border-right box-pad">
+                                    <app-input-control label="Application Status" type="select" defaultOption="All"
+                                        [(ngModel)]="searchParams.statusValue" name="statusValue"
+                                        [items]="initialData.DDLValues.DDLApplicationStatus" key="constant"
+                                        keyName="description"></app-input-control>
+                                    <app-input-control label="Action Status" type="select"
+                                        [(ngModel)]="searchParams.actionStatusValue" defaultOption="All"
+                                        [items]="initialData.DDLValues.DDLActionStatus" key="constant"
+                                        keyName="description" name="actionStatusValue"></app-input-control>
+                                    <app-input-control label="Application Stage" type="select"
+                                        [(ngModel)]="searchParams.applicationStageValue" defaultOption="All"
+                                        [items]="initialData.DDLValues.DDLTrustApplicationStage" key="constant"
+                                        keyName="description" name="applicationStageValue"></app-input-control>
+                                </div>
+                            </div>
+                            <div class="col-md-3 ">
+                                <div class="h100 border-right box-pad">
+                                    <app-input-control label="Applied Branch" type="select" defaultOption="All"
+                                        [(ngModel)]="searchParams.appliedBranchValue" name="appliedBranchValue"
+                                        [items]="initialData.DDLValues.DDLBranch" key="constant"
+                                        keyName="description"></app-input-control>
+                                    <app-input-control label="Applied Date From" type="date"
+                                        [(ngModel)]="searchParams.appliedDateFrom"
+                                        [maxDate]="searchParams.appliedDateTo"
+                                        name="appliedDateFrom"></app-input-control>
+                                    <app-input-control label="Applied Date To" type="date"
+                                        [(ngModel)]="searchParams.appliedDateTo" name="appliedDateTo"
+                                        [minDate]="searchParams.appliedDateFrom"></app-input-control>
+                                    <app-input-control label="Applicant Name" type="select" defaultOption="All"
+                                        [items]="initialData.DDLValues.DDLCustomer" key="fullName" keyName="fullName"
+                                        [(ngModel)]="searchParams.appliedBy" name="appliedBy"></app-input-control>
+                                    <app-input-control label="Applicant CRM No" type="select"
+                                        [(ngModel)]="searchParams.applicantCrmNo" name="applicantCrmNo"
+                                        [items]="initialData.DDLValues.DDLCustomer" defaultOption="All" key="code"
+                                        defaultOption="All" keyName="code"></app-input-control>
+                                </div>
+                            </div>
+                            <div class="col-md-3 ">
+                                <div class="h100  box-pad">
+                                    <app-input-control label="Settled Amount From" type="text"
+                                        [(ngModel)]="searchParams.settledAmountFrom"
+                                        name="settledAmountFrom"></app-input-control>
+                                    <app-input-control label="Settled Amount To" type="text"
+                                        [(ngModel)]="searchParams.settledAmountTo"
+                                        name="settledAmountTo"></app-input-control>
+                                    <app-input-control label="Trust Deed From Date" type="date"
+                                        [maxDate]="searchParams.trusDeedDateTo"
+                                        [(ngModel)]="searchParams.trusDeedDateFrom"
+                                        name="trusDeedDateFrom"></app-input-control>
+                                    <app-input-control label="Trust Deed To Date" type="date"
+                                        [(ngModel)]="searchParams.trusDeedDateTo"
+                                        [minDate]="searchParams.trusDeedDateFrom"
+                                        name="trusDeedDateTo"></app-input-control>
+                                </div>
+                            </div>
+                        </row>
+
+                    </form>
+                </div>
+            </scroll>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name">
+                <ion-icon src="assets/icons/trust.svg"></ion-icon>
+                <div class="screen-text">Trust Application</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

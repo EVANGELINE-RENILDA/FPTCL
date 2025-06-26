@@ -1,0 +1,760 @@
+<div class="v-flex h100" appAccess="AVOSC" [parentId]="pageId">
+  <form #x="ngForm" class="content-header">
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="text" label="Voucher Name" [errorTrue]="errorTrue" [required]="true"
+          [(ngModel)]="voucherConfig.voucherName" name="voucherName" [maxLength]="100"></app-input-control>
+      </div>
+      <div class="card-content">
+        <app-input-control type="select" label="Voucher Nature" [errorTrue]="errorTrue" [required]="true"
+          [(ngModel)]="voucherConfig.voucherNatureValue" name="voucherNatureValue"
+          [items]="initialData.DDLValues.ConfigVoucherNatureValue" key="constant" defaultOption="--Select--"
+          keyName="description"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="select" label="Voucher Category" [errorTrue]="errorTrue" [required]="true"
+          [(ngModel)]="voucherConfig.voucherCategoryValue" name="voucherCategoryValue"
+          [items]="initialData.DDLValues.ConfigVoucherTypeValue" key="constant" defaultOption="--Select--"
+          keyName="description"
+          (onSelect)="voucherConfig.voucherTypeValue = '';getVoucherSubTypeByVoucherType(voucherConfig.voucherCategoryValue)"></app-input-control>
+      </div>
+      <div class="card-content">
+        <view-label label="Created Date" value="{{voucherConfig.effectiveDate | appDate}}"></view-label>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <app-input-control type="select" label="Voucher Type" [errorTrue]="errorTrue" [required]="true"
+          [(ngModel)]="voucherConfig.voucherTypeValue" name="voucherTypeValue" defaultOption="--Select--"
+          [items]="subtype" key="constant" keyName="description"
+          (onSelect)="getVoucherType(voucherConfig.voucherTypeValue); ledgerPostingFromClear()"></app-input-control>
+      </div>
+      @if(conditionPosting.includes(voucherConfig.voucherTypeValue)){
+      <div class="card-content">
+
+        <app-input-control type="select" label="Ledger Posting From" [errorTrue]="errorTrue" [required]="true"
+          [(ngModel)]="voucherConfig.ledgerPostingFromValue" name="ledgerPostingFromValue"
+          [items]="initialData.DDLValues.LedgerPostingByList" key="constant" keyName="description"></app-input-control>
+      </div>
+      }
+      <!-- <div class="card-content">
+        <app-input-control
+          type="select"
+          label="Ledger Posting From" defaultOption="--Select--"
+          [errorTrue]="errorTrue"
+          [required]="true"
+        ></app-input-control>
+      </div> -->
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content top-ht">
+        <label>Print After Saving</label>
+        <!-- <div class="label-text">Suffix Symbol</div> -->
+        <div class="radio-value">
+          <mat-radio-group [(ngModel)]="voucherConfig.printAfterSaving" name="printAfterSaving">
+            <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+            <mat-radio-button value="N" color="primary">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Is Direct Approve</label>
+
+        <div class="radio-value">
+          <mat-radio-group [(ngModel)]="voucherConfig.isDirectApproval" name="isDirectApproval">
+            <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+            <mat-radio-button value="N" color="primary">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <view-label label="Ledger Posting" value="{{voucherConfig.isLedgerPosting}}"></view-label>
+      </div>
+      @if(hideNeedInventoryItem()){
+      @if(voucherConfig.voucherCategoryValue!=='TRUST'){
+
+      <div class="card-content">
+        <label>Need Inventory Item</label>
+
+        <div class="radio-value">
+          <mat-radio-group [(ngModel)]="voucherConfig.needInventory" name="needInventory"
+            [disabled]="(voucherConfig.actVoucherConfigId !== 0 || isProduction) || voucherConfig.voucherTypeValue === ''">
+            <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+            <mat-radio-button value="N" color="primary">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      }
+      }
+    </div>
+    <div class="status-header-box flex-none">
+      <div class="card-content btn-group">
+        @if(voucherConfig.actVoucherConfigId===0){
+        <app-icon-button name="save" toolTip="Save" (click)="saveVoucherConfig('new')"
+          appButtonAccess="VochrSaveBtn"></app-icon-button>
+        <app-icon-button name="clear" toolTip="Clear" (click)="createNewVoucherConfig()"
+          appButtonAccess="VochrClearBtn"></app-icon-button>
+        }@else{
+        <app-icon-button name="save" toolTip="Update" (click)="saveVoucherConfig()"
+          appButtonAccess="VochrUpdateBtn"></app-icon-button>
+        <app-icon-button name="refresh" toolTip="Refresh"
+          (click)="openVoucherConfig(voucherConfig.actVoucherConfigId,'refresh')"
+          appButtonAccess="VochrRefreshBtn"></app-icon-button>
+        }
+      </div>
+    </div>
+  </form>
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+    <div class="v-flex h100 ptb14">
+      <div class="flex-1 relative">
+        <div class="ab">
+          <div class="rel">
+            <form #y="ngForm" class="h100">
+              <row>
+                <div class="col-md-4 border-right mb14">
+                  <row>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Voucher Numbering" [errorTrue]="errorTrue"
+                        [required]="true" [(ngModel)]="voucherConfig.ientActVoucherNumber.voucherNumberingValue"
+                        name="voucherNumberingValue" [items]="initialData.DDLValues.ConfigVoucherNumbering"
+                        defaultOption="--Select--" key="constant" keyName="description"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                <div class="col-md-4 border-right mb14">
+                  <row>
+                    <div class="col-md-12">
+                      <app-input-control type="number" label="Starting Number " [errorTrue]="errorTrue"
+                        [required]="true" [(ngModel)]="voucherConfig.ientActVoucherNumber.startingNumber"
+                        name="startingNumber" [max]="99"  [min]="1" [maxLength]="2"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                <div class="col-md-4 mb14">
+                  <row>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Unique No " [errorTrue]="errorTrue" [required]="true"
+                        [(ngModel)]="voucherConfig.ientActVoucherNumber.uniqueNumberingValue" defaultOption="--Select--"
+                        name="uniqueNumberingValue" [items]="initialData.DDLValues.ConfigVoucherUniqueNumbering"
+                        key="constant" keyName="description"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                <div class="col-md-4 mb14 border-right">
+                  <row>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Restart Number" [errorTrue]="errorTrue"
+                        [(ngModel)]="voucherConfig.ientActVoucherNumber.restartNumberValue" name="restartNumberValue"
+                        [items]="initialData.DDLValues.ConfigVoucherRestartNumbering" key="constant"
+                        defaultOption="--Select--" keyName="description"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                <div class="col-md-4 mb14 border-right">
+                  <row>
+                    <div class="col-md-12">
+                      <app-input-control type="number" label="Number Length"
+                        [(ngModel)]="voucherConfig.ientActVoucherNumber.numberLength" name="numberLength"
+                        [max]="20"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                <div class="col-md-4 mb14">
+                  <row>
+                    <div class="col-md-12">
+                      <div class="label-text">Apply Prefix</div>
+                      <div class="radio-value">
+                        <mat-radio-group [(ngModel)]="voucherConfig.ientActVoucherNumber.applyPrefix"
+                          name="applyPrefix">
+                          <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="N" color="primary">No</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                    </div>
+                  </row>
+                </div>
+                @if (voucherConfig.voucherTypeValue === 'SAICE' || voucherConfig.voucherTypeValue === 'PRINV') {
+                <div class="col-md-4 border-right mb14">
+                  <row>
+                    <div class="col-md-12 ">
+                      <div class="label-text">Cash</div>
+                      <div class="radio-value">
+                        <mat-radio-group [(ngModel)]="voucherConfig.needCash"
+                          [disabled]="voucherConfig.actVoucherConfigId !== 0" name="needCash">
+                          <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="N" color="primary">No</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                    </div>
+                  </row>
+                </div>
+                }
+                <div class="col-md-4 border-right mb14">
+                  <row>
+                    <div class="col-md-12 ">
+                      <div class="label-text">Add Month</div>
+                      <div class="radio-value">
+                        <mat-radio-group [(ngModel)]="voucherConfig.ientActVoucherNumber.addMonth" name="addMonth">
+                          <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="N" color="primary">No</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                    </div>
+                  </row>
+                </div>
+
+                <div class="col-md-4 mb14">
+                  <row>
+                    <div class="col-md-12">
+
+                      <div class="label-text">Add Year</div>
+
+                      <div class="radio-value">
+                        <mat-radio-group [(ngModel)]="voucherConfig.ientActVoucherNumber.addYear" name="voucherConfig">
+                          <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="N" color="primary">No</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+
+                    </div>
+
+                  </row>
+                </div>
+                @if (__showTax() && voucherConfig.voucherTypeValue !== '') {
+                <div class="col-md-4 border-right">
+                  <row>
+                    @if(voucherConfig.voucherCategoryValue!=='TRUST'){
+                    <div class="col-md-12 ">
+                      <div class="label-text ">Is Tax Editable</div>
+
+                      <div class="radio-value">
+                        <mat-radio-group [(ngModel)]="voucherConfig.isTaxEditable" name="isTaxEditable">
+                          <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="N" color="primary">No</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                    </div>
+                    }
+                  </row>
+                </div>
+                }
+                @if(voucherConfig.voucherTypeValue === 'SAICE' ||
+                voucherConfig.voucherTypeValue === 'PRINV' ||
+                voucherConfig.voucherTypeValue === 'DBNTE' ||
+                voucherConfig.voucherTypeValue === 'CRNTE'){
+                <div class="col-md-4 border-right">
+                  <row>
+                    <div class="col-md-12">
+
+                      <div class="label-text">Is Item Ledger Editable</div>
+
+                      <div class="radio-value">
+                        <mat-radio-group [(ngModel)]="voucherConfig.isItemLedgerEditable" name="isItemLedgerEditable">
+                          <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="N" color="primary">No</mat-radio-button>
+                        </mat-radio-group>
+
+                      </div>
+
+                    </div>
+
+                  </row>
+                </div>
+                }
+                @if((voucherConfig.voucherTypeValue === 'SAICE' || voucherConfig.voucherTypeValue === 'PRINV') &&
+                voucherConfig.needCash !== 'Y'){
+                <div class="col-md-4 ">
+                  <row>
+                    <div class="col-md-12">
+                      <app-input-control type="select"
+                        [label]="voucherConfig.voucherTypeValue === 'SAICE' ? 'Default Receipt Note Mapping' : 'Default Payment Note Mapping'"
+                        [(ngModel)]="voucherConfig.postingVoucherConfigId" name="postingVoucherConfigId" valuetype="int"
+                        [items]="initialData.DDLValues.DDLPostingVoucher" key="id" keyName="name"></app-input-control>
+                    </div>
+                  </row>
+                </div>
+                }
+              </row>
+
+              <row className="pt20">
+                <div class="col-md-4 pr20">
+                  <app-input-control type="textarea" [maxLength]="250" className="notes-1"
+                    [(ngModel)]="voucherConfig.pdfOtherComments" name="pdfOtherComments"
+                    label="COMMENTS and Special Instructions"></app-input-control>
+                </div>
+                <div class="col-md-4 mh200">
+                  <label class="label-bold">Voucher Signature</label>
+                  <div class="img-frame " (change)="loadImageFromDevice($event)">
+
+                    <div class="flex-center logo h100">
+                      <img [src]="voucherConfig.pdfSignature?voucherConfig.pdfSignature:'assets/img/human-face.svg'">
+
+                    </div>
+                    <!-- <div class="pb20"></div> -->
+                    <div class="upload-btn ">
+                      <input type="file" class="uploadInput" #fileInput id="file-input"
+                        accept="image/jpg, image/jpeg , image/png">
+                      <div class="p10" (click)="triggerClick()">Select</div>
+                    </div>
+                  </div>
+                </div>
+              </row>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    }
+    @if(voucherConfig.actVoucherConfigId !==0){
+
+    @if(selectedTab === 1){
+
+        <app-table [hasHeader]="false" [columns]="prefix" [hideSelectAll]="true" [columnsName]="prefixName"
+          [hasIndex]="true" [dataSource]="tablePrefixData">
+          <ng-template cellDef="prefixValue" let-element>
+            <div (click)="openDialogPrefix(element.actVoucherNumberPrefixId)" class="hover-underline pointer">
+              {{element.prefixValue}}
+            </div>
+          </ng-template>
+          <ng-template cellDef="addBranchCode" let-element>
+            @if(element.addBranchCode === 'Y'){
+            Yes
+            }
+            @if(element.addBranchCode === 'N'){
+            No
+            }
+          </ng-template>
+          <ng-template cellDef="effectiveFrom" let-element>
+            {{element.effectiveFrom | appDate}}
+          </ng-template>
+          <ng-template cellHeaderDef="add">
+            <app-icon-button name="add" toolTip="Add New" (click)="openDialogPrefix(0)"
+              appButtonAccess="AVADP"></app-icon-button>
+          </ng-template>
+        </app-table>
+     
+    }
+    @if(selectedTab === 2){
+    <app-table [hideSelectAll]="true" [hasHeader]="false" [showPaginator]="false" [columns]="branch" [hasIndex]="true"
+      [columnsName]="branchName" [dataSource]="tableBranchData">
+      <ng-template cellDef="restartedDate" let-element>
+        {{element.restartedDate | appDate}}
+      </ng-template>
+      <ng-template cellDef="modifiedDate" let-element>
+        {{element.modifiedDate | appDate}}
+      </ng-template>
+    </app-table>
+    }
+    @if(selectedTab === 3){
+    <app-table [hideSelectAll]="true" [hasHeader]="false" [showPaginator]="false" [columns]="branchAccess"
+      [hasIndex]="true" [columnsName]="branchAccessName" [dataSource]="tableBranchAccessData">
+      <ng-template cellDef="branchName" let-element>
+        {{element.ientCompanyBranch.branchName}}
+      </ng-template>
+      <ng-template cellHeaderDef="add">
+        <app-icon-button name="add" toolTip="Add New" (click)="openBranchAccess(0)"
+          appButtonAccess="AVBAA"></app-icon-button>
+      </ng-template>
+      <ng-template cellDef="createdDate" let-element>
+        {{element.endDate | appDate}}
+      </ng-template>
+      <ng-template cellDef="effectiveDate" let-element>
+        {{element.effectiveDate | appDate}}
+      </ng-template>
+      <ng-template cellDef="branchName" let-element>
+        <div class="hover-underline pointer" (click)="openBranchAccess(element.actVoucherBranchAccessId)"
+          appButtonAccess="VochrBrchAcsNewBtn">
+          {{element.ientCompanyBranch.branchName}}</div>
+      </ng-template>
+      <ng-template cellDef="status" let-element>
+        {{element.ilistentActVoucherBranchAccessStatusHistory.statusValue}}
+      </ng-template>
+    </app-table>
+    }
+    @if(selectedTab === 4){
+    <app-table [hideSelectAll]="true" [hasHeader]="false" [showPaginator]="false" [columns]="regionAccess"
+      [hasIndex]="true" [columnsName]="regionAccessName" [dataSource]="tableRegionAccessData">
+      <ng-template cellDef="createdDate" let-element>{{element.createdDate |appDate}}</ng-template>
+      <ng-template cellDef="modifiedDate" let-element>{{element.modifiedDate |appDate}}</ng-template>
+      <ng-template cellDef="regionDescription" let-element>
+        <div class="hover-underline pointer" (click)="openRegionDialog(element.actVoucherRegionAccessId)">
+          {{element.regionDescription}}</div>
+      </ng-template>
+
+      <ng-template cellDef="regionDescription" let-element>
+        <div>{{element.regionDescription}}</div>
+      </ng-template>
+
+      <ng-template cellDef="enteredByFullName" let-element>
+        <div>{{element.enteredByFullName}}</div>
+      </ng-template>
+
+      <ng-template cellDef="delete" let-element></ng-template>
+
+      <ng-template cellHeaderDef="add">
+        <app-icon-button name="add" toolTip="Add New" (click)="openRegionDialog(0)"
+          appButtonAccess="VochrRegnNewBtn"></app-icon-button>
+      </ng-template>
+      <ng-template cellDef="add" let-element>
+        <app-icon-button name="doc-delete" toolTip="Delete" (click)="deleteItemType(element)"></app-icon-button>
+      </ng-template>
+    </app-table>
+    }
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon name="information-outline"></ion-icon>
+          <div>Voucher Info</div>
+        </div>
+        
+        @if(voucherConfig.actVoucherConfigId !==0){
+          @if (voucherConfig.ientActVoucherNumber.applyPrefix !=='N') {
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon name="return-down-forward-outline"></ion-icon>
+          <div>Prefix</div>
+        </div>
+      }
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon name="git-branch-outline"></ion-icon>
+          <div>Branch Voucher Number</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon name="key-outline"></ion-icon>
+
+          <div>Branch Access</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(4)" [ngClass]="{ tabClass: selectedTab === 4}">
+          <ion-icon src="assets/icons/region-value.svg"></ion-icon>
+
+          <div> Region Access </div>
+        </div>
+        }
+      </div>
+      <!-- <div class="open-arrow" id="trigger{{ pageId }}">
+		  <ion-icon name="chevron-down-outline"></ion-icon>
+		</div> -->
+    </div>
+    <!-- <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+		<row>
+		  <div class="col-md-4 footer-textarea">
+			<app-input-control
+			  type="textarea"
+			  [maxLength]="250"
+			  className="notes"
+			  label="Common Narration Text"
+			></app-input-control>
+		  </div>
+		  <div class="col-md-4">
+			<view-label label="Reporting Currency" value="INR"></view-label>
+		  </div>
+		  <div class="col-md-4">
+			<div class="justify-end">
+			  <div class="f-content-txt">
+				<div>Total Debit</div>
+				<div>Total Credit</div>
+				<div>Difference</div>
+			  </div>
+			  <div class="text-end">
+				<div>1,000.00</div>
+				<div>1,000.00</div>
+				<div>0</div>
+			  </div>
+			</div>
+		  </div>
+		</row>
+	  </div> -->
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg" (click)="navigateToList()"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Voucher</div>
+      </li>
+
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #prefixDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Voucher > Detail >
+        @if(voucherPrefix.actVoucherNumberPrefixId === 0){
+        Add Prefix
+        }
+        @else{
+        Edit Prefix
+        }
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <div class="end gap-10">
+            @if(voucherPrefix.actVoucherNumberPrefixId === 0){
+
+            <app-icon-button name="save" toolTip="Save" (click)="saveVoucherNumberPrefix()"
+              appButtonAccess="AVSPB"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="clearPrefix()"
+              appButtonAccess="AVCPB"></app-icon-button>
+            }
+            @else{
+            <app-icon-button name="save" toolTip="Update" (click)="saveVoucherNumberPrefix()"
+              appButtonAccess="AVUPB"></app-icon-button>
+            <app-icon-button name="refresh" toolTip="Refesh"
+              (click)="openVoucherNumberPrefix(voucherPrefix.actVoucherNumberPrefixId,'refresh')"
+              appButtonAccess="AVRPB"></app-icon-button>
+
+            }
+            <app-icon-button name="close" toolTip="Close" (click)=" dialogClose()"></app-icon-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="dialog-content-inner p10 h100">
+      @if(data.showErrorMessage){
+      <div class="error-panel">
+        <app-error-message></app-error-message>
+      </div>
+      }
+      <form #p="ngForm">
+        <row>
+          <div class="col-md-12">
+            <app-input-control type="text" label="Prefix Value" [errorTrue]="errorTrue" [required]="true"
+              [(ngModel)]="voucherPrefix.prefixValue" name="prefixValue" [maxLength]="5"></app-input-control>
+          </div>
+          <div class="col-md-12">
+            <app-input-control type="date" [errorTrue]="errorTrue" [required]="true" label="Effective Date"
+              [(ngModel)]="voucherPrefix.effectiveFrom" name="effectiveFrom"
+              [minDate]="voucherPrefix.effectiveFrom"></app-input-control>
+          </div>
+          <div class="col-md-12">
+            <div class="label-text">Add Branch Code</div>
+            <div class="radio-value">
+              <mat-radio-group [(ngModel)]="voucherPrefix.addBranchCode" name="addBranchCode">
+                <mat-radio-button value="Y" color="primary">Yes</mat-radio-button>
+                <mat-radio-button value="N" color="primary">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+
+
+          </div>
+        </row>
+      </form>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #branchAccessDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Voucher > Detail >
+        @if(voucherBranchAccess.actVoucherBranchAccessId !== 0){
+        Edit Branch Access
+        }
+        @else{ Add Branch Access}
+
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+
+          @if(voucherBranchAccess.actVoucherBranchAccessId !== 0){
+
+          @if(openApproved){
+          <app-icon-button name="save" toolTip="Update" (click)="saveVoucherBranchAccess()"
+            appButtonAccess="AVBAU"></app-icon-button>
+          }
+          <app-icon-button name="refresh" toolTip="Refresh"
+            (click)="openVoucherBranchAccess(voucherBranchAccess.actVoucherBranchAccessId, 'refresh')"
+            appButtonAccess="AVBAR"></app-icon-button>
+          }
+          @else{
+          <app-icon-button name="save" toolTip="Save" (click)="saveVoucherBranchAccess()"
+            appButtonAccess="AVBAS"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearVoucherBranchAccess()"
+            appButtonAccess="AVBAC"></app-icon-button>
+          }
+          <app-icon-button name="close" toolTip="Close" (click)=" dialogClose()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <form #b="ngForm">
+          <row>
+            <div class="col-md-6">
+
+              <app-input-control type="select" [(ngModel)]="voucherBranchAccess.actCompanyBranchId"
+                name="actCompanyBranchId" defaultOption="--Select--" [items]="branchDDL" key="id" keyName="description"
+                [btnClicked]="voucherBranchAccess.statusValue === 'APROV' || voucherBranchAccess.statusValue === 'PENAP'"
+                label="Branch"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="select" [errorTrue]="errorTrue" [required]="true" label="Status"
+                [(ngModel)]="voucherBranchAccess.statusValue" name="statusValue" [items]="statusddl" key="constant"
+                defaultOption="--Select--" keyName="description"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="date" label="Effective Date" [errorTrue]="errorTrue" [required]="true"
+                [(ngModel)]="voucherBranchAccess.effectiveDate" name="effectiveDate"
+                [minDate]="voucherBranchAccess.effectiveDate"
+                [btnClicked]="voucherBranchAccess.statusValue === 'APROV' || voucherBranchAccess.statusValue === 'PENAP'"
+              ></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="date" label="End Date" [(ngModel)]="voucherBranchAccess.endDate " name="endDate"
+                [btnClicked]="voucherBranchAccess.statusValue === 'APROV' || voucherBranchAccess.statusValue === 'PENAP'"
+                [minDate]="voucherBranchAccess.effectiveDate"></app-input-control>
+            </div>
+            <div class="col-md-6 check-align mb20">
+              <app-checkbox [checked]="voucherBranchAccess.isAllowed==='Y'" (change)="branchAccessCheck1($event)"
+                [btnClicked]="voucherBranchAccess.isRestricted === 'Y' "
+                [btnClicked]="voucherBranchAccess.statusValue === 'APROV' || voucherBranchAccess.statusValue === 'PENAP'"></app-checkbox>
+              <span [ngClass]="{'disable':voucherBranchAccess.isRestricted === 'Y'}">Access Allowed</span>
+            </div>
+            <div class="col-md-6 check-align mb20">
+              <app-checkbox [checked]="voucherBranchAccess.isRestricted==='Y'" (change)="branchAccessCheck2($event)"
+                [btnClicked]="voucherBranchAccess.isAllowed==='Y' "></app-checkbox>
+              <span [ngClass]="{'disable':voucherBranchAccess.isAllowed === 'Y'}">Access Restricted</span>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="text" label="Added By" placeholder="Enter Added By"
+                [(ngModel)]="voucherBranchAccess.istrAddedByUserName" name="istrAddedByUserName"
+                [btnClicked]="true"></app-input-control>
+            </div>
+            <div class="col-md-6">
+              <app-input-control type="text" label="Approved By" placeholder="Enter Approved By"
+                [(ngModel)]="voucherBranchAccess.istrApprovedByUserName" name="istrApprovedByUserName"
+                [btnClicked]="true"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #regionDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Voucher > Detail >
+        @if(this.regionData.actVoucherRegionAccessId === 0){
+        Add Region
+        }
+        @else{
+        Edit Region
+        }
+      </div>
+      <div class="slot-right">
+        <div class="btn-group gap-10">
+          @if(this.regionData.actVoucherRegionAccessId === 0){
+          <app-icon-button name="save" toolTip="Save" (click)="saveRegionAccess()"
+            appButtonAccess="VochrRegnSaveBtn"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearRegion()"
+            appButtonAccess="VochrRegnClearBtn"></app-icon-button>
+
+          }
+          @else{
+          <app-icon-button name="save" toolTip="Update" (click)="saveRegionAccess()"
+            appButtonAccess="VochrRegnUpdateBtn"></app-icon-button>
+          <app-icon-button name="refresh" toolTip="Refresh"
+            (click)="openRegionAccess(regionData.actVoucherRegionAccessId,'refresh')"
+            appButtonAccess="VochrRegnRefreshBtn"></app-icon-button>
+          }
+          <app-icon-button name="close" toolTip="Close" (click)=" dialogClose()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        @if(data.showErrorMessage){
+        <div class="error-panel">
+          <app-error-message></app-error-message>
+        </div>
+        }
+        <form #r="ngForm">
+          <row>
+            <div class="col-md-12 mb12">
+              <view-label label="Region" value="{{regionData.regionDescription}}"></view-label>
+              <!-- <app-input-control type="select" [errorTrue]="errorTrue" [required]="true" label="Region"
+                [(ngModel)]="regionData.regionValue" name="regionValue" [items]="initialData.DDLValues.DDLRegion"
+               key="constant" keyName="description" [btnClicked]="true"></app-input-control> -->
+            </div>
+            <div class="col-md-12">
+              <app-input-control label="Entered By" [(ngModel)]="regionData.enteredByFullName"
+                name="enteredByFullName"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of statusLst; track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByFullName ? status.changedByFullName : "-" }}
+          </div>
+          <div class="sub-status_by">{{ status.effectiveDate | appDate }}</div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>
+<!-- <ng-template cellDef="add" class="mat-cell " let-element><a mat-icon-button class="more-btn"
+          [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"
+            (click)="openRegionStatus(element.actVoucherRegionAccessId)"></ion-icon>
+        </a></ng-template> -->

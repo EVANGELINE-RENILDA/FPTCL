@@ -1,0 +1,197 @@
+<div class="v-flex h100" [parentId]="pageId" appAccess="PRTDV">
+
+    <section class="app-container">
+        <div class="side-menu border-right">
+            <div class="brand border-right">
+                <img src="assets/logo.svg" alt="">
+            </div>
+            
+               <div class="mt50">
+                @for (menu of menus; track $index) {
+
+                    @if (menu.menuAccess | menuAccess: appService.userData) {
+                      
+                           
+                    
+                        @if(menu.click === 'Finance'){
+                            <div class="main-menu" (click)="navigatetoFianance()">
+                            <div class="main-menu-item" [cdkMenuTriggerFor]="submenu" [cdkMenuPosition]="sidePosition"
+                            [ngClass]="{'active' : menuName === menu.value}" (click)="menuValue(menu.value)">
+                    
+                            <div class="main-menu-icon">
+                                <ion-icon [src]="menu.icon"></ion-icon>
+                            </div>
+                            <div class="main-menu-content">{{menu.click}}</div>
+                        </div>
+                    </div>
+                        }
+                        @else {
+                            <div class="main-menu ">
+                                
+                                <div class="main-menu-item" [cdkMenuTriggerFor]="submenu" [cdkMenuPosition]="sidePosition"
+                                [ngClass]="{'active' : menuName === menu.value}" (click)="menuValue(menu.value)">
+                                <div class="main-menu-icon">
+                                    <ion-icon [src]="menu.icon"></ion-icon>
+                                </div>
+                                <div class="main-menu-content">{{menu.name}}</div>
+                            </div>
+                            </div>
+                        }
+                   
+                    
+                    }
+                    }
+               </div>
+
+
+                <!-- <ng-container *ngTemplateOutlet="crm"></ng-container> -->
+
+            
+        </div>
+        <div class="app-content">
+            <div class="v-flex h100">
+                <header>
+
+                    <div class="toolbar">
+                        @if(breadCrumbTemplate){
+                        <ng-container *ngTemplateOutlet="breadCrumbTemplate"></ng-container>
+                        }
+                
+                        <div class="slot-right">
+                            <button class="header-notification" (click)="openUserManual()">
+                                <img src="assets/icons/help-circle-outline.svg" alt="">
+                            </button>
+                            <button class="header-notification">
+                                <img src="assets/icons/settings.svg" alt="">
+                            </button>
+                            <button class="header-notification">
+                                <img src="assets/icons/notification.svg" alt="">
+                            </button>
+                            <div class="profile-box" [cdkMenuTriggerFor]="profileMenu">
+                                <div class="profile-img">
+                                    <img src="" alt="">
+                                </div>
+                                <div class="profile-content">
+                                    <div class="subtitle">Welcome</div>
+                                    <div class="title">{{this.appService.userData.fullname}}</div>
+                                </div>
+                                <div class="chevron-down">
+                                    <ion-icon name="chevron-down-outline"></ion-icon>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div class="top-spacer"></div>
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <div class="flex-1 relative">
+                    <div class="ab">
+                        <div class="rel">
+
+
+                            <router-outlet></router-outlet>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+<ng-template #profileMenu>
+    <div class="profile-menu" cdkMenu>
+        <button cdkMenuItem>Profile</button>
+        <div class="bottom-border"></div>
+        <button cdkMenuItem (click)="doLogout()">Logout</button>
+    </div>
+</ng-template>
+
+<ng-template #submenu>
+    <div class="submenu-container" cdkMenu>
+      @for (menu of menus; track $index) {
+        @if (menu.value === menuName) {
+        @for (submenu of menu.subMenus; track $index) {
+        @if (submenu.menuAccess | menuAccess:appService.userData) {
+        @if(submenu.url!=='' && submenu.name!==''){
+        <a class="submenu-item" cdkMenuItem [routerLink]="submenu.url">{{submenu.name}}</a>
+        }
+        @if(submenu.click ==='My Diary') {
+        <div class="submenu-item" (click)="navigateDiary()">
+            {{submenu.click}}
+        </div>
+        }
+        @if(submenu.click ==='Finance') {
+        <div class="submenu-item" (click)="navigatetoFianance()">
+            {{submenu.click}}
+        </div>
+        }
+        @if(submenu.click ==='Corporate') { 
+        <div class="submenu-item h-auto">
+            <div>{{submenu.click}}</div>
+            <div class="child-menu">
+                <div class="submenu-item fw12" routerLink="/home/corporate/finance-menus">Accounts</div>
+                <div class="submenu-item fw12" routerLink="/home/corporate/purchase-menus">Purchase</div>
+                <div class="submenu-item fw12" routerLink="/home/corporate/sales-menus">Sales</div>
+                <div class="submenu-item fw12" routerLink="/home/corporate/inventory-menus">Inventory</div>
+                <div class="submenu-item fw12" routerLink="/home/corporate/budget-menus">Budget</div>
+            </div>
+        </div>
+
+
+        }
+        @if(submenu.click === 'Dashboard'){
+        <div class="submenu-item" [cdkMenuTriggerFor]="dashBoard" [cdkMenuPosition]="sidePosition">{{submenu.click}}
+        </div>
+        }
+
+        }
+        }
+        }
+        }
+        <!-- } -->
+    </div>
+</ng-template>
+
+<ng-template #corporateMenu>
+    <div class="submenu-container bgxc">
+        <div class="submenu-item" routerLink="/home/corporate/finance-menus">Finance</div>
+        <div class="submenu-item" routerLink="/home/corporate/purchase-menus">Purchase</div>
+        <div class="submenu-item" routerLink="/home/corporate/sales-menus">Sales</div>
+        <div class="submenu-item" routerLink="/home/corporate/inventory-menus">Inventory</div>
+    </div>
+</ng-template>
+<ng-template #dashBoard>
+    <div class="submenu-container bgxc">
+        <div class="submenu-item" routerLink="/home/crm/customer/dashboard">Customer</div>
+
+    </div>
+</ng-template>
+
+<ng-template #newDiaryDialog>
+    <div class="notify-dialog">
+        <div class="notification-icon center">
+            <ion-icon src="assets/icons/my-diary.svg"></ion-icon> My Diary
+        </div>
+        <div class="center text-center mb20">
+            Are you sure you want to create new diary for you</div>
+        <div class="center gap-10">
+            <button class="btn-notification" (click)="yesCreate()">Yes</button>
+            <button class="btn-notification cancel-btn" (click)="coreService.closeAll()">No</button>
+
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #viewUserManual>
+    <div class="h100">
+        <object [data]="this.appSettings.environment.userManualLocation +
+        this.appService.helpFile | appSafe: 'resourceUrl'" type='application/pdf' class="w100 h100"></object>
+    </div>
+</ng-template>

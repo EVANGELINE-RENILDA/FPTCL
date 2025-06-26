@@ -1,0 +1,198 @@
+<div class="content-wrapper" appAccess="MYDRY" [parentId]="pageId">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData" [sortColumnsName]="sortColumns"
+        (pageChanged)="pageChanged($event)" columnID="deathNoticeId" [hideSelectAll]="true">
+        <ng-template cellDef="date" let-element>{{element.date | appDate}}</ng-template>
+        <ng-template cellDef="reminderDatetime" let-element>{{element.reminderDatetime | appDate}}</ng-template>
+        <ng-template cellDef="status" let-element>
+            <div class="status-{{element.statusValue}}">
+                {{element.statusDescription}}
+            </div>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open" (click)="openDiaryData(element.diaryEntryId)"></app-icon-button>
+        </ng-template>
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate" maxHeight="350px"></app-search>
+        </ng-template>
+        <ng-template #slotRight>
+            <app-icon-button name="add" toolTip="Add New" (click)="createNewDiary()"></app-icon-button>
+        </ng-template>
+
+    </app-table>
+</div>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title gap-10"> <ion-icon src="assets/icons/my-diary.svg"></ion-icon> My Diary Search
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createDiarySearch('clear')"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+
+                <form #l="ngForm" autocomplete="off">
+                    <row>
+                        <div class="col-md-4">
+                            <app-input-control label="Date (From)" type="date" [(ngModel)]="searchParams.dateFrom"
+                                [maxDate]="searchParams.dateTo" name="dateFrom"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control label="Date (To)" [(ngModel)]="searchParams.dateTo" name="dateTo"
+                                [minDate]="searchParams.dateFrom" type="date"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control label="Event Type" type="select" defaultOption="All"
+                                [items]="initialData.DDLValues.DDLEventType" key="constant" keyName="description"
+                                [(ngModel)]="searchParams.eventTypeValue" name="eventTypeValue"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control label="Priority Type" type="select" defaultOption="All"
+                                [items]="initialData.DDLValues.DDLPriorityType" key="constant" keyName="description"
+                                [(ngModel)]="searchParams.priorityValue" name="priorityValue"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control label="Correspondence Type" type="select" defaultOption="All"
+                                [items]="initialData.DDLValues.DDLCorresType" key="constant" keyName="description"
+                                [(ngModel)]="searchParams.corresValue" name="corresValue"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control label="Reminder Date (From)"
+                                [(ngModel)]="searchParams.reminderDatetimeFrom" name="reminderDatetimeFrom"
+                                [maxDate]="searchParams.reminderDatetimeTo" type="date"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control label="Reminder Date (To)" [(ngModel)]="searchParams.reminderDatetimeTo"
+                                [minDate]="searchParams.reminderDatetimeFrom" name="reminderDatetimeTo"
+                                type="date"></app-input-control>
+                        </div>
+                        <div class="col-md-4">
+                            <app-input-control label="Status" type="select" [items]="initialData.DDLValues.DDLStatus"
+                                defaultOption="All" key="constant" [(ngModel)]="searchParams.statusValue"
+                                name="statusValue" keyName="description"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/my-diary.svg"></ion-icon>
+                <div class="screen-text">My Diary</div>
+            </li>
+
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #detailDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"> <ion-icon class="dialog-header-icon" src="assets/icons/my-diary.svg"></ion-icon>
+                My Diary<ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+                @if(this.diaryData.diaryEntryId === 0){
+                Add
+                }
+                @else {
+                Edit
+                }  Detail
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    @if(this.diaryData.diaryEntryId === 0){
+
+                    <app-icon-button name="save" toolTip="Save" (click)="saveDiaryData()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearDiary()"></app-icon-button>
+                    }
+                    @else {
+                    <app-icon-button name="save" toolTip="Update" (click)="saveDiaryData()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh" (click)="refreshDiary()"></app-icon-button>
+                    }
+                    <app-icon-button name="close" toolTip="Close" (click)="dialogClose()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <scroll>
+                <form #x="ngForm" class="dialog-content-inner">
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <row>
+                        @if(newDataData === false){
+                            <div class="col-md-4"><app-input-control label="Date" type="date" [(ngModel)]="diaryData.date"
+                                    [errorTrue]="errorTrue" [required]="true" name="date"
+                                    [minDate]="currentDate"></app-input-control>
+                            </div>
+                        }
+                        @else {
+                            <div class="col-md-4"><app-input-control label="Date" type="date" [(ngModel)]="diaryData.date"
+                                [errorTrue]="errorTrue" [required]="true" name="date"
+                                ></app-input-control>
+                        </div>
+                        } 
+                        <div class="col-md-4"><app-input-control label="Time" type="time" [(ngModel)]="diaryData.time"
+                                [errorTrue]="errorTrue" [required]="true" name="time"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Event Type"
+                                [(ngModel)]="diaryData.eventTypeValue" type="select" defaultOption="--Select--"
+                                [items]="initialData.DDLValues.DDLEventType" key="constant" keyName="description"
+                                name="eventTypeValue" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Priority Type"
+                                [(ngModel)]="diaryData.priorityValue" type="select" defaultOption="--Select--"
+                                [items]="initialData.DDLValues.DDLPriorityType" key="constant" keyName="description"
+                                name="priorityValue" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-4"><app-input-control label="Correspondence Type"
+                                [(ngModel)]="diaryData.corresValue" type="select" defaultOption="--Select--"
+                                [items]="initialData.DDLValues.DDLCorresType" key="constant" keyName="description"
+                                name="corresValue" [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                        </div>
+                        @if(newDataData=== false){
+
+                            <div class="col-md-4"><app-input-control label="Start Reminder On" type="date"
+                                    [(ngModel)]="diaryData.reminderDatetime" name="reminderDatetime" [errorTrue]="errorTrue"
+                                    [minDate]="currentDate" [maxDate]="diaryData.date"
+                                    [required]="true"></app-input-control>
+                            </div>
+                        }
+                        @else {
+                            <div class="col-md-4"><app-input-control label="Start Reminder On" type="date"
+                                [(ngModel)]="diaryData.reminderDatetime" name="reminderDatetime" [errorTrue]="errorTrue"
+                                [maxDate]="diaryData.date"
+                                [required]="true"></app-input-control>
+                        </div>
+                        }
+                        <div class="col-md-8"><app-input-control label="Title" [(ngModel)]="diaryData.title"
+                                name="title" [errorTrue]="errorTrue" [required]="true"></app-input-control></div>
+                        <div class="col-md-4"><app-input-control label="Status" [(ngModel)]="diaryData.statusValue"
+                                type="select" defaultOption="--Select--" [items]="initialData.DDLValues.DDLStatus"
+                                key="constant" keyName="description" name="statusValue" [errorTrue]="errorTrue"
+                                [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-12"><app-input-control label="Notes" className="notes" type="textarea"
+                                [maxLength]="250" [(ngModel)]="diaryData.notes" name="notes"></app-input-control></div>
+
+                    </row>
+                </form>
+            </scroll>
+        </div>
+
+    </div>
+</ng-template>

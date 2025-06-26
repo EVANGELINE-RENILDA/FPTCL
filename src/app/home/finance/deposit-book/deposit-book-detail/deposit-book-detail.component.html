@@ -1,0 +1,832 @@
+<div class="v-flex h100 ov-hid" appAccess="FUDTN" [parentId]="pageId">
+  <form #l="ngForm" class="content-header">
+    <div class="card-box border-right w100">
+      <view-label label="Branch" [value]="branchName"></view-label>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Cashier Name</label>
+        <div class="content">
+          <label-dash [value]="cashCounterDepositBook.cashierName" />
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Cash Counter</label>
+        <div class="content">
+          <label-dash [value]="cashCounterDepositBook.cashCounterNo" />
+        </div>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Deposit Book No</label>
+        <div class="content">
+          <label-dash [value]="cashCounterDepositBook.depositBookNo" />
+        </div>
+      </div>
+    </div>
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content">
+          <label>Book Status</label>
+          <accouts-status-table [statusDescription]="cashCounterDepositBook.statusDescription"></accouts-status-table>
+        </div>
+
+        <div class="card-content btn-group pt-2">
+          <app-icon-button name="edit" toolTip="Edit" (click)="editDepositBook()"
+            [hidden]="hideBtnBasedonStatus()"></app-icon-button>
+          <app-icon-button name="open" toolTip="Open" (click)="showDepositBook()"></app-icon-button>
+        </div>
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+
+  <div class="content-body flex-1 relative">
+    <scroll>
+      @if(selectedTab === 0){ @if(cashCounterDepositBook.statusValue ===
+      'CLOSED'){
+
+      <div class="p20">
+        <button class="approve-btn ml-auto pb-5 fw-600">Reconcillation</button>
+      </div>
+      }
+      <form #a="ngForm" class="pt-2 h100">
+        <div class="col-md-12 h100 d-flex">
+          <div class="col-md-8 h100 border-right">
+            <div class="v-flex h100">
+              <div class="d-flex pb-5 fw-600">
+                <div>Deposit List</div>
+                <div class="ml-auto">
+                  <!-- <app-icon-button
+                    name="add"
+                    toolTip="Add"
+                    appButtonAccess="FunTraNotNotsSaveBtn"
+                  ></app-icon-button> -->
+                </div>
+              </div>
+
+              <div class="flex-1 relative pb-5">
+                <scroll>
+                  <div class="pb-5">
+                    <ng-container *ngFor="
+                        let DepositData of cashCounterDepositBook.lstCashCounterDepositBookSummary
+                      ">
+                      <div class="col-md-12 card pointer" [ngStyle]="{
+                          'background-color':
+                            DepositData.cashCounterDepositBookSummaryId ===
+                            cashCounterDepositBookSummaryId
+                              ? '#D6F2FB'
+                              : ''
+                        }" (click)="
+                          openDepositSummary(
+                            DepositData.cashCounterDepositBookSummaryId
+                          )
+                        ">
+                        <div class="col-md-12 d-flex">
+                          <table class="w100">
+                            <tr>
+                              <td class="col-md-6 fw-600">Deposit Book</td>
+                              <td class="col-md-6 fw-600">
+                                Opening Amount ({{ appService.currencyValue }})
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="col-md-6">
+                                {{ DepositData.receiptModeDescription }}
+                              </td>
+                              <td class="col-md-6">
+                                {{ DepositData.openingAmount }}
+                                {{ appService.currencyValue }}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="col-md-6 fw-600">Closing Amount</td>
+                              <td class="col-md-6 fw-600">Computed Amount</td>
+                            </tr>
+                            <tr>
+                              <td class="col-md-6">
+                                {{ DepositData.closingAmount }}
+                                {{ appService.currencyValue }}
+                              </td>
+                              <td class="col-md-6">
+                                {{ DepositData.computedAmount }}
+                                {{ appService.currencyValue }}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="col-md-6 fw-600">Mismatch Amount</td>
+                              <td class="col-md-6 fw-600">
+                                Collected By Finance
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="col-md-6">
+                                {{ DepositData.mismatchAmount }}
+                                {{ appService.currencyValue }}
+                              </td>
+                              <td class="col-md-6">
+                                {{ DepositData.collectedByFinance }}
+                                {{ appService.currencyValue }}
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </scroll>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex fw-600">
+              <div>Deposit Details</div>
+              <div class="ml-auto d-flex gap-10">
+                @if(edit){ @if(cashCounterDepositBook.statusValue !== "CLOSD"){
+                <app-icon-button name="edit" toolTip="Edit" (click)="doEdit()" [hidden]="hideBtnBasedonStatus()"
+                  [parentId]="pageId" appAccess="DepositBookDetailsDepositSummaryEditBtn"></app-icon-button>
+                }} @if(edit !== true) {
+
+                <app-icon-button name="save" toolTip="Update" (click)="saveReconclilation()"
+                  [hidden]="hideBtnBasedonStatus()" [parentId]="pageId"
+                  appAccess="DepositBookDetailsDepositSummaryUpdateBtn"></app-icon-button>
+                <app-icon-button name="refresh" toolTip="Refresh"
+                  (click)="openDepositSummary(cashCounterDepositBookSummaryId)" [hidden]="hideBtnBasedonStatus()"
+                  [parentId]="pageId" appAccess="DepositBookDetailsDepositSummaryRefreshBtn"></app-icon-button>
+                }
+              </div>
+            </div>
+
+            <div class="v-flex mh100 pt-2">
+              <div class="col-md-12 card">
+                <div class="col-md-12 pt-2">
+                  <app-input-control type="text" label="Deposit Mode" [btnClicked]="true"
+                    [(ngModel)]="depositDetailSummary.receiptModeDescription"
+                    name="receiptModeDescription"></app-input-control>
+                </div>
+                <div class="col-md-12">
+                  <app-input-control type="number" label="Opening Amount ({{ appService.currencyValue }})"
+                    name="openingAmount" [(ngModel)]="depositDetailSummary.openingAmount" [decimal]="2" [maxLength]="10"
+                    [btnClicked]="true"></app-input-control>
+                </div>
+                <div class="col-md-12">
+                  <app-input-control label="Enter Closing Amount ({{
+                      appService.currencyValue
+                    }})" name="closingAmount" type="number" [forceSearch]="
+                      cashCounterDepositBook.statusValue === 'OPENS' &&
+                      depositDetailSummary.receiptModeValue === 'CASH' &&
+                      !edit
+                    " [(ngModel)]="depositDetailSummary.closingAmount" [decimal]="2" [errorTrue]="errorTrue"
+                    [required]="true" [btnClicked]="
+                      cashCounterDepositBook.statusValue !== 'OPENS' ||
+                      depositDetailSummary.receiptModeValue === 'CASH' || edit"
+                    (onSearch)="closingAmount()"></app-input-control>
+                </div>
+
+                <div class="col-md-12">
+                  <app-input-control type="number" label="Computed Amount ({{ appService.currencyValue }})"
+                    name="computedAmount" [(ngModel)]="depositDetailSummary.computedAmount" [btnClicked]="true"
+                    [decimal]="2" [maxLength]="10"></app-input-control>
+                </div>
+                <div class="col-md-12">
+                  <app-input-control type="number" label="Mismatch Amount ({{ appService.currencyValue }})"
+                    [(ngModel)]="depositDetailSummary.mismatchAmount" [btnClicked]="true" [decimal]="2"
+                    name="misMatchAmount" [maxLength]="10"></app-input-control>
+                </div>
+                <div class="col-md-12">
+                  <app-input-control type="number" label="Collected by Finance Amount ({{
+                      appService.currencyValue
+                    }})" name="collectedByFinance" [(ngModel)]="depositDetailSummary.collectedByFinance"
+                    [maxLength]="10" (ngModelChange)="onCollectedByFinanceChange($event)" [btnClicked]="
+                      cashCounterDepositBook.statusValue !== 'CLOSD' || edit
+                    "></app-input-control>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      } @else if(selectedTab===1){
+      <form #a="ngForm" class="pt-2 h100">
+        <div class="row h100">
+          <div class="col-md-6 h100">
+            <div class="v-flex h100">
+              <div class="d-flex pb-5">
+                <div class="fw-600">Opening Cheque Detail</div>
+                <div class="ml-auto"></div>
+              </div>
+
+              <div class="flex-1 relative pb-5">
+                <scroll>
+                  <div class="pb-5">
+                    <div class="table-responsive">
+                      <table class="app-table account-table">
+                        <thead class="app-table-head">
+                          <tr class="app-table-header-row">
+                            <th class="app-table-header-cell">
+                              <div class="header-cell-title pl-2">
+                                Cheque No
+                              </div>
+                            </th>
+                            <th class="app-table-header-cell">Bank</th>
+                            <th class="app-table-header-cell">Bank Code</th>
+                            <th class="app-table-header-cell">Issue date</th>
+                            <th class="app-table-header-cell">
+                              Amount({{ appService.currencyValue }})
+                            </th>
+                            <th class="app-table-header-cell">
+                              Collected By Finance
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody class="app-table-body">
+                          @for (element of openingChequeDataSource; track
+                          element; let i = $index) {
+                          <tr class="app-table-row">
+                            <td class="app-table-cell pl-2">
+                              {{ element.chequeNo }}
+                            </td>
+                            <td class="app-table-cell">
+                              <div>
+                                {{ element.issuedBankName }}
+                              </div>
+                            </td>
+                            <td class="app-table-cell">
+                              {{ element.branchCode }}
+                            </td>
+                            <td class="app-table-cell">
+                              {{ element.issuedDate | appDate }}
+                              {{ element.issueDate | appDate : "hh:mm a" }}
+                            </td>
+                            <td class="app-table-cell">
+                              {{ element.chequeAmount }}
+                            </td>
+                            <td class="app-table-cell">
+                              <div class="text-detail-down">
+                                <mat-checkbox color="primary" [disabled]="true"
+                                  [checked]="element.collectedByFinance === 'Y'"
+                                  (change)="isChecked($event, element, i)"></mat-checkbox>
+                              </div>
+                            </td>
+                          </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </scroll>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 h100">
+            <div class="v-flex h100">
+              <div class="d-flex pb-5">
+                <div class="fw-600">Closing Cheque Detail</div>
+                <div class="ml-auto"></div>
+              </div>
+
+              <div class="flex-1 relative pb-5">
+                <scroll>
+                  <div class="pb-5">
+                    <div class="table-responsive">
+                      <table class="app-table account-table">
+                        <thead class="app-table-head">
+                          <tr class="app-table-header-row">
+                            <th class="app-table-header-cell">
+                              <div class="header-cell-title pl-2">
+                                Cheque No
+                              </div>
+                            </th>
+                            <th class="app-table-header-cell pl-2">Bank</th>
+                            <th class="app-table-header-cell pl-2">
+                              Bank Code
+                            </th>
+                            <th class="app-table-header-cell pl-2">
+                              Issue date
+                            </th>
+                            <th class="app-table-header-cell pl-2">
+                              Amount({{ appService.currencyValue }})
+                            </th>
+                            <th class="app-table-header-cell pl-2">
+                              Collected By Finance
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody class="app-table-body">
+                          @for (element of closingChequeDataSource; track
+                          element; let i = $index) {
+                          <tr class="app-table-row">
+                            <td class="app-table-cell text-center">
+                              {{ element.chequeNo }}
+                            </td>
+                            <td class="app-table-cell">
+                              <div>
+                                {{ element.issuedBankName }}
+                              </div>
+                            </td>
+                            <td class="app-table-cell">
+                              {{ element.branchCode }}
+                            </td>
+                            <td class="app-table-cell">
+                              {{ element.issuedDate | appDate }}
+                              {{ element.issueDate | appDate : "hh:mm a" }}
+                            </td>
+                            <td class="app-table-cell">
+                              {{ element.chequeAmount }}
+                            </td>
+                            <td class="app-table-cell">
+                              <div class="text-detail-down">
+                                <mat-checkbox color="primary" [disabled]="
+                                    cashCounterDepositBook.statusValue !==
+                                    'CLOSD'
+                                  " [checked]="element.collectedByFinance === 'Y'"
+                                  (change)="isChecked($event, element, i)"></mat-checkbox>
+                              </div>
+                            </td>
+                          </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </scroll>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      } @else if(selectedTab===2){
+      <form #a="ngForm" class="pt-2 h100">
+        <div class="pb-5">
+          <div class="table-responsive h100">
+            <table class="app-table account-table">
+              <thead class="app-table-head">
+                <tr class="app-table-header-row">
+                  <th class="app-table-header-cell pl-5">Transaction No</th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">Receipt Date</div>
+                  </th>
+                  <th class="app-table-header-cell text-center">
+                    Receipt Amount ({{ appService.currencyValue }})
+                  </th>
+                  <th class="app-table-header-cell">Receipt Status</th>
+                </tr>
+              </thead>
+              <tbody class="app-table-body">
+                @for (element of depositDataSource; track element; let i =
+                $index) {
+                <tr class="app-table-row">
+                  <td class="app-table-cell pl-10">
+                    {{ element.transactionNo }}
+                  </td>
+                  <td class="app-table-cell">
+                    <div>
+                      {{ element.transactionCreatedDate | appDate }}
+                    </div>
+                  </td>
+                  <td class="app-table-cell text-right">
+                    <div class="cusp">
+                      {{ element.totalTransactionAmount | appCurrency }}
+                    </div>
+                  </td>
+                  <td class="app-table-cell">
+                    <div class="  status-{{ element.statusValue }}">
+                      {{ element.statusDescription }}
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </form>
+      } @else if(selectedTab === 3){
+      <div class="row">
+        <div class="col-md-8 border-right">
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center">
+                  <div>#</div>
+                </th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">Notes</div>
+                </th>
+                <th class="app-table-header-cell">
+                  <div>Created By</div>
+                </th>
+                <th class="app-table-header-cell">Date | Time</th>
+                <th class="app-table-header-cell">Status</th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (notes of
+              cashCounterDepositBook.lstCashCounterDepositBookNotes; track
+              notes; let i = $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div>
+                    <label-dash [value]="notes.notes" />
+                  </div>
+                  <div class="table-cell-subtitle fw-600"></div>
+                </td>
+                <td class="app-table-cell">
+                  {{ notes.enteredByFullName ? notes.enteredByFullName : "-" }}
+                </td>
+                <td class="app-table-cell">
+                  {{ notes.enteredDate ? (notes.enteredDate | appDate) : "-" }}
+                  |
+                  {{
+                  notes.enteredDate
+                  ? (notes.enteredDate | appDate : "hh:mm a")
+                  : "-"
+                  }}
+                </td>
+                <td>
+                  <accouts-status-table [statusDescription]="notes.statusDescription"></accouts-status-table>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-4">
+          <div class="dialog-container">
+            <div class="dialog-header">
+              <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+                Add Notes
+              </div>
+              <div class="slot-right">
+                <div class="btn-group">
+                  <app-icon-button name="save" toolTip="Save" (click)="saveNotes()" [hidden]="hideBtnBasedonStatus()"
+                    [parentId]="pageId" appAccess="DepositBookDetailsNotesSaveBtn"></app-icon-button>
+                  <app-icon-button name="clear" toolTip="Clear" (click)="clearNotes()" [hidden]="hideBtnBasedonStatus()"
+                    [parentId]="pageId" appAccess="DepositBookDetailsNotesClearBtn"></app-icon-button>
+                </div>
+              </div>
+            </div>
+            <div class="dialog-content">
+              <div class="dialog-content-inner h100">
+                <form #b="ngForm">
+                  <row>
+                    <div class="col-md-12">
+                      <app-input-control type="select" label="Select Status" [(ngModel)]="notes.statusValue"
+                        name="statusValue" [items]="notesDDL" key="constant" keyName="description"
+                        [errorTrue]="errorTrue" defaultOption="--Select--" [required]="true"></app-input-control>
+                    </div>
+
+                    <div class="col-md-12 mb26">
+                      <app-input-control type="textarea" className="notes-1" label="Add Notes" [(ngModel)]="notes.notes"
+                        name="notes" [errorTrue]="errorTrue" [required]="true" [maxLength]="500"></app-input-control>
+                    </div>
+                  </row>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      } @else if (selectedTab===4) {
+      <table class="app-table account-table">
+        <thead class="app-table-head">
+          <tr class="app-table-header-row">
+            <th class="app-table-header-cell pl-2">
+              <div class="header-cell-title">Status</div>
+            </th>
+            <th class="app-table-header-cell">
+              <div class="header-cell-title">Changed By</div>
+            </th>
+            <th class="app-table-header-cell">
+              <div class="header-cell-title">Changed Date & Time</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="app-table-body">
+          @for (status of statusDataSource; track status; let i = $index) {
+          <tr class="app-table-row">
+            <td class="app-table-cell">
+              <div class="fw-600 cursor-pointer pl-2">
+                <accouts-status-table [statusDescription]="status.statusDescription"></accouts-status-table>
+              </div>
+            </td>
+            <td class="app-table-cell">
+              <div>
+                {{ status.changedBy }}
+              </div>
+            </td>
+            <td class="app-table-cell">
+              {{ status.changedDate | appDate }}
+              {{ status.changedDate | appDate : "hh:mm a" }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      }
+    </scroll>
+  </div>
+
+  <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <div>Deposit Summary</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <div>Cheque Detail</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <div>Receipt</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(4)" [ngClass]="{ tabClass: selectedTab === 4 }">
+          <div>Status History</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Deposit Book</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Deposit Book > Detail > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100"></div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of
+      cashCounterDepositBook.lstCashCounterDepositBookStatusHistory; track
+      $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedBy ? status.changedBy : "-" }}
+          </div>
+          <div class="sub-status_by">
+            {{ status.changedDate | appDate }}
+            {{ status.changedDate | appDate : "hh:mm a" }}
+          </div>
+        </td>
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>
+
+<ng-template #Template>
+  <div class="ab bgc">
+    <div class="rel">
+      <div class="p-fix d-flex justify-content-end p10">
+        <div class="download-button">
+          <button color="primary">Download</button>
+        </div>
+        <div class="close-button">
+          <button color="danger" (click)="dialog.closeAll()">Close</button>
+        </div>
+      </div>
+      <div class="d-flex align-items-center h100 justify-content-center w100">
+        <div class="d-flex align-items-center h100 justify-content-center w100 relative">
+          <div class="ab">
+            <div class="rel">
+              <div class="dis-none wcheck active">
+                <img [src]="filePath | appSafe : 'resourceUrl'" alt="PreviewImages" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #assignedCashierEditDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Deposit Book > Detail > Edit
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear"></app-icon-button>
+
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner">
+        <form #x="ngForm">
+          <row>
+            <div class="col-md-12">
+              <app-input-control type="text" label="Counter No"></app-input-control>
+            </div>
+            <div class="col-md-12">
+              <app-input-control type="select" label="Branch" defaultOption="--Select--"
+                valueType="string"></app-input-control>
+            </div>
+            <div class="col-md-12">
+              <app-input-control type="text" label="Counter Name"></app-input-control>
+            </div>
+            <div class="col-md-12">
+              <app-input-control type="text" label="Counter Code"></app-input-control>
+            </div>
+            <div class="col-md-12">
+              <app-input-control type="text" label="Status"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #content>
+  <div class="header-popup d-flex justify-content-between align-items-center">
+    <div class="popUp-header p-3">Closing Amount</div>
+    <ion-icon name="close-circle" class="close-icon" (click)="dialog.closeDialog()"></ion-icon>
+  </div>
+  <div class="max-height">
+    <form #c="ngForm" autocomplete="off" class="h100">
+      <ng-container *ngIf="closingAmountDataSoruce?.length !== 0">
+        <div class="flex-1 relative mh100">
+          <scroll>
+            <table class="app-table account-table">
+              <thead class="app-table-head">
+                <tr class="app-table-header-row">
+                  <!-- <th class="app-table-header-cell text-center">
+                                        <div>#</div>
+                                    </th> -->
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">Count</div>
+                  </th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">Denominations</div>
+                  </th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">Amount</div>
+                  </th>
+                  <!-- <th class="app-table-header-cell  addNotes">
+                                                    @if(fundTransferNote.statusValue !=='APROV' &&
+                                                    fundTransferNote.statusValue !=='CANCD'){
+
+                                                    <app-icon-button name="add" toolTip="Add New" appButtonAccess="FunTraNotNotsNewBtn"
+                                                        (click)="openNotesDialog()"></app-icon-button>
+                                                    }
+                                                </th> -->
+                </tr>
+              </thead>
+              <tbody class="app-table-body">
+                @for (amount of closingAmountDataSoruce; track amount; let i =
+                $index) {
+                <tr class="app-table-row">
+                  <td class="app-table-cell text-center">
+                    {{ amount.denominationDescription }}
+                  </td>
+                  <td class="app-table-cell">
+                    <div>
+                      <app-input-control label="Enter Denomination Count" type="number"
+                        [(ngModel)]="amount.denominationCount" name="denominationCount{{ i }}" designType="bottom"
+                        (ngModelChange)="count(amount)" [isNumber]="true"></app-input-control>
+                    </div>
+                  </td>
+                  <td>
+                    {{ amount.totalAmount | appCurrency }}
+                  </td>
+                  <!-- <td></td> -->
+                </tr>
+                }
+              </tbody>
+            </table>
+          </scroll>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #ClosingAmount>
+  <div class="dialog-container custom-padding">
+    <div class="dialog-header">
+      <div class="dialog-title">Closing Amount</div>
+
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveDenomination()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearDenomination()"></app-icon-button>
+          <app-icon-button name="close" toolTip="close" (click)="dialog.closeAll()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="ab">
+          <div class="rel">
+            <form #c="ngForm" autocomplete="off" class="h100">
+              <ng-container *ngIf="closingAmountDataSoruce?.length !== 0">
+                <table class="sub-table w100 p10">
+                  <thead>
+                    <tr>
+                      <th>Count</th>
+                      <th>Denominations</th>
+                      <th class="text-right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="
+                        let element of closingAmountDataSoruce;
+                        let i = index
+                      ">
+                      <td>
+                        {{ element.denominationDescription }}
+                      </td>
+                      <td class="text-left w150">
+                        <div>
+                          <app-input-control class="" placeholder="Enter Denomination Count" type="number"
+                            valueType="int" [(ngModel)]="element.denominationCount" name="denominationCount{{ i }}"
+                            designType="bottom" (onChange)="count(element)" [isNumber]="true">
+                          </app-input-control>
+                        </div>
+                      </td>
+                      <td class="text-right">
+                        {{ element.totalAmount ? element.totalAmount : "0" }}
+                        {{ currency }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </ng-container>
+
+              <ng-container *ngIf="closingAmountDataSoruce.length === 0">
+                <app-empty-state [subtitle]="''"></app-empty-state>
+              </ng-container>
+            </form>
+          </div>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>

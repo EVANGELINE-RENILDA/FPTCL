@@ -1,0 +1,49 @@
+<div class="itg-form itg-form-group autocomplete-group">
+  @if(__label !== ''){
+  <div class="label-container">
+    <label>
+      {{__label}}
+      @if(__required){
+      <span class="text-danger">*</span>
+      }
+    </label>
+    <div class="label-container bottom">
+      <div class="label-container-right">
+        @if(__errorTrue){
+          <div class="error-text">
+            <span class="error-text-icon">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+            </span>
+            Mandatory
+          </div>
+          }
+      </div>
+    </div>
+  </div>
+  }
+  <div class="itg-input-group autocomplete" [ngClass]="{'input-error': __errorTrue}">
+    <input type="text" class="itg-input-control" autocomplete="none" [placeholder]="__placeholder"
+      [disabled]="__btnClicked" [tabIndex]="__tabIndex" #autoTrigger="matAutocompleteTrigger"
+      [matAutocomplete]="autoComplete" [matAutocompleteDisabled]="__btnClicked" (input)="doInput()" #inputField />
+    <div class="itg-input-group-append date">
+      @if(!__btnClicked){
+      <div class="icon-btn close-btn" (click)="onAction('clear')">
+        <ion-icon name="close-outline"></ion-icon>
+      </div>
+      }
+      @if(__search){
+      <div class="icon-btn" (click)="onAction('search')">
+        <ion-icon name="search-outline"></ion-icon>
+      </div>
+    }
+    </div>
+  </div>
+</div>
+
+<mat-autocomplete [autoActiveFirstOption]="true" [autoSelectActiveOption]="true" classList="itg-auto-complete"
+  #autoComplete="matAutocomplete" [requireSelection]="true" [displayWith]="displayFn"
+  (optionSelected)="optionSelected($event)">
+  @for (item of __items ; track item) {
+  <mat-option [value]="item">{{item[keyName]}}</mat-option>
+  }
+</mat-autocomplete>

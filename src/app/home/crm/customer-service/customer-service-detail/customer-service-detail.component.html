@@ -1,0 +1,445 @@
+<!--  [parentId]="pageId" -->
+<div class="content-wrapper" appAccess="CUSEV" [parentId]="pageId">
+  <app-multi-page-url [id]="id" url="/home/crm/customer-service/detail"></app-multi-page-url>
+  <accordion>
+    <accordion-item [isOpen]="true">
+      <accordion-header>
+        <div class="accordion-header-content">
+          <div class="accordion-title open-visible">
+            <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+            <div class="">Customer Service Information</div>
+          </div>
+          <div class="accordion-title open-hide">
+            <row class="row-w100">
+              <div class="col-md-2"> <view-label label="Service No"
+                  value="{{customerService.serviceRefNo}}"></view-label>
+              </div>
+              <div class="col-md-2"> <view-label label="Service Type"
+                  value="{{customerService.serviceTypeDescription}}"></view-label>
+              </div>
+              <div class="col-md-3"> <view-label label="Branch"
+                  value="{{customerService.branchDescription}}"></view-label></div>
+              <div class="col-md-3"> <view-label label="Service Date | Time"
+                  value="{{customerService.serviceDatetime | appDate}} | {{customerService.serviceDatetime | appDate: 'hh:mm a' }} "></view-label>
+              </div>
+              <div class="col-md-2"> <view-label label="Status" status="{{customerService.statusValue}}"
+                  statusValue="{{customerService.statusDescription}}"></view-label></div>
+            </row>
+          </div>
+        </div>
+      </accordion-header>
+      <accordion-body>
+        <div class="accordian-content">
+          <row>
+            <div class="col-md-9 border-right">
+              <div class="border-bottom ">
+                <div class="d-flex between mb26">
+                  <div class="kyc-details ">Service No <span>{{customerService.serviceRefNo}}
+                      @if(serviceInfoEdit === false){
+                      &nbsp;&nbsp; |&nbsp;&nbsp; <span
+                        class="status status-{{customerService.statusValue}}">{{customerService.statusDescription}}</span>
+                      }</span>
+                  </div>
+                  <div>
+                    @if(serviceInfoEdit === false){
+
+                    @if(this.customerService.customerServiceEditFlag === 'Y' &&
+                    this.customerService.statusValue ==='OPEN' ){
+
+                    <app-icon-button name="edit" toolTip="Edit" (click)=" editDetails()"
+                      appButtonAccess="CrmCustServAppEditBtn"></app-icon-button>
+                    }
+                    }
+                    @if(serviceInfoEdit === true){
+                    <div class="gap-10 d-flex">
+                      <app-icon-button name="save" toolTip="Update" (click)="saveServiceInfoDetails()"
+                        appButtonAccess="CrmCustServAppSaveBtn"></app-icon-button>
+                      <app-icon-button name="refresh" toolTip="Refresh"
+                        (click)="openCustomerService()"></app-icon-button>
+                    </div>
+
+                    }
+                  </div>
+                </div>
+                @if(serviceInfoEdit === false){
+                <row>
+
+                  <div class="col-md-4"><view-label class="mb26" label="Service Type"
+                      value="{{customerService.serviceTypeDescription}}"></view-label></div>
+                  <div class="col-md-4"><view-label class="mb26" label="Contact Mode"
+                      value="{{customerService.contactModeDescription}} "></view-label></div>
+                  <div class="col-md-4"><view-label class="mb26" label="Service Date | Time"
+                      value="{{customerService.serviceDatetime | appDate}} | {{customerService.serviceDatetime | appDate: 'hh:mm a' }}"></view-label>
+                  </div>
+
+                  <div class="col-md-4"><view-label class="mb26" label="Branch"
+                      value="{{customerService.branchDescription}} "></view-label>
+                  </div>
+                  <div class="col-md-4">
+
+                    <view-label class="mb26" label="Communication Type"
+                      value="{{customerService.communicationTypeDescription}} ">
+                    </view-label>
+
+                  </div>
+                  <div class="col-md-4"><view-label class="mb26" label="Service By"
+                      value="{{customerService.servicedByFullname}} "></view-label></div>
+
+
+                  <!-- <div class="hr1 col-md-12"></div> -->
+                </row>
+                }
+                @if(serviceInfoEdit === true){
+                <form #x="ngForm">
+                  <row>
+
+                    <div class="col-md-4"> <app-input-control type="select" label="Service Type"
+                        placeholder="Select Service Type" [(ngModel)]="customerService.serviceTypeValue"
+                        [errorTrue]="errorTrue" [required]="true" [items]="initialData.DDLValues.DDLServiceType"
+                        key="constant" keyName="description" name="serviceTypeValue"></app-input-control></div>
+                    <div class="col-md-3">
+                      <app-input-control type="select" label="Contact Mode" placeholder="Enter Contact Mode"
+                        [(ngModel)]="customerService.contactModeValue" name="contactModeValue" [errorTrue]="errorTrue"
+                        [required]="true" [items]="initialData.DDLValues.DDLContactMode" key="constant"
+                        keyName="description"></app-input-control>
+                    </div>
+                    <div class="col-md-3 end">
+                      <view-label class="mb26" label="Service By "
+                        value="{{customerService.servicedByFullname}} "></view-label>
+                    </div>
+                    <div class="col-md-2 end">
+                      <view-label class="mb26" label="Service Date  "
+                        value="{{customerService.serviceDatetime | appDate}} "></view-label>
+                    </div>
+                    <div class="col-md-4">
+                      <app-input-control type="select" label="Communication Type" [sort]="false"
+                        placeholder="Select Communication Type" [errorTrue]="errorTrue" [required]="true"
+                        [(ngModel)]="customerService.communicationTypeValue"
+                        [items]="initialData.DDLValues.DDLCommunicationType" name="communicationTypeValue"
+                        key="constant" keyName="description"></app-input-control>
+                    </div>
+                    <div class="col-md-4">
+                      <app-input-control type="select" label="Status" placeholder="Select Status"
+                        [(ngModel)]="customerService.statusValue" name="statusValue" [errorTrue]="errorTrue"
+                        [required]="true" [items]="initialData.DDLValues.DDLStatus" key="constant" keyName="description"
+                        placeholder="Select Status"></app-input-control>
+                    </div>
+                    <div class="col-md-4 pl30">
+                      <view-label class="mb26" label="Branch"
+                        value="{{customerService.branchDescription}} "></view-label>
+                    </div>
+
+                  </row>
+                </form>
+                }
+
+              </div>
+              <!-- <div class="mb26"></div> -->
+              <div class="view-label-container-title m10">
+                Service Description</div>
+              <form #n="ngForm">
+                <div class="col-md-12 textarea-cus">
+                  <app-input-control type="textarea" className="notes"  [maxLength]="250"
+                [(ngModel)]="serviceNotes" name="serviceNotes"
+                    placeholder="Enter Service Description"></app-input-control>
+                </div>
+              </form>
+              @if(this.serviceInfoEdit === false){
+              @if(this.customerService.customerServiceEditFlag === 'Y' && this.customerService.statusValue
+              ==='OPEN'){
+
+              @if(this.customerService.notesFlag === ''){
+
+              <div class="justify-content-end gap-10">
+                <app-icon-button name="save" toolTip="Save" (click)="saveNotes(n)"
+                  appButtonAccess="CrmCustServAppSaveNoteBtn"></app-icon-button>
+                <app-icon-button name="clear" toolTip="Clear" (click)="clearNotes()"
+                  appButtonAccess="CrmCustServAppClearNoteBtn"></app-icon-button>
+              </div>
+              }
+              @if(this.customerService.notesFlag === 'true'){
+
+              <div class="justify-content-end gap-10">
+                <app-icon-button name="save" toolTip="Update" (click)="saveNotes(n)"
+                  appButtonAccess="CrmCustServAppSaveNoteBtn"></app-icon-button>
+                <app-icon-button name="refresh" toolTip="Refresh" appButtonAccess="CrmCustServAppRefreshNoteBtn"
+                  (click)="refreshServiceNotes()"></app-icon-button>
+              </div>
+              }
+
+              }
+
+              }
+            </div>
+            <div class="col-md-3">
+
+              <div class="between mb26 w100">
+                <div class="view-label-container-title">
+                  Customer Information</div>
+
+              </div>
+              <row>
+                <div class="col-md-12 mb26">
+                  <row>
+
+                    <div class="col-md-12">
+                      <div class="view-type mb26">
+                        <div class="label">Customer No</div>
+                        <div (click)="navigateToCustomer()" class="value">
+                          {{customerDetails.customerRefNo}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12"> <view-label class="mb26" label="Customer Name"
+                        value="{{customerDetails.firstName }}&nbsp;{{customerDetails.middleName }}&nbsp;{{customerDetails.lastName }}"></view-label>
+                    </div>
+                    <!-- <div class="col-md-6"> <view-label class="mb26" label="Date of Birth"
+                                                value="{{customerDetails.dateOfBirth | appDate}}"></view-label>
+                                        </div> -->
+                    <div class="col-md-12"> <view-label class="mb26" label="Email ID"
+                        value="{{customerDetails.emailId}}"></view-label></div>
+                    <div class="col-md-12"> <view-label class="mb26" label=" Contact No"
+                        value="{{customerDetails.contactNo}}"></view-label></div>
+                    <div class="col-md-6"> <view-label class="mb26" label="Customer Status"
+                        status="{{customerDetails.customerStatusValue}}"
+                        statusValue="{{customerDetails.customerStatusDescription}}"></view-label>
+                    </div>
+                    <!-- <div class="col-md-6"> <view-label class="mb26" label="Gender"
+                                                value="{{customerDetails.genderDescription}}"></view-label></div>
+                                        <div class="col-md-6"> <view-label class="mb26" label="Father Name"
+                                                value="{{customerDetails.fatherName}}"></view-label></div>
+                                        <div class="col-md-6"> <view-label class="mb26" label="Nationality"
+                                                value="{{customerDetails.nationalityDescription}}"></view-label>
+                                        </div>
+                                        <div class="col-md-6"> <view-label class="mb26" label="Mother Name"
+                                                value="{{customerDetails.motherName}}"></view-label></div>
+                                        <div class="col-md-6"> <view-label class="mb26" label="Guardian Name"
+                                                value="{{customerDetails.gaurdianName}}"></view-label>
+                                        </div>
+                                        <div class="col-md-6"> <view-label class="mb26" label="Alternate Contact No"
+                                                value="{{customerDetails.alternateContactNo}}"></view-label></div>
+                                        <div class="col-md-6"> <view-label class="mb26" label="Customer Status"
+                                                status="{{customerDetails.customerStatusValue}}"
+                                                statusValue="{{customerDetails.customerStatusDescription}}"></view-label>
+                                        </div> -->
+                  </row>
+                </div>
+              </row>
+
+            </div>
+          </row>
+
+
+        </div>
+      </accordion-body>
+    </accordion-item>
+
+    <accordion-item>
+      <accordion-header>
+        <div class="accordion-header-content">
+          <div class="accordion-title">
+            <ion-icon src="assets/icons/accordian/lead.svg"></ion-icon>
+            <div class="accordion-title-content">
+              <div>Lead</div>
+              <div class="accordian-title-count">{{customerService.leadCount}}</div>
+            </div>
+          </div>
+        </div>
+      </accordion-header>
+      <accordion-body>
+        <div class="outer-content-wrapper">
+          @if(this.customerService.serviceTypeId !==0 ){
+          <app-lead-list [serviceId]="customerService.customerServiceId"
+            [serviceFlag]="this.customerService.customerServiceEditFlag" [type]="'1'"
+            [accessInBtns]="'CrmCustAppCustServLeadAddInfoBtn'" [accessInApp]="'CUSEV'"
+            [serviceStatus]="this.customerService.statusValue" [serviceRef]="customerService.serviceRefNo"
+            [customerId]="customerService.customerId" [isHideSelectedAll]="true"
+            (dataSelected)="detailsFetched($event)"></app-lead-list>
+          }
+        </div>
+      </accordion-body>
+    </accordion-item>
+
+    <accordion-item>
+      <accordion-header>
+        <div class="accordion-header-content">
+          <div class="accordion-title">
+            <ion-icon src="assets/icons/accordian/document.svg"></ion-icon>
+            <div class="accordion-title-content">
+              <div>Document</div>
+              <div class="accordian-title-count">{{customerServiceDocumentList.length}}</div>
+            </div>
+          </div>
+        </div>
+      </accordion-header>
+      <accordion-body>
+        <div class="document-pad">
+          <div class="doc-header">
+            <row class="row-w100">
+              <!-- <div class="col-md-2">Doc Ref No</div> -->
+              <div class="col-md-3">Document Name</div>
+              <div class="col-md-2">File Name</div>
+              <div class="col-md-2">File Type</div>
+              <div class="col-md-2">Uploaded Date</div>
+              <div class="col-md-2"></div>
+            </row>
+          </div>
+
+
+          <div style="padding: 10px 20px;">
+            @for (document of customerServiceDocumentList; track $index) {
+
+            <app-documents [document]="document" (onUpload)="onUpload($event, document)" [pageAccess]="'CUSEV'"
+              [btnCondition]="true" (onDelete)="checkDocumentDelete(document)"></app-documents>
+            <!--    [docViewAccess]="'CustUpAppViewDocBtn'" [docDeleteAccess]="'CrmCustAppCleaDocBtn'"
+                            [docDownloadAccess]="'CustUpAppDownDocBtn'" [docUploadAccess]="'CrmCustAppUpldDocBtn'" -->
+
+            }
+          </div>
+        </div>
+      </accordion-body>
+    </accordion-item>
+
+    <div class="card-accordian w100">
+      <div class="card-header">
+        <div class="w100 card-header">
+          <div class="col-md-5 pl8px">
+
+            <div class="d-flex">
+              <div class="accordion-title-card pr10 flex-none border-right pointer"
+                [ngClass]="{'active-tab': showStatusHistory === true}" (click)="openStatusValue(1)">
+                <ion-icon src="assets/icons/accordian/status-history.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Status History</div>
+                  <div class="accordian-title-count">{{statusHistoryDataSource.length}}</div>
+                </div>
+              </div>
+              <div class="accordion-title-card pl10 pointer" (click)="openStatusValue(2)"
+                [ngClass]="{'active-tab': showEmailHistory === true}">
+                <ion-icon src="assets/icons/accordian/email-history.svg"></ion-icon>
+                <div class="accordion-title-content">
+                  <div>Communication History</div>
+                  <div class="accordian-title-count">{{emailHistoryTableData.length}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7" (click)="openAccordian(this.accordianOpen)">
+
+            <div class="end btn-accordian">
+              @if(this.accordianOpen === true){
+
+              <div class="rotate">
+                <ion-icon src="assets/icons/down.svg"></ion-icon>
+              </div>
+              }
+              @else{
+              <!-- <div class="rotate-180"> -->
+              <ion-icon src="assets/icons/down.svg"></ion-icon>
+              <!-- </div> -->
+              }
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      @if(this.accordianOpen === true){
+      @if(this.showStatusHistory === true){
+      <!-- <div class="acc-card-content"> -->
+      <div class="status-padding">
+        <app-status-history [data]="statusHistoryDataSource"></app-status-history>
+      </div>
+      <!-- </div> -->
+      }
+      @else if(this.showEmailHistory === true){
+      <div class="outer-content-wrapper">
+        <div class="content-wrapper">
+
+          <app-table [columns]="emailColumns" [columnsName]="emailColumnsName" [hasPagination]="true"
+            [dataSource]="emailHistoryTableData" [pagination]="pagination" [hideSelectAll]="true">
+            <ng-template cellDef="toEmailId" let-element>
+              {{element.pentCommunicationTracking.toEmailId}}
+            </ng-template>
+            <ng-template cellDef="sentDate" let-element>
+              {{element.pentCommunicationTracking.sentDate |
+              appDate
+              }} |
+              {{element.pentCommunicationTracking.sentDate
+              | appDate: 'hh:mm a'}}
+            </ng-template>
+            <ng-template cellDef="sentStatusDescription" let-element>
+              <div class="status-{{element.pentCommunicationTracking.sentStatusValue}}">
+                {{element.pentCommunicationTracking.sentStatusDescription}}</div>
+            </ng-template>
+
+            <ng-template cellDef="action" let-element>
+              <app-icon-button name="open" toolTip="Open" (click)="viewEmailDetail(element)"></app-icon-button>
+            </ng-template>
+          </app-table>
+        </div>
+      </div>
+      }
+      }
+
+    </div>
+    <div class="p5px"></div>
+
+    <accordion-item>
+      <accordion-header>
+        <div class="accordion-header-content">
+          <div class="accordion-title">
+            <ion-icon src="assets/icons/accordian/bank.svg"></ion-icon>
+            <div class="accordion-title-content">
+              <div>Customer Service History</div>
+              <div class="accordian-title-count">{{tableServiceHistory.length}}</div>
+            </div>
+          </div>
+        </div>
+      </accordion-header>
+      <accordion-body>
+
+        <div class="outer-content-wrapper">
+          <div class="content-wrapper">
+            <app-table [columns]="serviceHistoryColumns" [columnsName]="serviceHistoryColumnsName"
+              columnID="customerBankId" (onSelect)="onSelect($event)" [dataSource]="tableServiceHistory"
+              [pagination]="pagination" [hasPagination]="true" [hideSelectAll]="true"
+              (pageChanged)="bankPageChanged($event)">
+
+              <ng-template cellDef="action" let-element>
+                <app-icon-button name="open" toolTip="Open"
+                  (click)="getChildCustomerServiceHistory(element.customerServiceId)"></app-icon-button>
+              </ng-template>
+              <ng-template cellDef="leadCount" let-element>
+                <div class="text-align-center">
+                  {{element.leadCount}}
+                </div>
+              </ng-template>
+              <ng-template cellDef="statusDescription" let-element>
+                <div class="status status-{{element.statusValue}}">{{element.statusDescription}}</div>
+              </ng-template>
+            </app-table>
+          </div>
+        </div>
+      </accordion-body>
+    </accordion-item>
+
+
+
+  </accordion>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn"> <ion-icon src="assets/icons/back.svg"></ion-icon></div>
+        <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+        <div class="screen-text">Customer Service</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

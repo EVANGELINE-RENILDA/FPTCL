@@ -1,0 +1,157 @@
+//toggle
+.label-data {
+  font-size: 12px;
+  font-weight: 500;
+  color: #676767;
+}
+
+.m10px {
+  margin: 10px;
+}
+
+.h280 {
+  height: 280px;
+}
+
+.pr5px {
+  padding-right: 5px !important;
+}
+
+.approve-btn {
+  background: #0079c4 !important;
+  color: #fff !important;
+  padding: 8px 16px;
+  border: 1px solid #0079c4;
+
+  &:hover {
+    background: #fff !important;
+    color: #0079c4 !important;
+  }
+}
+
+.single-document {
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+    padding-bottom: 16px;
+    padding-top: 16px;
+  }
+
+  .pl8 {
+    padding-left: 13px;
+  }
+}
+
+.table-approve {
+  min-width: 75px;
+  background: green;
+  border: 1px solid green;
+  padding: 5px;
+  color: #fff;
+
+  &:hover {
+    background: #fff;
+    color: green;
+  }
+}
+
+.table-verify {
+  min-width: 75px;
+  background: rgb(173, 171, 17);
+  border: 1px solid rgb(173, 171, 17);
+  padding: 5px;
+  color: #fff;
+
+  &:hover {
+    background: #fff;
+    color: rgb(173, 171, 17);
+  }
+}
+
+.w33 {
+  width: 33%;
+}
+
+.hori-active {
+  background: #0079c4 !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+}
+
+.horizontal-tab {
+  background: #fff;
+  color: #000;
+  padding: 8px 16px;
+  border-top-right-radius: 25px;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.m50 {
+  margin: 30px;
+}
+
+//
+.bgc {
+  background-color: #00000061;
+}
+
+.p-fix {
+  position: absolute;
+  right: 2rem;
+  top: 1rem;
+  z-index: 1;
+}
+
+.close-button {
+  button {
+    width: 120px;
+    font-size: 16px;
+    height: 40px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    background: var(--app-warning);
+  }
+}
+
+.download-button {
+  button {
+    width: 120px;
+    font-size: 16px;
+    height: 40px;
+    color: #fff;
+    background: var(--app-primary);
+    border: none;
+    border-radius: 5px;
+  }
+}
+
+.cus-check-box {
+  // padding: 30px 11px 11px 0px;
+  // vertical-align: middle;
+  // top: 10px;
+  // right: 10px;
+  height: 59px;
+}
+
+.checkbox-p {
+  padding-top: 13px;
+}
+
+::ng-deep .mat-mdc-checkbox-touch-target {
+  height: 45px !important;
+  width: 45px !important;
+}
+
+.gap-20 {
+  gap: 20px;
+}
+
+.pt-2{
+  padding-top: 20px;
+}
+
+

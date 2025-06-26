@@ -1,0 +1,507 @@
+<!-- <div class="ap"> -->
+<!-- <div class="mt-16px"> -->
+<div class="v-flex h100">
+    @if(selectedTab === 0){
+    <form #z="ngForm">
+        <div class="end align-items-center gap-10 pr15 only-input">
+            Document Name
+            <div class="col-md-2">
+                <app-input-control type="select" placeholder="Document Name" [(ngModel)]="voucherConfigId"
+                    name="voucherConfigId" [items]="initialData.DDLValues.DDLVoucherConfig" key="id" keyName="name"
+                    (onSelect)="getVoucherDetail(voucherConfigId)" [errorTrue]="errorTrue" [required]="true"
+                    valueType="int"></app-input-control>
+            </div>
+            <div class="col-md-2">
+                <app-input-control type="select" placeholder="Region" [(ngModel)]="initialRegionValue"
+                    name="initialRegionValue" [items]="regionValueDDL" key="constant" keyName="description"
+                    [errorTrue]="errorTrue" [required]="true"></app-input-control>
+            </div>
+            <app-icon-button name="add" toolTip="Add New " (click)="navigateDetail(z)"></app-icon-button>
+        </div>
+    </form>
+    }
+    <form #l="ngForm">
+        <div class="content-header">
+            <div class="card-box border-right">
+                <div class="card-content only-input">
+                    <label>Vendor Name</label>
+                    <app-search-vendor [(ngModel)]="purchaseOrder.vendorId" name="vendorId"></app-search-vendor>
+                </div>
+                <div class="card-content">
+                    <label>Vendor ID
+                    </label>
+                    <div class="content">
+                        {{purchaseOrder.sentActVendor.vendorCode?purchaseOrder.sentActVendor.vendorCode:'-'}}</div>
+                </div>
+            </div>
+            <div class="card-box border-right">
+                <div class="card-content">
+                    <label>Document No</label>
+                    <div class="content">{{purchaseOrder.purchaseOrderNumber?purchaseOrder.purchaseOrderNumber:'-'}}
+                    </div>
+                </div>
+                <div class="card-content">
+                    <label>Document Name</label>
+                    <div class="content">
+                        {{purchaseOrder.sentActVoucherConfig.voucherName?purchaseOrder.sentActVoucherConfig.voucherName:'-'}}
+                    </div>
+                </div>
+            </div>
+            <div class="card-box border-right">
+                <div class="card-content">
+                    <label>Branch Name</label>
+                    <div class="content">
+                        {{purchaseOrder.sentActCompanyBranch.branchName?purchaseOrder.sentActCompanyBranch.branchName:'-'}}
+                    </div>
+                </div>
+                <div class="card-content">
+                    <app-input-control type="date" label="Document Date | Effective Date"
+                        [(ngModel)]="purchaseOrder.documentDate" name="documentDate"
+                        (change)="documentDateConversioDate()" [required]="true"
+                        [errorTrue]="errorTrue"></app-input-control>
+                </div>
+            </div>
+            <div class="card-box border-right">
+                <div class="card-content">
+                    <label>Posting Date</label>
+                    <div class="content">{{purchaseOrder.approvedDate?(purchaseOrder.approvedDate |
+                        appDate:"datetime"):'-'}}</div>
+                </div>
+                <div class="card-content">
+                    <app-input-control type="date" label="Due Date" [(ngModel)]="purchaseOrder.dueDate"
+                        name="dueDate"></app-input-control>
+                </div>
+            </div>
+            <div class="card-box border-right">
+                <div class="card-content">
+                    <label>Created Date</label>
+                    <div class="content">{{purchaseOrder.enteredDate?(purchaseOrder.enteredDate |
+                        appDate:"datetime"):'-'}}</div>
+                </div>
+                <div class="card-content">
+                    <label>Created By</label>
+                    <div class="content">{{purchaseOrder.usrEnteredBy?purchaseOrder.usrEnteredBy:'-'}}</div>
+                </div>
+            </div>
+            <div class="status-header-box ">
+                <div class="card-box-1">
+                    <div class="card-content">
+                        <label>Status</label>
+                        <div class=" content">
+                            {{purchaseOrder.statusDescription?purchaseOrder.statusDescription:'-'}}</div>
+                    </div>
+                    <div class="card-content btn-group">
+                        <app-icon-button name="save" toolTip="Save" (click)="savePurchaseOrder()"></app-icon-button>
+                        <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"></app-icon-button>
+                    </div>
+                </div>
+                <div>
+                    <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+                        <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="content-body flex-1">
+        @if(selectedTab === 0){
+        <div class="v-flex h100">
+            <div class="end gap-5 p10">
+                <div class="col-md-2 only-input">
+                    <app-input-control type="text"></app-input-control>
+                </div>
+                <app-icon-button name="add" toolTip="Get Item"></app-icon-button>
+            </div>
+            <div class="flex-1 relative mh100">
+                <scroll>
+                    <table class="app-table account-table">
+                        <thead class="app-table-head">
+                            <tr class="app-table-header-row">
+                                <th class="app-table-header-cell tw50 text-center">#</th>
+                                <th class="app-table-header-cell tw100">PQ No</th>
+                                <th class="app-table-header-cell">
+                                    <div class="header-cell-title">Item | Service Code</div>
+                                    <div class="header-cell-subtitle">Name | Description</div>
+                                </th>
+                                <th class="app-table-header-cell tw100 text-right">
+                                    <div class="header-cell-title">Quantity</div>
+                                    <div class="header-cell-subtitle">Unit</div>
+                                </th>
+                                <th class="app-table-header-cell tw100 text-right">
+                                    <div class="header-cell-title">Unit Price</div>
+                                    <div class="header-cell-subtitle">INR</div>
+                                </th>
+                                <th class="app-table-header-cell tw100 text-right">
+                                    <div class="header-cell-title">Dis %</div>
+                                    <div class="header-cell-subtitle">Value</div>
+                                </th>
+                                <th class="app-table-header-cell tw150 text-right">
+                                    <div class="header-cell-title">After Discount %</div>
+                                    <div class="header-cell-subtitle">Rep CCY (INR)</div>
+                                </th>
+                                <th class="app-table-header-cell tw100 text-right">
+                                    <div class="header-cell-title">Tax%</div>
+                                    <div class="header-cell-subtitle">Value</div>
+                                </th>
+                                <th class="app-table-header-cell tw100 text-right">
+                                    <div class="header-cell-title">Total</div>
+                                    <div class="header-cell-subtitle">Rep CCY(INR)</div>
+                                </th>
+                                <th class="app-table-header-cell tw50">
+                                    <app-icon-button name="add" toolTip="Add New" (click)="addRow(0)"></app-icon-button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="app-table-body">
+                            @for (element of purchaseOrder.lstentPurPurchaseOrderItem; track $index) {
+                            <tr class="app-table-row">
+                                <td class="app-table-cell text-center">
+                                    {{$index +1}}
+                                </td>
+                                <td>{{element.ientPurQuotation.purchaseQuotationRefNo}}</td>
+                                <td class="app-table-cell">
+                                    <div class="table-cell-header only-input">
+                                        <app-search-item [(ngModel)]="element.sentInvItem.invItemId"
+                                            name="invItemId"></app-search-item>
+                                    </div>
+                                    <div class="table-cell-subtitle">{{element.sentInvItem.itemCode}}</div>
+                                </td>
+                                <td class="app-table-cell text-right">
+                                    <div class="table-cell-header only-input">
+                                        <app-input-control type="number" [(ngModel)]="element.quantity"
+                                            name="quantity{{$index}}" [decimal]="2" [required]="true"
+                                            [errorTrue]="errorTrue" valuetype="int"></app-input-control>
+                                    </div>
+                                    <div class="table-cell-subtitle">{{element.sentInvItem.stockUnitValue}}</div>
+                                </td>
+                                <td class="app-table-cell text-right">
+                                    <app-input-control type="number" [(ngModel)]="element.unitPrice"
+                                        name="unitPrice{{$index}}" [decimal]="2" [required]="true"
+                                        [errorTrue]="errorTrue" valuetype="int">
+                                    </app-input-control>
+                                </td>
+                                <td class="app-table-cell text-right">
+                                    <div class="table-cell-header only-input">
+                                        <app-input-control type="number" [(ngModel)]="element.discountPercentage"
+                                            [decimal]="2" type="discountPercentage"
+                                            name="discountPercentage{{$index}}"></app-input-control>
+                                    </div>
+                                    <div class="table-cell-subtitle">{{element.discountPrice}}</div>
+                                </td>
+                                <td class="app-table-cell text-right">
+                                    <div class="table-cell-header">
+                                        {{element.totalAfterDiscount}}
+                                    </div>
+                                    <div class="table-cell-subtitle">{{element.totalAfterDiscountReportingCurrency}}
+                                    </div>
+                                </td>
+                                <td class="app-table-cell text-right">
+                                    <div class="table-cell-header only-input">
+                                        <app-input-control type="number" [(ngModel)]="element.taxPercentage"
+                                            name="taxPercentage{{$index}}" [decimal]="2"></app-input-control>
+                                    </div>
+                                    <div class="table-cell-subtitle">{{element.vatAmount}}</div>
+                                </td>
+                                <td class="app-table-cell text-right">
+                                    <div class="table-cell-header">
+                                        <item-value [(item)]="purchaseOrder.lstentPurPurchaseOrderItem[$index]"
+                                            discountValue="discountPrice" totalAfterDiscount="totalAfterDiscount"
+                                            totalAfterDiscountReportingCurrency="totalAfterDiscountReportingCurrency"
+                                            total="totalPrice" totalReportingCurrency="totalPriceReportingCurrency"
+                                            taxAmount="vatAmount" [unitPrice]="element.unitPrice"
+                                            [quantity]="element.quantity" [taxPercentage]="element.taxPercentage"
+                                            [discountPercentage]="element.discountPercentage"
+                                            [(updateSequence)]="updateSequence">
+                                            {{element.totalPrice}}
+                                        </item-value>
+
+                                    </div>
+                                    <div class="table-cell-subtitle">{{element.totalPriceReportingCurrency}}</div>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </scroll>
+            </div>
+        </div>
+        } @else if(selectedTab === 1){
+        <app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+            [dataSource]="purchaseOrder.lstentPurNotes">
+            <ng-template cellDef="sno" let-element>
+                <div>1</div>
+            </ng-template>
+            <ng-template cellDef="notesDetail" let-element>
+                <div>{{element.notesDetail}}</div>
+            </ng-template>
+            <ng-template cellDef="createdFullName" let-element>
+                <div>{{element.createdFullName}}</div>
+            </ng-template>
+            <ng-template cellDef="createdDate" let-element>
+                <div>{{element.createdDate | appDate: "datetime"}}</div>
+            </ng-template>
+            <ng-template cellHeaderDef="add">
+                <app-icon-button name="add" toolTip="Add New" (click)="createNewNotes()"></app-icon-button>
+            </ng-template>
+        </app-table>
+        } @else if(selectedTab === 2){
+        <div class="v-flex h100">
+            <div class="col-md-3">
+                <app-input-control label="" placeholder="Search All By File Name" [search]="true"
+                    [(ngModel)]="filterFileName"></app-input-control>
+            </div>
+            <app-table [hasHeader]="false" class="h100" [hideSelectAll]="true" [columns]="attachment"
+                [columnsName]="attachmentsName" [dataSource]="purchaseOrder.ilistbusPurAttachments">
+                <ng-template cellHeaderDef="fileName">
+                    <div class="header-cell-title">File Name</div>
+                    <div class="header-cell-subtitle">Created By | Date | Time</div>
+                </ng-template>
+                <ng-template cellDef="fileName" let-element>
+                    <div class="header-cell-title">{{element.attachmentFileName}}</div>
+                    <div class="header-cell-subtitle">{{element.modifiedFullName}} | {{element.modifiedDate | appDate}}
+                    </div>
+                </ng-template>
+                <ng-template cellHeaderDef="action">
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"></app-icon-button>
+                </ng-template>
+            </app-table>
+        </div>
+        }@else if(selectedTab === 3){
+        <div class="print-wrap">
+            <row>
+                <div class="col-md-4">
+                    <app-input-control type="textarea" [maxLength]="250" className="notes-1"
+                        label="COMMENTS OR SPECIAL INSTRUCTIONS"
+                        [(ngModel)]="purchaseOrder.sentActVoucherConfig.pdfOtherComments"
+                        name="pdfOtherComments"></app-input-control>
+                    <div class="end">
+                        <app-icon-button name="save" toolTip="Update" class=""
+                            (click)="viewPurchaseOrderReceipt()"></app-icon-button>
+                    </div>
+                </div>
+            </row>
+        </div>
+        } @else if(selectedTab === 4){
+        <app-table [columns]="poData" [hideSelectAll]="true" [columnsName]="poDataName"
+            [dataSource]="purchaseOrder.lstentPurNotes">
+            <ng-template #slotLeft>
+                <div class="d-flex w100 gap-5">
+                    <div class="col-md-4">
+                        <app-input-control placeholder="Status" type="select"
+                            [(ngModel)]="purchaseOrder.voucherStatusValue" name="voucherStatusValue"
+                            [items]="initialData.DDLValues.DDLVoucherStatus" key="constant"
+                            keyName="description"></app-input-control>
+                    </div>
+                    <div class="col-md-1">
+                        <app-icon-button name="save" toolTip="Save"
+                            (click)="savePurPurchaseOrderVoucherStatus()"></app-icon-button>
+                    </div>
+                </div>
+            </ng-template>
+        </app-table>
+        }
+    </div>
+    <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+        <div class="footer-tab">
+            <div class="d-flex">
+                <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+                    <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+                    <div>Items</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+                    <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+                    <div>Notes</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+                    <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+                    <div>Attachments</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+                    <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+                    <div>Print Preview</div>
+                </div>
+                <div class="tabs" (click)="onSelectTab(4)" [ngClass]="{ tabClass: selectedTab === 4 }">
+                    <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+                    <div>Status On Po</div>
+                </div>
+            </div>
+            <div class="open-arrow" id="trigger{{pageId}}">
+                <ion-icon name="chevron-down-outline"></ion-icon>
+            </div>
+        </div>
+        <div class="panel-footer-expand" id="footerpanel{{pageId}}">
+            <row>
+                <div class="col-md-4 footer-textarea">
+                    <app-input-control type="textarea" [maxLength]="250" className="notes" [applybtn]="false"
+                        label="Common Narration Text" [(ngModel)]="purchaseOrder.comment"
+                        name="comment"></app-input-control>
+                </div>
+                <div class="col-md-2">
+                    <view-label label="Document Currency" value="{{purchaseOrder.sentActVendor.currencyValue}}"
+                        class="mb20"></view-label>
+                    <app-input-control label="Conversion Rate" type="number" [required]="true"
+                        [(ngModel)]="purchaseOrder.currencyRate" name="currencyRate" [decimal]="8"
+                        (onBlur)="purchaseOrderItemCalculation()"></app-input-control>
+                </div>
+                <div class="col-md-2">
+                    <div class="justify-end">
+                        <div class="f-content-txt">
+                            <div>Total After Discount</div>
+                            <div>Tax</div>
+                            <div>Net Amount</div>
+                        </div>
+                        <div class="text-end">
+                            <div>1,000.00</div>
+                            <div>1,000.00</div>
+                            <div>0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-sub-box">
+                    <div class="d-flex between">
+                        <div>
+                            <view-label label="Reporting Currency" value="INR" class="mb20"></view-label>
+                        </div>
+                        <div class="justify-end">
+                            <div class="f-content-txt">
+                                <div>Total After Discount</div>
+                                <div>Tax</div>
+                                <div>Net Amount</div>
+                            </div>
+                            <div class="text-end">
+                                <div>1,000.00</div>
+                                <div>1,000.00</div>
+                                <div>0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </row>
+
+
+        </div>
+    </div>
+</div>
+<!-- </div> -->
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link" (click)="navigateToList()">
+                <div class="back-btn">
+                    <ion-icon src="assets/icons/back.svg"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/purchase.svg"></ion-icon>
+                <div class="screen-text">Purchase Order</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Detail</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #notesDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase
+                Order > Detail >
+                Add Notes
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="savePurchaseOrderNote()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="notesClear()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <form #n="ngForm">
+                    <row>
+                        <div class="col-md-6">
+                            <app-input-control type="select" label="Status" [(ngModel)]="purchaseOrderNotes.statusValue"
+                                name="statusValue" [items]="ddlFlowStatus" keyName="description" key="constant"
+                                [errorTrue]="errorTrue" [required]="true"></app-input-control>
+                        </div>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes-1"
+                                [(ngModel)]="purchaseOrderNotes.notesDetail" name="notesDetail" [errorTrue]="errorTrue"
+                                [maxLength]="250" [required]="true" label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+
+
+<ng-template #attachmentDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title"><ion-icon class="fos-20" src="assets/icons/purchase.svg"></ion-icon> Purchase
+                Order > Detail >
+                Add Documents
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                <app-drop-zone fileType="pdf" [accept]="accept" [isUploadBtnFlag]="true"
+                    (onUpload)="uploadAttachemnt($event)" [multiple]="true"></app-drop-zone>
+            </div>
+
+        </div>
+    </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+    <div class="status-table-header">
+        <div class="changed-by_label">
+            Changed By | Changed Date
+        </div>
+        <div class="pl14">
+            Status
+        </div>
+    </div>
+    @for (item of statusSource; track $index) {
+    <div class="status-table-content">
+        <div class="changed-by">
+            {{item.changedByUsername?item.changedByUsername:'-'}}
+            <div class="changed-by_sub">
+                {{item.effectiveDate?(item.effectiveDate | appDate:"datetime"):'-'}}
+            </div>
+        </div>
+        <div class="status_align pl14">
+            <div class="status-PRSTV">
+                {{item.statusDescription?item.statusDescription:'-'}}
+            </div>
+        </div>
+    </div>
+    }
+    <!-- <div class="mat-menu-drop"> -->
+    <!-- <app-table
+      [hideSelectAll]="true"
+      [showPaginator]="false"
+      [columns]="statusMenu"
+      [columnsName]="statusMenuName"
+      [dataSource]="tableStatusMenuData"
+    >
+      <ng-template cellHeaderDef="fileName">
+        <div class="header-cell-title">Changed By | Effective Date</div>
+      </ng-template>
+      <ng-template cellDef="fileName" let-element>
+        <div class="header-cell-title">{{element.changedBy}}</div>
+        <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+      </ng-template>
+    </app-table> -->
+    <!-- </div> -->
+
+</mat-menu>

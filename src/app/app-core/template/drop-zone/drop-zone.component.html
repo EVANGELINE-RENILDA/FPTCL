@@ -1,0 +1,211 @@
+@if(type!==''){
+<div class="drop-zone">
+  <div #dropzone>
+
+    <div class="bordered" (click)="triggerClick()">
+
+      <div class="upload-icon">
+        <img src="assets/img/upload-img.svg">
+      </div>
+      <div class="dragDrop">
+        <div>
+          Drag & drop files or <span class="pointer">Browse</span>
+          @if(fileType!==''){
+          <div class="fs12px">Supported Format : {{fileType}}</div>
+          }
+          <!-- <div class="fs12px" *ngIf="fileType!==''">Maximum File Size Limit Below {{fileSizeLimit}} mb</div> -->
+        </div>
+      </div>
+
+
+    </div>
+    @if (dropZoneService.files.length > 0) {
+    <ng-container *ngTemplateOutlet="uploadSubFiles"></ng-container>
+    }
+    @if(errorTrue){
+    <div class="error-text"><span class="error-text-icon"><svg _ngcontent-ng-c1520701844="" width="16" height="17"
+          viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M8.00163 14.7381C4.31973 14.7381 1.33496 11.7533 1.33496 8.07145C1.33496 4.38955 4.31973 1.40479 8.00163 1.40479C11.6835 1.40479 14.6683 4.38955 14.6683 8.07145C14.6683 11.7533 11.6835 14.7381 8.00163 14.7381ZM7.33496 10.0715V11.4048H8.66829V10.0715H7.33496ZM7.33496 4.73812V8.73812H8.66829V4.73812H7.33496Z"
+            fill="#D93025"></path>
+        </svg></span>Please select this document</div>
+    }
+  </div>
+</div>
+}
+@else {
+<row>
+  <div class="col-md-6 h100">
+    <div class="drop-zone">
+      <div #dropzone>
+
+        <div class="bordered" (click)="triggerClick()">
+
+          <div class="upload-icon">
+            <img src="assets/img/upload-img.svg">
+          </div>
+          <div class="dragDrop">
+            <div>
+              Drag & drop files or <span class="pointer">Browse</span>
+              @if(fileType!==''){
+              <div class="fs12px">Supported Format : {{fileType}}</div>
+              }
+              <!-- <div class="fs12px" *ngIf="fileType!==''">Maximum File Size Limit Below {{fileSizeLimit}} mb</div> -->
+            </div>
+          </div>
+
+
+        </div>
+        @if(errorTrue){
+        <div class="error-text"><span class="error-text-icon"><svg _ngcontent-ng-c1520701844="" width="16" height="17"
+              viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M8.00163 14.7381C4.31973 14.7381 1.33496 11.7533 1.33496 8.07145C1.33496 4.38955 4.31973 1.40479 8.00163 1.40479C11.6835 1.40479 14.6683 4.38955 14.6683 8.07145C14.6683 11.7533 11.6835 14.7381 8.00163 14.7381ZM7.33496 10.0715V11.4048H8.66829V10.0715H7.33496ZM7.33496 4.73812V8.73812H8.66829V4.73812H7.33496Z"
+                fill="#D93025"></path>
+            </svg></span>Please select this document</div>
+        }
+      </div>
+
+    </div>
+  </div>
+  <div class="col-md-6">
+    @if (dropZoneService.files.length > 0) {
+    <ng-container *ngTemplateOutlet="uploadFiles"></ng-container>
+    }
+  </div>
+</row>
+}
+
+
+
+<label class="file-upload" #nativefileupload>
+  <input type="file" #fileinput (change)="loadImageFromDeviceMultiple($event)" id="file-input" class="hidden"
+    [accept]="accept" [multiple]="multiple">
+</label>
+
+<ng-template #uploadFiles>
+  <div class="v-flex min-height170px" [ngClass]="{'Upload-panel-height': isUploadBtnFlag === true}">
+    <!-- <div class="upload-lebal">
+      Uploading - {{dropZoneService.completedCount}} / {{dropZoneService.files.length}}
+    </div> -->
+    <!-- <div class="upload-container pt-2"> -->
+    <div class="flex-1 relative">
+      <div class="ab">
+        <div class="rel">
+          <div class="v-flex justify-content-between">
+            <div class="itg-form itg-form-group itg-upload">
+              <row>
+                @for (xfile of dropZoneService.files; track $index) {
+                <div class="col-md-6 plr-0 pb-2">
+                  <row>
+                    <div class="itg-input-group plr-0 col-md-10">
+                      <input autocomplete="none" type="text" class="itg-input-control" [(ngModel)]="xfile.fileName"
+                        name="fileName{{$index}}" readonly>
+                    </div>
+                    <div class="pl-0 col-md-2 pointer">
+                      <app-icon-button name="doc-delete" (click)="deleteFunction($index)"
+                        toolTip="Delete"></app-icon-button>
+                    </div>
+                    <div class="col-md-10 file-size">
+                      Size:{{xfile.fileSize | fileSize}}mb
+                    </div>
+                    @if(isfileSizeError){
+
+                    <div class="error-text">{{fileSizeError}}</div>
+                    }
+                    @if(xfile.fileName | fileType: fileTypePattern){
+
+                    <div class="text-danger fs12px">
+                      <small>{{fileTypeErrorOccur()}}</small>
+                    </div>
+                    }
+
+                  </row>
+                  <!-- <div class="d-flex align-items-center pl-1">
+                    <div class="dropzone-label col-md-5">
+                      File Size:
+                      <span>
+  
+                        {{dropZoneService.files[$index].fileSizeKb }} kb
+                      </span>
+                    </div>
+                    <div class="dropzone-label col-md-6">
+                      File Type:
+                      <span>
+                        {{dropZoneService.files[$index].fileType }}
+                      </span>
+                    </div>
+                  </div> -->
+                </div>
+                }
+              </row>
+
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 end d-flex gap-10">
+      <app-icon-button name="upload" toolTip="Upload" (click)="upload()"></app-icon-button>
+      <app-icon-button name="clear" toolTip="Clear" (click)="clearAll()"></app-icon-button>
+    </div>
+    @if(isUploadBtnFlag !== true) {
+    <row>
+      <div class="col-md-12 pt24px d-flex justify-content-end gap-10 px-0">
+        @if(!isUploadCancel){
+
+        <app-icon-button name="upload" toolTip="Upload" {{dialogUpload}} (click)="upload()"></app-icon-button>
+        <app-icon-button name="clear" toolTip="Clear" (click)="clearAll()"></app-icon-button>
+
+        }
+      </div>
+    </row>
+    }
+    <!-- </div> -->
+  </div>
+</ng-template>
+
+
+<ng-template #uploadSubFiles>
+  <div [ngClass]="{'Upload-panel-height': isUploadBtnFlag === true}">
+
+    @for (xfile of dropZoneService.files; track $index) {
+    <div class="between">
+
+      <div class="doc-sub">
+
+        {{xfile.fileName}} <span>|</span> {{xfile.fileSize | fileSize}}mb
+      </div>
+
+      @if(isfileSizeError){
+
+      <div class="error-text">{{fileSizeError}}</div>
+      }
+      @if((xfile.fileName | fileType: fileTypePattern)){
+
+      <div class="text-danger fs12px">
+        <small>{{fileTypeErrorOccur()}}</small>
+        <app-icon-button name="doc-delete" toolTip="Clear" (click)="clearAll()"></app-icon-button>
+      </div>
+      }
+      @if(isUploadBtnFlag !== true) {
+      <row>
+        <div class="d-flex gap-5">
+          @if(!isUploadCancel){
+          @if(dialogUpload === false){
+          <app-icon-button name="doc-upload" toolTip="Upload" (click)="upload()"></app-icon-button>
+          }
+          <app-icon-button name="doc-delete" toolTip="Clear" (click)="clearAll()"></app-icon-button>
+          }
+        </div>
+      </row>
+      }
+    </div>
+
+
+    }
+  </div>
+</ng-template>

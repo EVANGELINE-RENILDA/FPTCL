@@ -1,0 +1,276 @@
+<div class="content-wrapper">
+    <app-multi-page-url [id]="id" url="/home/will/will-application"></app-multi-page-url>
+    <div class="sticky-card">
+        <row>
+            <div class="col-md-3"><view-label label="Will Ref No"
+                    value="{{willApplication.willApplRefNo}}"></view-label>
+            </div>
+            <div class="col-md-3"><view-label label="Lead Ref No" value="{{willApplication.leadRefNo}}"></view-label>
+            </div>
+            <div class="col-md-3"><view-label label="File No" value="{{willApplication.fileNo}}"></view-label>
+            </div>
+            <div class="col-md-3">
+                    <view-label label="Is FPTCL need to maintain this will" value="{{maintainFile}}"></view-label>
+               
+                
+            </div>
+            <!-- <div class="col-md-3"> <view-label label="Type" value="{{willApplication}}"></view-label></div> -->
+            <div class="col-md-12 mb20"></div>
+            <div class="col-md-3"> <view-label label="Applied Date"
+                    value="{{willApplication.appliedDate | appDate}}"></view-label></div>
+                    <div class="col-md-3"><view-label label="Application Stage"
+                            value="{{willApplication.applicationStageDescription}}"></view-label></div>
+            <div class="col-md-3"> <view-label label="Application Status"
+                    value="{{willApplication.statusDescription}}"></view-label>
+            </div>
+            <div class="col-md-3"> <view-label label="Action Status"
+                    class="status-{{willApplication.actionStatusValue}}"
+                    value="{{willApplication.actionStatusDescription}}"></view-label></div>
+            <!-- <div class="col-md-3"> <view-label label="Source" value="{{willApplication.source}}"></view-label></div> -->
+
+
+        </row>
+    </div>
+    @if(showData === true){
+    <app-tab-group  (tabChange)="onTabChange($event)">
+        <app-tab tabTitle="Application">
+            <div class="bg h100">
+                <app-will-application [(application)]="willApplication"></app-will-application>
+            </div>
+        </app-tab>
+        <app-tab tabTitle="Process">
+            @if(showProcessAccordion === true){
+                <accordion>
+                    @for(type of willApplication.lstentWillApplicationProcessHistory; track $index){
+                        @switch (type.stageValue) {
+                        @case ('PRORQ') {
+                            <app-requirment-list [(application)]="willApplication" [type]="type"></app-requirment-list>
+                        }
+                        @case ('CIDOC') {
+                            <app-initial-document [(application)]="willApplication" [type]="type"></app-initial-document>
+                        }
+                        @case('BNDOC'){
+                            <app-collect-beneficiary-doc [(application)]="willApplication" [type]="type"></app-collect-beneficiary-doc>
+                        }
+                    @case('IDTST'){
+                        <app-identify-testator [(application)]="willApplication" [type]="type"></app-identify-testator>
+                    }
+                    @case('INTST'){
+                        <app-interview-testator [(application)]="willApplication" [type]="type"></app-interview-testator>
+                    }
+                    @case('WLDRT'){
+                        <app-prepare-will-draft [(application)]="willApplication" [type]="type"></app-prepare-will-draft>
+                    }
+                    @case('RDRTS'){
+                        <app-review-draft [(application)]="willApplication" [type]="type"></app-review-draft>
+                    }
+                    @case('SIGTS'){
+                        <app-obtain-signature [(application)]="willApplication" [type]="type"></app-obtain-signature>
+                    }
+                    @case('ISIGT'){
+                        <app-issued-signed-copy [(application)]="willApplication" [type]="type"></app-issued-signed-copy>
+                    }
+                    @case('REWLF'){
+                        <app-receipt-will-fee [(application)]="willApplication" [type]="type"></app-receipt-will-fee>
+                    }
+                    @case('REHIC'){
+                        <app-register-will-high-court [(application)]="willApplication" [type]="type"></app-register-will-high-court>
+                    }
+                    @case('CLREG'){
+                        <app-collect-will-register [(application)]="willApplication" [type]="type"></app-collect-will-register>
+                    }
+                    @case('ISREG'){
+                        <app-issue-register-will-copy [(application)]="willApplication" [type]="type"></app-issue-register-will-copy>
+                    }
+                    @case('UPREG'){
+                        <app-update-registered-will [(application)]="willApplication" [type]="type"></app-update-registered-will>
+                    }
+                    @case('CMPWL'){
+                        <app-complete-will-application [(application)]="willApplication" [type]="type"></app-complete-will-application>
+                    }
+                    @case('WONFL'){
+                        <app-open-file [(application)]="willApplication" [type]="type"></app-open-file>
+                    }
+                    
+                    
+
+                    }
+                }
+                @if(willApplication.willApplicationCompleted === 'Y'){
+                    <app-will-summary [(application)]="willApplication" ></app-will-summary>
+                }
+                <!-- <app-obtain-signature [(application)]="willApplication"></app-obtain-signature>
+                <app-issued-signed-copy [(application)]="willApplication"></app-issued-signed-copy>
+                <app-receipt-will-fee [(application)]="willApplication" ></app-receipt-will-fee>
+                <app-collect-will-register [(application)]="willApplication"></app-collect-will-register>
+                <app-issue-register-will-copy [(application)]="willApplication"></app-issue-register-will-copy>
+                <app-update-registered-will [(application)]="willApplication"></app-update-registered-will> -->
+
+            </accordion> 
+            }
+           
+        </app-tab>
+        <app-tab tabTitle="History">
+            <accordion>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Notes</div>
+                                    <!-- <div class="accordian-title-count">{{notesLength}}</div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <div class="p16px pb26 wrap-content">
+                                    <!-- <div class="justify-content-end d-flex">
+                                        <app-icon-button name="add" toolTip="Create"
+                                            (click)="createTrustWithdrawalNotes()"></app-icon-button>
+                                    </div> -->
+
+                                    @for (item of notesList; track $index) {
+                                    <div class="border-bottom  notes-list">
+                                        <div class="mx10">{{item.notes}}</div>
+                                        <div class="d-flex justify-content-end notes-context">
+                                            <div style="padding-right:5px ;">
+                                                {{item.enteredByFullname}}</div>
+                                            <div class=" notes-border-left">
+                                                {{item.enteredDate}}
+                                            </div>
+                                            <div style="padding-right:5px ;"></div>
+                                            <div class=" notes-border-left status-{{item.actionStatusValue}}">
+                                                {{item.actionStatusDescription}}
+                                            </div>
+                                            <div style="padding-right:5px ;"></div>
+                                            <div class=" notes-border-left status-{{item.applicationStageValue}}">
+                                                {{item.applicationStatusDescription}}
+                                            </div>
+                                            <div class="card-1-header-label px-2 ">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-body>
+                </accordion-item>
+                <accordion-item [isOpen]="true">
+                    <accordion-header>
+                        <div class="accordion-header-content">
+                            <div class="accordion-title">
+                                <ion-icon src="assets/icons/accordian/customer-service.svg"></ion-icon>
+                                <div class="accordion-title-content">
+                                    <div>Assigned Officer</div>
+                                    <div class="accordian-title-count">{{assignOfficerData?.length}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-header>
+                    <accordion-body>
+
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+                                <app-table [columns]="assignOfficerColumns" [columnsName]="assignOfficerColumnsName"
+                                    [hasPagination]="true" [dataSource]="willApplication.lstentWillApplicationAssignedOfficerHistory" [hideSelectAll]="true">
+                                    <ng-template cellDef="statusDescription" let-element>
+                                        <div class="status status-{{element.applicationStatusValue}}">
+                                            {{element.applicationStatusDescription}}
+                                        </div>
+                                    </ng-template>
+                                    <ng-template cellDef="assignedDate" let-element>
+                                        {{element.assignedDate | appDate}}
+                                    </ng-template>
+                                    <ng-template cellDef="assignedByFullname" let-element>
+                                        {{element.assignedByFullname}}
+                                    </ng-template>
+                                    <!-- @if(customerUpdate.assignedOfficerFlag === 'True'){ -->
+                                    <ng-template #slotRight>
+                                        <!-- <div class="d-flex align-items-center">
+
+                                            <form #p="ngForm" class="col-md-10 w250"><app-input-control
+                                                    type="select"></app-input-control></form>
+                                            <div class="col-md-2">
+                                                <div class="col-md-2"><app-icon-button name="reassign"
+                                                        toolTip="Reassign"></app-icon-button></div>
+                                            </div>
+
+                                        </div> -->
+                                    </ng-template>
+                                    <!-- } -->
+                                </app-table>
+                            </div>
+                        </div>
+
+                    </accordion-body>
+                </accordion-item>
+            </accordion>
+            <div class="bg-white-padd">
+
+                <app-tab-sub-group>
+                    <app-sub-tab tabTitle="Status History">
+                        <div class="status-padding">
+                            <app-status-history-will [data]="statusHistoryDataSource"></app-status-history-will>
+                        </div>
+                    </app-sub-tab>
+                    <app-sub-tab tabTitle="Communication History">
+                        <div class="outer-content-wrapper">
+                            <div class="content-wrapper">
+
+                                <app-table [columns]="emailColumns" [columnsName]="emailColumnsName"
+                                    [hasPagination]="true" [dataSource]="emailHistoryTableData" [hideSelectAll]="true">
+                                    <ng-template cellDef="toEmailId" let-element>
+                                        {{element.ientCommunicationTracking.toEmailId}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentDate" let-element>
+                                        {{element.ientCommunicationTracking.sentDate |
+                                        appDate
+                                        }} |
+                                        {{element.ientCommunicationTracking.sentDate
+                                        | appDate: 'hh:mm a'}}
+                                    </ng-template>
+                                    <ng-template cellDef="sentStatusDescription" let-element>
+                                        <div class="status-{{element.ientCommunicationTracking.sentStatusValue}}">
+                                            {{element.ientCommunicationTracking.sentStatusDescription}}</div>
+                                    </ng-template>
+
+                                    <ng-template cellDef="action" let-element>
+                                        <app-icon-button name="open" toolTip="Open" (click)="viewEmailDetail(element)"></app-icon-button>
+                                    </ng-template>
+                                </app-table>
+                            </div>
+                        </div>
+                    </app-sub-tab>
+                </app-tab-sub-group>
+            </div>
+
+        </app-tab>
+        <app-tab tabTitle="Payment">
+            
+        </app-tab>
+    </app-tab-group>
+    }
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <div class="back-btn" (click)="navigateToList()"> <ion-icon src="assets/icons/back.svg"></ion-icon>
+                </div>
+                <ion-icon src="assets/icons/will.svg"></ion-icon>
+                <div class="screen-text">Will Application</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Details</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

@@ -1,0 +1,33 @@
+.p-fix {
+    position: absolute;
+    right: 2rem;
+    top: 1rem;
+    z-index: 1;
+}
+.pb20 {
+    padding-bottom: 20px;
+}
+.close-button {
+    button {
+        width: 120px;
+        font-size: 16px;
+        height: 40px;
+        margin-left: 10px;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        background: var(--app-warning);
+    }
+}
+
+.download-button {
+    button {
+        width: 120px;
+        font-size: 16px;
+        height: 40px;
+        color: #fff;
+        background: var(--app-primary);
+        border: none;
+        border-radius: 5px;
+    }
+}

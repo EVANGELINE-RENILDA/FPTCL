@@ -1,0 +1,452 @@
+<div class="v-flex h100">
+  <form #l="ngForm">
+    <div class="content-header">
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Document No</label>
+          <div class="content">{{stockTransferNote.referenceNo}}</div>
+        </div>
+        <div class="card-content">
+          <label>Document Name</label>
+          <div class="content">{{stockTransferNote.ientActVoucherConfig.voucherName}}</div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>From Branch</label>
+          <div class="content">{{stockTransferNote.ientActCompanyBranch.branchName}}</div>
+        </div>
+        <div class="card-content">
+          <label>To Branch </label>
+          <app-input-control type="select" [(ngModel)]="stockTransferNote.toCompanyBranchId" name="toCompanyBranchId"
+            valuetype="int" [items]="initialData.DDLValues.DDLBranch" key="id" keyName="name" [required]="true"
+            [errorTrue]="errorTrue" (onSelect)="toCompanyValidate(stockTransferNote.toCompanyBranchId)"
+            [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Created Date</label>
+          <div class="content">{{stockTransferNote.transferDate | appDate: "datetime"}}</div>
+        </div>
+        <div class="card-content">
+          <label>Created By</label>
+          <div class="content">{{stockTransferNote.stnTransferedBy}}</div>
+        </div>
+      </div>
+      <div class="card-box border-right">
+        <div class="card-content">
+          <label>Posting Date</label>
+          <div class="content">{{stockTransferNote.verifiedDate | appDate:"datetime"}}</div>
+        </div>
+        <div class="card-content">
+          <label>Document Date</label>
+          <app-input-control type="date" [(ngModel)]="stockTransferNote.documentDate" name="documentDate"
+            [required]="true" [errorTrue]="errorTrue" (onChange)="documentDateChanged()"
+            [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+        </div>
+
+      </div>
+
+      <div class="status-header-box ">
+        <div class="card-box-1">
+          <div class="card-content">
+            <label>Status</label>
+            <accouts-status-table [statusDescription]="stockTransferNote.statusDescription"></accouts-status-table>
+          </div>
+          <div class="card-content btn-group">
+            @if(selectedTab === 0){
+            @if (stockTransferNote.invStockTransferNoteId === 0) {
+            <app-icon-button name="save" toolTip="Save" (click)="saveStockTransferNote()"></app-icon-button>
+            <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"></app-icon-button>
+            }@else {
+            <app-icon-button name="save" toolTip="Update" (click)="saveStockTransferNote()"></app-icon-button>
+            <app-icon-button name="refresh" toolTip="Refresh"
+              (click)="openStockTransferNote(stockTransferNote.invStockTransferNoteId)"></app-icon-button>
+            @if (stockTransferNote.statusValue !== 'APROV' && stockTransferNote.statusValue !== 'CANCL') {
+            <app-icon-button name="accept" toolTip="Complete" (click)="directApproved()"></app-icon-button>
+            }
+            }
+            }
+          </div>
+        </div>
+        <div>
+          <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+            <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="h100 content-body flex-1">
+    @if(selectedTab === 0){
+    <div class="v-flex h100">
+      <!-- <div class="end gap-5 p10">
+          <div class="col-md-2 only-input">
+            <app-input-control type="text"></app-input-control>
+          </div>
+          <app-icon-button name="add" toolTip="Get Item"></app-icon-button>
+        </div> -->
+      <div class="flex-1 relative">
+        <form #a="ngForm">
+          <scroll>
+            <table class="app-table account-table">
+              <thead class="app-table-head">
+                <tr class="app-table-header-row">
+                  <th class="app-table-header-cell tw50 text-center">#</th>
+                  <th class="app-table-header-cell">
+                    <div class="header-cell-title">Item | Service Code</div>
+                    <div class="header-cell-subtitle">Name | Description</div>
+                  </th>
+                  <th class="app-table-header-cell tw200 text-right">
+                    <div class="header-cell-title">Unit Type</div>
+                  </th>
+                  <th class="app-table-header-cell tw200 text-right">
+                    <div class="header-cell-title">Quantity</div>
+                  </th>
+                  <th class="app-table-header-cell tw200 text-right">
+                    <div class="header-cell-title">Unit Price</div>
+                  </th>
+                  <th class="app-table-header-cell tw200 text-right">
+                    <div class="header-cell-title">Total Amount</div>
+                  </th>
+                  <th class="app-table-header-cell tw100">
+                    <app-icon-button name="add" toolTip="Add New" (click)="addRow()"></app-icon-button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="app-table-body">
+                @for (element of stockTransferNote.lstentInvStockTransferNoteItem; track $index) {
+                <tr class="app-table-row">
+                  <td class="app-table-cell text-center">
+                    {{$index + 1}}
+                  </td>
+                  <td class="app-table-cell">
+                    <div class="table-cell-header only-input">
+                      <app-search-item [(ngModel)]="element.ientInvItems.invItemId"
+                        [displayText]="element.ientInvItems.itemName" [required]="true" [errorTrue]="errorTrue"
+                        (onSelect)="doItemSearch($event,element,$index)" name="invItemId{{$index}}" valueType="int"
+                        [isInventory]="stockTransferNote.ientActVoucherConfig.needInventory"></app-search-item>
+                    </div>
+                    <div class="table-cell-subtitle">{{element.ientInvItems.itemCode}}</div>
+                  </td>
+                  <td class="app-table-cell text-right">
+                    <div class="table-cell-header">
+                      {{element.ientInvItems.stockUnitValue}}
+                    </div>
+                  </td>
+                  <td class="app-table-cell text-right">
+                    <div class="table-cell-header only-input">
+                      <app-input-control type="number" [(ngModel)]="element.quantity" name="quantity{{$index}}"
+                        [decimal]="2" [required]="true" [errorTrue]="errorTrue" valuetype="int"
+                        [btnClicked]="hideBtnBasedonStatus()">
+                      </app-input-control>
+                    </div>
+                  </td>
+                  <td class="app-table-cell text-right">
+                    <div class="table-cell-header only-input">
+                      <app-input-control type="number" [(ngModel)]="element.unitPrice" name="unitPrice{{$index}}"
+                        [decimal]="2" [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+                    </div>
+                  </td>
+                  <td class="app-table-cell text-right">
+                    <div class="table-cell-header only-input">
+                      <!-- <app-input-control type="number" [(ngModel)]="element.totalAmount" name="totalAmount{{$index}}" [decimal]="2"></app-input-control> -->
+                      <item-value [(item)]="stockTransferNote.lstentInvStockTransferNoteItem[$index]"
+                        total="totalAmount" [unitPrice]="element.unitPrice" [quantity]="element.quantity">
+                        {{element.totalAmount}}
+                      </item-value>
+                    </div>
+                  </td>
+                  <td class="app-table-cell text-right">
+                    <div class="table-cell-header d-flex gap-10">
+                      <app-icon-button name="doc-delete" toolTip="Add New"
+                        (click)="itemsDelete(element,$index)"></app-icon-button>
+                      <app-icon-button name="add" toolTip="Add New" (click)="addRow()"></app-icon-button>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </scroll>
+        </form>
+      </div>
+    </div>
+    }
+    @else if(selectedTab === 1){
+    <app-table [hasHeader]="false" [columns]="notes" [hideSelectAll]="true" [columnsName]="notesName"
+      [dataSource]="stockTransferNote.lstentInvNotes" [hasIndex]="true">
+      <ng-template cellHeaderDef="add">
+        <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"></app-icon-button>
+      </ng-template>
+      <ng-template cellDef="notesDetail" let-element>
+        <div>{{element.notesDetail}}</div>
+      </ng-template>
+      <ng-template cellDef="createdFullName" let-element>
+        <div>{{element.createdFullName}}</div>
+      </ng-template>
+      <ng-template cellDef="createdDate" let-element>
+        <div>{{element.createdDate | appDate: "datetime"}}</div>
+      </ng-template>
+    </app-table>
+    } @else if(selectedTab === 2){
+    <div class="v-flex h100">
+      <div class="search_text pl12px">
+        <app-input-control placeholder="Search By Any File Name" type="text" [(ngModel)]="filterFileName"
+          namee="filterFileName" [search]="true"></app-input-control>
+      </div>
+      <div class="flex-1 relative mh100">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center">#</th>
+                <th class="app-table-header-cell">
+                  <div class="header-cell-title">File Name</div>
+                  <div class="header-cell-subtitle">
+                    Created By | Date | Time
+                  </div>
+                </th>
+                <th class="app-table-header-cell">File Format</th>
+                <th class="app-table-header-cell">Size</th>
+                <th class="app-table-header-cell">
+                  <div class="flex-center">
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()">
+                    </app-icon-button>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (doc of stockTransferNote.lstentInvAttachments | filterAndSort : filterFileName :
+              'attachmentFileName' : false; track doc;
+              let i = $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div>
+                    {{ doc.attachmentFileName }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ doc.modifiedByFullName }} |
+                    {{
+                    doc.createdDate
+                    | appDate
+                    : "datetime"
+                    }}
+                  </div>
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.attachmentType }}
+                </td>
+                <td class="app-table-cell">
+                  {{ doc.attachmentSize }}
+                </td>
+                <td class="app-table-cell">
+                  <div class="flex-center">
+                    <app-icon-button name="download" toolTip="Download"
+                      (click)="downloadDocumentImage(doc)"></app-icon-button>
+                    <app-icon-button name="doc-view" toolTip="View"
+                      (click)="downloadDocumentImage(doc)"></app-icon-button>
+                    <app-icon-button name="doc-delete" toolTip="Delete"
+                      (click)="deleteActAttachmentFile(doc)"></app-icon-button>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </div>
+    </div>
+    }@else if(selectedTab === 3){
+    <div class="print-wrap">
+      <row>
+        <div class="col-md-4">
+          <app-input-control type="textarea" [maxLength]="250" className="notes-1"
+            label="COMMENTS OR SPECIAL INSTRUCTIONS"
+            [(ngModel)]="stockTransferNote.ientActVoucherConfig.pdfOtherComments"
+            name="pdfOtherComments"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" class=""
+              (click)="viewInvStockTransferNoteReceipt()"></app-icon-button>
+          </div>
+        </div>
+      </row>
+    </div>
+    }
+  </div>
+  <div class="card-footer" footerpanel="footerpanel{{pageId}}" trigger="trigger{{pageId}}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>Items</div>
+        </div>
+        @if (stockTransferNote.invStockTransferNoteId !== 0) {
+
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if (stockTransferNote.statusValue === 'APROV') {
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        }
+        }
+      </div>
+      <div class="open-arrow" id="trigger{{pageId}}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{pageId}}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [maxLength]="250" className="notes" label="Notes"
+            [(ngModel)]="stockTransferNote.comment" name="comment"
+            [btnClicked]="hideBtnBasedonStatus()"></app-input-control>
+        </div>
+
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/inventory.svg"></ion-icon>
+        <div class="screen-text">Stock Transfer Note
+        </div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu=matMenu>
+  <div class="status-table-header">
+    <div class="changed-by_label">
+      Changed By | Changed Date
+    </div>
+    <div class="pl14">
+      Status
+    </div>
+  </div>
+  @for (item of stockTransferNote.lstentInvStockTransferNoteStatusHistory; track $index) {
+  <div class="status-table-content">
+    <div class="changed-by">
+      {{item.changedByUsername}}
+      <div class="changed-by_sub">
+        {{item.effectiveDate | appDate:"datetime"}}
+      </div>
+    </div>
+    <div class="status_align pl14">
+      <div class="status-PRSTV">
+        {{item.statusDescription}}
+      </div>
+    </div>
+  </div>
+  }
+  <!-- <div class="mat-menu-drop"> -->
+  <!-- <app-table
+          [hideSelectAll]="true"
+          [showPaginator]="false"
+          [columns]="statusMenu"
+          [columnsName]="statusMenuName"
+          [dataSource]="tableStatusMenuData"
+        >
+          <ng-template cellHeaderDef="fileName">
+            <div class="header-cell-title">Changed By | Effective Date</div>
+          </ng-template>
+          <ng-template cellDef="fileName" let-element>
+            <div class="header-cell-title">{{element.changedBy}}</div>
+            <div class="header-cell-subtitle">{{element.effectiveDate}}</div>
+          </ng-template>
+        </app-table> -->
+  <!-- </div> -->
+
+</mat-menu>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Stock Transfer Note > Details > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save"
+            (click)="stockTransferForNotes.statusValue !== 'CANCL'?saveStockTransferNoteNotess():changeReversal()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="notesClear()"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #x="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Status" [(ngModel)]="stockTransferForNotes.statusValue"
+                name="statusValue" [items]="initialData.DDLValues.DDLFlowStatus" key="constant" keyName="description"
+                [required]="true" [errorTrue]="errorTrue"></app-input-control>
+            </div>
+            @if (stockTransferForNotes.statusValue === 'CANCL' && stockTransferNote.statusValue ==='APROV') {
+            <div class="col-md-6">
+              <app-input-control type="date" label="Reversal Effective Date"
+                [(ngModel)]="stockTransferForNotes.temporaryDocumentDate" name="temporaryDocumentDate"
+                [minDate]="stockTransferNote.documentDate" [required]="true"
+                [errorTrue]="errorTrue"></app-input-control>
+            </div>
+            }
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1" [maxLength]="250" label="Add Notes"
+                [(ngModel)]="stockTransferForNotes.notesDetail" defaultOption="--Select--"
+                name="notesDetail"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Stock Transfer Note > Details > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <app-drop-zone [multiple]="true" [accept]="accept" [fileType]="fileType"
+          (onUpload)="uploadAttachemnt($event)"></app-drop-zone>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,602 @@
+<div class="v-flex h100" appAccess="ARJSC" [parentId]="pageId">
+  <div class="">
+    @if(true){
+    @if(reversingJournalVoucher.statusValue !=='APROV' && reversingJournalVoucher.statusValue !== 'CANCL' &&
+    isUpdateClicked && selectedTab === 0){
+    <div class="flex-end pt8 pr20 pb8">
+      <div class="submit-btn bor-rad" (click)="cancelOrComplete('APROV')" appButtonAccess="">Complete
+      </div>
+    </div>
+    }
+    @if(reversingJournalVoucher.statusValue ==='APROV'){
+    <div class="flex-end pt8 pr20 pb8">
+      <div class="submit-btn bor-rad" (click)="cancelOrComplete('CANCL')" appButtonAccess="">Cancel
+      </div>
+    </div>
+    }
+    }
+  </div>
+  <form #b="ngForm" class="content-header">
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Document No </label>
+        <div class="content">
+          {{
+          reversingJournalVoucher.reversingJournalVoucherNo
+          ? reversingJournalVoucher.reversingJournalVoucherNo
+          : "-"
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Journal Voucher Document No</label>
+        <div class="content">
+          {{
+          reversingJournalVoucher.ibusActJournalVoucher.journalVoucherNo
+          ? reversingJournalVoucher.ibusActJournalVoucher.journalVoucherNo
+          : "-"
+          }}
+        </div>
+      </div>
+      <!-- <div class="card-content">
+        <label>Region</label>
+        <div class="content">
+          {{
+          reversingJournalVoucher.regionDescription
+          ? reversingJournalVoucher.regionDescription
+          : "-"
+          }}
+        </div>
+      </div> -->
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <view-label label="Branch" [value]="reversingJournalVoucher.ibusActBranch.branchName"></view-label>
+      </div>
+      <div class="card-content">
+        <app-input-control type="number" label="Reference Number" [maxLength]="20"
+          [(ngModel)]="reversingJournalVoucher.referenceNo" name="referenceNo"
+          [btnClicked]="screenDisabled()"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Posting Date</label>
+        <div class="content">
+          {{
+          reversingJournalVoucher.approvedDate
+          | appDate
+          }}
+        </div>
+      </div>
+      <div class="card-content">
+        <app-input-control type="date" label="Document" [(ngModel)]="reversingJournalVoucher.documentDate"
+          name="documentDate" [required]="true" [minDate]="reversingJournalVoucher.documentDate" [errorTrue]="errorTrue"
+          [btnClicked]="screenDisabled()"></app-input-control>
+      </div>
+    </div>
+    <div class="card-box border-right">
+      <div class="card-content">
+        <label>Created Date</label>
+        <div class="content">
+          {{ reversingJournalVoucher.enteredDate | appDate }}
+        </div>
+      </div>
+      <div class="card-content">
+        <label>Created By</label>
+        <div class="content">
+          {{
+          reversingJournalVoucher.enteredByUserName
+          ? reversingJournalVoucher.enteredByUserName
+          : "-"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="status-header-box">
+      <div class="card-box-1">
+        <div class="card-content">
+          <view-label label="Status" status="{{ reversingJournalVoucher.statusValue }}"
+            statusValue="{{ reversingJournalVoucher.statusDescription }}"></view-label>
+        </div>
+        @if(selectedTab === 0 && reversingJournalVoucher.actReversingJournalId
+        === 0){
+        <div class="card-content btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveReversingJournal('create')"
+            appButtonAccess="RerJornlVochrSaveBtn"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="doClear()"
+            appButtonAccess="RerJornlVochrClearBtn"></app-icon-button>
+        </div>
+        } @else{
+        <div class="card-content btn-group">
+          @if(selectedTab === 0){
+          @if(this.reversingJournalVoucher.statusValue
+          !== 'APROV' && this.reversingJournalVoucher.statusValue !== 'CANCL'){
+          <app-icon-button name="save" toolTip="Update" (click)="saveReversingJournal('update')"
+            appButtonAccess="RerJornlVochrUpdateBtn"></app-icon-button>
+          }
+          <app-icon-button name="refresh" toolTip="Refresh" (click)="
+              openReversingJournalVoucher(
+                reversingJournalVoucher.actReversingJournalId
+              )
+            " appButtonAccess="RerJornlVochrRefreshBtn"></app-icon-button>
+          }
+
+          @if (reversingJournalVoucher.statusValue !== 'APROV' && reversingJournalVoucher.statusValue !== 'CANCL') {
+          <!-- <app-icon-button name="accept" toolTip="Complete" (click)="directApproved()"
+            appButtonAccess="RerJornlVochrComplDelBtn"></app-icon-button> -->
+          }
+        </div>
+        }
+      </div>
+      <div>
+        <a mat-icon-button class="more-btn" [matMenuTriggerFor]="triggerMenu">
+          <ion-icon name="ellipsis-vertical" class="icon-black"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </form>
+  <div class="content-body flex-1">
+    @if(selectedTab === 0){
+
+    <div class="flex-1 relative h100">
+      <scroll>
+        <table class="app-table account-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <th class="app-table-header-cell tw50 text-center">#</th>
+              <th class="app-table-header-cell">
+                <div class="header-cell-title">Ledger Code</div>
+                <div class="header-cell-subtitle">Name | Description</div>
+              </th>
+              <th class="app-table-header-cell text-right">
+                <div class="header-cell-title">Debit Amount</div>
+                <div class="header-cell-subtitle">({{currency}})</div>
+              </th>
+              <th class="app-table-header-cell text-right">
+                <div class="header-cell-title">Credit Amount</div>
+                <div class="header-cell-subtitle">({{currency}})</div>
+              </th>
+              <th class="app-table-header-cell pl12px">
+                <div class="header-cell-title">Narration</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="app-table-body">
+            @for (element of
+            reversingJournalVoucher.ilistbusActReversingJournalDetail; track
+            element; let i = $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ i + 1 }}
+              </td>
+              <td class="app-table-cell">
+                <div>
+                  {{ element.ientActLedger.codeName ?element.ientActLedger.codeName:'-' }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{ element.ientActLedger.ledgerName ? element.ientActLedger.ledgerName:'-' }}
+                </div>
+              </td>
+              <td class="app-table-cell text-right">
+                {{ element.debitAmount }}
+              </td>
+              <td class="app-table-cell text-right">
+                {{ element.creditAmount }}
+              </td>
+              <td class="app-table-cell th-mw150 pl12px">
+                <app-input-control type="text" [(ngModel)]="element.narration" [maxLength]="100"
+                  name="narration{{ i }}"></app-input-control>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </scroll>
+    </div>
+    <!-- <app-table
+      [hasHeader]="false"
+      [columns]="items"
+      [columnsName]="itemsName"
+      [dataSource]="tableItemData"
+      [hideSelectAll]="true"
+    >
+      <ng-template cellHeaderDef="codeName">
+        <div class="header-cell-title">Ledger Code</div>
+        <div class="header-cell-subtitle">Name | Description</div>
+      </ng-template>
+      <ng-template cellDef="codeName" let-element>
+        <div>{{ element.ientActLedger.codeName }}</div>
+        <div class="table-cell-subtitle">
+          {{ element.ientActLedger.ledgerName }}
+        </div>
+      </ng-template>
+      <ng-template cellHeaderDef="debitAmount">
+        <div class="header-cell-title text-end">Debit Amount</div>
+        <div class="header-cell-subtitle text-end">INR</div>
+      </ng-template>
+      <ng-template cellDef="debitAmount" let-element>
+        <div class="text-end">{{ element.debitAmount }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="creditAmount">
+        <div class="header-cell-title text-end">Credit Amount</div>
+        <div class="header-cell-subtitle text-end">INR</div>
+      </ng-template>
+      <ng-template cellDef="creditAmount" let-element>
+        <div class="text-end">{{ element.creditAmount }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="narration">
+        <div class="header-cell-title pl32 h100">Narration</div>
+      </ng-template>
+      <ng-template cellDef="narration" let-element>
+        <div class="pl32">{{ element.narration }}</div>
+      </ng-template>
+      <ng-template cellHeaderDef="add">
+        <div class="flex-center">
+          <app-icon-button
+            name="add"
+            toolTip="Add New"
+            (click)="addNewItemLst()"
+          ></app-icon-button>
+        </div>
+      </ng-template>
+      <ng-template cellDef="add" let-element>
+        <div class="space-evenly">
+          <app-icon-button
+            name="doc-delete"
+            toolTip="Add New"
+          ></app-icon-button>
+          <app-icon-button
+            name="add"
+            toolTip="Add New"
+            (click)="addNewItemLst()"
+          ></app-icon-button>
+        </div>
+      </ng-template>
+    </app-table> -->
+    } @else if(selectedTab === 1){
+    <div class="flex-1 relative h100">
+      <scroll>
+        <table class="app-table account-table">
+          <thead class="app-table-head">
+            <tr class="app-table-header-row">
+              <th class="app-table-header-cell text-center">#</th>
+
+              <th class="app-table-header-cell pl12px">
+                <div class="header-cell-title">Notes</div>
+                <div class="header-cell-subtitle">Created By | Date & Time</div>
+              </th>
+              <th class="app-table-header-cell tw100">
+                @if(reversingJournalVoucher.statusValue !== 'CANCL'){
+                <app-icon-button name="add" toolTip="Add New" (click)="openDialogNotes()"
+                  appButtonAccess="RJNNM"></app-icon-button>
+                }
+              </th>
+            </tr>
+          </thead>
+          <tbody class="app-table-body">
+            @for (notes of reversingJournalVoucher.ilistbusActNotes; track
+            notes; let i = $index) {
+            <tr class="app-table-row">
+              <td class="app-table-cell text-center">
+                {{ i + 1 }}
+              </td>
+              <td class="app-table-cell">
+                <div>
+                  {{ notes.notesDetail ? notes.notesDetail : "-" }}
+                </div>
+                <div class="table-cell-subtitle">
+                  {{ notes.createdFullName }} |
+                  {{ notes.createdDate | appDate }} {{ notes.createdDate | appDate: 'hh:mm a' }}
+                </div>
+              </td>
+              <td></td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </scroll>
+    </div>
+    <!-- <app-table
+      [hasHeader]="false"
+      [columns]="notes"
+      [hideSelectAll]="true"
+      [columnsName]="notesName"
+      [dataSource]="tableNoteData"
+    >
+      <ng-template cellHeaderDef="add">
+        <app-icon-button
+          name="add"
+          toolTip="Add New"
+          (click)="openDialogNotes()"
+        ></app-icon-button>
+      </ng-template>
+    </app-table> -->
+    } @else if(selectedTab === 2){
+    <div class="v-flex h100">
+      <div class="search_text pl12px">
+        <app-input-control placeholder="Search By Any File Name" type="text" [(ngModel)]="filterFileName"
+          namee="filterFileName" [search]="true"></app-input-control>
+      </div>
+      <div class="flex-1 relative h100">
+        <scroll>
+          <table class="app-table account-table">
+            <thead class="app-table-head">
+              <tr class="app-table-header-row">
+                <th class="app-table-header-cell text-center"></th>
+                <th class="app-table-header-cell pl12px">
+                  <div class="header-cell-title">File Name</div>
+                  <div class="header-cell-subtitle">
+                    Created By | Date & Time
+                  </div>
+                </th>
+                <th class="app-table-header-cell">File Format</th>
+                <th class="app-table-header-cell">Size</th>
+                <th class="app-table-header-cell tw100">
+                  <div class="flex-center">
+                    @if(reversingJournalVoucher.statusValue !== 'APROV' && reversingJournalVoucher.statusValue !==
+                    'CANCL'){
+                    <app-icon-button name="add" toolTip="Add New" (click)="createNewAttachment()"
+                      appButtonAccess="RJANB"></app-icon-button>
+                    }
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="app-table-body">
+              @for (doc of reversingJournalVoucher.ilistbusActAttachments | filterAndSort : filterFileName :
+              'attachmentFileName' : false; track
+              doc; let i = $index) {
+              <tr class="app-table-row">
+                <td class="app-table-cell text-center">
+                  {{ i + 1 }}
+                </td>
+                <td class="app-table-cell">
+                  <div>
+                    {{ doc.attachmentFileName }}
+                  </div>
+                  <div class="table-cell-subtitle">
+                    {{ doc.modifiedByFullName }} |
+                    {{ doc.createdDate | appDate }} {{ doc.createdDate | appDate:'hh:mm a' }}
+                  </div>
+                </td>
+                <td class="mat-cell">
+                  {{ doc.attachmentType }}
+                </td>
+                <td class="mat-cell">
+                  {{ doc.attachmentSize }}
+                </td>
+                <td class="mat-cell">
+                  <div class="flex-center">
+                    <app-icon-button name="download" toolTip="Download" (click)="downloadAttachment(doc, 'down')"
+                      appButtonAccess="RJADB"></app-icon-button>
+                    <app-icon-button name="doc-view" toolTip="View" (click)="downloadAttachment(doc, 'view')"
+                      appButtonAccess="RerJornlVochrAtchViewBtn"></app-icon-button>
+                    @if(reversingJournalVoucher.statusValue !== 'APROV' && reversingJournalVoucher.statusValue !==
+                    'CANCL'){
+                    <app-icon-button name="doc-delete" toolTip="Delete" (click)="deleteActAttachmentFile(doc)"
+                      appButtonAccess="RJADE"></app-icon-button>
+                    }
+
+
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </scroll>
+      </div>
+    </div>
+
+    } @else if(selectedTab === 3){
+    <div class="print-wrap flex-1 relative h100">
+      <row className="h100">
+        <div class="col-md-4">
+          <app-input-control type="textarea" [maxLength]="250" className="notes-1"
+            label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="
+              reversingJournalVoucher.ibusActVoucherConfig.pdfOtherComments
+            " name="pdfOtherComments"></app-input-control>
+          <div class="end">
+            <app-icon-button name="save" toolTip="Update" (click)="viewReversingJournalReceipt()"
+              appButtonAccess="RJGPB"></app-icon-button>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="pdf-viewer">
+            <div class="ab">
+              <object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+    }
+  </div>
+
+  <div class="card-footer" footerpanel="footerpanel{{ pageId }}" trigger="trigger{{ pageId }}">
+    <div class="footer-tab">
+      <div class="d-flex">
+        <div class="tabs" (click)="onSelectTab(0)" [ngClass]="{ tabClass: selectedTab === 0 }">
+          <ion-icon src="assets/icons/tab-icons/items.svg"></ion-icon>
+          <div>items</div>
+        </div>
+        @if (reversingJournalVoucher.actReversingJournalId !== 0) {
+        <div class="tabs" (click)="onSelectTab(1)" [ngClass]="{ tabClass: selectedTab === 1 }">
+          <ion-icon src="assets/icons/tab-icons/notes.svg"></ion-icon>
+          <div>Notes</div>
+        </div>
+        <div class="tabs" (click)="onSelectTab(2)" [ngClass]="{ tabClass: selectedTab === 2 }">
+          <ion-icon src="assets/icons/tab-icons/attachments.svg"></ion-icon>
+          <div>Attachments</div>
+        </div>
+        @if (reversingJournalVoucher.statusValue === 'APROV') {
+        <div class="tabs" (click)="onSelectTab(3)" [ngClass]="{ tabClass: selectedTab === 3 }">
+          <ion-icon src="assets/icons/tab-icons/print.svg"></ion-icon>
+          <div>Print Preview</div>
+        </div>
+        }
+        }
+      </div>
+      <div class="open-arrow" id="trigger{{ pageId }}">
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+    <div class="panel-footer-expand" id="footerpanel{{ pageId }}">
+      <row>
+        <div class="col-md-4 footer-textarea">
+          <app-input-control type="textarea" [maxLength]="250" className="notes" label="Common Narration Text"
+            [(ngModel)]="reversingJournalVoucher.documentHeaderText" name="documentHeaderText"
+            [btnClicked]="screenDisabled()" (onApplyChange)="commonNarrationFill($event)"
+            [applybtn]="true"></app-input-control>
+        </div>
+        <div class="col-md-4">
+          <view-label label="Reporting Currency" value="{{reversingJournalVoucher.docCurrencyValue}}"></view-label>
+        </div>
+        <div class="col-md-4">
+          <div class="justify-end">
+            <div class="f-content-txt">
+              <div>Total Debit</div>
+              <div>Total Credit</div>
+              <div>Difference</div>
+            </div>
+            <div class="text-end">
+              <div>{{ totalDebit | number : '1.2-2'}}</div>
+              <div>{{ totalCredit | number : '1.2-2' }}</div>
+              <div>{{ differeceValue | number : '1.2-2' }}</div>
+            </div>
+          </div>
+        </div>
+      </row>
+    </div>
+  </div>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link" (click)="navigateToList()">
+        <div class="back-btn">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToList()">Reversing Journal</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Details</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #notesDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Reversing Journal > Detail > Add Notes
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="save" toolTip="Save" (click)="saveReversingJournalNotes(x)"
+            appButtonAccess="RJNSM"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clearNotes()"
+            appButtonAccess="RJNCB"></app-icon-button>
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <form #x="ngForm">
+          <row>
+            <div class="col-md-6">
+              <app-input-control type="select" label="Status" [(ngModel)]="reversingJournalVoucherNotes.statusValue"
+                name="statusValue" [items]="initialData.DDLValues.DDLFlowStatus" key="constant" keyName="description"
+                defaultOption="--Select--" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+            </div>
+            @if(reversingJournalVoucherNotes.statusValue === 'CANCL' &&
+            reversingJournalVoucher.statusValue ==='APROV'){
+            <div class="col-md-6">
+              <app-input-control type="date" label="Reversal Effective Date"
+                [(ngModel)]="reversingJournalVoucherNotes.temporaryDocumentDate" name="temporaryDocumentDate"
+                [minDate]="reversingJournalVoucher.documentDate" [errorTrue]="errorTrue"
+                [required]="true"></app-input-control>
+            </div>
+            }
+            <div class="col-md-12 mb26">
+              <app-input-control type="textarea" className="notes-1"
+                [(ngModel)]="reversingJournalVoucherNotes.notesDetail" name="notesDetail" [maxLength]="250"
+                label="Notes"></app-input-control>
+            </div>
+          </row>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #attachmentDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <ion-icon class="fos-20" src="assets/icons/finance.svg"></ion-icon>
+        Reversing Journal > Detail > Add Documents
+      </div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="close" toolTip="Close" (click)="dialog.closeDialog()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-content-inner h100">
+        <app-drop-zone [multiple]="true" [accept]="accept" [fileType]="fileType"
+          (onUpload)="uploadAttachemnt($event)"></app-drop-zone>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<mat-menu xPosition="before" class="status-trigger-menu" #triggerMenu="matMenu">
+  <table class="status-table w100">
+    <thead class="status-header">
+      <tr>
+        <th class="status-header-cell">Changed By | Changed Date</th>
+        <th class="status-header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="hover_none">
+      @for (status of statusLst; track $index) {
+      <tr class="status-body-row">
+        <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.changedByUsername ? status.changedByUsername : "-" }}
+          </div>
+          <div class="sub-status_by">
+            {{
+            status.effectiveDate| appDate}} {{
+            status.effectiveDate
+            | appDate:'hh:mm a'
+            }}
+          </div>
+        </td>
+        <!-- <td class="status-body-cell">
+          <div class="status_by">
+            {{ status.statusDescription }}
+          </div>
+        </td> -->
+        <div class="status_align pl14">
+          <div class="status-PRSTV">
+            {{ status.statusDescription ? status.statusDescription : "-" }}
+          </div>
+        </div>
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-menu>
+<app-documents #DocumentsComponent class="none"></app-documents>

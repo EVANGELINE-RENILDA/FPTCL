@@ -1,0 +1,119 @@
+<div class="print-wrap">
+	<row>
+		<div class="col-md-4">
+			<div class="ptb14"></div>
+			<app-input-control type="textarea" [maxLength]="250" className="notes-2"
+				label="COMMENTS OR SPECIAL INSTRUCTIONS" [(ngModel)]="parentData.pActVoucherConfig.pdfOtherComments"
+				name="pdfOtherComments"></app-input-control>
+			<div class="end">
+				<app-icon-button name="save" toolTip="Update" (click)="viewPurchaseInvoiceReceipt()"></app-icon-button>
+			</div>
+		</div>
+		<div class="col-md-8">
+				<div class="d-flex gap-5 end">
+					<button type="submit" class="approve-btn" (click)="openEmailHistory()">Send Email</button>
+          <!-- <app-send-email [name]="purchaseOrder.sentActVendor
+          .vendorName" [documentDate]="purchaseOrder.documentDate" [netAmount]="purchaseOrder.netAmount"
+            [refNumber]="purchaseOrder.purchaseQuotationRefNo"
+            [voucherName]="purchaseOrder.sentActVoucherConfig.voucherTypeDescription" [emailId]="purchaseOrder.sentActVendor
+          .emailId" [blob]="blob"></app-send-email> -->
+					<!-- <app-icon-button name="clear" toolTip="Close"></app-icon-button>-->
+					 <button type="submit" class="cancel-btn" (click)="closePdf()"> Close </button>
+				</div>
+				<div class="pt8"></div>
+			<div class="pdf-viewer">
+				<div class="ab">
+					<object [data]="fileUrl | appSafe: 'resourceUrl'" type='application/pdf'></object>
+				</div>
+			</div>
+		</div>
+	</row>
+</div>
+
+
+    <ng-template #mailTemplate>
+      <div class="dialog-box p-3">
+          <div class="label-value-head" >
+            Send Email
+          </div>
+          <div class="ml-auto">
+            <button mat-icon-button (click)="onNoClick()">
+              <app-icon-button name="close" (click)="dialogService.closeAll()"></app-icon-button>
+            </button>
+          <!-- </div>/ -->
+        </div>
+        <div class="mat-dialog-content" >
+                <scroll>
+                <form class="h100" #l="ngForm">
+               <div class="container-fluid h100">
+                 <row>
+                   <div class="col-md-12">
+                     <app-input-control type="email" label="To" [(ngModel)]="mailInfo.toMailList" name="toMailList" [required]="true" [errorTrue]="errorTrue" ></app-input-control>
+                   </div>
+                   <div class="col-md-12">
+                    <app-input-control  type="email" label="CC" [(ngModel)]="mailInfo.ccMailList" name="ccMailList" [multiEmail]="true"></app-input-control>
+                   </div>
+                   <div class="col-md-12 d-flex align-items-center">
+                     <div class="form-group">
+                       <label class="label-value">From :  </label>
+                       <div class="form-value">
+                         {{appService.userData.firstName}} {{appService.userData.middleName}} {{appService.userData.lastName}}
+                       </div>
+                     </div>
+                   </div>
+                   <div class="col-md-12 mt10">
+                     <app-input-control label="Subject" [(ngModel)]="fullSubject" name="fullSubject" [required]="true" [errorTrue]="errorTrue"></app-input-control>
+                   </div>
+                   <div class="col-md-12">
+                     <div class="mail-content mail-box">
+                      <div class="form-value">
+                        <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                        [required]="true" [(ngModel)]="fullContent" name="fullContent"
+                        label="Content"></app-input-control>
+                      </div>
+                     </div>
+                   </div>
+                   <div class="col-md-12">
+                     <div class="down-content">
+                       <!-- {{downContent}}
+                         -->
+                         This is an auto-generated email. Please do not reply to this email.
+                         Please find the PDF below :-
+                     </div>
+                   </div>
+                  <!-- <div class="d-flex"> -->
+                    <div class="col-md-6 d-flex gap-10  mt20">
+                      <app-checkbox [checked]="mailInfo.isIncludePdf === 'Y'" (change)="doPdfChange($event)" color="primary"></app-checkbox>Include Invoice
+                    </div>
+                    <div>
+
+                    </div>
+                  <!-- </div> -->
+                   <div class="col-md-6 d-flex gap-10 mt20">
+                     <app-checkbox [checked]="mailInfo.isIncludeAttachment === 'Y'" (change)="doAttachment($event)" color="primary"></app-checkbox>Additional Attachment
+                   </div>
+                   <ng-container >
+                    @if(mailInfo.isIncludeAttachment === 'Y'){
+
+                      <div class="p-3">
+                        <app-drop-zone type="set" [multiple]="true" (onUpload)="loadAttachment($event)"></app-drop-zone>
+                      </div>
+                    }
+                   </ng-container>
+                  </row>
+                  <div mat-dialog-actions class="d-flex align-items-baseline justify-content-end my-1 gap-10 mt30">
+                    <button class="approve-btn"  (click)="sendEmailforVoucher(l)" >
+                        Send Mail
+                    </button>
+                    <button class="complete-btn"  >
+                      Refresh
+                  </button>
+                </div>
+               </div>
+             </form>
+             </scroll>
+
+         </div>
+
+      </div>
+    </ng-template>

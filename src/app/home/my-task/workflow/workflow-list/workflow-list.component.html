@@ -1,0 +1,119 @@
+<div class="content-wrapper" appAccess="MYTAS" [parentId]="pageId">
+    <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" [dataSource]="tableData"
+        (pageChanged)="pageChanged($event)" columnID="deathNoticeId" [hideSelectAll]="true">
+        <ng-template cellDef="workRef" let-element>
+            <div> {{element.workflowRefNo}}</div>
+            <div class="table-cell-subtitle">{{element.workflowName}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="workRef">
+            <div class="header-cell-title">Task Ref No</div>
+            <div class="header-cell-subtitle">Task Name</div>
+        </ng-template>
+        <ng-template cellDef="sourRef" let-element>
+            <div> {{element.sourceRefNo}}</div>
+            <div class="table-cell-subtitle"> {{element.sourceName}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="sourRef">
+            <div class="header-cell-title">Source Ref No</div>
+            <div class="header-cell-subtitle">Source Name</div>
+        </ng-template>
+        <ng-template cellDef="currTask" let-element>
+            <div> {{element.stepName}}</div>
+            <div class="table-cell-subtitle">{{element.stepStatusDescription}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="currTask">
+            <div class="header-cell-title">Current Task</div>
+            <div class="header-cell-subtitle">Status</div>
+        </ng-template>
+        <ng-template cellDef="assignDate" let-element>
+            <div> {{element.assignedDateTime | appDate}}</div>
+            <div class="table-cell-subtitle"> {{element.totalTatInWords}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="assignDate">
+            <div class="header-cell-title">Assigned Date</div>
+            <div class="header-cell-subtitle">Total TAT </div>
+        </ng-template>
+        <ng-template cellDef="compleDate" let-element>
+            <div> {{element.completedTatInWords}}</div>
+            <div class="table-cell-subtitle"> {{element.remainingTatInWords}}</div>
+        </ng-template>
+        <ng-template cellHeaderDef="compleDate">
+            <div class="header-cell-title">Completed TAT </div>
+            <div class="header-cell-subtitle">Remaining TAT </div>
+        </ng-template>
+        <ng-template cellDef="action" let-element>
+            <app-icon-button name="open" toolTip="Open" (click)="navigateToDetail(element)"></app-icon-button>
+        </ng-template>
+
+
+        <ng-template #slotLeft>
+            <app-search #appSearch [searchTemplate]=" searchTemplate"  maxHeight="300px"></app-search>
+        </ng-template>
+    </app-table>
+</div>
+
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/my-task.svg"></ion-icon>
+                <div class="screen-text">Task List</div>
+            </li>
+
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #searchTemplate>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Task Search</div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="search" toolTip="Search" (click)="onSearch()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear"
+                        (click)="createWorkFlowSearch('clear')"></app-icon-button>
+                    <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+
+                <form #l="ngForm" autocomplete="off">
+                    <row>
+                        <div class="col-md-6">
+                            <app-input-control type="text" label="Task Name" className="white-input"
+                                [(ngModel)]="searchParams.workflowName" name="workflowName"></app-input-control>
+                        </div>
+                        <div class="col-md-6">
+                            <app-input-control type="text" className="white-input" label="Source Reference Number"
+                                [(ngModel)]="searchParams.sourceRefNo" name="sourceRefNo"></app-input-control>
+                        </div>
+                        <div class="col-md-6">
+                            <app-input-control type="select" className="white-input" label="Task Status"
+                                [(ngModel)]="searchParams.stepStatusValue" name="stepStatusValue"
+                                [items]="initialData.DDLValues.DDLWorkflowStepStatus" key="constant"
+                                keyName="description" defaultOption="All"></app-input-control>
+                        </div>
+                        <div class="col-md-6">
+                            <app-input-control type="select" className="white-input" label="Task Status"
+                                [(ngModel)]="searchParams.statusValue" name="statusValue"
+                                [items]="initialData.DDLValues.DDLWorkflowStatus" key="constant" keyName="description"
+                                defaultOption="All"></app-input-control>
+                        </div>
+                        <!-- <div class="col-md-6">
+                                  <app-input-control type="date" className="white-input" label="Assgn Date (from)"
+                                    [(ngModel)]="searchParams" name="assignedDateTimeFrom"></app-input-control>
+                                </div>
+                                <div class="col-md-6">
+                                  <app-input-control type="date" className="white-input" label="Assgn Date (to)"
+                                    [(ngModel)]="searchParams" name="assignedDateTimeTo"></app-input-control>
+                                </div> -->
+                    </row>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</ng-template>

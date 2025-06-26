@@ -1,0 +1,45 @@
+.pr5 {
+    padding-right: 5px;
+}
+
+.mt8 {
+    margin-top: 8px;
+}
+
+.card-accordion {
+    background: white;
+
+    .card-accordion-header {
+        display: flex;
+        border-bottom: 1px solid #E0E0E0;
+        align-items: center;
+        justify-content: space-between;
+        height: 44px;
+
+        .tab-sub-header {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: var(--text-dark-color);
+
+            &:hover {
+                color: #0079c4;
+            }
+
+        }
+    }
+
+    .accordion-card-content {
+        padding: 16px;
+    }
+}
+
+.tabActive {
+    color: red;
+}
+
+.tabActive-text {
+    color: #0079c4 !important;
+}

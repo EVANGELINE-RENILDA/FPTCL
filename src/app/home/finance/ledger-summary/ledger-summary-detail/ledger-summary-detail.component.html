@@ -1,0 +1,255 @@
+<div class="content-wrapper">
+  @if(ledgerDetailReport.plstentActLedgerInfo.length !==0){
+  <div class="container1 padding">
+    <div class="d-flex align-items-center">
+      <div class="col-md-6 mt10">
+        <app-search maxHeight="250px" #appSearch [searchTemplate]="searchTemplate"></app-search>
+      </div>
+      <div class="col-md-6">
+        <div class="justify-content-end mt20 align-items-center">
+          <div class="px10 pb15">
+            <div class="d-flex view">
+              <div class="pr">Report Generated Date & Time:</div>
+              <div>
+                {{ ledgerDetailReport.generatedDateTime | appDate }}
+                {{ ledgerDetailReport.generatedDateTime | appDate : "hh:mm a" }}
+              </div>
+            </div>
+          </div>
+          <div class="pb">
+            <app-icon-button name="download" toolTip="Export To Excel"
+              (click)="getLedgerDetailsReportAsExcel()"></app-icon-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @for (item of ledgerDetailReport.plstentActLedgerInfo; track $index) {
+
+    <table class="app-table account-table mb20">
+      <thead class="app-table-head">
+        <tr class="app-table-header-row">
+          <th class="app-table-header-cell text-left">Parent Group Name</th>
+          <th class="app-table-header-cell text-left">Ledger Name</th>
+          <th class="app-table-header-cell text-left">Ledger Code</th>
+          <th class="app-table-header-cell text-left">Alias Name</th>
+          <th class="app-table-header-cell text-left">Nature Of Group</th>
+          <th class="app-table-header-cell text-left">Ledger Type</th>
+        </tr>
+      </thead>
+
+      <tbody class="app-table-body">
+        <tr class="app-table-row">
+          <td class="app-table-cell text-left">{{ item.groupName }}</td>
+          <td class="app-table-cell text-left">{{ item.ledgerName }}</td>
+          <td class="app-table-cell text-left">{{ item.ledgerCode }}</td>
+          <td class="app-table-cell text-left">{{ item.aliasName }}</td>
+          <td class="app-table-cell text-left">{{ item.groupNature }}</td>
+          <td class="app-table-cell text-left">{{ item.ledgerType }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="app-table account-table mb20">
+      <thead class="app-table-head">
+        <tr class="app-table-header-row">
+          <th class="app-table-header-cell text-right">
+            Opening Balance ({{ currency }})
+          </th>
+          <th class="app-table-header-cell text-right">
+            Debit Amount ({{ currency }})
+          </th>
+          <th class="app-table-header-cell text-right">
+            Credit Amount ({{ currency }})
+          </th>
+          <th class="app-table-header-cell text-right">
+            Net Transaction ({{ currency }})
+          </th>
+          <th class="app-table-header-cell text-right">
+            Closing Balance ({{ currency }})
+          </th>
+          <th class="app-table-header-cell text-right">Currency</th>
+        </tr>
+      </thead>
+
+      <tbody class="app-table-body">
+        <tr class="app-table-row">
+          <td class="app-table-cell text-right">
+            {{ item.pentActLedgerSummary.openingBalance }}
+          </td>
+          <td class="app-table-cell text-right">
+            {{ item.pentActLedgerSummary.totalDebit }}
+          </td>
+          <td class="app-table-cell text-right">
+            {{ item.pentActLedgerSummary.totalCredit }}
+          </td>
+          <td class="app-table-cell text-right">
+            {{ item.pentActLedgerSummary.netTransaction }}
+          </td>
+          <td class="app-table-cell text-right">
+            {{ item.pentActLedgerSummary.closingBalanceAbs }}
+          </td>
+          <td class="app-table-cell text-right">
+            {{ ledgerDetailReport.companyCurrency }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="app-table account-table">
+      <thead class="app-table-head">
+        <tr class="app-table-header-row">
+          <th class="app-table-header-cell text-left">#</th>
+          <th class="app-table-header-cell text-left">Document Number</th>
+          <th class="app-table-header-cell text-left">Document Type</th>
+          <th class="app-table-header-cell text-left">Document Name</th>
+          <th class="app-table-header-cell text-left">Document Date</th>
+          <th class="app-table-header-cell text-right">
+            Debit Amount ({{ currency }})
+          </th>
+          <th class="app-table-header-cell text-right">
+            Credit Amount ({{ currency }})
+          </th>
+          <th class="app-table-header-cell text-right">
+            Running Balance ({{ currency }})
+          </th>
+        </tr>
+      </thead>
+      @for (documentItem of
+      ledgerDetailReport.plstentActLedgerInfo[0].plstentActLedgerVoucherInfo; track
+      $index) {
+      <tbody class="app-table-body mb20">
+        <tr class="app-table-row">
+          <td class="app-table-cell text-left">{{ $index + 1 }}</td>
+          <td class="app-table-cell text-left">
+            {{ documentItem.voucherNumber }}
+          </td>
+          <td class="app-table-cell text-left">
+            {{ documentItem.voucherType }}
+          </td>
+          <td class="app-table-cell text-left">
+            {{ documentItem.voucherName }}
+          </td>
+          <td class="app-table-cell text-left">
+            {{ documentItem.documentDate | appDate }}
+          </td>
+          <td class="app-table-cell text-right">
+            {{ documentItem.debitAmount }}
+          </td>
+          <td class="app-table-cell text-right">
+            {{ documentItem.creditAmount }}
+          </td>
+          <td class="app-table-cell text-right">
+            {{ documentItem.runningBalanceAbs }}
+          </td>
+        </tr>
+      </tbody>
+      }
+    </table>
+
+    <div class="mt10 d-flex justify-content-center pb15">
+      <div class="font">End of the Ledger Details :{{ item.ledgerName }}</div>
+    </div>
+
+    <hr />
+    }
+  </div>
+  }
+</div>
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Ledger Detail Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search"
+            (click)="generateLedgerDetailReportWithForm()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="clear()"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #ledgerDetail="ngForm">
+            <div>
+
+              <row>
+                <div class="col-md-4">
+                  <app-input-control label="Fiscal Year" type="select" [(ngModel)]="ledgerDetailReport.fiscalYearId"
+                    name="fiscalYearId" key="id" keyName="description" [items]="initialData.DDLValues.DDLFiscalYear"
+                    defaultOption="--Select--" (onSelect)="
+                  changDate();getMinAndMaxDate($event)"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                  <app-input-control label="From Date" type="date" [(ngModel)]="ledgerDetailReport.fromDate"
+                    name="fromDate"  [maxDate]="maxDate"  [minDate]="minDate"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                  <app-input-control type="date" label="To Date" [(ngModel)]="ledgerDetailReport.toDate" name="toDate"
+                  [minDate]="ledgerDetailReport.fromDate" [maxDate]="maxDate"></app-input-control>
+                </div>
+              </row>
+
+              <row>
+                <div class="col-md-4">
+                  <app-input-control type="select" label="Parent Group Name" defaultOption="--Select--" valueType="int"
+                    [(ngModel)]="ledgerDetailReport.groupId" name="groupId" [items]="initialData.DDLValues.DDLGroups"
+                    key="id" keyName="description"
+                    (onSelect)="onGroupSelect(ledgerDetailReport.groupId)"></app-input-control>
+                </div>
+                <div class="col-md-4">
+                  <app-input-control type="select" label="Ledger Name" defaultOption="--Select--"
+                    [(ngModel)]="ledgerDetailReport.ledgerId" name="ledgerId" [items]="ledgerNames" key="actLedgerId" keyName="ledgerName">
+                  </app-input-control>
+                </div>
+              </row>
+
+              <!-- <div class="col-md-3">
+                   <app-input-control
+              label="Region"
+              type="select"
+              [(ngModel)]="ledgerDetailReport.regionValue"
+              name="regionValue"
+              [items]="initialData.DDLValues.DDLRegion"
+              key="constant"
+              keyName="description"
+              defaultOption="--Select--" [btnClicked]="regionValueBtn" [required]="true" [errorTrue]="errorTrue"
+            ></app-input-control>
+                </div>-->
+
+            </div>
+          </form>
+          <!-- </form> -->
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <div class="back-btn" (click)="navigateToList()">
+          <ion-icon src="assets/icons/back.svg"></ion-icon>
+        </div>
+        @if(regionValue === 'REGIO'){
+        <ion-icon src="assets/icons/customer.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToTrust()">Trust</div>
+        }
+        @else {
+        <ion-icon src="assets/icons/sales.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToAccount()">Accounts</div>
+        }
+      </li>
+      <li class="screen-name link">
+        <div class="screen-text" (click)="navigateToDetail()">
+          Ledger Summary
+        </div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Ledger Summary Detail</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

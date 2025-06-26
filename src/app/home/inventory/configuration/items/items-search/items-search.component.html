@@ -1,0 +1,160 @@
+<div class="content-wrapper" appAccess="ITMSC" [parentId]="pageId">
+  <app-table [pagination]="pagination" [columns]="columns" [columnsName]="columnsName" columnID="leadId"
+    [dataSource]="dataSource" (pageChanged)="pageChanged($event)" (onActive)="valueSelected($event)"
+    [hideSelectAll]="true">
+    @if(!isSelectOnly){
+    <ng-template #slotRight>
+      <app-icon-button name="add" toolTip="Add New" (click)="navigateToDetail(0)"></app-icon-button>
+    </ng-template>
+    }
+
+    <ng-template cellHeaderDef="itemCode">
+      <div class="header-cell-title">Item Code</div>
+      <div class="header-cell-subtitle">Name</div>
+    </ng-template>
+    <ng-template cellDef="itemCode" let-element>
+      <div [ngClass]="{'pointer': isSelectOnly}" (click)="valueSelected(element)">
+        <div>{{ element.itemCode }}</div>
+        <div class="table-cell-subtitle">{{ element.itemName }}</div>
+      </div>
+    </ng-template>
+    <ng-template cellHeaderDef="effectiveDate">
+      <div class="header-cell-title">Created Date</div>
+      <div class="header-cell-subtitle">Created By</div>
+    </ng-template>
+    <ng-template cellDef="effectiveDate" let-element>
+      <div>{{ element.effectiveDate | appDate : "datetime" }}</div>
+      <div class="table-cell-subtitle">{{ element.createdBy }}</div>
+    </ng-template>
+
+    <ng-template cellHeaderDef="invItemTypeName">
+      <div class="header-cell-title">Item Type</div>
+    </ng-template>
+    <ng-template cellDef="invItemTypeName" let-element>
+      <div>{{ element.invItemTypeName }}</div>
+    </ng-template>
+
+    <ng-template cellHeaderDef="invItemSubtypeName">
+      <div class="header-cell-title">Item Sub Type</div>
+    </ng-template>
+    <ng-template cellDef="invItemSubtypeName" let-element>
+      <div>{{ element.invItemSubtypeName }}</div>
+    </ng-template>
+
+    <ng-template cellHeaderDef="categoryName">
+      <div class="header-cell-title">Category</div>
+    </ng-template>
+    <ng-template cellDef="categoryName" let-element>
+      <div>{{ element.categoryName }}</div>
+    </ng-template>
+
+    <ng-template cellDef="action" let-element>
+      <app-icon-button name="open" toolTip="Open" (click)="navigateToDetail(element.invItemId)">
+      </app-icon-button>
+    </ng-template>
+    <ng-template cellHeaderDef="action">
+      <div class="header-cell-title">Action</div>
+    </ng-template>
+
+    <ng-template cellDef="status" let-element>
+      <accouts-status-table [statusDescription]="element.status"></accouts-status-table>
+    </ng-template>
+    @if(!isSelectOnly){
+    <ng-template #slotMiddle>
+      <div class="d-flex">
+        <div (click)="statusSortSearch('ACTIV')">
+          <table-status-sort type="activeCount" [activeCount1]="totalActiveCount"></table-status-sort>
+        </div>
+        <div (click)="statusSortSearch('INACT')">
+          <table-status-sort type="inactiveCount" [inActiveCount1]="totalInactiveCount"></table-status-sort>
+        </div>
+      </div>
+    </ng-template>
+    }
+
+    <ng-template #slotLeft>
+      <app-search maxHeight="270px" #appSearch [searchTemplate]="searchTemplate"></app-search>
+    </ng-template>
+  </app-table>
+</div>
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Item Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" appButtonAccess="CrmCustLeaAppSearchBtn"
+            (click)="onSearch()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" appButtonAccess="CrmCustLeadAppClearBtn"
+            (click)="clearAllSearch()"></app-icon-button>
+          <app-icon-button name="close" (click)="appSearch.close()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <form #l="ngForm">
+            <row>
+              <div class="col-md-3">
+                <app-input-control type="text" label="Item Name" placeholder="Enter Item Name"
+                  [(ngModel)]="searchParams.strItemName" name="strItemName"></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control type="text" label="Item Code" placeholder="Enter Item Code"
+                  [(ngModel)]="searchParams.strItemCode" name="strItemCode"></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control type="select" label="Category" defaultOption="--Select--"
+                  [(ngModel)]="searchParams.strInvCategoryId" name="strInvCategoryId"
+                  [items]="initialData.DDLValues.CategoryList" key="id" keyName="name" valuetype="int"
+                  (onSelect)="getTypeByGroupValue();searchParams.longTypeid='';searchParams.longSubTypeId=''"></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control type="select" label="Status" defaultOption="--Select--"
+                  [(ngModel)]="searchParams.strStatusValue" name="strStatusValue"
+                  [items]="initialData.DDLValues.configitemStatus" key="constant" keyName="description"
+                  [btnClicked]="hideStatus"></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control type="select" label="Item Type" defaultOption="--Select--"
+                  [(ngModel)]="searchParams.longTypeid" name="longTypeid" [items]="itemTypeDDL" key="id" keyName="name"
+                  (onSelect)="getSubTypeBytype(searchParams.longTypeid);searchParams.longSubTypeId=''"></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control type="select" label="Item Sub Type" defaultOption="--Select--"
+                  [(ngModel)]="searchParams.longSubTypeId" name="longSubTypeId"
+                  [items]="initialData.DDLValues.SubTypeList" key="id" keyName="name"></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control type="date" label="Created Date From" placeholder="From Date"
+                  [(ngModel)]="searchParams.dtmEffectiveDateFrom" [maxDate]="searchParams.dtmEffectiveDateTo"
+                  name="dtmEffectiveDateFrom"></app-input-control>
+              </div>
+              <div class="col-md-3">
+                <app-input-control type="date" label="Created Date To" placeholder="To Date"
+                  [(ngModel)]="searchParams.dtmEffectiveDateTo" name="dtmEffectiveDateTo"
+                  [minDate]="searchParams.dtmEffectiveDateFrom"></app-input-control>
+              </div>
+            </row>
+          </form>
+        </div>
+      </scroll>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name link">
+        <ion-icon src="assets/icons/inventory.svg"></ion-icon>
+        <div class="screen-text" (click)="navigateToInventory()">Inventory</div>
+      </li>
+      <li class="screen-name">
+        <div class="screen-text">Item search</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

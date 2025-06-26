@@ -1,0 +1,122 @@
+<div class="content-wrapper bgff" appAccess="PRTDV" [parentId]="pageId">
+  <div class="mb26"></div>
+  <div class="box">
+    <div class="box-pad-1">
+      <div class="d-flex space-between">
+        <div class="col-md-6 d-flex align-items-center gap-10 fin-header">
+          <ion-icon src="assets/icons/finance.svg"></ion-icon>
+          Finance
+        </div>
+
+        <div class="pr20 w200">
+          <app-input-control
+            type="select"
+            label="Branch Name"
+            [(ngModel)]="branchValue"
+            name="branchValue"
+            defaultOption="--Select--"
+            [items]="branchDDL"
+            key="constant"
+            keyName="description"
+            (onSelect)="changeBranch(branchValue, true)"
+            [required]="true"
+            [errorTrue]="false"
+          ></app-input-control>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 mb20"></div>
+  <row>
+    <div class="col-md-3" [appMenuAccess]="'CorporateDiv'">
+      <div class="finance-header">
+      <ion-icon src="assets/finance-menu/corporate_main.svg"></ion-icon>
+        Corporate
+      </div>
+      <div class="finance-sub-menus">
+        <div
+          class="d-flex align-items-center pointer-1 gap-10"
+          (click)="navigateToAccounts()"
+        >
+          <ion-icon src="assets/finance-menu/accounts.svg"></ion-icon> Accounts
+        </div>
+        <div
+          class="d-flex align-items-center pointer-1 gap-10"
+          (click)="navigateToSales()"
+        >
+          <ion-icon src="assets/finance-menu/sales.svg"></ion-icon> Sales
+        </div>
+        <div
+          class="d-flex align-items-center pointer-1 gap-10"
+          (click)="navigateToPurchase()"
+        >
+          <ion-icon src="assets/finance-menu/purchase.svg"></ion-icon> Purchase
+        </div>
+        <div
+          class="d-flex align-items-center pointer-1 gap-10"
+          (click)="navigateToInventory()"
+        >
+          <ion-icon src="assets/finance-menu/inventory.svg"></ion-icon>
+          Inventory
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="finance-header" [appMenuAccess]="'FinTrustDiv'">
+        <ion-icon src="assets/finance-menu/fintrust_main.svg"></ion-icon>
+        Trust
+      </div>
+      <div class="finance-sub-menus">
+        <div
+          class="d-flex align-items-center pointer-1 gap-10"
+          [appMenuAccess]="'FinTrustDiv'"
+          (click)="navigateToTrust()"
+        >
+          <ion-icon src="assets/finance-menu/finTrust_sub.svg"></ion-icon> Trust
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 ml-auto">
+      <div class="sub-box h100">
+        <div class="header d-flex gap-10">
+          <ion-icon name="person-circle-outline"></ion-icon
+          >{{ this.appService.userData.fullname }}
+        </div>
+        <div class="pb16"></div>
+        <div class="mb200">
+          <view-label
+            label="Current Log In Date Time"
+            value="{{
+              userData.userAdditionalDetail.currentLoginDatetime | appDate
+            }} {{
+              userData.userAdditionalDetail.currentLoginDatetime
+                | appDate : 'hh:mm a'
+            }}"
+            class="pb16 pl10"
+          ></view-label>
+          <view-label
+            label="Last Log In Date Time"
+            value=" {{
+              userData.userAdditionalDetail.lastLoginDatetime | appDate
+            }} {{
+              userData.userAdditionalDetail.lastLoginDatetime
+                | appDate : 'hh:mm a'
+            }}"
+            class="pb16 pl10"
+          ></view-label>
+        </div>
+      </div>
+    </div>
+  </row>
+</div>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon src="assets/icons/finance.svg"></ion-icon>
+        <div class="screen-text">Finance</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

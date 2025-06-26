@@ -1,0 +1,97 @@
+<div class="padd-menus" [parentId]="pageId" appAccess="PRTDV">
+    <div class="submenu-container col-md-11">
+        <div class="d-flex w100">
+
+            <div class="col-md-3 border-right">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_config.svg"></ion-icon> Configuration
+                </div>
+                <a class="submenu-item" cdkMenuItem [routerLink]="'/home/finance/company/detail'"
+                    [appAccess]="'AMCMY' | menuAccess:appService.userData">My Company</a>
+
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/voucher/search"
+                    [appAccess]="'ACCVO' | menuAccess:appService.userData">Voucher</a>
+
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/voucher-account/search"
+                    [appAccess]="'ACCVA' | menuAccess:appService.userData">Voucher
+                    Account</a>
+                <a class="submenu-item" cdkMenuItem [routerLink]=" '/home/finance/tax/search'"
+                    [appAccess]="'ACCTX' | menuAccess:appService.userData">
+                    Tax</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/exchange-rate/search"
+                    [appAccess]="'AEXCR' | menuAccess:appService.userData">Exchange Rate</a>
+            </div>
+            <div class="col-md-3 border-right">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/finance.svg"></ion-icon> Finance
+                </div>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/group/list"
+                    [appAccess]="'ACCGP' | menuAccess:appService.userData">Group</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/ledger/list"
+                    [appAccess]="'ACCLG' | menuAccess:appService.userData">Ledger</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/ledger-transaction/search"
+                    [appAccess]="'ACLTS' | menuAccess:appService.userData">Ledger
+                    Transaction</a>
+            </div>
+            <div class="col-md-3 border-right">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_voucher.svg"></ion-icon> Vouchers
+                </div>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/fund-transfer-note/search"
+                    [appAccess]="'ACFTN' | menuAccess:appService.userData">Fund Transfer
+                    Note</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/journal-voucher/search"
+                    [appAccess]="'ACCJV' | menuAccess:appService.userData">Journal
+                    Voucher</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/reversing-journal/search"
+                    [appAccess]="'ACREJ' | menuAccess:appService.userData">Reversing
+                    Journal</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/net-out-voucher/search"
+                    [appAccess]="'ACNOV' | menuAccess:appService.userData">Net Out Voucher
+                </a>
+            </div>
+            <div class="col-md-3">
+                <div class="submenu-header">
+                    <ion-icon src="assets/icons/side_report.svg"></ion-icon> Report
+                </div>
+                <a class="submenu-item" cdkMenuItem routerLink='/home/finance/trial-balance/trial-balance-report'>Trial
+                    Balance Report</a>
+                <a class="submenu-item" cdkMenuItem
+                    routerLink="/home/finance/balance-sheet/balance-sheet-report">Balance Sheet</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/profit-and-loss/profit-and-loss-report">P
+                    & L Statement</a>
+                <a class="submenu-item" cdkMenuItem
+                    routerLink="/home/finance/trial-balance-monthly/trial-balance-monthly-report">Trial Balance Monthly
+                    Report</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/profit-and-loss-monthly-report">Profit &
+                    Loss Monthly Report</a>
+                <a class="submenu-item" cdkMenuItem routerLink="/home/finance/report/bank-reconciliation/search">Bank
+                    Reconciliation Summary </a>
+                <a class="submenu-item" cdkMenuItem (click)="navigateToDetail()">Bank Reconciliation Detail </a>
+                <a class="submenu-item" cdkMenuItem routerLink="">Bank Reconciliation Report</a>
+                <a class="submenu-item" cdkMenuItem
+                    routerLink="/home/finance/balance-sheet-monthly/balance-sheet-monthly-report">Balance Sheet Monthly
+                    Report</a>
+                <a class="submenu-item" cdkMenuItem
+                    routerLink="/home/finance/ledger-summary/ledger-summary-report">Ledger Summary Report</a>
+                <a class="submenu-item" cdkMenuItem (click)="submenuClickNavigate()">Ledger Detail Report</a>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+
+                <ion-icon src="assets/icons/finance.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToCorporate()">Corporate</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Accounts</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

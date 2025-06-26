@@ -1,0 +1,125 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/client-doc.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Determine the Required Amount within threshold or not</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="content-wrapper">
+            <row>
+                <div class="col-md-3 pb16"><view-label label="Eligible Amount"
+                        value="{{application.eligibleAmount}}"></view-label></div>
+                <div class="col-md-3 pb16"><view-label label="Requested Amount"
+                        value="{{application.requestedAmount}}"></view-label></div>
+                <div class="col-md-3 pb16"><view-label label="Available Amount"
+                        value="{{application.availableAmount}}"></view-label></div>
+                <div class="col-md-3">
+                    <div class="pb10 checkbox-label">
+                        Above Threshold
+                    </div>
+                    <div>
+                        <app-checkbox (click)="withdrawalByOrg($event)" [btnClicked]="true"
+                            [checked]="application.aboveThereshold==='Y'"></app-checkbox>
+                    </div>
+                </div>
+
+            </row>
+            <form #notiForm="ngForm">
+                <row>
+                    <div class="col-md-12">
+                        <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue" [maxLength]="250"
+                            [required]="true" label="Notes" [(ngModel)]="notesMessage"
+                            name="notesMessage"></app-input-control>
+                    </div>
+                    <div class="col-md-12 mb26 gap-10 end">
+                        @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True' &&
+                        application.applicationStatusValue!=='APPRJ'){
+                        <app-icon-button name="save" toolTip="Save" (click)="saveWithdrawalNotes()"></app-icon-button>
+                        }
+                        <!-- @if(trustWithdrawalNotes.isUpdateButtonShow ==='Y'){
+                    <app-icon-button name="save" toolTip="Update" (click)="saveTrustApplication()"></app-icon-button>
+                    <app-icon-button name="refresh" toolTip="Refresh" (click)=" refeshData()"></app-icon-button>
+                    }
+                    @else {
+    
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearCourtOrderNotes()"></app-icon-button>
+                    } -->
+                    </div>
+                    <div class=""></div>
+                </row>
+            </form>
+        </div>
+        @if(this.type.isEditable === 'Y' && application.assignedOfficerFlag === 'True' &&
+        application.applicationStatusValue!=='APPRJ'){
+        <div class="col-md-12 end gap-10">
+            <button type="submit" class="complete-btn" (click)="cancelProcess()">Cancel</button>
+            <button type="submit" class="approve-btn" (click)="completeApplicationStage()">Required Amount
+                Determined</button>
+        </div>
+        }
+    </accordion-body>
+</accordion-item>
+<ng-template #notesCancelDialog>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">
+                <ion-icon class="fos-20" src="assets/icons/trust.svg"></ion-icon>
+                Reason For Cancellation
+            </div>
+            <div class="slot-right">
+                <div class="btn-group">
+                    <app-icon-button name="save" toolTip="Save" (click)="cancelApplicationStage()"></app-icon-button>
+                    <app-icon-button name="clear" toolTip="Clear" (click)="clearCancelNotes()"></app-icon-button>
+                    <app-icon-button name="close" toolTip="Close" (click)="dialogClose()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-content-inner h100">
+                @if(data.showErrorMessage){
+                <div class="error-panel">
+                    <app-error-message></app-error-message>
+                </div>
+                }
+                <form #g="ngForm">
+                    <row>
+                        <div class="col-md-12 mb26">
+                            <app-input-control type="textarea" className="notes" [errorTrue]="errorTrue"
+                                [(ngModel)]="cancelNotesDescription" name="cancelNotesDescription" [maxLength]="250"
+                                [required]="true" label="Notes"></app-input-control>
+                        </div>
+                    </row>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #cancelAlert>
+    <div class="dialog-container">
+        <div class="dialog-content">
+            <div class="dialog-content-inner">
+                <div class="notification-header">
+                    <div class="notification-icon">
+                        <ion-icon name="warning-outline"></ion-icon>
+                    </div>
+                    <div class="notification-title">Alert</div>
+                </div>
+                <div class="text-center p10">
+                    Are you sure you want to cancel this process
+                </div>
+                <div class="center">
+                    <div class="notification-button">
+                        <button class="btn-notification" (click)="cancelNotesDialog()">Yes</button>
+                        <button class="btn-notification cancel-btn" (click)="dialog.closeAll()">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

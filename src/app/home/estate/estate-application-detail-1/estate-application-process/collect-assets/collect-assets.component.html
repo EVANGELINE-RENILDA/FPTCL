@@ -1,0 +1,402 @@
+<accordion-item [isOpen]="true">
+    <accordion-header>
+        <div class="accordion-header-content">
+            <div class="accordion-title">
+                <ion-icon src="assets/icons/accordian/conduct-i.svg"></ion-icon>
+                <div class="accordion-title-content">
+                    <div>Collect Assets</div>
+                </div>
+            </div>
+        </div>
+    </accordion-header>
+    <accordion-body>
+        <div class="bg-white-padd">
+
+            <app-tab-sub-group (tabChange)="onChange($event)">
+                <app-sub-tab tabTitle="Bank Account">
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+                            <app-table [columns]="bankColumns" [columnsName]="bankColumnsName"
+                                [dataSource]="bankTableData" [hideSelectAll]="true"></app-table>
+                            <div class="mb20"></div>
+                            <row>
+                                <div class="col-md-4 ">
+                                    <div class="box" style="padding: 8px 16px;">
+                                        <div class="mb20"></div>
+                                        <div class="col-md-12">
+                                            <app-input-control type="select" label="Document Type"
+                                                [(ngModel)]="docNameType" [items]="documentArray" key="code"
+                                                defaultOption="--Select--" (onSelect)="documentTypeDatas(docNameType)"
+                                                name="documentTypeValue" [btnClicked]="this.type.isEditable === 'N'"
+                                                keyName="fullName"></app-input-control>
+                                        </div>
+                                        <app-drop-zone type="1" [fileType]="fileExtension" [accept]="accept"
+                                            [multiple]="false" [btnClicked]="this.type.isEditable === 'N'"
+                                            (onUpload)="uploadClientDocumentAttachment($event)"></app-drop-zone>
+                                    </div>
+                                    <div class="mb26"></div>
+
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="outer-content-wrapper">
+                                        <div class="content-wrapper">
+                                            <div>
+                                                <!-- @if (loading) { -->
+                                                <app-table [columns]="clientDocumentColumns"
+                                                    [columnsName]="clientDocumentColumnsName" [hideSelectAll]="true"
+                                                    [dataSource]="application.lstentTrustApplicationDocument | estateApplication: this.type.trustApplicationStageValue: this.type.trustApplicationIdenityNo"
+                                                    [showPaginator]="false" columnID="trustApplicationDocumentId">
+                                                    <ng-template cellHeaderDef="fileName">
+                                                        <div class="w200px">
+                                                            File Name
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template cellDef="fileName" let-element>
+                                                        <div class="overflow-wrap">
+                                                            {{element.ientFile.fileName}}
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template cellHeaderDef="documentTypeDescription">
+                                                        <div class="w200px">Document Name</div>
+                                                    </ng-template>
+                                                    <ng-template cellDef="fileExtension" let-element>
+                                                        {{element.ientFile.fileExtension}}
+                                                    </ng-template>
+                                                    <ng-template cellDef="fileSize" let-element>
+                                                        {{element.ientFile.fileSize | fileSize}}mb
+                                                    </ng-template>
+                                                    <ng-template cellHeaderDef="action">
+                                                        <div class="text-center">
+                                                            Action
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template cellDef="action" let-element>
+                                                        @if(element.ientFile.fileName!==''){
+
+                                                        <div class="d-flex align-items-center">
+                                                            <app-icon-button name="doc-download"
+                                                                (click)="downloadFile(element)">
+
+                                                            </app-icon-button>
+                                                            @if(this.type.isEditable === 'Y'){
+
+                                                            <app-icon-button name="doc-delete"
+                                                                (click)="checkDocumentDelete(element)" />
+                                                            }
+
+
+                                                            <app-icon-button name="doc-view"
+                                                                (click)="viewFile(element)">
+
+                                                            </app-icon-button>
+                                                        </div>
+                                                        }
+                                                    </ng-template>
+                                                </app-table>
+                                                <!-- } -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb20">
+                                    <app-input-control label="Notes" type="textarea" [maxLength]="250"
+                                        className="notes"></app-input-control>
+                                </div>
+                            </row>
+                        </div>
+                    </div>
+                    <div class="col-md-12 end">
+                        <button type="submit" class="approve-btn">Bank Account Closed</button>
+                    </div>
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Investments">
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper">
+
+
+                            <div class="col-md-12 mb20">
+                                <app-table [columns]="investmentColumns" [columnsName]="investmentColumnsName"
+                                    [dataSource]="investmentTableData" [hideSelectAll]="true">
+                                    <ng-template cellDef="sell">
+                                        <app-checkbox></app-checkbox>
+                                    </ng-template>
+                                    <ng-template cellDef="transfer">
+                                        <app-checkbox></app-checkbox>
+                                    </ng-template>
+                                    <ng-template cellDef="utof">
+                                        <app-checkbox></app-checkbox>
+                                    </ng-template>
+
+                                </app-table>
+                            </div>
+                            <div class="sub-table w100">
+                                <table class="w100">
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Name</th>
+                                        <th>Verified Date</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>ED</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>MET</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>CEO / ML</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>ED</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+
+
+                                </table>
+                            </div>
+                            <div class="col-md-12 end">
+                                <button type="submit" class="approve-btn">Investment Collected</button>
+                            </div>
+                        </div>
+                    </div>
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Death Benifits">
+                    <row>
+                        <div class="col-md-4 ">
+                            <div class="box" style="padding: 8px 16px;">
+                                <div class="mb20"></div>
+                                <div class="col-md-12">
+                                    <app-input-control type="select" label="Document Type" [(ngModel)]="docNameType"
+                                        [items]="documentArray" key="code" defaultOption="--Select--"
+                                        (onSelect)="documentTypeDatas(docNameType)" name="documentTypeValue"
+                                        [btnClicked]="this.type.isEditable === 'N'"
+                                        keyName="fullName"></app-input-control>
+                                </div>
+                                <app-drop-zone type="1" [fileType]="fileExtension" [accept]="accept" [multiple]="false"
+                                    [btnClicked]="this.type.isEditable === 'N'"
+                                    (onUpload)="uploadClientDocumentAttachment($event)"></app-drop-zone>
+                            </div>
+                            <div class="mb26"></div>
+
+                        </div>
+                        <div class="col-md-8">
+                            <div class="outer-content-wrapper">
+                                <div class="content-wrapper">
+                                    <div>
+                                        <!-- @if (loading) { -->
+                                        <app-table [columns]="clientDocumentColumns"
+                                            [columnsName]="clientDocumentColumnsName" [hideSelectAll]="true"
+                                            [dataSource]="application.lstentTrustApplicationDocument | estateApplication: this.type.trustApplicationStageValue: this.type.trustApplicationIdenityNo"
+                                            [showPaginator]="false" columnID="trustApplicationDocumentId">
+                                            <ng-template cellHeaderDef="fileName">
+                                                <div class="w200px">
+                                                    File Name
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellDef="fileName" let-element>
+                                                <div class="overflow-wrap">
+                                                    {{element.ientFile.fileName}}
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellHeaderDef="documentTypeDescription">
+                                                <div class="w200px">Document Name</div>
+                                            </ng-template>
+                                            <ng-template cellDef="fileExtension" let-element>
+                                                {{element.ientFile.fileExtension}}
+                                            </ng-template>
+                                            <ng-template cellDef="fileSize" let-element>
+                                                {{element.ientFile.fileSize | fileSize}}mb
+                                            </ng-template>
+                                            <ng-template cellHeaderDef="action">
+                                                <div class="text-center">
+                                                    Action
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellDef="action" let-element>
+                                                @if(element.ientFile.fileName!==''){
+
+                                                <div class="d-flex align-items-center">
+                                                    <app-icon-button name="doc-download"
+                                                        (click)="downloadFile(element)">
+
+                                                    </app-icon-button>
+                                                    @if(this.type.isEditable === 'Y'){
+
+                                                    <app-icon-button name="doc-delete"
+                                                        (click)="checkDocumentDelete(element)" />
+                                                    }
+
+
+                                                    <app-icon-button name="doc-view" (click)="viewFile(element)">
+
+                                                    </app-icon-button>
+                                                </div>
+                                                }
+                                            </ng-template>
+                                        </app-table>
+                                        <!-- } -->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb20">
+                            <app-input-control label="Notes" type="textarea" [maxLength]="250"
+                                className="notes"></app-input-control>
+                        </div>
+                        <div class="col-md-12 end">
+                            <button type="submit" class="approve-btn">Death Benifits Collected</button>
+                        </div>
+                    </row>
+                </app-sub-tab>
+                <app-sub-tab tabTitle="Real Property">
+                    <row>
+                        <div class="col-md-4 ">
+                            <div class="box" style="padding: 8px 16px;">
+                                <div class="mb20"></div>
+                                <div class="col-md-12">
+                                    <app-input-control type="select" label="Document Type" [(ngModel)]="docNameType"
+                                        [items]="documentArray" key="code" defaultOption="--Select--"
+                                        (onSelect)="documentTypeDatas(docNameType)" name="documentTypeValue"
+                                        [btnClicked]="this.type.isEditable === 'N'"
+                                        keyName="fullName"></app-input-control>
+                                </div>
+                                <app-drop-zone type="1" [fileType]="fileExtension" [accept]="accept" [multiple]="false"
+                                    [btnClicked]="this.type.isEditable === 'N'"
+                                    (onUpload)="uploadClientDocumentAttachment($event)"></app-drop-zone>
+                            </div>
+                            <div class="mb26"></div>
+
+                        </div>
+                        <div class="col-md-8">
+                            <div class="outer-content-wrapper">
+                                <div class="content-wrapper">
+                                    <div>
+                                        <!-- @if (loading) { -->
+                                        <app-table [columns]="clientDocumentColumns"
+                                            [columnsName]="clientDocumentColumnsName" [hideSelectAll]="true"
+                                            [dataSource]="application.lstentTrustApplicationDocument | estateApplication: this.type.trustApplicationStageValue: this.type.trustApplicationIdenityNo"
+                                            [showPaginator]="false" columnID="trustApplicationDocumentId">
+                                            <ng-template cellHeaderDef="fileName">
+                                                <div class="w200px">
+                                                    File Name
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellDef="fileName" let-element>
+                                                <div class="overflow-wrap">
+                                                    {{element.ientFile.fileName}}
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellHeaderDef="documentTypeDescription">
+                                                <div class="w200px">Document Name</div>
+                                            </ng-template>
+                                            <ng-template cellDef="fileExtension" let-element>
+                                                {{element.ientFile.fileExtension}}
+                                            </ng-template>
+                                            <ng-template cellDef="fileSize" let-element>
+                                                {{element.ientFile.fileSize | fileSize}}mb
+                                            </ng-template>
+                                            <ng-template cellHeaderDef="action">
+                                                <div class="text-center">
+                                                    Action
+                                                </div>
+                                            </ng-template>
+                                            <ng-template cellDef="action" let-element>
+                                                @if(element.ientFile.fileName!==''){
+
+                                                <div class="d-flex align-items-center">
+                                                    <app-icon-button name="doc-download"
+                                                        (click)="downloadFile(element)">
+
+                                                    </app-icon-button>
+                                                    @if(this.type.isEditable === 'Y'){
+
+                                                    <app-icon-button name="doc-delete"
+                                                        (click)="checkDocumentDelete(element)" />
+                                                    }
+
+
+                                                    <app-icon-button name="doc-view" (click)="viewFile(element)">
+
+                                                    </app-icon-button>
+                                                </div>
+                                                }
+                                            </ng-template>
+                                        </app-table>
+                                        <!-- } -->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </row>
+                    <div class="sub-table w100">
+                        <div class="sub-table-header pb10">
+                            Approvals
+                        </div>
+                        <table class="w100">
+                            <tr>
+                                <th>Designation</th>
+                                <th>User Name</th>
+                                <th>Verified Check</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                <td>Estate Officer</td>
+                                <td>Estate Officer</td>
+                                <td>
+                                    <app-checkbox></app-checkbox>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Manager Estate & Trust</td>
+                                <td>Manager Estate & Trust</td>
+                                <td>
+                                    <app-checkbox></app-checkbox>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Cheif Executor Officer</td>
+                                <td>Cheif Executor Officer</td>
+                                <td>
+                                    <app-checkbox></app-checkbox>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <app-icon-button name="open" toolTip="Open"></app-icon-button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-12 end">
+                        <button type="submit" class="approve-btn">Real Property Collected</button>
+                    </div>
+                </app-sub-tab>
+            </app-tab-sub-group>
+        </div>
+    </accordion-body>
+</accordion-item>

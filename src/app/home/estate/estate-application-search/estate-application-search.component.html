@@ -1,0 +1,187 @@
+<div class="content-wrapper">
+
+  <app-table class="h100" [pagination]="pagination" [columns]="columns" [columnsName]="columnsName"
+    [dataSource]="tableData" (pageChanged)="pageChanged($event)" columnID="estateApplicationId"
+    [hideSelectAll]="false">
+
+
+
+    <ng-template cellHeaderDef="action">
+      <app-icon-button name="open" toolTip="Open Selected" (click)="selectAllNavigate()"></app-icon-button>
+    </ng-template>
+
+    <ng-template cellHeaderDef="appliedBranchDescription">
+      <div class="header-cell-title">
+        Applied Branch</div>
+      <div class="header-cell-subtitle">
+        Applied Date</div>
+    </ng-template>
+    <ng-template cellDef="appliedBranchDescription" let-element>
+    <div>{{element.appliedBranchDescription}}</div>
+    <div class="table-cell-subtitle">{{element.appliedDate | appDate}}</div>
+    </ng-template>
+    <ng-template cellDef="action" let-element>
+      <app-icon-button name="open" toolTip="Open Selected" (click)="navigateToDetail(element.estateApplicationId)"></app-icon-button>
+
+
+    </ng-template>
+
+    <ng-template #slotLeft>
+      <app-search #appSearch [searchTemplate]="searchTemplate"  maxHeight="380px"></app-search>
+    </ng-template>
+
+    <ng-template #slotRight>
+      <form #l="ngForm">
+          <div class="d-flex justify-content-end align-items-center">
+
+              <div class="col-md-12 mt10">
+                  <app-input-control type="select" placeholder="Select Lead No" [(ngModel)]="trustLeadId"
+                      name="voucherConfigId" [items]="initialData.DDLValues.DDLLead" key="id" keyName="code"
+                      [errorTrue]="errorTrue" [required]="true" valueType="int"></app-input-control>
+              </div>
+              <div>
+
+                  <app-icon-button name="add" toolTip="Add New" (click)="createEstateApplication()">
+                  </app-icon-button>
+              </div>
+          </div>
+      </form>
+
+  </ng-template>
+
+  </app-table>
+</div>
+
+
+<ng-template #searchTemplate>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="dialog-title">Estate Application Search</div>
+      <div class="slot-right">
+        <div class="btn-group">
+          <app-icon-button name="search" toolTip="Search" (click)="searchEstateAppication()"></app-icon-button>
+          <app-icon-button name="clear" toolTip="Clear" (click)="createEstateApplicationSearch('clear')"></app-icon-button>
+          <app-icon-button name="close" (click)="dialog.closeAll()"></app-icon-button>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <scroll>
+        <div class="dialog-content-inner">
+          <row>
+
+
+    <div class="col-md-4">
+      <app-input-control label="Estate Ref No" [(ngModel)]="searchParams.estateApplicationRefNo" name="estateApplicationRefNo"></app-input-control>
+    </div>
+    <div class="col-md-4">
+      <app-input-control label="Registration No" [(ngModel)]="searchParams.estateRegNo" name="estateRegNo"></app-input-control>
+    </div>
+    <div class="col-md-4">
+      <app-input-control label="Applied Date (From)" type="date" [(ngModel)]="searchParams.appliedDateFrom" name="appliedDateFrom" [maxDate]="searchParams.appliedDateTo"></app-input-control>
+    </div>
+    <div class="col-md-4">
+      <app-input-control label="Applied Date (To)" type="date" [(ngModel)]="searchParams.appliedDateTo" name="appliedDateTo" [minDate]="searchParams.appliedDateFrom"></app-input-control>
+    </div>
+    <div class="col-md-4">
+      <app-input-control label="Entered Date (From)" type="date" [(ngModel)]="searchParams.enteredDateFrom" name="enteredDateFrom" [maxDate]="searchParams.enteredDateTo"></app-input-control>
+    </div>
+    <div class="col-md-4">
+      <app-input-control label="Entered Date (To)" type="date" [(ngModel)]="searchParams.enteredDateTo" name="enteredDateTo" [minDate]="searchParams.enteredDateFrom"></app-input-control>
+    </div>
+            <div class="col-md-4"><app-input-control type="select" [items]="initialData.DDLValues.DDLDeathNoticeStatus"
+                key="constant" keyName="description" defaultOption="All" label="Status" type="select"
+                [(ngModel)]="searchParams.statusValue" name="statusValue"></app-input-control></div>
+                <div class="col-md-4"><app-input-control label="Application Status" type="select"
+                  [(ngModel)]="searchParams.statusValue" name="statusValue"
+                  [items]="initialData.DDLValues.DDLApplicationStatus" key="constant"
+                  keyName="description" defaultOption="All"></app-input-control>
+          </div>
+          <div class="col-md-4"><app-input-control label="Application Stage" type="select"
+                  [(ngModel)]="searchParams.applicationStageValue"
+                  [items]="initialData.DDLValues.DDLApplicationStage" key="constant"
+                  keyName="description" defaultOption="All"
+                  name="applicationStageValue"></app-input-control>
+          </div>
+          <div class="col-md-4"><app-input-control label="Action Status" type="select"
+                  [(ngModel)]="searchParams.actionStatusValue"
+                  [items]="initialData.DDLValues.DDLApplicationActionStatus" key="constant" keyName="description"
+                  defaultOption="All" name="actionStatusValue"></app-input-control>
+          </div>
+          </row>
+        </div>
+      </scroll>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #addDialog>
+  <div class="dialog-container">
+    <div class="dialog-header">
+        <div class="dialog-title"><ion-icon class="dialog-header-icon"
+                src="assets/icons/accordian/estate.svg"></ion-icon>
+            Esate Application <ion-icon class="arrow-icon" src="assets/icons/arrow.svg"></ion-icon>
+            Add New
+        </div>
+        <div class="slot-right">
+            <div class="btn-group">
+                <app-icon-button name="save" toolTip="Save" (click)="saveestateApplication()"
+                   ></app-icon-button>
+                <!-- <app-icon-button name="clear" toolTip="Clear" (click)="clearDetails()"
+                    appButtonAccess="CrmCustAppRefreshInfoBtn"></app-icon-button> -->
+
+                <app-icon-button name="close" toolTip="Close" appButtonAccess="CrmCustAppCancelBtn"
+                    (click)="dialog.closeDialog()"></app-icon-button>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <div class="dialog-content-inner h100">
+            <row class="row-h100">
+                <scroll>
+                    @if(data.showErrorMessage){
+                    <div class="error-panel">
+                        <app-error-message></app-error-message>
+                    </div>
+                    }
+                    <div class="outer-content-wrapper">
+                        <div class="content-wrapper p10px">
+                            <row>
+
+                                <div class="col-md-4 pb20"><view-label label="Application Stage"
+                                        [value]="estateApplication.applicationStageDescription"></view-label></div>
+                                <div class="col-md-4 pb20"><view-label label="Application Status"
+                                        [value]="estateApplication.statusDescription"></view-label></div>
+                                <div class="col-md-4 pb20"><view-label label="Action Status"
+                                        [value]="estateApplication.actionStatusDescription"></view-label></div>
+                                <div class="col-md-4 pb20"><view-label label="Applied By"
+                                        [value]="estateApplication.appliedByFullname"></view-label></div>
+                                <div class="col-md-4 pb20"><view-label label="Applied Date"
+                                        [value]="estateApplication.appliedDate | appDate"></view-label></div>
+                                <div class="col-md-4 pb20"><view-label label="Applied Branch"
+                                        [value]="estateApplication.appliedBranchDescription"></view-label></div>
+                                        <!-- <div class="col-md-4">
+                                          <app-input-control label="Branch" [items]="initialData.DDLValues.DDLBranch" key="constant" keyName="description" [(ngModel)]="estateApplication.branchValue" name="branchValue" type="select" defaultOption="--Select--"></app-input-control>
+                                        </div> -->
+                            </row>
+                        </div>
+                    </div>
+
+                </scroll>
+            </row>
+        </div>
+    </div>
+</div>
+</ng-template>
+
+<ng-template #breadCrumb>
+  <div class="breadcrumb">
+    <ul>
+      <li class="screen-name">
+        <ion-icon src="assets/icons/estate.svg"></ion-icon>
+        <div class="screen-text">Estate Application</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

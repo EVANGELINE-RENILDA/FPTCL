@@ -1,0 +1,108 @@
+.app-accordion {
+    .app-accordion-item {
+        background-color: white;
+        display: block;
+        position: relative;
+        margin-bottom: 10px;
+
+        .app-accordion-header {
+            display: flex;
+            align-items: center;
+            height: 44px;
+            padding: 0 16px;
+            user-select: none; 
+            cursor: pointer;
+            border-bottom: 1px solid #E0E0E0;
+
+            .accordion-header-content {
+                flex: 1;
+                display: flex;
+
+                .accordion-title {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: var(--app-text-danger);
+
+                    .accordion-title-content {
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .accordian-title-count {
+                        margin-left: 15px;
+                        color: #6C6B6B;
+                        font-size: 15px;
+                        border-radius: 10px;
+                        padding: 1px 5px;
+                        border: 1px solid #DBE0E1;
+                    }
+
+
+                    ion-icon {
+                        font-size: 18px;
+                        // transition: 0.3s;
+                    }
+                }
+            }
+        }
+
+        .app-accordion-body {
+            display: none;
+            padding: 16px 8px !important;
+        }
+
+        .open-visible {
+            display: none !important;
+        }
+
+        .open-hide {
+            display: flex !important;
+            color: #000;
+        }
+
+        &.open {
+            .app-accordion-header {
+                .accordion-header-content {
+                    .accordion-title {
+                        color: var(--app-primary);
+                    }
+
+                    .reverse {
+
+                        ion-icon {
+                            transform: rotate(180deg);
+                        }
+                    }
+                }
+
+
+                .btn-accordion {
+
+
+                    ion-icon {
+                        transform: rotate(180deg);
+                        transition: 0.3s;
+                    }
+
+
+                }
+            }
+
+            .open-visible {
+                display: flex !important;
+            }
+
+            .open-hide {
+                display: none !important;
+            }
+
+            .app-accordion-body {
+                display: block;
+            }
+        }
+    }
+}

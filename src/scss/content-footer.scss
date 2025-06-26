@@ -1,0 +1,229 @@
+// .card-footer {
+// 	overflow: hidden;
+// 	transition: height .5s ease-out;
+// 	// height: 100%;
+
+// 	.footer-tab {
+// 		display: flex;
+// 		z-index: 999;
+// 		position: relative;
+// 		background-color: #E0E0E0;
+// 		height: 24px;
+// 		font-weight: 400;
+// 		font-size: 14px;
+// 		font-weight: 500;
+// 		justify-content: space-between;
+// 		// margin-bottom: 5px;
+
+// 		.tabs {
+// 			display: flex;
+// 			justify-content: center;
+// 			align-items: center;
+// 			padding: 0 14px;
+
+// 			ion-icon {
+// 				padding-right: 4px;
+// 				font-size: 14px;
+// 			}
+
+// 			:hover {
+// 				cursor: pointer;
+// 			}
+// 		}
+
+// 		.open-arrow {
+// 			padding-left: 48px;
+// 			display: flex;
+// 			align-items: center;
+// 			transform: rotate(-180deg);
+// 			// transition: transform 0.5s ease-out;
+
+// 			&.expanded {
+// 				padding-right: 48px;
+// 				transform: rotate(0deg);
+// 			}
+// 		}
+// 	}
+// }
+
+// .f-content-txt {
+// 	text-align: end;
+
+// 	div {
+// 		font-size: 14px;
+// 		font-weight: 700;
+// 		color: #000;
+// 		padding-right: 20px;
+// 		border-right: 1px solid var(--text-dark-color);
+// 	}
+// }
+
+// .text-end {
+// 	div {
+// 		font-size: 14px;
+// 		font-weight: 500;
+// 		color: var(--text-light-color);
+// 		padding-left: 30px;
+
+// 		// &:last-child{
+// 		// 	color: #000;
+// 		// font-weight: 700;
+
+// 		// }
+// 	}
+
+// }
+
+// .panel-footer-expand {
+// 	padding: 8px;
+// 	width: 100%;
+// 	height: auto;
+// 	background-color: #fff;
+// 	display: inline
+// }
+
+// .footer-textarea {
+// 	padding-top: 4px;
+// }
+
+
+// .tabClass {
+// 	background-color: #fff;
+// 	color: #000;
+// 	font-weight: 700;
+
+// 	.ion-icon {
+// 		color: #000;
+// 	}
+// }
+
+// .footer-ht{
+// 	height: 33px !important;
+// }
+
+
+.card-footer {
+    // overflow: hidden;
+    transition: height .5s ease-out;
+    // height: 100%;
+
+    .footer-tab {
+        display: flex;
+        z-index: 999;
+        position: relative;
+        background-color: #E0E0E0;
+        height: 24px;
+        font-weight: 400;
+        font-size: 14px;
+        font-weight: 500;
+        justify-content: space-between;
+        // margin-bottom: 5px;
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 14px;
+
+            ion-icon {
+                padding-right: 4px;
+                font-size: 14px;
+            }
+
+            :hover {
+                cursor: pointer;
+            }
+        }
+
+        .open-arrow {
+            width: 24px;
+            height: 24px;
+            margin-right: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-180deg);
+            // transition: transform 0.5s ease-out;
+
+            &.expanded {
+                // padding-right: 48px;
+                transform: rotate(0deg);
+            }
+        }
+    }
+}
+
+.f-content-txt {
+    text-align: end;
+    z-index: 9;
+
+    div {
+        font-size: 14px;
+        font-weight: 700;
+        color: #000;
+        padding-right: 20px;
+        border-right: 1px solid var(--text-dark-color);
+    }
+}
+
+.text-end {
+    div {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-light-color);
+        padding-left: 30px;
+
+        // &:last-child{
+        // 	color: #000;
+        // font-weight: 700;
+
+        // }
+    }
+
+}
+
+.panel-footer-expand {
+    // padding: 8px 0;
+    width: 100%;
+    height: auto;
+    background-color: #fff;
+
+    .row-container {
+        // padding: 0;
+
+    }
+
+    // display: inline;
+}
+
+.f-second {
+    background: #f2f2f2;
+    margin-top: -8px;
+    padding-top: 8px;
+}
+
+.footer-textarea {
+    padding-top: 4px;
+}
+
+.footer-textarea-1 {
+    padding-top: 13px;
+}
+
+.tabClass {
+    background-color: #fff;
+    color: #000;
+    font-weight: 700;
+
+    .ion-icon {
+        color: #000;
+    }
+}
+
+.footer-ht {
+    height: 33px !important;
+}
+
+.h20{
+    height: 20px;
+}

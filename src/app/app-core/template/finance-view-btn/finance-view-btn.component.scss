@@ -1,0 +1,130 @@
+.document-container {
+    padding-bottom: 24px;
+
+    .document-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-dark-color);
+        padding-bottom: 8px;
+    }
+
+    .document-box {
+        width: 100%;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        border: 1px dashed #333333;
+        border-radius: 6px;
+        padding: 0 12px;
+
+        .file-name {
+            flex: 1;
+        }
+    }
+
+    .document-btn-group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .drag-zone {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        gap: 6px;
+        cursor: pointer;
+
+        .drag-icon {
+            height: 16px;
+        }
+
+        .drag-text {
+            color: var(--text-light-color);
+        }
+    }
+
+
+}
+
+.file-upload {
+    .hidden {
+        display: none;
+    }
+}
+
+
+.doc-content {
+    height: 40px;
+}
+
+.document-btn-group {
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+}
+
+ion-icon {
+    font-size: 30px;
+}
+
+
+.bgc {
+    background-color: #00000061;
+  }
+
+  .p-fix {
+    position: absolute;
+    right: 2rem;
+    top: 1rem;
+    z-index: 1;
+  }
+
+  .download-button {
+    button {
+      width: 120px;
+      font-size: 16px;
+      height: 40px;
+      color: #fff;
+      background: var(--app-primary);
+      border: none;
+      border-radius: 5px;
+    }
+  }
+  
+  .close-button {
+    button {
+      width: 120px;
+      font-size: 16px;
+      height: 40px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--app-warning);
+    }
+  }
+
+  .wcheck {
+    width: 800px;
+    height: 520px;
+  }
+  
+  .dis-none {
+    display: none;
+  }
+
+  .active {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  
+    img {
+      max-width: 800px;
+      min-width: auto;
+      max-height: 520px;
+      min-height: auto;
+    }
+  }

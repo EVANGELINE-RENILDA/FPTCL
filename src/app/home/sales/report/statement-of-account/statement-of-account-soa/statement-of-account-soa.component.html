@@ -1,0 +1,117 @@
+<ng-template #breadCrumb>
+    <div class="breadcrumb">
+        <ul>
+            <li class="screen-name link">
+                <ion-icon src="assets/icons/sales.svg"></ion-icon>
+                <div class="screen-text" (click)="navigateToSales()">Sales</div>
+            </li>
+            <li class="screen-name link">
+                <div class="screen-text" (click)="navigateToList()">Summary of Statement Account Customer</div>
+            </li>
+            <li class="screen-name">
+                <div class="screen-text">Statement of Accounts Customer Detail</div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<div style="margin: 0 20px;">
+    <h1 class="d-flex align-items-center justify-content-center">Statement of Accounts - Detail</h1>
+    <div class="flex-between">
+        <div>
+            <p class="bold">Company Address:</p>
+            <p>ITGalax Solutions Private Limited</p>
+            <p>1st Floor,M-2,Type-II, Thiruvanmiyur,Chennai,Tamilnadu,India, Chennai, India</p>
+            <div class="flex-between">
+                <div>
+                    <p>Report Generating Date & Time</p>
+                    <p class="bold">09/02/2024 05:30 PM</p>
+                </div>
+                <div style="padding-right: 100px;">
+                    <p>Statement Date</p>
+                    <p class="bold">9/2/2024</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <p class="bold">Customer Address:</p>
+            <p>Rajesh DR</p>
+            <p>39 xxx, xxx,India,Chennai</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="w100 pt20 p20">
+    <table class="w100">
+        <tr>
+            <th>Doc Date</th>
+            <th>Doc No</th>
+            <th>Voucher Type</th>
+            <th>Customer Ref No</th>
+            <th>Shipping Address</th>
+            <th>Currency</th>
+            <th>Sales Value</th>
+            <th>Receipt Value</th>
+            <th>Balance</th>
+        </tr>
+        <tr>
+            <td>04/02/2024</td>
+            <td>20240400002</td>
+            <td>Sale Invoice</td>
+            <td>CUST2400002</td>
+            <td>39 xxx, xxx,India,Chennai</td>
+            <td>Indian Rupee</td>
+            <td>20,000.20</td>
+            <td>0.00</td>
+            <td>20,000.20</td>
+        </tr>
+        <tr>
+            <td>04/02/2024</td>
+            <td>RN_CHE20240406</td>
+            <td>Receipt Note</td>
+            <td>CUST2400002</td>
+            <td>39 xxx, xxx,India,Chennai</td>
+            <td>Indian Rupee</td>
+            <td>0.00</td>
+            <td>20,000.20</td>
+            <td>0.00</td>
+        </tr>
+        <tr>
+            <td>04/02/2024</td>
+            <td>SIS_20240702</td>
+            <td>Sale Invoice</td>
+            <td>CUST2400002</td>
+            <td>39 xxx, xxx,India,Chennai</td>
+            <td>Indian Rupee</td>
+            <td>12.00</td>
+            <td>0.00</td>
+            <td>12.00</td>
+        </tr>
+    </table>
+</div>
+
+<div class="w100 p20 table2" style="bottom: 0; position: absolute;">
+    <table class="w100">
+        <tr>
+            <th>Customer Code</th>
+            <th>Customer Name</th>
+            <th>Customer Currency</th>
+            <th>Total Balance Due</th>
+            <th>0 - 30 Days Due</th>
+            <th>31 - 60 Days Due</th>
+            <th>61 - 90 Days Due</th>
+            <th>90 Days Due</th>
+        </tr>
+        <tr>
+            <td>CUST2400002</td>
+            <td>Rajesh DR</td>
+            <td>Indian Rupee</td>
+            <td>12.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>12.00</td>
+            <td>0.00</td>
+        </tr>
+    </table>
+</div>
