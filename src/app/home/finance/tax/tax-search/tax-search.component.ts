@@ -130,6 +130,7 @@ export class TaxSearchComponent {
     await this.createNewTaxSearch();
 
     this.tableData = [];
+    // hello
 
     // await this.initialData.getDDL('getInitialDataForCustomer', this.options);
     // this.createTaxSearch();
